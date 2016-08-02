@@ -1,0 +1,566 @@
+//
+//  SortViewController.m
+//  CKProject
+//
+//  Created by furui on 15/12/1.
+//  Copyright © 2015年 furui. All rights reserved.
+//
+
+#import "SortViewController.h"
+#import "ProjectTableCell.h"
+#import "ProjectListViewController.h"
+#import "OrganismListViewController.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import "CustomLabel.h"
+#import "ProgressHUD/ProgressHUD.h"
+@interface SortViewController
+()<UITableViewDataSource,UITableViewDelegate>{
+    NSArray *tableArray;
+    UILabel *titleLabel;
+     NSString *str1;
+}
+
+@end
+
+@implementation SortViewController
+@synthesize titleHeight;
+@synthesize cityLabel;
+@synthesize searchLabel;
+@synthesize msgLabel;
+@synthesize tabArray;
+@synthesize bottomHeight;
+@synthesize projectTableView;
+@synthesize orgTableView;
+@synthesize httpProjectArray;
+@synthesize projectDictionary;
+@synthesize httpOrgArray;
+@synthesize orgDictionary;
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    [ProgressHUD show:@"加载中"];
+    [self initTitle];
+    [self initSwitchBtn];
+    tableArray = [NSArray arrayWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",nil];
+    [self initProjectTableView];
+    [self initOrgTableView];
+    [projectTableView setHidden:NO];
+    [orgTableView setHidden:YES];
+    [self getLessonGroup];
+    [self getInstList];
+    // Do any additional setup after loading the view, typically from a nib.
+}
+-(void)getData
+{
+    NSArray *zjArray=[NSArray arrayWithObjects:@"早教",nil];
+    NSArray *musciArray=[NSArray arrayWithObjects:@"钢琴",@"打击乐器",@"弦乐器",@"管乐器",@"声乐",@"古典乐器",@"其他",nil];
+    NSArray *yyArray=[NSArray arrayWithObjects:@"英语",@"日语",@"书法",@"国学",@"其他",nil];
+    NSArray *ydArray=[NSArray arrayWithObjects:@"足球",@"篮球",@"网球",@"高尔夫球",@"马术",@"壁球",@"击剑",@"跆拳道",@"武术",@"早教运动",@"其他",nil];
+    NSArray *acArray=[NSArray arrayWithObjects:@"美术",@"表演",@"主持",@"舞蹈",@"摄影",@"其他",nil];
+    NSArray *tbArray=[NSArray arrayWithObjects:@"小学",@"初中",@"高中",@"其他",nil];
+    NSArray *bkArray=[NSArray arrayWithObjects:@"出国备考",@"艺术备考",@"其他",nil];
+    NSArray *jnArray=[NSArray arrayWithObjects:@"平面设计",@"程序开发",@"其他",nil];
+    NSArray *jzArray=[NSArray arrayWithObjects:@"健身房",@"美颜保养",@"瘦身",@"其他",nil];
+    
+    projectDictionary=[[NSMutableArray alloc]init];
+    
+    [projectDictionary addObject:@"早教"];
+    [projectDictionary addObject:@"音乐类"];
+    [projectDictionary addObject:@"语言/国学"];
+    [projectDictionary addObject:@"运动类"];
+    [projectDictionary addObject:@"艺术类"];
+    [projectDictionary addObject:@"同步课堂"];
+    [projectDictionary addObject:@"备考类"];
+    [projectDictionary addObject:@"设计/技能"];
+    [projectDictionary addObject:@"家长汇"];
+    
+    orgDictionary=[[NSMutableArray alloc]init];
+    
+    [orgDictionary addObject:zjArray];
+    [orgDictionary addObject:musciArray];
+    [orgDictionary addObject:yyArray];
+    [orgDictionary addObject:ydArray];
+    [orgDictionary addObject:acArray];
+    [orgDictionary addObject:tbArray];
+    [orgDictionary addObject:bkArray];
+    [orgDictionary addObject:jnArray];
+    [orgDictionary addObject:jzArray];
+    
+}
+
+//初始化顶部菜单栏
+-(void)initTitle{
+    //设置顶部栏
+    titleHeight=44;
+    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
+    [titleView setBackgroundColor:[UIColor whiteColor]];
+    //新建左上角Label
+    cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
+    [cityLabel setBackgroundColor:[UIColor greenColor]];
+    [cityLabel setText:@"未知"];
+    [cityLabel setTextAlignment:NSTextAlignmentCenter];
+    //新建查询视图
+    searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
+    [searchLabel setTextAlignment:NSTextAlignmentCenter];
+    [searchLabel setText:@"分类"];
+    
+    //新建右上角的图形
+    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
+    [msgLabel setBackgroundColor:[UIColor greenColor]];
+    [msgLabel setText:@"未知"];
+    [msgLabel setTextAlignment:NSTextAlignmentCenter];
+    
+    //[titleView addSubview:cityLabel];
+    //[titleView addSubview:msgLabel];
+    [titleView addSubview:searchLabel];
+    [self.view addSubview:titleView];
+    
+    
+}
+
+-(void)initSwitchBtn{
+    int width=self.view.frame.size.width;
+    UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
+    [topView setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:topView];
+    NSArray *array = [NSArray arrayWithObjects:@"体验课",@"机构", nil];
+    tabArray=[[NSMutableArray alloc]init];
+    for (int i=0; i<[array count]; i++) {
+        TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count]-1, titleHeight)];
+        [topBar addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
+        [topBar setTag:i];
+        [topBar setText:[array objectAtIndex:i]];
+        if(i==[array count]-1){
+            [topBar setIsEnd:YES];
+        }
+        if(i==0){
+            [topBar setChecked:YES];
+        }else{
+            [topBar setChecked:NO];
+        }
+        [topBar initView];
+        [topBar setLabelFont:[UIFont systemFontOfSize:width/22.8]];
+        [topView addSubview:topBar];
+        [tabArray addObject:topBar];
+    }
+}
+-(void)onClick:(id)sender{
+    TopBar *topBar=(TopBar *)sender;
+    for (NSObject *object in tabArray) {
+        TopBar *b=(TopBar *)object;
+        if(b.tag!=topBar.tag){
+            [b setChecked:NO];
+            [b setTextColor:[UIColor grayColor]];
+        }else{
+            [b setChecked:YES];
+            [b setTextColor:[UIColor orangeColor]];
+            
+        }
+    }
+    switch (topBar.tag) {
+        case 0:
+        {
+            [projectTableView setHidden:NO];
+            [orgTableView setHidden:YES];
+            [projectTableView reloadData];
+            
+            
+        }
+            break;
+        case 1:
+        {
+            [orgTableView reloadData];
+            [orgTableView setHidden:NO];
+            [projectTableView setHidden:YES];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+-(void)initProjectTableView{
+    bottomHeight=49;
+    
+    projectTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
+                                                                  titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40
+                                                                  ,
+                                                                  self.view.frame.size.width,
+                                                                  self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40)-bottomHeight)];
+    NSLog(@"%f",self.tabBarController.view.frame.size.height);
+    [projectTableView setBackgroundColor:[UIColor whiteColor]];
+    projectTableView.dataSource                        = self;
+    projectTableView.delegate                          = self;
+    projectTableView.rowHeight                         = self.view.bounds.size.height/7;
+    projectTableView.tag=0;
+    [self.view addSubview:projectTableView];
+}
+-(void)initOrgTableView{
+    bottomHeight=49;
+    
+    orgTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
+                                                              titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40
+                                                              ,
+                                                              self.view.frame.size.width,
+                                                              self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40)-bottomHeight)];
+    NSLog(@"%f",self.tabBarController.view.frame.size.height);
+    [orgTableView setBackgroundColor:[UIColor whiteColor]];
+    orgTableView.dataSource                        = self;
+    orgTableView.delegate                          = self;
+    orgTableView.rowHeight                         = self.view.bounds.size.height/7;
+    orgTableView.tag=1;
+    
+    [self.view addSubview:orgTableView];
+}
+
+
+#pragma mark - 数据源方法
+#pragma mark 返回分组数
+//-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+//    return 1;
+//}
+
+#pragma mark 返回每组行数
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    //  NSLog(@"计算每组(组%i)行数",section);
+    //  KCContactGroup *group1=_contacts[section];
+    
+    if (tableView.tag==0) {
+        if ([httpProjectArray count]>0 && httpProjectArray!=nil) {
+            return [httpProjectArray count];
+        }
+        return [projectDictionary count];
+    }else{
+        if ([httpOrgArray count]>0 && httpOrgArray!=nil) {
+            return [httpProjectArray count];
+        }
+        return [orgDictionary count];
+    }
+}
+
+#pragma mark返回每行的单元格
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    //NSIndexPath是一个结构体，记录了组和行信息
+    UITableViewCell *cell;
+    
+    if (tableView.tag==0) {
+        cell  = [[SortProjectListTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        //    if ([projectDictionary count]>0 ) {
+        int width=self.view.frame.size.width;
+        SortProjectListTableCell *dataCell=(SortProjectListTableCell *)cell;
+        //[dataCell.logoImage ];加载后台logo
+        NSDictionary *projectDic=[httpProjectArray objectAtIndex:[indexPath row]];
+        if ([projectDic objectForKey:@"logo"] && ![[projectDic objectForKey:@"logo"] isEqual:[NSNull null]]) {
+            NSString *logo=[projectDic objectForKey:@"logo"];
+            if(logo!=nil && ![logo isEqualToString:@""]&& ![logo isEqual:[NSNull null]])
+            {
+                [dataCell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+                
+            }else{
+                [dataCell.logoImage setImage:[UIImage imageNamed:@"instlist_defalut"]];
+            }
+        }else{
+            [dataCell.logoImage setImage:[UIImage imageNamed:@"instlist_defalut"]];
+        }
+        [dataCell.titleLabel setText:[NSString stringWithFormat:@"%@",[[httpProjectArray objectAtIndex:[indexPath row]]objectForKey:@"title"]]];
+        
+        NSInteger number=0;
+        if ([httpProjectArray count]>0 && httpProjectArray!=nil) {
+            NSArray *lesson=[[httpProjectArray objectAtIndex:[indexPath row]]objectForKey:@"lesson_group"];
+            number=[lesson count];
+        }else{
+            number=[[orgDictionary objectAtIndex:[indexPath row]] count];
+        }
+        for (int i=0; i<number; i++) {
+            int paddingheight=width/16;//每组的高度
+            
+            UIControl *control=[[UIControl alloc]init];
+            float y=0;
+            float x=0;
+            x=width/22.8+(width-width/22.8)/3*(i%3);
+            y=(paddingheight+width/14)*(i/3)+dataCell.titleLabel.frame.size.height+dataCell.titleLabel.frame.origin.y+width/22.8;
+            [control setFrame:CGRectMake(x, y, (width-width/22.8)/3, width/14)];
+            [dataCell addSubview:control];
+            
+           
+            if ([httpProjectArray count]>0 && httpProjectArray!=nil) {
+                NSArray *lesson=[[httpProjectArray objectAtIndex:[indexPath row]]objectForKey:@"lesson_group"];
+                str1=[[lesson objectAtIndex:i]objectForKey:@"title"];
+               
+
+            }else{
+                str1=[[orgDictionary objectAtIndex:[indexPath row]]objectAtIndex:i];
+                
+            }
+            CustomLabel *itemLabel=[[CustomLabel alloc]initWithFrame:CGRectMake(0, 0, width/26.7*([str1 length]+3), width/14)];
+            UITapGestureRecognizer *getsture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goProjectListViewController:)];
+            [itemLabel addGestureRecognizer:getsture];
+            [itemLabel setUserInteractionEnabled:YES];
+            [itemLabel setSuperID:(int)[indexPath row]];
+            [itemLabel setSubID:i];
+            [itemLabel setText:str1];
+            NSLog(@"111111111111111111111111111111111111\n\n\n%@",str1);
+            
+            [itemLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+            [itemLabel setTextAlignment:NSTextAlignmentCenter];
+            [itemLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+            itemLabel.layer.masksToBounds=YES;
+            itemLabel.layer.cornerRadius=23/2;
+            itemLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
+            itemLabel.layer.borderWidth=1;
+            [itemLabel setFrame:CGRectMake((control.frame.size.width-itemLabel.frame.size.width)/2, 0, itemLabel.frame.size.width, itemLabel.frame.size.height)];
+            [itemLabel setBackgroundColor:[UIColor colorWithRed:244.f/255.f green:243.f/255.f blue:243.f/255.f alpha:1.0]];
+            [control addSubview:itemLabel];
+            //   if (i==[[orgDictionary objectAtIndex:[indexPath row]] count]-1) {
+            CGRect frame=cell.frame;
+            frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
+            cell.frame=frame;
+            //  }
+        }
+        //}
+    }else if(tableView.tag==1 ){
+        cell  = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        NSString *str;
+        int width=self.view.frame.size.width;
+        titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/35.6, width/21, width, width/26.7)];
+        [titleLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+        [titleLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
+        [cell addSubview:titleLabel];
+        NSDictionary *inset=[httpOrgArray objectAtIndex:[indexPath row]];
+        
+        
+        
+        
+        
+        str= [inset objectForKey:@"title"];
+        [titleLabel setText:[NSString stringWithFormat:@"%@",str]];
+             UIControl  *moreControl=[[UIControl alloc]initWithFrame:CGRectMake(width-width/10-width/20-width/25, width/21.3, width/10+width/20, width/16)];
+        [moreControl setUserInteractionEnabled:YES];
+        [moreControl setTag:[indexPath row]];
+        [moreControl addTarget:self action:@selector(onMoreClick:) forControlEvents:UIControlEventTouchUpInside];
+        UILabel *moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/10, width/16)];
+        [moreLabel setText:@"更多"];
+        [moreLabel setTextAlignment:NSTextAlignmentCenter];
+        [moreLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+        [moreLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
+        UIImageView *rightView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"more_logo"]];
+        [rightView setFrame:CGRectMake(width/10, width/32-width/40, width/20, width/20)];
+        [moreControl addSubview:moreLabel];
+        [moreControl addSubview:rightView];
+        
+        [cell addSubview:moreControl];
+        
+        NSArray *instList=[inset objectForKey:@"inst"];
+        if ([instList count]>0) {
+            for (int i=0; i<[instList count]; i++) {
+                float x=0;
+                float y=0;
+                x=width/21+(width*3/7+width/23)*(i%2);
+                y=width/21+width/26.7+width/35.6+(width/3.8+width/23)*((int)(i/2));
+                NSDictionary *inst=[instList objectAtIndex:i];
+                
+                
+                UIImageView *instImageView=[[UIImageView alloc]initWithFrame:CGRectMake(x,y, width*3/7, width/3.8)];
+                instImageView.layer.masksToBounds = YES;
+                instImageView.layer.cornerRadius = 3.0f;
+                 UITapGestureRecognizer *getsture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goOrganDetialsViewController:)];
+                [instImageView addGestureRecognizer:getsture];
+                [instImageView setUserInteractionEnabled:YES];
+                NSNumber *orgId=[[instList objectAtIndex:i]objectForKey:@"id"];
+                [instImageView setTag:[orgId intValue]];
+                UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(0, width/3.8-width/15, instImageView.frame.size.width, width/15)];
+                [imageTitle setBackgroundColor:[UIColor colorWithRed:0.f/255.f green:0.f/255.f blue:0.f/255.f alpha:0.5]];
+                [imageTitle setTextAlignment:NSTextAlignmentCenter];
+                [imageTitle setFont:[UIFont systemFontOfSize:width/26.7]];
+                [imageTitle setTextColor:[UIColor whiteColor]];
+                [imageTitle setText:@"汉昌培训"];
+                [instImageView addSubview:imageTitle];
+                if ([inst objectForKey:@"biglogo"] && ![[inst objectForKey:@"biglogo"] isEqual:[NSNull null]]) {
+                    NSString *logo=[inst objectForKey:@"biglogo"];
+                    if(logo!=nil && ![logo isEqualToString:@""]&& ![logo isEqual:[NSNull null]])
+                    {
+                        [instImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+  
+                    }else{
+                        [instImageView setImage:[UIImage imageNamed:@"instlist_defalut"]];
+                    }
+                }else{
+                    [instImageView setImage:[UIImage imageNamed:@"instlist_defalut"]];
+                }
+                
+                if ([inst objectForKey:@"title"] && ![[inst objectForKey:@"title"] isEqual:[NSNull null]]) {
+                    [imageTitle setText:[NSString stringWithFormat:@"%@",[inst objectForKey:@"title"]]];
+                    
+                }
+                [cell addSubview:instImageView];
+                if (i==[instList count]-1) {
+                    CGRect frame=cell.frame;
+                    frame.size.height=instImageView.frame.origin.y+instImageView.frame.size.height+width/22.8;
+                    cell.frame=frame;
+                }
+                
+            }
+        }
+        
+    }
+    return cell;
+}
+-(void)onMoreClick:(id)sender{
+    
+//    NSString *ct=[inst objectForKey:@"title];
+//    NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
+//    [st setObject:ct forKey:@"biname"];
+
+    UIControl *control=(UIControl *)sender;
+    int indexrow=(int)control.tag;
+    OrganismListViewController *organismListViewController=[[OrganismListViewController alloc]init];
+    NSDictionary *dic=[httpOrgArray objectAtIndex:indexrow] ;
+    NSNumber *orgId=[dic objectForKey:@"id"];
+                  
+                  NSString *cb=[dic objectForKey:@"title"];
+                  NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
+                  [st setObject:cb forKey:@"biname"];
+
+        [organismListViewController setProjectID:orgId];
+        [self presentViewController:organismListViewController animated:YES completion:nil];
+}
+-(void)goOrganDetialsViewController:(UITapGestureRecognizer *)gestrue{
+    NSNumber *orgID=[NSNumber numberWithInt:(int)(gestrue.view.tag)];
+    
+    OrganDetailsViewController *projectListViewController=[[OrganDetailsViewController alloc]init];
+    [projectListViewController setAritcleId:orgID];
+    [self presentViewController:projectListViewController animated:YES completion:nil];
+
+    
+}
+-(void)goAllPorjectListViewController{
+    NSLog(@"goAllPorjectListViewController");
+    
+    //UIView *view=gestrue.v
+//    ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
+//    NSDictionary *dic=[httpProjectArray objectAtIndex:label.superID] ;
+//    NSNumber *orgId=[dic objectForKey:@"id"];
+//    
+//    NSArray *lesson=[dic objectForKey:@"lesson_group"];
+//    NSDictionary *data=[lesson objectAtIndex:label.subID];
+//    NSNumber *subId=[data objectForKey:@"id"];
+//    [projectListViewController setProjectID:orgId];
+//    [projectListViewController setProjectSubID:subId];
+//    [self presentViewController:projectListViewController animated:YES completion:nil];
+}
+-(void)goProjectListViewController:(UITapGestureRecognizer *)gestrue{
+    CustomLabel *label=(CustomLabel *)gestrue.view;
+    ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
+    NSDictionary *dic=[httpProjectArray objectAtIndex:label.superID] ;
+    NSNumber *orgId=[dic objectForKey:@"id"];
+    
+    NSArray *lesson=[dic objectForKey:@"lesson_group"];
+    NSDictionary *data=[lesson objectAtIndex:label.subID];
+    NSNumber *subId=[data objectForKey:@"id"];
+    [projectListViewController setTitleName:label.text];
+    NSLog(@"str1----------\n\n\n%@",str1);
+    [projectListViewController setProjectID:orgId];
+    [projectListViewController setProjectSubID:subId];
+    [self presentViewController:projectListViewController animated:YES completion:nil];
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%ld",(long)indexPath.row);
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    if (tableView.tag==0) {
+        int indexrow=(int)indexPath.row;
+        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
+        NSDictionary *str=[httpProjectArray objectAtIndex:indexrow];
+        if ([str objectForKey:@"id"]) {
+            NSNumber *number=[str objectForKey:@"id"];
+            [projectListViewController setProjectID:number];
+            [projectListViewController setProjectSubID:[NSNumber numberWithInt:0]];
+            
+        }
+        if ([str objectForKey:@"title"]) {
+            [projectListViewController setTitleName:[str objectForKey:@"title"]];
+            
+        }
+        [self presentViewController: projectListViewController animated:YES completion:nil];
+    }
+
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell;
+    
+    if (tableView.tag==0) {
+        cell = [self tableView:projectTableView cellForRowAtIndexPath:indexPath];
+        
+    }else if(tableView.tag==1){
+        cell = [self tableView:orgTableView cellForRowAtIndexPath:indexPath];
+    }
+    return cell.frame.size.height;
+    
+}
+-(void)getLessonGroup{
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [HttpHelper getLessonGroup:self success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    httpProjectArray=(NSArray *)model.result;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [projectTableView reloadData];
+                    });
+                    
+                    
+                }else{
+                    
+                }
+                [ProgressHUD dismiss];
+
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                [ProgressHUD dismiss];
+
+            }
+        }];
+        
+        
+    });
+}
+-(void)getInstList{
+    static NSString * const DEFAULT_LOCAL_AID = @"500100";
+    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+    NSNumber *aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [HttpHelper getInsetList:aid success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    httpOrgArray=(NSArray *)model.result;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [orgTableView reloadData];
+                    });
+                }else{
+                    
+                }
+                
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+            }
+        }];
+        
+        
+    });
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end
