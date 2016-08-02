@@ -19,7 +19,7 @@
 
 @property(strong,nonatomic)CustomTextField *cityLabel;
 @property(strong,nonatomic)CustomTextField *searchField;
-@property(strong,nonatomic)UILabel *msgLabel;
+@property(strong,nonatomic)UIImageView *msgLabel;
 @property(strong,nonatomic)UIScrollView *scrollview;
 @property(strong,nonatomic)UIPageControl *pageControl;
 @property(strong,nonatomic)NSTimer *timer;

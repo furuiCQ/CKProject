@@ -66,6 +66,9 @@
     int tok;
     UIPageControl *pag;
     NSTimer *timer3;
+    //
+    NSMutableArray *projectTableArray;
+
 }
 
 @end
@@ -111,12 +114,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     mainConnectCount=3;
     [self initTitle];
     tableArray = [[NSArray alloc]init];
-
+    
     localArray=[[NSArray alloc]init];
     localNumber=[[NSNumber alloc]init];
     [ProgressHUD show:@"加载中..."];
     locationManager = [[CLLocationManager alloc] init];
-     locationManager.delegate = self;
+    locationManager.delegate = self;
     // 设置定位精度
     // kCLLocationAccuracyNearestTenMeters:精度10米
     // kCLLocationAccuracyHundredMeters:精度100 米
@@ -124,13 +127,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     // kCLLocationAccuracyThreeKilometers:精度3000米
     // kCLLocationAccuracyBest:设备使用电池供电时候最高的精度
     // kCLLocationAccuracyBestForNavigation:导航情况下最高精度，一般要有外接电源时才能使用
-     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
     // distanceFilter是距离过滤器，为了减少对定位装置的轮询次数，位置的改变不会每次都去通知委托，而是在移动了足够的距离时才通知委托程序
     // 它的单位是米，这里设置为至少移动1000再通知委托处理更新;
-     locationManager.distanceFilter = 100.0f; // 如果设为kCLDistanceFilterNone，则每秒更新一次;
+    locationManager.distanceFilter = 100.0f; // 如果设为kCLDistanceFilterNone，则每秒更新一次;
     [locationManager startUpdatingLocation];
-
+    
     [self getHotLesson];
     [self creatAlertView];
     [self getMainSlider];
@@ -138,25 +141,25 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self initMainView];
     
     [self getCity];
-  
+    
 }
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     neloct=newLocation;
-
-//    NSLog(@"纬度:%f",oldLocation.coordinate.latitude);
-//    NSLog(@"经度:%f",oldLocation.coordinate.longitude);
+    
+    //    NSLog(@"纬度:%f",oldLocation.coordinate.latitude);
+    //    NSLog(@"经度:%f",oldLocation.coordinate.longitude);
     [manager stopUpdatingLocation];
-//    CLLocationCoordinate2D wgsPt = newLocation.coordinate;
-
-//    CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
- 
-//    //当使用模拟器定位在中国大陆以外地区，计算GCJ-02坐标还是返回WGS-84
-//    _pt1Lable.text = [NSString stringWithFormat:@"WGS-84(国际标准坐标)：\n %f,%f",wgsPt.latitude,wgsPt.longitude];
-//    _pt2Lable.text = [NSString stringWithFormat:@"GCJ-02(中国国测局坐标(火星坐标))：\n %f,%f",gcjPt.latitude,gcjPt.longitude];
-//    _pt3Lable.text = [NSString stringWithFormat:@"BD-09(百度坐标)：\n %f,%f",bdPt.latitude,bdPt.longitude];
+    //    CLLocationCoordinate2D wgsPt = newLocation.coordinate;
+    
+    //    CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
+    
+    //    //当使用模拟器定位在中国大陆以外地区，计算GCJ-02坐标还是返回WGS-84
+    //    _pt1Lable.text = [NSString stringWithFormat:@"WGS-84(国际标准坐标)：\n %f,%f",wgsPt.latitude,wgsPt.longitude];
+    //    _pt2Lable.text = [NSString stringWithFormat:@"GCJ-02(中国国测局坐标(火星坐标))：\n %f,%f",gcjPt.latitude,gcjPt.longitude];
+    //    _pt3Lable.text = [NSString stringWithFormat:@"BD-09(百度坐标)：\n %f,%f",bdPt.latitude,bdPt.longitude];
     // 停止位置更新
-   
+    
 }
 
 // 定位失误时触发
@@ -182,8 +185,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [titleView addSubview:contextLabel];
     
     
-    cityLabel=[[CustomTextField alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/5, titleHeight)];
-    [cityLabel setText:@"重庆市"];
+    cityLabel=[[CustomTextField alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/7, titleHeight)];
+    [cityLabel setText:@"重庆"];
+    [cityLabel setFont:[UIFont systemFontOfSize:15]];
     [cityLabel setTextColor:[UIColor whiteColor]];
     [cityLabel setEnabled:NO];
     [cityLabel setTextAlignment:NSTextAlignmentCenter];
@@ -191,42 +195,26 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [downView setFrame:CGRectMake(0, 0, 10, 7)];
     [cityLabel setRightView:downView];
     [cityLabel setRightViewMode:UITextFieldViewModeAlways];
-    
-    //    //新建查询视图
-    //    searchField=[[CustomTextField alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight*3/16, self.view.frame.size.width/2, titleHeight*5/8))];
-    //    searchField.delegate=self;
-    //    [searchField setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    //    [searchField.layer setCornerRadius:10.0f];
-    //    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 15, 2)];
-    //    [searchField setLeftView:view];
-    //    [searchField setLeftViewMode:UITextFieldViewModeAlways];
-    //    UIImageView *searchImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"search_logo"]];
-    //    [searchField setRightView:searchImageView];
-    //    [searchField setRightViewMode:UITextFieldViewModeAlways];
-    
-    
     //新建右上角的图形
-    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/20-self.view.frame.size.width/4.2, (titleHeight-self.view.frame.size.width/10)/2, self.view.frame.size.width/4.2, self.view.frame.size.width/10)];
+    msgLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/32-self.view.frame.size.width/11.8, (titleHeight-self.view.frame.size.width/11.8)/2, self.view.frame.size.width/11.8, self.view.frame.size.width/11.8)];
     UITapGestureRecognizer *uITapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showAlertView)];
     [msgLabel addGestureRecognizer:uITapGestureRecognizer];
     [msgLabel setUserInteractionEnabled:YES];
-    [msgLabel setText:@"蹭课时间表"];
-    [msgLabel setTextAlignment:NSTextAlignmentCenter];
-    [msgLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/26.7]];
-    [msgLabel setTextColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
-    [msgLabel setBackgroundColor:[UIColor whiteColor]];
-    [msgLabel.layer setCornerRadius:10.0f];
-    [msgLabel.layer setBorderWidth:1.0f];
-    msgLabel.layer.masksToBounds =YES;
-    [msgLabel.layer setBorderColor:[UIColor whiteColor].CGColor];
-    //    pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
-    //
-    //    [pointView setBackgroundColor:[UIColor redColor]];
-    //    pointView.layer.masksToBounds = YES;
-    //    pointView.layer.cornerRadius = (pointView.frame.size.width + 10) / 4;
-    //    [pointView setHidden:YES];
-    //    [msgLabel addSubview:pointView];
-    //
+    [msgLabel setImage:[UIImage imageNamed:@"calendar"]];
+
+    //新建查询视图
+    searchField=[[CustomTextField alloc]initWithFrame:(CGRectMake(cityLabel.frame.size.width+cityLabel.frame.origin.x, titleHeight*2/16, self.view.frame.size.width-cityLabel.frame.size.width-cityLabel.frame.origin.x-msgLabel.frame.size.width-self.view.frame.size.width/32*2, titleHeight*3/4))];
+    searchField.delegate=self;
+    [searchField setBackgroundColor:[UIColor whiteColor]];
+    [searchField.layer setCornerRadius:3.0f];
+    [searchField setFont:[UIFont systemFontOfSize:15]];
+    [searchField setPlaceholder:@"搜索你想蹭的课程"];
+    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 30,titleHeight*3/4)];
+    UIImageView *searchImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"search_logo"]];
+    [searchImageView setFrame:CGRectMake(10, 10, 12, 12)];
+    [view addSubview:searchImageView];
+    [searchField setLeftView:view];
+    [searchField setLeftViewMode:UITextFieldViewModeAlways];
     
     [titleView addSubview:cityLabel];
     [titleView addSubview:msgLabel];
@@ -242,7 +230,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     // totalCount = 1;
     
-    scrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, titleHeight+20, self.view.frame.size.width, self.view.frame.size.width/2.8)];
+    scrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, titleHeight+20, self.view.frame.size.width, self.view.frame.size.width/2)];
     
     //  CGRect bounds = scrollview.frame;  //获取界面区域
     
@@ -292,130 +280,185 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 -(void)initMainView{
     int width=self.view.frame.size.width;
-    //拨打客服按钮
-//    UIView *customerServiceView=[[UIView alloc]initWithFrame:CGRectMake(0, scrollview.frame.size.height+scrollview.frame.origin.y+5, width, width/4.5)];
-//    customerServiceView.backgroundColor=[UIColor grayColor];
-//    [customerServiceView setUserInteractionEnabled:YES];
-//    -----
-//    aimageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/15, 0, width/6, width/5)];
-//    [aimageView setImage:[UIImage imageNamed:@"新闻-头条.png"]];
-//    aimageView.contentMode=UIViewContentModeScaleAspectFill;
-//    UILabel *lb=[[UILabel alloc]initWithFrame:CGRectMake(aimageView.frame.origin.x+aimageView.frame.size.width+10, 0, width/100, customerServiceView.frame.size.height)];
-//    lb.backgroundColor=[UIColor grayColor];
-//    [customerServiceView addSubview:lb];
-//   //新闻头条
-//    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/indexnews"];
-//    NSURL *url=[NSURL URLWithString:str];
-//    NSURLRequest *request=[NSURLRequest requestWithURL:url];
-//    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-//        
-//        id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-//        
-//        db=[obj objectForKey:@"result"];
-//        //       NSLog(@"-------------")
-//        NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
-//        [st setObject:db forKey:@"nn"];
-//        NSLog(@"db----------------\n\n\n\n\n\n\n\\n\n\n\n%@",db);
-//        //        [acollectionView reloadData];
-//        [self.view setNeedsDisplay];
-//    }];
-//    NSLog(@"111111111111111:%li",db.count);
+    int view_y=scrollview.frame.origin.y+scrollview.frame.size.height;
+    
+    //青少年专区
+    UIView *youthView=[[UIView alloc]initWithFrame:CGRectMake(0, view_y, width/2.5,width/2.1)];
+    [youthView setBackgroundColor:[UIColor whiteColor]];
+    UITextField *youthtitleTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                          width/21.3, width/2.5-width/32, width/21.3)];
+    [youthtitleTextView setText:@"青少年专区"];
+    [youthtitleTextView setTextAlignment:NSTextAlignmentLeft];
+    [youthtitleTextView setFont:[UIFont systemFontOfSize:width/21.3]];
+    [youthView addSubview:youthtitleTextView];
+    
+    UITextField *youthcontentTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                          youthtitleTextView.frame.size.height+youthtitleTextView.frame.origin.y+
+                                                                            width/53, width/2.5-width/32, width/27)];
+    [youthcontentTextView setText:@"德智体美全面发展"];
+    [youthcontentTextView setTextColor:[UIColor grayColor]];
+    [youthcontentTextView setFont:[UIFont systemFontOfSize:width/32]];
+    [youthView addSubview:youthcontentTextView];
+    
+    UIImageView *youthImageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, width/2.1-width/4.5-width/16, width/2.5, width/4.5)];
+    [youthImageview setImage:[UIImage imageNamed:@"youth_image"]];
+    [youthView addSubview:youthImageview];
+    [sc addSubview:youthView];
+    //育儿
+    UIView *childView=[[UIView alloc]initWithFrame:CGRectMake(youthView.frame.size.width+1, view_y, width-youthView.frame.size.width,width/5.5)];
+    [childView setBackgroundColor:[UIColor whiteColor]];
+    UITextField *childtitleTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                            width/21.3, width/2.5-width/32, width/21.3)];
+    [childtitleTextView setText:@"育婴早教"];
+    [childtitleTextView setTextAlignment:NSTextAlignmentLeft];
+    [childtitleTextView setFont:[UIFont systemFontOfSize:width/21.3]];
+    [childView addSubview:childtitleTextView];
+    
+    UITextField *childcontentTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                              childtitleTextView.frame.size.height+childtitleTextView.frame.origin.y+
+                                                                              width/53, width/2.5-width/32, width/27)];
+    [childcontentTextView setText:@"给宝贝找一个放心的家"];
+    [childcontentTextView setTextColor:[UIColor grayColor]];
+    [childcontentTextView setFont:[UIFont systemFontOfSize:width/32]];
+    [childView addSubview:childcontentTextView];
+    
+    UIImageView *childimageview=[[UIImageView alloc]initWithFrame:CGRectMake(childView.frame.size.width-width/4.8,(width/5.5-width/7)/2, width/4.8, width/7)];
+    [childimageview setImage:[UIImage imageNamed:@"child_image"]];
+    [childView addSubview:childimageview];
+    [sc addSubview:childView];
+    //技能
+    UIView *skillView=[[UIView alloc]initWithFrame:CGRectMake(youthView.frame.size.width+1, view_y+childView.frame.size.height+1, width/3.2,width/2.1-childView.frame.size.height-1)];
+    [skillView setBackgroundColor:[UIColor whiteColor]];
+    UITextField *skilltitleTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                 width/35.5, width/2.5-width/32, width/21.3)];
+    [skilltitleTextView setText:@"技能满分"];
+    [skilltitleTextView setTextAlignment:NSTextAlignmentLeft];
+    [skilltitleTextView setFont:[UIFont systemFontOfSize:width/21.3]];
+    [skillView addSubview:skilltitleTextView];
+    
+    UITextField *skillcontentTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                   skilltitleTextView.frame.size.height+skilltitleTextView.frame.origin.y+
+                                                                                   width/53, width/2.5-width/32, width/27)];
+    [skillcontentTextView setText:@"各种专业技能走起"];
+    [skillcontentTextView setTextColor:[UIColor grayColor]];
+    [skillcontentTextView setFont:[UIFont systemFontOfSize:width/32]];
+    [skillView addSubview:skillcontentTextView];
+    
+    UIImageView *skillimageview=[[UIImageView alloc]initWithFrame:CGRectMake((skillView.frame.size.width-width/4)/2,skillView.frame.size.height-width/6.3, width/4, width/6.3)];
+    [skillimageview setImage:[UIImage imageNamed:@"skill_image"]];
+    [skillView addSubview:skillimageview];
+    [sc addSubview:skillView];
+    
+    //育儿
+    UIView *girlView=[[UIView alloc]initWithFrame:CGRectMake(skillView.frame.size.width+skillView.frame.origin.x+1, skillView.frame.origin.y, width-skillView.frame.size.width-skillView.frame.origin.x-1,width/2.1-childView.frame.size.height-1)];
+    [girlView setBackgroundColor:[UIColor whiteColor]];
+    UITextField *girltitleTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                width/35.5, width/2.5-width/32, width/21.3)];
+    [girltitleTextView setText:@"女生专区"];
+    [girltitleTextView setTextAlignment:NSTextAlignmentLeft];
+    [girltitleTextView setFont:[UIFont systemFontOfSize:width/21.3]];
+    [girlView addSubview:girltitleTextView];
+    
+    
+    UIImageView *girlimageview=[[UIImageView alloc]initWithFrame:CGRectMake(girlView.frame.size.width-width/6.9,girlView
+                                                                            .frame.size.height-width/4.8, width/6.9, width/4.8)];
+    [girlimageview setImage:[UIImage imageNamed:@"girl_image"]];
+    [girlView addSubview:girlimageview];
+    
+    UITextField *girlcontentTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                  girltitleTextView.frame.size.height+girltitleTextView.frame.origin.y+
+                                                                                  width/53, width/2.5-width/32, width/27)];
+    [girlcontentTextView setText:@"点我变女神"];
+    [girlcontentTextView setTextColor:[UIColor grayColor]];
+    [girlcontentTextView setFont:[UIFont systemFontOfSize:width/27]];
+    [girlView addSubview:girlcontentTextView];
+
+    [sc addSubview:girlView];
+    
+    //K12教育
+    UIView *k12eduView=[[UIView alloc]initWithFrame:CGRectMake(0,youthView.frame.size.height+youthView.frame.origin.y+width/40, width/2-1,width/5.3)];
+    [k12eduView setBackgroundColor:[UIColor whiteColor]];
+    UITextField *k12edutitleTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                  width/21.3, width/2.5-width/32, width/21.3)];
+    [k12edutitleTextView setText:@"K12教育"];
+    [k12edutitleTextView setTextAlignment:NSTextAlignmentLeft];
+    [k12edutitleTextView setFont:[UIFont systemFontOfSize:width/21.3]];
+    [k12eduView addSubview:k12edutitleTextView];
+    
+    UITextField *k12educontentTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                    k12edutitleTextView.frame.size.height+k12edutitleTextView.frame.origin.y+
+                                                                                    width/53, width/2.5-width/32, width/27)];
+    [k12educontentTextView setText:@"基础教育一点通"];
+    [k12educontentTextView setTextColor:[UIColor grayColor]];
+    [k12educontentTextView setFont:[UIFont systemFontOfSize:width/32]];
+    [k12eduView addSubview:k12educontentTextView];
+    
+    UIImageView *k12eduimageview=[[UIImageView alloc]initWithFrame:CGRectMake(k12eduView.frame.size.width-width/5.6-width/24,width/5.3-width/5.8, width/5.6, width/5.8)];
+    [k12eduimageview setImage:[UIImage imageNamed:@"k12edu_image"]];
+    [k12eduView addSubview:k12eduimageview];
+    [sc addSubview:k12eduView];
+    //生活体验
+    UIView *lifeView=[[UIView alloc]initWithFrame:CGRectMake(k12eduView.frame.size.width+1, youthView.frame.size.height+youthView.frame.origin.y+width/40,  width/2,width/5.3)];
+    [lifeView setBackgroundColor:[UIColor whiteColor]];
+    UITextField *lifetitleTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                width/21.3, width/2.5-width/32, width/21.3)];
+    [lifetitleTextView setText:@"生活体验"];
+    [lifetitleTextView setTextAlignment:NSTextAlignmentLeft];
+    [lifetitleTextView setFont:[UIFont systemFontOfSize:width/21.3]];
+    [lifeView addSubview:lifetitleTextView];
+    
+    UITextField *lifecontentTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
+                                                                                  lifetitleTextView.frame.size.height+lifetitleTextView.frame.origin.y+
+                                                                                  width/53, width/2.5-width/32, width/27)];
+    [lifecontentTextView setText:@"精彩生活从这里开始"];
+    [lifecontentTextView setTextColor:[UIColor grayColor]];
+    [lifecontentTextView setFont:[UIFont systemFontOfSize:width/32]];
+    [lifeView addSubview:lifecontentTextView];
+    //83 × 111
+    UIImageView *lifeimageview=[[UIImageView alloc]initWithFrame:CGRectMake(lifeView.frame.size.width-width/8-width/24,(width/5.5-width/5.7)/2, width/8, width/5.7)];
+    [lifeimageview setImage:[UIImage imageNamed:@"life_image"]];
+    [lifeView addSubview:lifeimageview];
+    [sc addSubview:lifeView];
+
+    
+    
+    
+//    int viewWidth=(width-width/640)/2;
+//    int viewHeight=width/5.3;
+//    int x=(width-width/640)/2+width/320;
+//    int y=scrollview.frame.origin.y+scrollview.frame.size.height+width/64;
+//    NSArray *imageArray=[[NSArray alloc]initWithObjects:@"teen",@"sprint",@"skill",@"girl",@"k12",@"生活体验",nil];
+//    NSArray *titleArray=[[NSArray alloc]initWithObjects:@"青少年专区",@"育婴早教",@"技能满分",@"女生专属",@"k12",@"生活体验",nil];
+//    NSArray *contentArray=[[NSArray alloc]initWithObjects:@"德智体美全面发展",@"给宝贝找一个放心的",@"各种专业技能走起",@"点我变女神",@"基础教育一点通",@"精彩生活，从这里开始",nil];
 //    
-//    NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
-//    NSArray *ary=[st objectForKey:@"nn"];
-//    
-//    sb=[[UIScrollView alloc]initWithFrame:CGRectMake(aimageView.frame.size.width+aimageView.frame.origin.x+20, 5, width-aimageView.frame.size.width-50, customerServiceView.frame.size.height-10)];
-//    sb.backgroundColor=[UIColor whiteColor];
-//    sb.contentSize=CGSizeMake(sb.frame.size.width, ary.count/2*sb.frame.size.height);
-//    sb.pagingEnabled=YES;
-//    
-//    NSLog(@"arycount:%li",ary.count);
-//    for (int i=0; i<ary.count; i++) {
-//        UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(0, i* (sb.frame.size.height/2.1), sb.frame.size.width, sb.frame.size.height/2.1)];
-//        NSDictionary *bt=[ary objectAtIndex:i];
-//        lab.text=[bt objectForKey:@"title"];
-//        lab.font=[UIFont systemFontOfSize:width/20];
-//        lab.textColor=[UIColor blackColor];
-//        
-//        NSLog(@"333333333--%@",lab.text);
-//        [sb addSubview:lab];
+//    chasetArray=[[NSMutableArray alloc]init];
+//    for(int i=0;i<6;i++){
+//        CharesectionView *subView=[[CharesectionView alloc]initWithFrame:CGRectMake((i%2)*x, y+(i/2)*(width/320+viewHeight),viewWidth, viewHeight)];
+//        CGRect frame=self.view.frame;
+//        [subView initView:&frame withTag:i];
+//        [subView.iconView setImage:[UIImage imageNamed:[imageArray objectAtIndex:i]]];
+//        [subView.titleLabel setText:[titleArray objectAtIndex:i]];
+//        [subView.contentLabel setText:[contentArray objectAtIndex:i]];
+//        [subView setUserInteractionEnabled:YES];
+//        [subView addTarget:self action:@selector(menuGesture:) forControlEvents:UIControlEventTouchUpInside];
+//        [subView setTag:i];
+//        [chasetArray addObject:subView];
+//        [sc addSubview:subView];
 //        
 //    }
-//    sb.userInteractionEnabled = YES;
-//    //创建tap手势
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tz)];
-//    [sb addGestureRecognizer:tap];
-//    [customerServiceView addSubview:sb];
-//    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(nextxinwen) userInfo:nil repeats:YES];
-//    --------------------------------------------
-//    --------------------------
+        [self getslid:lifeView];
+//    CharesectionView *subView=(CharesectionView *)[chasetArray lastObject];
+  
+    
+        [self initHotProjectTableView:lifeView];
+        [self getCharsection];
     
     
-    
-    
-    
-    
-    
-//
-//    //创建uicollectionview空间
-//    UICollectionViewFlowLayout *layout=[[ UICollectionViewFlowLayout alloc ] init ];
-//    //创建一屏的视图大小
-//    
-//    acollectionView=[[ UICollectionView alloc ] initWithFrame :CGRectMake(aimageView.frame.origin.x+aimageView.frame.size.width+20 ,0, width/1.8,width/4) collectionViewLayout :layout];
-//   
-//    acollectionView. backgroundColor =[ UIColor clearColor ];
-//
-//    acollectionView. delegate = self ;
-//    
-//    acollectionView. dataSource = self ;
-////    acollectionView.
-//    [acollectionView registerNib:[UINib nibWithNibName:@"teseCell" bundle:nil] forCellWithReuseIdentifier:@"acell"];
-//    
-//    [ customerServiceView addSubview :acollectionView];
-//    UITapGestureRecognizer *callCustomerServiceGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callCustomerService)];
-//    [customerServiceView addGestureRecognizer:callCustomerServiceGesture];
-//    [customerServiceView setBackgroundColor:[UIColor whiteColor]];
-//    
-//    [customerServiceView addSubview:aimageView];
-//    [customerServiceView addSubview:acollectionView];
-    // [customerServiceView addSubview:label];
-//    --
-//    [sc addSubview:customerServiceView];
-    
-    int viewWidth=(width-width/640)/2;
-    int viewHeight=width/5.3;
-    int x=(width-width/640)/2+width/320;
-    int y=scrollview.frame.origin.y+scrollview.frame.size.height+width/64;
-    NSArray *imageArray=[[NSArray alloc]initWithObjects:@"teen",@"sprint",@"skill",@"girl",@"k12",@"生活体验",nil];
-    NSArray *titleArray=[[NSArray alloc]initWithObjects:@"青少年专区",@"育婴早教",@"技能满分",@"女生专属",@"k12",@"生活体验",nil];
-    NSArray *contentArray=[[NSArray alloc]initWithObjects:@"德智体美全面发展",@"给宝贝找一个放心的",@"各种专业技能走起",@"点我变女神",@"基础教育一点通",@"精彩生活，从这里开始",nil];
-    
-    chasetArray=[[NSMutableArray alloc]init];
-    for(int i=0;i<6;i++){
-        CharesectionView *subView=[[CharesectionView alloc]initWithFrame:CGRectMake((i%2)*x, y+(i/2)*(width/320+viewHeight),viewWidth, viewHeight)];
-        CGRect frame=self.view.frame;
-        [subView initView:&frame withTag:i];
-        [subView.iconView setImage:[UIImage imageNamed:[imageArray objectAtIndex:i]]];
-        [subView.titleLabel setText:[titleArray objectAtIndex:i]];
-        [subView.contentLabel setText:[contentArray objectAtIndex:i]];
-        [subView setUserInteractionEnabled:YES];
-        [subView addTarget:self action:@selector(menuGesture:) forControlEvents:UIControlEventTouchUpInside];
-        [subView setTag:i];
-        [chasetArray addObject:subView];
-        [sc addSubview:subView];
-        
-    }
-      [self getslid];
-     CharesectionView *subView=(CharesectionView *)[chasetArray lastObject];
-    [self initHotProjectTableView:subView];
-    [self getCharsection];
-    
-
 }
 //新闻头条的数据
--(void)getslid
-{int width=self.view.frame.size.width;
-
+-(void)getslid:(UIView *)subView{
+    int width=self.view.frame.size.width;
+    
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [HttpHelper getXW:self success:^(HttpModel *model){
@@ -424,23 +467,23 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     myDelegate.model=model;
-//                    customServiceNumber=model.custom_tel;
+                    //                    customServiceNumber=model.custom_tel;
                     dispatch_async(dispatch_get_main_queue(), ^{
-//                        connectCount=3;
+                        //                        connectCount=3;
                         xws=(NSArray *)model.result;
-                        CharesectionView *subView=(CharesectionView *)[chasetArray lastObject];
-                        xinwen=[[UIView alloc]initWithFrame:CGRectMake(0, subView.frame.size.height+subView.frame.origin.y+1, width, width/4.2)];
-                        xinwen.backgroundColor=[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0];
-//                        aimageView.layer.cornerRadius=3.0f;
+                       // CharesectionView *subView=(CharesectionView *)[chasetArray lastObject];
+                        xinwen=[[UIView alloc]initWithFrame:CGRectMake(0, subView.frame.size.height+subView.frame.origin.y+1+width/26.7, width, width/4.2)];
+                        [xinwen setBackgroundColor:[UIColor whiteColor]];
+                        //                        aimageView.layer.cornerRadius=3.0f;
                         UIView *vo=[[UIView alloc]initWithFrame:CGRectMake(4, 4, width/5, xinwen.frame.size.height/1.1)];
                         vo.backgroundColor=[UIColor whiteColor];
                         aimageView=[[UIImageView alloc]initWithFrame:CGRectMake(0,width/36, width/5, xinwen.frame.size.height/1.4)];
-                        [aimageView setImage:[UIImage imageNamed:@"新闻-头条.png"]];
-//                        aimageView.backgroundColor=[UIColor grayColor];
+                        [aimageView setImage:[UIImage imageNamed:@"news_top"]];
+                        //                        aimageView.backgroundColor=[UIColor grayColor];
                         aimageView.backgroundColor=[UIColor whiteColor];
                         aimageView.contentMode=UIViewContentModeScaleAspectFit;
                         
-                       
+                        
                         [vo addSubview:aimageView];
                         [xinwen addSubview:vo];
                         UIView *ip=[[UIView alloc]initWithFrame:CGRectMake(vo.frame.origin.x+vo.frame.size.width+3, 4,  width-vo.frame.size.width-3, xinwen.frame.size.height/1.1)];
@@ -460,33 +503,31 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                         [sc addSubview:xinwen];
                         tok=(int)(xws.count/2);
                         pag.numberOfPages=tok;
-//                        NSLog(@"tok----%i",tok);
+                        //                        NSLog(@"tok----%i",tok);
                         for (int i=0; i<xws.count; i++) {
-                                    UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(width/20, i* (st.frame.size.height/2-1), st.frame.size.width, st.frame.size.height/2)];
-                                    NSDictionary *bt=[xws objectAtIndex:i];
+                            UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(width/20, i* (st.frame.size.height/2-1), st.frame.size.width, st.frame.size.height/2)];
+                            NSDictionary *bt=[xws objectAtIndex:i];
                             lab.backgroundColor=[UIColor whiteColor];
-                                    lab.text=[bt objectForKey:@"title"];
-                                    lab.font=[UIFont systemFontOfSize:self.view.frame.size.width/20];
-                                    lab.textColor=[UIColor blackColor];
-                                    
-//                                    NSLog(@"333333333--%@",lab.text);
-                                    [st addSubview:lab];
-                                    
-                             }
+                            lab.text=[bt objectForKey:@"title"];
+                            lab.font=[UIFont systemFontOfSize:self.view.frame.size.width/20];
+                            lab.textColor=[UIColor blackColor];
+                            [st addSubview:lab];
+                            
+                        }
                         pag=[[UIPageControl alloc]initWithFrame:CGRectMake(0, 10, 30, 30)];
                         pag.numberOfPages = tok;//总的图片页数
                         
                         [st addSubview:pag];
-
-//                        st.delegate=self;
+                        
+                        //                        st.delegate=self;
                         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tz)];
                         [st addGestureRecognizer:tap];
                         st.delegate=self;
                         //------------------
-//                        NSLog(@"page.curr:%li",pag.currentPage);
-           timer3= [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(nextxinwen) userInfo:nil repeats:YES];
-              
-//                       ---------------
+                        //                        NSLog(@"page.curr:%li",pag.currentPage);
+                        timer3= [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(nextxinwen) userInfo:nil repeats:YES];
+                        
+                        //                       ---------------
                         
                         
                     });
@@ -512,30 +553,21 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             }
         }];
     });
-
-
-
-
-
-
-
-
-
 }
 
 -(void)tz{
-
-       ViewController *ma=[[ViewController alloc]init];
-        [self presentViewController:ma animated:YES completion:nil];
-
-
-
+    
+    ViewController *ma=[[ViewController alloc]init];
+    [self presentViewController:ma animated:YES completion:nil];
+    
+    
+    
 }
 
 -(void)nextxinwen
 {
     int page = (int)pag.currentPage;
-//    NSLog(@"page----%i",page);
+    //    NSLog(@"page----%i",page);
     if (page == tok-1) {
         page = 0;
     }else
@@ -544,13 +576,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     
     //  滚动scrollview
-   
-  
-   
+    
+    
+    
     CGFloat x = page*st.frame.size.height;
     st.contentOffset = CGPointMake(0, x);
-
-
+    
+    
 }
 -(void)getCharsection{
     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
@@ -561,7 +593,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [HttpHelper getCharsection:localNumber success:^(HttpModel *model){
-//            NSLog(@"%@",model.message);
+            //            NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -603,7 +635,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
 }
 -(void)menuGesture:(id)sender{
-//    NSLog(@"menuGesture");
+    //    NSLog(@"menuGesture");
     CharesectionView *view=(CharesectionView *)sender;
     if (view.sqlString!=nil && ![view.sqlString isEqual:[NSNull null]] && ![view.sqlString isEqualToString:@""] ) {
         ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
@@ -634,37 +666,43 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     bottomHeight=49;
     
     int width=self.view.frame.size.width;
-     CharesectionView *subView=(CharesectionView *)[chasetArray lastObject];
+  //  CharesectionView *subView=(CharesectionView *)[chasetArray lastObject];
     mainTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
                                                                view.frame.size.height+view.frame.origin.y+width/4,
                                                                self.view.frame.size.width,
-                                                              self.view.frame.size.height*3.8)];
+                                                               self.view.frame.size.height*3.8)];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
     [mainTableView setBackgroundColor:[UIColor whiteColor]];
     mainTableView.dataSource                        = self;
     mainTableView.delegate                          = self;
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
-    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, subView.frame.origin.y+subView.frame.size.height+2, width, width/9)];
-    [headerView setBackgroundColor:[UIColor whiteColor]];
-    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(width/40, width/16, width/3, 1)];
-    [lineView setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
-    UIImageView *logoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(lineView.frame.size.width+lineView.frame.origin.x+width/26, width/26, width/21, width/21)];
-    [logoImageView setImage:[UIImage imageNamed:@"hot"]];
-    [headerView addSubview:logoImageView];
-    mainTableView.scrollEnabled=NO;
-    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(logoImageView.frame.size.width+logoImageView.frame.origin.x+width/160
-                                                            , width/22.8, width/26.7*6, width/26.7)];
-    [label setText:@"热门体验课"];
-    [label setTextColor:[UIColor colorWithRed:230.f/255.f green:0.f/255.f blue:18.f/255.f alpha:1.0]];
-    [label setFont:[UIFont systemFontOfSize:width/26.7]];
-    [headerView addSubview:label];
     
-    UIView *line1View=[[UIView alloc]initWithFrame:CGRectMake(label.frame.size.width+label.frame.origin.x+width/26, width/16, width/3, 1)];
-    [line1View setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
     
-    [headerView addSubview:lineView];
-    [headerView addSubview:line1View];
+    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, view.frame.origin.y+view.frame.size.height+2, width, width/8.8)];
+    [headerView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
+    [self initSwitchBtn:headerView];
+//    [headerView setBackgroundColor:[UIColor whiteColor]];
+//    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(width/40, width/16, width/3, 1)];
+//    [lineView setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
+//    UIImageView *logoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(lineView.frame.size.width+lineView.frame.origin.x+width/26, width/26, width/21, width/21)];
+//    [logoImageView setImage:[UIImage imageNamed:@"hot"]];
+//    [headerView addSubview:logoImageView];
+//    mainTableView.scrollEnabled=NO;
+//    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(logoImageView.frame.size.width+logoImageView.frame.origin.x+width/160
+//                                                            , width/22.8, width/26.7*6, width/26.7)];
+//    [label setText:@"热门体验课"];
+//    [label setTextColor:[UIColor colorWithRed:230.f/255.f green:0.f/255.f blue:18.f/255.f alpha:1.0]];
+//    [label setFont:[UIFont systemFontOfSize:width/26.7]];
+//    [headerView addSubview:label];
+//    
+//    UIView *line1View=[[UIView alloc]initWithFrame:CGRectMake(label.frame.size.width+label.frame.origin.x+width/26, width/16, width/3, 1)];
+//    [line1View setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
+//    
+//    [headerView addSubview:lineView];
+//    [headerView addSubview:line1View];
     [mainTableView setTableHeaderView:headerView];
+  
+    
     [sc addSubview:mainTableView];
     //    //添加刷新
     //    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
@@ -691,6 +729,54 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     //
     
 }
+-(void)initSwitchBtn:(UIView *)superView{
+    int width=self.view.frame.size.width;
+//    UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
+//    [topView setBackgroundColor:[UIColor whiteColor]];
+//    [self.view addSubview:topView];
+    NSArray *array = [NSArray arrayWithObjects:@"推荐",@"热门",@"最新",@"附近", nil];
+    projectTableArray=[[NSMutableArray alloc]init];
+    for (int i=0; i<[array count]; i++) {
+        TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count], titleHeight)];
+        [topBar addTarget:self action:@selector(topBarOnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [topBar setTag:i];
+        [topBar setText:[array objectAtIndex:i]];
+        [topBar initView];
+        if(i==[array count]-1){
+            [topBar setIsEnd:YES];
+        }
+        if(i==0){
+            [topBar setChecked:YES];
+            [topBar setIconColor:[UIColor redColor]];
+            [topBar setTextColor:[UIColor redColor]];
+        }else{
+            [topBar setChecked:NO];
+            [topBar setIconColor:[UIColor blackColor]];
+            [topBar setTextColor:[UIColor blackColor]];
+
+        }
+        [topBar setLabelFont:[UIFont systemFontOfSize:width/22.8]];
+        [topBar setLineViewFill];
+        [superView addSubview:topBar];
+        [projectTableArray addObject:topBar];
+    }
+}
+-(void)topBarOnClick:(id)sender{
+    TopBar *topBar=(TopBar *)sender;
+    for (NSObject *object in projectTableArray) {
+        TopBar *b=(TopBar *)object;
+        if(b.tag!=topBar.tag){
+            [b setChecked:NO];
+            [b setIconColor:[UIColor blackColor]];
+            [b setTextColor:[UIColor blackColor]];
+        }else{
+            [b setChecked:YES];
+            [b setIconColor:[UIColor redColor]];
+            [b setTextColor:[UIColor redColor]];
+            
+        }
+    }
+}
 -(void)showAddress{
     UIAlertView  *at=[[UIAlertView alloc]initWithTitle:@"提示" message:@"现未开通其他城市" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
     [at show];
@@ -698,8 +784,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
 }
 //-(void)showAddress{
-//    
-//    
+//
+//
 //    int width=self.view.frame.size.width;
 //    int hegiht=self.view.frame.size.height;
 //    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
@@ -707,7 +793,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
 //    [titleView setBackgroundColor:[UIColor whiteColor]];
 //    [view addSubview:titleView];
-//    
+//
 //    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
 //    [cancelLabel setText:@"取消"];
 //    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
@@ -718,16 +804,16 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
 //    [cancelLabel addGestureRecognizer:cancelGesture];
 //    [titleView addSubview:cancelLabel];
-//    
-//    
+//
+//
 //    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
 //    [titleLabel setText:@"区域"];
 //    [titleLabel setTextAlignment:NSTextAlignmentCenter];
 //    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
 //    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
 //    [titleView addSubview:titleLabel];
-//    
-//    
+//
+//
 //    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
 //    //    [confirmLabel setText:@"确定"];
 //    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
@@ -737,9 +823,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
 //    //    [confirmLabel addGestureRecognizer:confrimGesture];
 //    //    [titleView addSubview:confirmLabel];
-//    
-//    
-//    
+//
+//
+//
 //    addTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
 //                                                              width/10+2+width/40+width/46,
 //                                                              view.frame.size.width,
@@ -749,7 +835,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //    addTableView.delegate                          = self;
 //    [addTableView setTag:1];
 //    [view addSubview:addTableView];
-//    
+//
 //   	twoLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
 //    twoLayout.width=view.frame.size.width;
 //    twoLayout.contentView=view;
@@ -765,11 +851,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //        [addTableView scrollToRowAtIndexPath:idxPath
 //                            atScrollPosition:UITableViewScrollPositionTop
 //                                    animated:NO];
-//        
+//
 //    }
-//    
-//    
-//    
+//
+//
+//
 //}
 #pragma mark - ECDrawerLayoutDelegate
 - (void) drawerLayoutDidOpen:(id)sender
@@ -1058,7 +1144,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         
         UILabel *openLabel=[[UILabel alloc]initWithFrame:CGRectMake(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/20, proejctImageView.frame.size.height+proejctImageView.frame.origin.y-width/29, width/29*6, width/29)];
         openLabel.layer.cornerRadius=3.0f;
-         openLabel.clipsToBounds = YES;
+        openLabel.clipsToBounds = YES;
         openLabel.backgroundColor=[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0];
         [openLabel setText:@"适应年龄段:"];
         [openLabel setTextColor:[UIColor colorWithRed:165.f/255.f green:165.f/255.f blue:165.f/255.f alpha:1.0]];
@@ -1074,25 +1160,25 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [openTimeLabel setFont:[UIFont systemFontOfSize:width/29]];
         [subview addSubview:openTimeLabel];
         if([str objectForKey:@"grade"] && ![[str objectForKey:@"grade"] isEqual:[NSNull null]]){
-//            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-           NSString *created=[str objectForKey:@"grade"];
-//            NSString *timeString=[f stringFromNumber:created];
-//            NSNumberFormatter *fomate=[[NSNumberFormatter alloc]init];
-//            NSNumber *number=[fomate numberFromString:timeString];
-//            NSInteger myInteger = [number integerValue];
-//            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-//            [formatter setDateStyle:NSDateFormatterMediumStyle];
-//            [formatter setTimeStyle:NSDateFormatterShortStyle];
-//            [formatter setDateFormat:@"MM月dd号"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
-//            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
-//            [formatter setTimeZone:timeZone];
-//            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
-//            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+            //            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            NSString *created=[str objectForKey:@"grade"];
+            //            NSString *timeString=[f stringFromNumber:created];
+            //            NSNumberFormatter *fomate=[[NSNumberFormatter alloc]init];
+            //            NSNumber *number=[fomate numberFromString:timeString];
+            //            NSInteger myInteger = [number integerValue];
+            //            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+            //            [formatter setDateStyle:NSDateFormatterMediumStyle];
+            //            [formatter setTimeStyle:NSDateFormatterShortStyle];
+            //            [formatter setDateFormat:@"MM月dd号"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+            //            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+            //            [formatter setTimeZone:timeZone];
+            //            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+            //            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
             [openTimeLabel setText:created];
         }
         
         UILabel *sut=[[UILabel alloc]initWithFrame:CGRectMake(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/20, proejctImageView.frame.size.height-width/12, proejctImageView.frame.size.width, width/15)];
-//        sut.backgroundColor=[UIColor grayColor];
+        //        sut.backgroundColor=[UIColor grayColor];
         
         double price=[[str objectForKey:@"price"]doubleValue];
         if (price==0) {
@@ -1105,7 +1191,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             [sut setText:[NSString stringWithFormat:@"¥%@",[str objectForKey:@"price"]]];
             [sut setTextColor:[UIColor orangeColor]];
             [sut  setFont:[UIFont systemFontOfSize:width/20]];
-        
+            
         }
         
         [subview addSubview:sut];
@@ -1132,27 +1218,27 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
             [stand setObject: at forKey:@"lttt"];
             [stand setObject:ng forKey:@"nggg"];
-//            + (CLLocationCoordinate2D)bd09ToGcj02:(CLLocationCoordinate2D)location;
-         CLLocationCoordinate2D coordinate;
+            //            + (CLLocationCoordinate2D)bd09ToGcj02:(CLLocationCoordinate2D)location;
+            CLLocationCoordinate2D coordinate;
             coordinate.latitude=[lat floatValue];
             
             coordinate.longitude=[lng floatValue];
-      
-             CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-//               CLLocationCoordinate2D wgsPt = newLocation.coordinate;
-//            
-//               CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
             
-           
+            CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
+            //               CLLocationCoordinate2D wgsPt = newLocation.coordinate;
+            //
+            //               CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
+            
+            
             double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
             
-             NSLog(@"---------\n\n\n lng:%f\n %f ",coords3.longitude,coords3.latitude);
+            NSLog(@"---------\n\n\n lng:%f\n %f ",coords3.longitude,coords3.latitude);
             if(distance>0.0){
                 if (distance/1000>1) {
-            [distanceLabel setText:[NSString stringWithFormat:@"%.2f千米",(float)distance/1000]];
+                    [distanceLabel setText:[NSString stringWithFormat:@"%.2f千米",(float)distance/1000]];
                 }else if (distance/1000<1 && distance/1000>0.5){
-                  [distanceLabel setText:[NSString stringWithFormat:@"%d米",(int)distance]];
-
+                    [distanceLabel setText:[NSString stringWithFormat:@"%d米",(int)distance]];
+                    
                 }else if (distance/1000<0.5){
                     [distanceLabel setText:@"<500米"];
                 }
@@ -1190,7 +1276,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //获取新闻头条
 -(void)getnews
 {
-//http://211.149.190.90:90/api/indexnews
+    //http://211.149.190.90:90/api/indexnews
     NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/indexnews"];
     NSURL *url=[NSURL URLWithString:str];
     NSURLRequest *request=[NSURLRequest requestWithURL:url];
@@ -1199,25 +1285,25 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
         
         db=[obj objectForKey:@"result"];
-//       NSLog(@"-------------")
+        //       NSLog(@"-------------")
         
         NSLog(@"db----------------\n\n\n\n\n\n\n\\n\n\n\n%@",db);
-//        [acollectionView reloadData];
+        //        [acollectionView reloadData];
         [self.view setNeedsDisplay];
     }];
-
-
+    
+    
 }
 
 
 
 -(void)onMoreClick:(id)sender{
-//    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
-//    [def setObject: forKey:@"tite"];
+    //    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+    //    [def setObject: forKey:@"tite"];
     
     
     
-       UIControl *control=(UIControl *)sender;
+    UIControl *control=(UIControl *)sender;
     int indexrow=(int)control.tag;
     ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
     NSDictionary *str=[tableArray objectAtIndex:indexrow];
@@ -1590,7 +1676,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //    NSNumber *userId=[NSNumber numberWithInt:0];
 //    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 //    dispatch_async(queue, ^{
-//    
+//
 //        [HttpHelper getHotLesson:userId success:^(HttpModel *model){
 //            NSLog(@"%@",model.message);
 //            dispatch_async(dispatch_get_main_queue(), ^{
@@ -1599,39 +1685,39 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //                    myDelegate.model=model;
 //                    tableArray=(NSArray *)model.result;
 //                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        
+//
 //                        [mainTableView reloadData];
 //                        _isLoading=false;
-//                        
+//
 //                    });
-//                    
-//                    
+//
+//
 //                }
 //                [refreshHeader endRefreshing];
 //                [ProgressHUD dismiss];
-//                
+//
 //            });
 //        }failure:^(NSError *error){
 //            if (error.userInfo!=nil) {
 //                NSLog(@"%@",error.userInfo);
-//                
+//
 //            }
 //            [refreshHeader endRefreshing];
 //            [ProgressHUD dismiss];
-//            
+//
 //        }];
-//        
-//        
+//
+//
 //    });
-//    
-//    
+//
+//
 //}
 -(void)getHotLesson{
     NSNumber *userId=[NSNumber numberWithInt:0];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
-       
+        
         NSNumber *ar=[stand objectForKey:@"lttt"];
         NSNumber *ngg=[stand objectForKey:@"nggg"];
         if (ar==NULL&&ngg==NULL) {
@@ -1642,7 +1728,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             ar=[NSNumber numberWithDouble:29.5];
             ngg=[NSNumber numberWithDouble:106.5];
         }
-      
+        
         NSLog(@"77777777-%f", neloct.coordinate.longitude) ;
         [HttpHelper getHotLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             NSLog(@"热门课程数据：\n\n\n\n\n%@",model.message);
@@ -1655,7 +1741,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                         
                         [mainTableView reloadData];
                         _isLoading=false;
-                       
+                        
                     });
                     
                     
@@ -1865,10 +1951,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         
         else
         {
-        NSString *sur=[NSString stringWithFormat:@"http://211.149.190.90/%@",url];
-        
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:sur]];
-        //        http://211.149.190.90/m/20160126/index.html
+            NSString *sur=[NSString stringWithFormat:@"http://211.149.190.90/%@",url];
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:sur]];
+            //        http://211.149.190.90/m/20160126/index.html
         }
     }
     
@@ -1905,10 +1991,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //-( NSInteger )collectionView:( UICollectionView *)collectionView numberOfItemsInSection:( NSInteger )section
 //
 //{
-//    
+//
 //    NSLog(@"22------------\n\n %i",db.count);
 //    return db.count ;
-//    
+//
 //}
 //
 ////定义展示的Section的个数
@@ -1916,9 +2002,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //-( NSInteger )numberOfSectionsInCollectionView:( UICollectionView *)collectionView
 //
 //{
-//    
+//
 //    return 1 ;
-//    
+//
 //}
 //
 ////每个UICollectionView展示的内容
@@ -1926,18 +2012,18 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //-( UICollectionViewCell *)collectionView:( UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath
 //
 //{
-//    
+//
 //    teseCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier : @"acell" forIndexPath :indexPath];
 //    NSDictionary *ary=[db objectAtIndex:indexPath.row];
 //    NSLog(@"9999999999:\n\n\n\n\n\n\n%@",[ary objectForKey:@"title"]);
 //    cell.tils.text=[ary objectForKey:@"title"];
 //    cell.backgroundColor=[UIColor whiteColor];
-//   
+//
 ////    cell.ima.image=[UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
 ////    cell.tile.text=[titleArray objectAtIndex:indexPath.row];
 ////    cell.deta.text=[contentArray objectAtIndex:indexPath.row];
 //    return cell;
-//    
+//
 //}
 //
 //#pragma mark --UICollectionViewDelegate
@@ -1949,10 +2035,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 //{
 //   ViewController *ma=[[ViewController alloc]init];
 //    [self presentViewController:ma animated:YES completion:nil];
-// 
-//   
+//
+//
 ////    cell. backgroundColor = [ UIColor colorWithRed :(( arc4random ()% 255 )/ 255.0 ) green :(( arc4random ()% 255 )/ 255.0 ) blue :(( arc4random ()% 255 )/ 255.0 ) alpha : 1.0f ];
-//  
+//
 //}
 //
 ////返回这个UICollectionViewCell是否可以被选择
@@ -1987,8 +2073,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-//    [timer3 invalidate];
-
+    //    [timer3 invalidate];
+    
 }
 
 - (void)didReceiveMemoryWarning {

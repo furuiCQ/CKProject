@@ -19,7 +19,9 @@
 @property(strong,nonatomic)UIFont *textFont;
 @property BOOL checked;
 @property BOOL isEnd;
+@property UIView *lineView;
 
 -(void)initView;
 -(void)setLabelFont:(UIFont *)font;
+-(void)setLineViewFill;
 @end
