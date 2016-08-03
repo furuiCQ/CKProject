@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *writers;
 @property (weak, nonatomic) IBOutlet UILabel *nums;
 @property (weak, nonatomic) IBOutlet UILabel *times;
+@property (weak, nonatomic) IBOutlet UILabel *auther;
 
 @end

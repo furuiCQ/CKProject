@@ -391,6 +391,7 @@
 		49EBB63F1D5180E7005843B8 /* news@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB63E1D5180E7005843B8 /* news@2x.png */; };
 		49EBB6411D5192DF005843B8 /* free_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB6401D5192DF005843B8 /* free_image@2x.png */; };
 		49EBB6431D51979A005843B8 /* order_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB6421D51979A005843B8 /* order_image@2x.png */; };
+		49EBB6451D51B3D4005843B8 /* totop_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB6441D51B3D4005843B8 /* totop_image@2x.png */; };
 		49EBDB231C65C8C80057A50D /* deal_check.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBDB1D1C65C8C80057A50D /* deal_check.png */; };
 		49EBDB241C65C8C80057A50D /* deal_check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBDB1E1C65C8C80057A50D /* deal_check@2x.png */; };
 		49EBDB251C65C8C80057A50D /* deal_check@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBDB1F1C65C8C80057A50D /* deal_check@3x.png */; };
@@ -954,6 +955,7 @@
 		49EBB63E1D5180E7005843B8 /* news@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "news@2x.png"; sourceTree = "<group>"; };
 		49EBB6401D5192DF005843B8 /* free_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "free_image@2x.png"; sourceTree = "<group>"; };
 		49EBB6421D51979A005843B8 /* order_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_image@2x.png"; sourceTree = "<group>"; };
+		49EBB6441D51B3D4005843B8 /* totop_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "totop_image@2x.png"; sourceTree = "<group>"; };
 		49EBDB1D1C65C8C80057A50D /* deal_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deal_check.png; sourceTree = "<group>"; };
 		49EBDB1E1C65C8C80057A50D /* deal_check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deal_check@2x.png"; sourceTree = "<group>"; };
 		49EBDB1F1C65C8C80057A50D /* deal_check@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deal_check@3x.png"; sourceTree = "<group>"; };
@@ -1763,6 +1765,7 @@
 		49B056141D50B9FD00F0C79B /* thrid */ = {
 			isa = PBXGroup;
 			children = (
+				49EBB6441D51B3D4005843B8 /* totop_image@2x.png */,
 				49EBB6421D51979A005843B8 /* order_image@2x.png */,
 				49EBB6401D5192DF005843B8 /* free_image@2x.png */,
 				49EBB63E1D5180E7005843B8 /* news@2x.png */,
@@ -2319,6 +2322,7 @@
 				49D79E4C1C57A0E7009EE6B0 /* qq@3x.png in Resources */,
 				4971208A1CC1F73B0032DED2 /* music_logo@3x.png in Resources */,
 				496454341C22EDBC00EA5F67 /* star_select@2x.png in Resources */,
+				49EBB6451D51B3D4005843B8 /* totop_image@2x.png in Resources */,
 				499905251CC25E5300353C00 /* beikao@2x.png in Resources */,
 				499443111C47EE7600FC67C6 /* main_defalut@2x.png in Resources */,
 				49DB84921C2A8A5F00C344B1 /* right_logo@2x.png in Resources */,

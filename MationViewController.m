@@ -35,7 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     tab.scrollEnabled=NO;
-    selectArray =[NSArray arrayWithObjects:@"早期教育",@"幼儿教育",@"小学教育",@"初高中教育",@"成人教育",nil];
+    selectArray =[NSArray arrayWithObjects:@"最新",@"热门",@"早期教育",@"幼儿教育",@"小学教育",@"初高中教育",@"成人教育",nil];
     [self initTitle];
     [self getsj];
     [self initsc];
@@ -117,13 +117,6 @@
       
 
     }];
-
-
-
-
-
-
-
 }
 
 
@@ -131,7 +124,7 @@
 {
     
     sc=[[UIScrollView alloc]initWithFrame:CGRectMake(0, titleView.frame.size.height+titleView.frame.origin.y+20, swidth, sheight/22)];
-    
+    [sc setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
      for (int i=0; i<selectArray.count; i++) {
       UIButton    *btn=[UIButton buttonWithType:UIButtonTypeCustom];
         [btn setFrame: CGRectMake(i*swidth/5,0 , swidth/4.5, sheight/22)];
@@ -139,8 +132,7 @@
         btn.titleLabel.font = [UIFont systemFontOfSize: 14.0];
         [btn setTag:i];
         [btn addTarget:self action:@selector(clickon:) forControlEvents:UIControlEventTouchDown];
-      
-        btn.backgroundColor=[UIColor blackColor];
+        [btn setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
         [sc addSubview:btn];
     }
     sc.contentSize=CGSizeMake(swidth*1.2, sheight/22);
@@ -153,10 +145,8 @@
     
     switch (btn.tag) {
         case 0:
-            
-
             tab=[[UITableView alloc]initWithFrame:CGRectMake(0,sc.frame.size.height+sc.frame.origin.y+5, swidth, sheight)];
-          tab.backgroundColor=[UIColor clearColor];
+            tab.backgroundColor=[UIColor clearColor];
             tab.delegate=self;
             tab.dataSource=self;
             tab.tag=0;

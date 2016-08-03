@@ -459,7 +459,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     st.pagingEnabled=YES;
     
     st.contentSize=CGSizeMake(st.frame.size.width, self.view.frame.size.width/5.5*(xws.count/2));
-    
+    st.showsVerticalScrollIndicator=false;
     // [ip addSubview:st];
     
     [xinwen addSubview:st];

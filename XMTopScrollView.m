@@ -9,7 +9,7 @@
 #import "XMTopScrollView.h"
 #import "XMTopCell.h"
 
-#define BACK_COLOR [UIColor colorWithRed:(float)225/255 green:(float)225/255 blue:(float)225/255 alpha:1.0f]
+#define BACK_COLOR [UIColor colorWithRed:(float)241/255 green:(float)243/255 blue:(float)247/255 alpha:1.0f]
 
 @interface XMTopScrollView ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> {
     UICollectionView                *_mainCollectionView;
@@ -38,7 +38,7 @@
 
 - (void)loadParam {
     _selectRow = 0;
-    self.textSelectedtColor = [UIColor orangeColor];
+    self.textSelectedtColor = [UIColor redColor];
     self.lineHeight = 2;
     self.separatorTop = 8;
     self.separatorHidden = YES;
@@ -60,10 +60,16 @@
     _mainCollectionView.dataSource = self;
     [self addSubview:_mainCollectionView];
     
+    
+    UIView *bgLineView=[[UIView alloc]initWithFrame:CGRectMake(_cellWidth*_selectRow, self.frame.size.height-self.lineHeight, self.frame.size.width, self.lineHeight)];
+    [bgLineView setBackgroundColor:[UIColor grayColor]];
+    [_mainCollectionView addSubview:bgLineView];
+    
     _lineView = [[UIView alloc] init];
     _lineView.backgroundColor = self.textSelectedtColor;
     [_mainCollectionView addSubview:_lineView];
     
+
     UINib *nib = [UINib nibWithNibName:@"XMTopCell" bundle:[NSBundle mainBundle]];
     [_mainCollectionView registerNib:nib forCellWithReuseIdentifier:@"XMTopCell"];
   

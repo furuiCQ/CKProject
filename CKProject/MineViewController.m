@@ -40,11 +40,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLogoutStauets) name:@"logout" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    NSLog(@"最后一页：");
     [self initTitle];
     [self initContentView];
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSLog(@"123456789----------------%@",myDelegate.model.result);
     if(myDelegate.isLogin){
         [ProgressHUD show:@"加载中..."];
         [self changeLoginStauets];
