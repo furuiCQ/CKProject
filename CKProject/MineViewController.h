@@ -19,6 +19,7 @@
 
 @interface MineViewController : UIViewController
 @property int titleHeight;
+@property(strong,nonatomic)UIImageView *leftImage;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;
 @property(strong,nonatomic)UIImageView *msgLabel;

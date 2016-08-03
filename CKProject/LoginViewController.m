@@ -36,10 +36,14 @@ TencentOAuth *tencentOAuth;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getWBUserInfo:) name:@"getWBUserInfo" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getWXUserInfo:) name:@"getWXUserInfo" object:nil];
 
-    [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    
+    //[self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [imageView setImage:[UIImage imageNamed:@"login_bg"]];
+    [self.view addSubview:imageView];
     [self initTitle];
     [self initCotentView];
-//    [self initOtherLoginView];
+    [self initOtherLoginView];
     
     
     
@@ -55,12 +59,12 @@ TencentOAuth *tencentOAuth;
     //设置顶部栏
     titleHeight=44;
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
     //新建左上角Label
-    cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
-    [cityLabel setTextAlignment:NSTextAlignmentCenter];
+    cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/4.5, titleHeight)];
+    [cityLabel setTextAlignment:NSTextAlignmentRight];
     cityLabel.userInteractionEnabled=YES;//
-    UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
+    [cityLabel setText:@"返回"];
+    UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"black_back"]];
     [imageView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/35/2, titleHeight/2-self.view.frame.size.width/20/2, self.view.frame.size.width/35, self.view.frame.size.width/20)];
     [cityLabel addSubview:imageView];
     UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMiss:)];
@@ -68,7 +72,6 @@ TencentOAuth *tencentOAuth;
     //新建查询视图
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
     [searchLabel setText:@"登录"];
     
@@ -82,32 +85,27 @@ TencentOAuth *tencentOAuth;
     [msgLabel setTextColor:[UIColor orangeColor]];
     [msgLabel setTextAlignment:NSTextAlignmentCenter];
     [titleView addSubview:cityLabel];
-    [titleView addSubview:msgLabel];
+   // [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
 }
 -(void)initCotentView{
     int width=self.view.frame.size.width;
-    userTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(0, titleHeight+20+width/40, width, titleHeight)];
-    [userTextFiled setBackgroundColor:[UIColor whiteColor]];
+    
+    userTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(width/8, titleHeight+20+width/4.9, width, titleHeight)];
     [userTextFiled setPlaceholder:@"手机号"];
-    [userTextFiled setFont:[UIFont systemFontOfSize:width/26.7]];
-    [userTextFiled setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    [userTextFiled setValue:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0] forKeyPath:DXPlaceholderColorKey];
-    [self setTextFieldLeftPadding:userTextFiled forWidth:width/21];
+    [userTextFiled setTextColor:[UIColor blackColor]];
+    [userTextFiled setValue:[UIColor blackColor] forKeyPath:DXPlaceholderColorKey];
     [self.view addSubview:userTextFiled];
     
-    pasTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(0, titleHeight+20+width/40+titleHeight+0.5, width, titleHeight)];
-    [pasTextFiled setBackgroundColor:[UIColor whiteColor]];
-    [pasTextFiled setPlaceholder:@"密码"];
-    [pasTextFiled setFont:[UIFont systemFontOfSize:width/26.7]];
-    [pasTextFiled setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    [pasTextFiled setValue:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0] forKeyPath:DXPlaceholderColorKey];
+    pasTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(width/8, titleHeight+20+width/4.9+titleHeight+0.5, width, titleHeight)];
+    [pasTextFiled setPlaceholder:@"请输入密码"];
+    [pasTextFiled setTextColor:[UIColor blackColor]];
+    [pasTextFiled setValue:[UIColor blackColor] forKeyPath:DXPlaceholderColorKey];
     [pasTextFiled setSecureTextEntry:YES];
-    [self setTextFieldLeftPadding:pasTextFiled forWidth:width/21];
     [self.view addSubview:pasTextFiled];
     
-    loginLabel=[[UILabel alloc]initWithFrame:CGRectMake((width-width*7/9)/2, titleHeight+20+width/40+titleHeight+0.5+titleHeight+width/20, width*7/9, width/8.6)];
+    loginLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/8, titleHeight+20+width/4.9+titleHeight+0.5+titleHeight+width/20, width-width/4, width/8.6)];
     UITapGestureRecognizer *loginRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goLoginViewController)];
     loginLabel.userInteractionEnabled=YES;
     [loginLabel addGestureRecognizer:loginRecognizer];
@@ -115,11 +113,7 @@ TencentOAuth *tencentOAuth;
     [loginLabel setFont:[UIFont systemFontOfSize:width/26.7]];
     [loginLabel setTextAlignment:NSTextAlignmentCenter];
     [loginLabel setTextColor:[UIColor whiteColor]];
-    [loginLabel setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    loginLabel.layer.borderColor=[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0].CGColor;
-    loginLabel.layer.cornerRadius=16.0;
-    loginLabel.layer.borderWidth = 1; //要设置的描边宽
-    loginLabel.layer.masksToBounds=YES;
+    [loginLabel setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:100.f/255.f blue:103.f/255.f alpha:1.0]];
     [self.view addSubview:loginLabel];
     
     
@@ -176,25 +170,25 @@ TencentOAuth *tencentOAuth;
         [control addSubview:label];
         
         if (![WXApi isWXAppInstalled] && i==1) {
-            [control setHidden:YES];
+           // [control setHidden:YES];
 
         }
         if (![WeiboSDK isWeiboAppInstalled] && i==0) {
-            [control setHidden:YES];
+            //[control setHidden:YES];
 
         }
         if (![TencentOAuth iphoneQQInstalled] && i==2) {
-            [control setHidden:YES];
+          //  [control setHidden:YES];
         }
 
         
         [view addSubview:control];
     }
     if(![WXApi isWXAppInstalled] && ![WeiboSDK isWeiboAppInstalled] && ![TencentOAuth iphoneQQInstalled]){
-        [line1View setHidden:YES];
-        [titleLabel setHidden:YES];
-        [line2View setHidden:YES];
-        [view setHidden:YES];
+       // [line1View setHidden:YES];
+       // [titleLabel setHidden:YES];
+       // [line2View setHidden:YES];
+       // [view setHidden:YES];
 
 
     }
