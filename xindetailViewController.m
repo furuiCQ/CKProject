@@ -14,6 +14,7 @@
 #import "RJShareView.h"
 #import "ScaleImgViewController.h"
 #import "ProgressHUD.h"
+#import "NewsCommentCell.h"
 #define swidth self.view.frame.size.width
 #define sheight self.view.frame.size.height
 @interface xindetailViewController ()<UITextViewDelegate,UITableViewDelegate,UITableViewDataSource>
@@ -25,7 +26,7 @@
     UILabel *searchLabel;
     UILabel *msgLabel;
     UIView *titleView;
-    UIScrollView *sb;
+    UIView *sb;
     UITextView *editTextView;
     UITextView *tv;
     UILabel *zanNumberLabel;
@@ -40,12 +41,16 @@
     UILabel *lb;
     UIView *bottomView;
     UILabel *lp;
+    UINib *nib;
+    
+    UIView *commetTitleView;
 }
 
 @end
 
 @implementation xindetailViewController
 @synthesize aritcleId;
+@synthesize data;
 @synthesize alertView;
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -111,7 +116,7 @@
     //设置顶部栏
     titleHeight=44;
     titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
+    [titleView setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:83.f/255.f blue:86.f/255.f alpha:1.0]];
     //新建左上角Label
     cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
     UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
@@ -126,7 +131,7 @@
     //新建查询视图
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
+    [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setText:@"新闻详情"];
     //分享
@@ -137,93 +142,96 @@
 //        [msgLabel addGestureRecognizer:shareGesutre];
         UIImageView *shareView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_logo"]];
         [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/12.3/2, titleHeight/2-self.view.frame.size.width/12.3/2, self.view.frame.size.width/12.3, self.view.frame.size.width/12.3)];
-        [msgLabel addSubview:shareView];
-        [msgLabel setTextAlignment:NSTextAlignmentCenter];
+    [msgLabel addSubview:shareView];
+    [msgLabel setTextAlignment:NSTextAlignmentCenter];
     
     [titleView addSubview:cityLabel];
-        [titleView addSubview:msgLabel];
+    [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
     
 }
 -(void)mainview{
-    sb=[[UIScrollView alloc]initWithFrame:CGRectMake(0, titleView.frame.size.height+titleView.frame.origin.y, swidth, sheight/1.2)];
-    sb.contentSize=CGSizeMake(swidth,sb.frame.size.height*5);
-    sb.backgroundColor=[UIColor clearColor];
-    lab=[[UILabel alloc]initWithFrame:CGRectMake(5, 0, swidth, sheight/10)];
+    sb=[[UIView alloc]initWithFrame:CGRectMake(0, 0, swidth, sheight)];
+    lab=[[UILabel alloc]initWithFrame:CGRectMake(swidth/32, swidth/24.6, swidth-swidth/16, swidth/21)];
     lab.numberOfLines=0;
     lab.text=@"";
-    lab.font=[UIFont systemFontOfSize:swidth/18];
-    lab.textAlignment=NSTextAlignmentCenter;
+    lab.textColor=[UIColor colorWithRed:22.f/255.f green:22.f/255.f blue:22.f/255.f alpha:1.0];
+    lab.font=[UIFont systemFontOfSize:swidth/21];
+    lab.textAlignment=NSTextAlignmentLeft;
     
-    writer=[[UILabel alloc]initWithFrame:CGRectMake(0, lab.frame.size.height+lab.frame.origin.y, swidth/5, swidth/14)];
-    writer.text=@"";
-    writer.font=[UIFont systemFontOfSize:swidth/25];
-    timers=[[UILabel alloc]initWithFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/9,lab.frame.size.height+lab.frame.origin.y, swidth/4, swidth/14)];
+    writer=[[UILabel alloc]initWithFrame:CGRectMake(swidth/32, lab.frame.size.height+lab.frame.origin.y+swidth/26.7, swidth/27.8*5, swidth/27.8)];
+    writer.text=@"新闻作者";
+    writer.font=[UIFont systemFontOfSize:swidth/27.8];
+    timers=[[UILabel alloc]initWithFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/20,writer.frame.origin.y, swidth/4, swidth/27.8)];
     timers.font=[UIFont systemFontOfSize:swidth/25];
-    timers.text=@"";
+    timers.text=@"07-22";
     timers.textColor=[UIColor grayColor];
-   lt=[[UILabel alloc]initWithFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y, swidth, 0.2)];
-    lt.backgroundColor=[UIColor grayColor];
-    //图片
-   mg=[[UIImageView alloc]initWithFrame:CGRectMake(0, lt.frame.size.height+lt.frame.origin.y+4, swidth, sb.frame.size.height/4)];
     
-    [mg setImage:[UIImage imageNamed:@""]];
-    
-    //新闻内容
-    tv=[[UITextView alloc]initWithFrame:CGRectMake(0, mg.frame.origin.y+mg.frame.size.height+5 , swidth , sheight)];
-//    NSUserDefaults *kp=[NSUserDefaults standardUserDefaults];
-//    NSString *st=[kp objectForKey:@"cpn"];
-    tv.text=@"";
-//    tv.scrollEnabled=NO;
-    tv.editable=NO;
-    tv.backgroundColor=[UIColor whiteColor];
-    tv.textAlignment=NSTextAlignmentLeft;
-    tv.font=[UIFont systemFontOfSize:swidth/25];
-//    detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(width/40, detailLabel.frame.size.height+detailLabel.frame.origin.y+width/35.5,  width-width/40-width/40, hegiht/5)];
-//    [detailContentLabel setText:@""];
-//    detailContentLabel.editable=NO;
-//    [detailContentLabel setTextAlignment:NSTextAlignmentLeft];
-    [tv setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [tv setFont:[UIFont systemFontOfSize:swidth/26.7]];
-   
-    zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth/40, tv.frame.origin.y+tv.frame.size.height+swidth/45.7, swidth/32, swidth/32)];
-    [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
-    // [zanImageView setImage:[UIImage imageNamed:@"dianzan_logo"] forState:UIControlStateSelected];
-    // [zanImageView addTarget:self action:@selector(zanOnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [sb addSubview:zanImageView];
-    
-    zanNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(zanImageView.frame.origin.x+zanImageView.frame.size.width+swidth/53, tv.frame.origin.y+tv.frame.size.height+swidth/45.7, swidth/32*2, swidth/32)];
+    zanNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(swidth-swidth/32*4-swidth/40, writer.frame.origin.y, swidth/32*4, swidth/32)];
     [zanNumberLabel setText:@"50"];
     [zanNumberLabel setFont:[UIFont systemFontOfSize:swidth/32]];
     [zanNumberLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     [sb addSubview:zanNumberLabel];
     
+    zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/32*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
+    [zanImageView setImage:[UIImage imageNamed:@"dianzan_logo"] forState:UIControlStateNormal];
+    [sb addSubview:zanImageView];
     
-    read=[[UILabel alloc]initWithFrame:CGRectMake(zanNumberLabel.frame.origin.x+zanNumberLabel.frame.size.width+swidth/20, tv.frame.origin.y+tv.frame.size.height+swidth/45.7, swidth/8, swidth/32)];
-    read.text=@"阅读数：";
-    [read setFont:[UIFont systemFontOfSize:swidth/32]];
-//    UIImageView *disImageView=[[UIImageView alloc]initWithFrame:CGRectMake(zanNumberLabel.frame.origin.x+zanNumberLabel.frame.size.width+swidth/20, tv.frame.origin.y+tv.frame.size.height+swidth/45.7, swidth/32, swidth/32)];
-//    [disImageView setImage:[UIImage imageNamed:@"discuss_logo"]];
-    [sb addSubview:read];
+    lt=[[UILabel alloc]initWithFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y+swidth/40, swidth, 0.2)];
+    lt.backgroundColor=[UIColor grayColor];
+   
+    //图片
+    mg=[[UIImageView alloc]initWithFrame:CGRectMake(0, lt.frame.size.height+lt.frame.origin.y+4, swidth, sb.frame.size.height/4)];
+    [mg setImage:[UIImage imageNamed:@""]];
     
-    disNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(read.frame.origin.x+read.frame.size.width+swidth/53, tv.frame.origin.y+tv.frame.size.height+swidth/45.7, swidth/32*3, swidth/32)];
-    [disNumberLabel setText:@"25"];
-    [disNumberLabel setFont:[UIFont systemFontOfSize:swidth/32]];
-    [disNumberLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [sb addSubview:disNumberLabel];
-  
-    lb=[[UILabel alloc]initWithFrame:CGRectMake(0, disNumberLabel.frame.size.height+disNumberLabel.frame.origin.y+2, swidth, 0.2)];
-    lb.backgroundColor=[UIColor grayColor];
-    lp=[[UILabel alloc]initWithFrame:CGRectMake(swidth/33, lb.frame.origin.y+lb.frame.size.height+5, swidth/5, swidth/28)];
-    lp.text=@"评价";
-    [lp setFont:[UIFont systemFontOfSize:swidth/22]];
-    tab=[[UITableView alloc]initWithFrame:CGRectMake(0, lp.frame.size.height+lp.frame.origin.y+3, swidth, sheight)];
+    //新闻内容
+    tv=[[UITextView alloc]initWithFrame:CGRectMake(0, mg.frame.origin.y+mg.frame.size.height+5 , swidth , sheight)];
+    tv.text=@"新闻内容";
+    tv.editable=NO;
+    tv.backgroundColor=[UIColor whiteColor];
+    tv.textAlignment=NSTextAlignmentLeft;
+    tv.font=[UIFont systemFontOfSize:swidth/25];
+    [tv setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
+    [tv setFont:[UIFont systemFontOfSize:swidth/26.7]];
+   
+    commetTitleView=[[UIView alloc]initWithFrame:CGRectMake(0, tv.frame.size.height+tv.frame.origin.y+2,
+                                                            swidth, swidth/25.6)];
+    UIView *lineView1=[[UILabel alloc]initWithFrame:CGRectMake((swidth/2-swidth/5)/2, (swidth/25.6-0.2)/2, swidth/5, 0.2)];
+    lineView1.backgroundColor=[UIColor grayColor];
+    
+    UIView *lineView2=[[UILabel alloc]initWithFrame:CGRectMake((swidth/2-swidth/5)/2+swidth/2, (swidth/25.6-0.2)/2, swidth/5, 0.2)];
+    lineView2.backgroundColor=[UIColor grayColor];
+    lp=[[UILabel alloc]initWithFrame:CGRectMake((swidth-swidth/25.6*4)/2, 0, swidth/25.6*4, swidth/25.6)];
+    lp.text=@"最新评论";
+    [lp setTextColor:[UIColor colorWithRed:136.f/255.f green:136.f/255.f blue:136.f/255.f alpha:1.0]];
+    [lp setFont:[UIFont systemFontOfSize:swidth/25.6]];
+    
+    [commetTitleView addSubview:lineView1];
+    [commetTitleView addSubview:lineView2];
+    [commetTitleView addSubview:lp];
+    
+    [sb addSubview:lab];
+    [sb addSubview:writer];
+    [sb addSubview:timers];
+    [sb addSubview:lt];
+    [sb addSubview:mg];
+    [sb addSubview:tv];
+    [sb addSubview:commetTitleView];
+   // [sb addSubview:lp];
+//    [sb addSubview:tab];
+ //   tab.tableHeaderView=sb;
+   // [self.view addSubview:sb];
+    [sb setFrame:CGRectMake(0, 0, swidth, lp.frame.size.height+lp.frame.origin.y+10)];
+    
+    
+    tab=[[UITableView alloc]initWithFrame:CGRectMake(0, titleView.frame.size.height+titleView.frame.origin.y, swidth, sheight-(titleView.frame.size.height+titleView.frame.origin.y)-swidth/6.5)];
     tab.backgroundColor=[UIColor clearColor];
     tab.delegate=self;
     tab.dataSource=self;
-    tab.rowHeight                         = self.view.bounds.size.height/5;
+    tab.rowHeight= self.view.bounds.size.height/5;
     tab.separatorStyle = UITableViewCellSelectionStyleNone;
+
     //下拉刷新
     UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
     [_refreshControl setTintColor:[UIColor grayColor]];
@@ -233,19 +241,8 @@
               forControlEvents:UIControlEventValueChanged];
     [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
     [tab addSubview:_refreshControl];
-    
-    
-    [sb addSubview:lab];
-    [sb addSubview:writer];
-    [sb addSubview:timers];
-    [sb addSubview:lt];
-    [sb addSubview:mg];
-    [sb addSubview:tv];
-    [sb addSubview:lb];
-    [sb addSubview:lp];
-    [sb addSubview:tab];
-    [self.view addSubview:sb];
 
+    [self.view addSubview:tab];
 
 
 
@@ -253,16 +250,8 @@
 - (CGSize)contentSizeOfTextView:(UITextView *)textView
 {
     CGSize textViewSize = [tv sizeThatFits:CGSizeMake(textView.frame.size.width, FLT_MAX)];
-    
-    
     return textViewSize;
 }
-
-
-
-
-
-
 -(void) refreshView:(UIRefreshControl *)refresh
 {
     
@@ -288,34 +277,27 @@
     
    bottomView=[[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-width/6.5, width, width/6.5-0.5)];
     [bottomView setTag:1000];
-    [bottomView setBackgroundColor:[UIColor whiteColor]];
-    UIImageView *disImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/40, width/18, width/20, width/22.8)];
-    [disImageView setImage:[UIImage imageNamed:@"discuss_logo"]];
-    [bottomView addSubview:disImageView];
-    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(width/40+width/20+width/53, width/17.8, width/24.6*2, width/24.6)];
-    [label setText:@"评论"];
-    [label setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    [label setFont:[UIFont systemFontOfSize:width/24.6]];
-    [bottomView addSubview:label];
-    
-    editTextView=[[UITextView alloc]initWithFrame:CGRectMake(width/40+width/20+width/53+width/24.6*2
-                                                             +width/22.8, width/29, width*5/8, width/10)];
-    [editTextView setText:@"说点什么吧"];
+    [bottomView setBackgroundColor:[UIColor colorWithRed:220.f/255.f green:220.f/255.f blue:220.f/255.f alpha:1.0]];
+    editTextView=[[UITextView alloc]initWithFrame:CGRectMake(width/26.7, (bottomView.frame.size.height-width/10)/2, width-width/6.4-width/26.7*2, width/10)];
+    [editTextView setText:@"输入您的精彩评论"];
     [editTextView setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     editTextView.layer.masksToBounds=YES;
-    [editTextView setBackgroundColor:[UIColor colorWithRed:238.f/255.f green:238.f/255.f blue:238.f/255.f alpha:1.0]];
-    editTextView.layer.cornerRadius=3.f;
+    [editTextView setBackgroundColor:[UIColor colorWithRed:248.f/255.f green:248.f/255.f blue:248.f/255.f alpha:1.0]];
+    [editTextView.layer setCornerRadius:5.0f];
     editTextView.delegate=self;
     [bottomView addSubview:editTextView];
-    
-    UILabel *sendDisLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/22.8-width/24.6*2, width/17.8, width/24.6*2, width/24.6)];
+    //100x60
+    UILabel *sendDisLabel=[[UILabel alloc]initWithFrame:CGRectMake(editTextView.frame.size.width+editTextView.frame.origin.x+swidth/64, (bottomView.frame.size.height-width/10)/2, width/6.4, width/10)];
+    [sendDisLabel setBackgroundColor:[UIColor colorWithRed:30.f/255.f green:169.f/255.f blue:240.f/255.f alpha:1.0]];
     UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sendeCommects)];
     [sendDisLabel addGestureRecognizer:gesutre];
     [sendDisLabel setUserInteractionEnabled:YES];
-    [sendDisLabel setText:@"发布"];
+    [sendDisLabel setText:@"发送"];
     [sendDisLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-    [sendDisLabel setTextColor:[UIColor colorWithRed:233.f/255.f green:106.f/255.f blue:71.f/255.f alpha:1.0]];
+    [sendDisLabel setTextColor:[UIColor whiteColor]];
     [sendDisLabel setTextAlignment:NSTextAlignmentCenter];
+    [sendDisLabel.layer setCornerRadius:5.0f];
+    sendDisLabel.clipsToBounds = YES;
     [bottomView addSubview:sendDisLabel];
     
     
@@ -338,9 +320,10 @@
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
     CGRect rect8=bottomView.frame;
-    rect8.origin.y=sheight-350;
+    rect8.origin.y=sheight-300;
     [bottomView setFrame:rect8];
     editTextView.text=nil;
+    NSLog(@"textViewDidBeginEditing");
 }
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
@@ -357,9 +340,6 @@
     return 1;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    UITableViewCell *cell = [self tableView:tab cellForRowAtIndexPath:indexPath];
-    
     return 100;
     
 }
@@ -383,45 +363,51 @@
 }
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    //NSIndexPath是一个结构体，记录了组和行信息
-    InvitaitionTabelCell *cell=[[InvitaitionTabelCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    static NSString *identy = @"NewsCommentCell";
+    if (!nib) {
+        [tab registerNib:[UINib nibWithNibName:@"NewsCommentCell" bundle:nil] forCellReuseIdentifier:@"cell"];
+
+        nib = [UINib nibWithNibName:@"NewsCommentCell" bundle:nil];
+        [tableView registerNib:nib forCellReuseIdentifier:identy];
+        NSLog(@"我是从nib过来的，%ld",(long)indexPath.row);
+    }
+    NewsCommentCell *cell=[tableView dequeueReusableCellWithIdentifier:identy forIndexPath:indexPath];
+
     if ([tableArray count]>0) {
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
-        [cell setData:dic];
         if ([dic objectForKey:@"uimg"] && ![[dic objectForKey:@"uimg"] isEqual:[NSNull null]]) {
-            [cell.logoView  sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[dic objectForKey:@"uimg"]]]];
+            [cell.im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[dic objectForKey:@"uimg"]]]];
         }
         if ([dic objectForKey:@"username"] && ![[dic objectForKey:@"username"] isEqual:[NSNull null]] ) {
-            [cell.userName  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]]    ];
+            [cell.writers  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]]    ];
         }
-        if ([dic objectForKey:@"created"] && ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
-            NSNumber *number=[dic objectForKey:@"created"];
-            NSInteger myInteger = [number integerValue];
-            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateStyle:NSDateFormatterMediumStyle];
-            [formatter setTimeStyle:NSDateFormatterShortStyle];
-            [formatter setDateFormat:@"YYYY-MM-dd"];
-            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
-            [formatter setTimeZone:timeZone];
-            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
-            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-            [cell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
-            
-        }
+//        if ([dic objectForKey:@"created"] && ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
+//            NSNumber *number=[dic objectForKey:@"created"];
+//            NSInteger myInteger = [number integerValue];
+//            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+//            [formatter setDateStyle:NSDateFormatterMediumStyle];
+//            [formatter setTimeStyle:NSDateFormatterShortStyle];
+//            [formatter setDateFormat:@"YYYY-MM-dd"];
+//            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+//            [formatter setTimeZone:timeZone];
+//            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+//            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+//            [cell. setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+//            
+//        }
       
         
         if ([dic objectForKey:@"content"] && ![[dic objectForKey:@"content"] isEqual:[NSNull null]]) {
-            [cell.contextView  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"content"]]];
+            [cell.titles  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"content"]]];
         }
         
         
         if([dic objectForKey:@"zan"] && ![[dic objectForKey:@"zan"] isEqual:[NSNull null]]){
             NSNumber *zanStaues=[dic objectForKey:@"zan"];
             if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
-                cell.dianZanLabel.selected=false;
+                [cell.zanImage setImage:[UIImage imageNamed:@"zan_logo"]];
             }else{
-                cell.dianZanLabel.selected=true;
+                [cell.zanImage setImage:[UIImage imageNamed:@"dianzan_logo"]];
             }
         }
         
@@ -454,11 +440,6 @@
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                         tableArray=(NSArray *)model.result;
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            //    imi.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"   "]]];
-                            
-                            
-                            
-                            
                             [tab reloadData];
                         });
                         
@@ -492,11 +473,6 @@
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                         tableArray=(NSArray *)model.result;
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            //    imi.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"   "]]];
-                            
-                            
-                            
-                            
                             [tab reloadData];
                         });
                         
@@ -521,6 +497,70 @@
     
     
 }
+-(void)getArticleInfo{
+    NSDictionary *dic=data;
+    if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
+        [lab setText:[dic objectForKey:@"title"]];
+    }
+    if ([dic objectForKey:@"created"]&& ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
+        NSNumber *number=[dic objectForKey:@"created"];
+        NSInteger myInteger = [number integerValue];
+        NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterMediumStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
+        [formatter setDateFormat:@"YYYY-MM-dd"];
+        NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+        [formatter setTimeZone:timeZone];
+        NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+        NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+        [timers setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+        
+    }
+    
+    
+    if([dic objectForKey:@"zan"]){
+        NSString *number=[dic objectForKey:@"zan"];
+        [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+    }
+    if([dic objectForKey:@"read"]){
+        NSNumber *number=[dic objectForKey:@"read"];
+        NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+        [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+    }
+    if([dic objectForKey:@"content"]){
+        [tv setText:[dic objectForKey:@"content"]];
+        CGRect frame=tv.frame;
+        frame.size.height=tv.contentSize.height;
+        [tv setFrame:frame];
+        //赞的数值
+        CGRect rect4=commetTitleView.frame;
+        rect4.origin.y=tv.frame.origin.y+tv.frame.size.height+8;
+        [commetTitleView setFrame:rect4];
+        
+       // CGRect rect5=lp.frame;
+       // rect5.origin.y=lb.frame.origin.y+lb.frame.size.height+8;
+       // [lp setFrame:rect5];
+        //滚动的长度
+       CGRect rect7=sb.frame;
+        
+       rect7.size.height=commetTitleView.frame.origin.y+commetTitleView.frame.size.height+10;
+
+        [sb setFrame:rect7];
+        tab.tableHeaderView=sb;
+
+    }
+    if ([dic objectForKey:@"author"]) {
+        writer.text=[dic objectForKey:@"author"];
+    }
+    if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
+        
+        NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
+        mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
+        
+    }
+
+}
+/*
 //获取前方数据
 -(void)getArticleInfo{
     
@@ -539,10 +579,8 @@
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            NSDictionary *dic=model.result;
-//                            data=dic;
-                            
-                            
+                        //    NSDictionary *dic=model.result;
+                            NSDictionary *dic=data;
                             if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
                                 [lab setText:[dic objectForKey:@"title"]];
                             }
@@ -798,7 +836,7 @@
         
     }
     
-}
+}*/
 /*
 #pragma mark - Navigation
 

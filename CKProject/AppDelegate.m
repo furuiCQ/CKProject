@@ -20,6 +20,7 @@
 #import "msViewController.h"
 #import "MationViewController.h"
 #import "HttpHelper.h"
+#import "ViewController.h"
 @interface AppDelegate ()<WXApiDelegate>
 
 @end
@@ -52,7 +53,7 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
     NSArray *unselectArray =[NSArray arrayWithObjects:@"main_unselect",@"news",@"junyouhui",@"sort_unselect",@"mine_unselect",nil];
     NSArray *textArray =[NSArray arrayWithObjects:@"首页",@"新闻",@"聚优惠",@"分类",
                          @"我",nil];
-    NSArray *viewControllerArray =[NSArray arrayWithObjects:[[MainViewController alloc]init],[[MationViewController alloc]init],[[SortViewController alloc]init],[[MineViewController alloc]init],[[msViewController alloc]init],nil];
+    NSArray *viewControllerArray =[NSArray arrayWithObjects:[[MainViewController alloc]init],[[ViewController alloc]init],[[SortViewController alloc]init],[[MineViewController alloc]init],[[MineViewController alloc]init],nil];
     
     MainTabBarViewController *mtvc=[[MainTabBarViewController alloc]init];
     NSMutableArray *vcArray=[[NSMutableArray alloc]init];

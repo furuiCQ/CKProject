@@ -527,9 +527,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     ViewController *ma=[[ViewController alloc]init];
     [self presentViewController:ma animated:YES completion:nil];
-    
-    
-    
 }
 
 -(void)nextxinwen
@@ -1176,8 +1173,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             NSNumber *lat=[str objectForKey:@"lat"];
             //转化为坐标
             
-            NSLog(@"得到的纬度:%f",neloct.coordinate.latitude);
-            NSLog(@"经度:%f",neloct.coordinate.longitude);
+        //    NSLog(@"得到的纬度:%f",neloct.coordinate.latitude);
+        //    NSLog(@"经度:%f",neloct.coordinate.longitude);
             NSNumber *at=[NSNumber numberWithDouble:neloct.coordinate.latitude];
             NSNumber *ng=[NSNumber numberWithDouble:neloct.coordinate.longitude];
             NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
@@ -1197,7 +1194,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             
             double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
             
-            NSLog(@"---------\n\n\n lng:%f\n %f ",coords3.longitude,coords3.latitude);
+        //    NSLog(@"---------\n\n\n lng:%f\n %f ",coords3.longitude,coords3.latitude);
             if(distance>0.0){
                 if (distance/1000>1) {
                     [distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
@@ -1252,7 +1249,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         db=[obj objectForKey:@"result"];
         //       NSLog(@"-------------")
         
-        NSLog(@"db----------------\n\n\n\n\n\n\n\\n\n\n\n%@",db);
+       // NSLog(@"db----------------\n\n\n\n\n\n\n\\n\n\n\n%@",db);
         //        [acollectionView reloadData];
         [self.view setNeedsDisplay];
     }];
@@ -1265,9 +1262,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 -(void)onMoreClick:(id)sender{
     //    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
     //    [def setObject: forKey:@"tite"];
-    
-    
-    
     UIControl *control=(UIControl *)sender;
     int indexrow=(int)control.tag;
     ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];

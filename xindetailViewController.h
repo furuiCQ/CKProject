@@ -10,5 +10,6 @@
 
 @interface xindetailViewController : UIViewController
 @property NSNumber *aritcleId;
+@property NSDictionary *data;
 @property(strong,nonatomic)UIAlertView *alertView;
 @end

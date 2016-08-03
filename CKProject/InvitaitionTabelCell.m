@@ -73,7 +73,7 @@
         frame=self.frame;
         frame.size.height=dianZanLabel.frame.size.height+dianZanLabel.frame.origin.y+width/22.8;
         self.frame=frame;
-        
+        [self setBackgroundColor:[UIColor redColor]];
     }
     return self;
 }

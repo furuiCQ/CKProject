@@ -392,6 +392,8 @@
 		49EBB6411D5192DF005843B8 /* free_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB6401D5192DF005843B8 /* free_image@2x.png */; };
 		49EBB6431D51979A005843B8 /* order_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB6421D51979A005843B8 /* order_image@2x.png */; };
 		49EBB6451D51B3D4005843B8 /* totop_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB6441D51B3D4005843B8 /* totop_image@2x.png */; };
+		49EBB6491D51EE13005843B8 /* NewsCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49EBB6481D51EE13005843B8 /* NewsCommentCell.xib */; };
+		49EBB64C1D51EE45005843B8 /* NewsCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49EBB64B1D51EE45005843B8 /* NewsCommentCell.m */; };
 		49EBDB231C65C8C80057A50D /* deal_check.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBDB1D1C65C8C80057A50D /* deal_check.png */; };
 		49EBDB241C65C8C80057A50D /* deal_check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBDB1E1C65C8C80057A50D /* deal_check@2x.png */; };
 		49EBDB251C65C8C80057A50D /* deal_check@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49EBDB1F1C65C8C80057A50D /* deal_check@3x.png */; };
@@ -956,6 +958,9 @@
 		49EBB6401D5192DF005843B8 /* free_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "free_image@2x.png"; sourceTree = "<group>"; };
 		49EBB6421D51979A005843B8 /* order_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_image@2x.png"; sourceTree = "<group>"; };
 		49EBB6441D51B3D4005843B8 /* totop_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "totop_image@2x.png"; sourceTree = "<group>"; };
+		49EBB6481D51EE13005843B8 /* NewsCommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsCommentCell.xib; sourceTree = "<group>"; };
+		49EBB64A1D51EE45005843B8 /* NewsCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsCommentCell.h; sourceTree = "<group>"; };
+		49EBB64B1D51EE45005843B8 /* NewsCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsCommentCell.m; sourceTree = "<group>"; };
 		49EBDB1D1C65C8C80057A50D /* deal_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deal_check.png; sourceTree = "<group>"; };
 		49EBDB1E1C65C8C80057A50D /* deal_check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deal_check@2x.png"; sourceTree = "<group>"; };
 		49EBDB1F1C65C8C80057A50D /* deal_check@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deal_check@3x.png"; sourceTree = "<group>"; };
@@ -1846,6 +1851,9 @@
 		CE4DA8CC1D24C99B00AE52AA /* 新闻头条 */ = {
 			isa = PBXGroup;
 			children = (
+				49EBB64A1D51EE45005843B8 /* NewsCommentCell.h */,
+				49EBB64B1D51EE45005843B8 /* NewsCommentCell.m */,
+				49EBB6481D51EE13005843B8 /* NewsCommentCell.xib */,
 				CE1D24581D35F4AC00FE2A74 /* xindetailViewController.h */,
 				CE1D24591D35F4AC00FE2A74 /* xindetailViewController.m */,
 				CE4DA8D51D24C9B700AE52AA /* ViewController.h */,
@@ -2027,6 +2035,7 @@
 				499443121C47EE7600FC67C6 /* main_defalut@3x.png in Resources */,
 				4999053E1CC25E5300353C00 /* skill@3x.png in Resources */,
 				49541B691C30F6AE00CB023F /* qq_logo@2x.png in Resources */,
+				49EBB6491D51EE13005843B8 /* NewsCommentCell.xib in Resources */,
 				496453901C2135F500EA5F67 /* mine_select@3x.png in Resources */,
 				49D79E6A1C57B48C009EE6B0 /* icon-76@2x.png in Resources */,
 				4946217E1C23E14800E372ED /* location_logo@3x.png in Resources */,
@@ -2493,6 +2502,7 @@
 				49DFB4381CC32A940013068E /* CharesectionView.m in Sources */,
 				496453431C20476F00EA5F67 /* SortOrganizationTabelCell.m in Sources */,
 				494621901C26DB8B00E372ED /* FVCustomAlertView.m in Sources */,
+				49EBB64C1D51EE45005843B8 /* NewsCommentCell.m in Sources */,
 				4977AEEC1C0DCC1A001F0D55 /* AppDelegate.m in Sources */,
 				4977AF3C1C0F2F4E001F0D55 /* RJUtil.m in Sources */,
 				49D79E2C1C579EBC009EE6B0 /* RJBaseMenu.m in Sources */,

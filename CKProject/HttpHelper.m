@@ -1172,7 +1172,7 @@
     
     NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] >=200&&[urlResponese statusCode]<300){
-        NSLog(@"返回结果=====%@",result);
+       // NSLog(@"返回结果=====%@",result);
         if (resultData!=nil) {
             NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:resultData options:kNilOptions error:&error];
             if (error) {

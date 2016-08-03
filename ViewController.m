@@ -260,7 +260,8 @@
     xindetailViewController  *bt=[[xindetailViewController alloc]init];
     NSDictionary *dic=[ary objectAtIndex:indexPath.row];
     NSNumber *aritcleId=[dic objectForKey:@"id"];
-    [bt setAritcleId:   ];
+    [bt setAritcleId:aritcleId];
+    [bt setData:dic];
     [self presentViewController:bt animated:YES completion:nil];
     
 }
