@@ -288,7 +288,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     //设置顶部栏
     titleHeight=44;
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
+    [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     //新建左上角Label
     cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
     UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
@@ -302,9 +302,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
     //新建查询视图
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
-    //[searchLabel setBackgroundColor:[UIColor whiteColor]];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
+    [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setText:@""];
     
@@ -321,43 +320,83 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
 }
 -(void)initSelectView{
     int width= self.view.frame.size.width;
-    UIView *marginview=[[UIView alloc] initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
+    UIView *marginview=[[UIView alloc] initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, width/7)];
     [marginview setUserInteractionEnabled:YES];
-    [marginview setBackgroundColor:[UIColor whiteColor]];
-    
-    UIView *view=[[UIView alloc] initWithFrame:CGRectMake(width/40,0,width-width/20, titleHeight*3/4)];
-    [view setBackgroundColor:[UIColor whiteColor]];
-    bi=[[UILabel alloc]initWithFrame:CGRectMake(width/11, 0, width/5, titleHeight*3/4)];
-    bi.text=@"";
-    bi.font=[UIFont systemFontOfSize:width/25];
-    bi.textColor=[UIColor redColor];
-    [view addSubview:bi];
-    
-    
-    NSArray *titleArray= [NSArray arrayWithObjects:@"热门",@"筛选", nil];
-    NSArray *imgArray=[NSArray  arrayWithObjects:@"demotion_logo",@"demotion_logo", nil];
-    NSArray *unimgArray=[NSArray arrayWithObjects:@"undemotion_logo",@"undemotion_logo", nil];
-    
-    for(int i=0;i<2;i++){
-        DemotionControl *subView=[[DemotionControl alloc]initWithFrame:CGRectMake(view.frame.size.width/3*i+width/3, 0,view.frame.size.width/3, marginview.frame.size.height)];
-        [subView setUserInteractionEnabled:YES];
-        [subView setTag:i];
-        [subView addTarget:self action:@selector(topOnClick:) forControlEvents:UIControlEventTouchUpInside];
-        CGRect frame=self.view.frame;
-        [subView initView:&frame withTag:i];
-        [subView setBackgroundColor:[UIColor whiteColor]];
-        [subView.textLabel setText:[titleArray objectAtIndex:i]];
-        [subView.userLogo setImage:[UIImage imageNamed:[unimgArray objectAtIndex:i]] forState:UIControlStateNormal];
-        [subView.userLogo setImage:[UIImage imageNamed:[imgArray objectAtIndex:i]] forState:UIControlStateSelected];
-        [view addSubview:subView];
-    }
-//    UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width/1.5,0,self.view.frame.size.width/3, titleHeight*3/3)];
-//    lab.text=@"渝北区";
-//    [lab setTextColor:[UIColor redColor]];
-//    lab.font=[UIFont systemFontOfSize:16];
-//    [view addSubview:lab];
-    [marginview addSubview:view];
+    [marginview setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self.view addSubview:marginview];
+    
+    UILabel *localLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/3, width/7)];
+    [localLabel setText:@"正在定位.."];
+    [localLabel setBackgroundColor:[UIColor whiteColor]];
+    [localLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [localLabel setTextAlignment:NSTextAlignmentCenter];
+    [marginview addSubview:localLabel];
+    //筛选按钮
+    UIControl *hotControl=[[UIControl alloc]initWithFrame:CGRectMake(localLabel.frame.size.width+0.3, 0, width/3-0.2, width/7)];
+    
+    UIImageView *hotImageView=[[UIImageView alloc]initWithFrame:CGRectMake(hotControl.frame.size.width-width/11.6-width/29, width/7/2-width/45.7-1, width/29, width/45.7)];
+    [hotControl setBackgroundColor:[UIColor whiteColor]];
+    [hotImageView setImage:[UIImage imageNamed:@"red_up"]];
+    UIImageView *hot2ImageView=[[UIImageView alloc]initWithFrame:CGRectMake(hotControl.frame.size.width-width/11.6-width/29, width/7/2+1, width/29, width/45.7)];
+    [hot2ImageView setImage:[UIImage imageNamed:@"red_down"]];
+    
+    UILabel *hotLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/8.7, 0, width/26.7*2, width/7)];
+    [hotLabel setText:@"热门"];
+    [hotLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [hotLabel setTextAlignment:NSTextAlignmentCenter];
+    [hotControl addSubview:hotLabel];
+    [hotControl addSubview:hotImageView];
+    [hotControl addSubview:hot2ImageView];
+    [marginview addSubview:hotControl];
+
+    
+    UIControl *siftCotrol=[[UIControl alloc]initWithFrame:CGRectMake(hotControl.frame.origin.x+hotControl.frame.size.width+0.2, 0, width-(hotLabel.frame.origin.x+hotLabel.frame.size.width+0.2), width/7)];
+    
+    //筛选按钮
+    UIImageView *siftImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, (width/7-width/17.8)/2, width/19.3, width/17.8)];
+    [siftCotrol setBackgroundColor:[UIColor whiteColor]];
+    [siftImageView setImage:[UIImage imageNamed:@"sift_logo"]];
+    UILabel *siftLabel=[[UILabel alloc]initWithFrame:CGRectMake(siftImageView.frame.size.width+siftImageView.frame.origin.x+width/64, 0, width/26.7*2, width/7)];
+    [siftLabel setText:@"筛选"];
+    [siftLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [siftLabel setTextAlignment:NSTextAlignmentCenter];
+    [siftCotrol addSubview:siftLabel];
+    [siftCotrol addSubview:siftImageView];
+    [marginview addSubview:siftCotrol];
+    
+    
+//    UIView *view=[[UIView alloc] initWithFrame:CGRectMake(width/40,0,width-width/20, titleHeight*3/4)];
+//    [view setBackgroundColor:[UIColor whiteColor]];
+//    bi=[[UILabel alloc]initWithFrame:CGRectMake(width/11, 0, width/5, titleHeight*3/4)];
+//    bi.text=@"";
+//    bi.font=[UIFont systemFontOfSize:width/25];
+//    bi.textColor=[UIColor redColor];
+//    [view addSubview:bi];
+//    
+//    
+//    NSArray *titleArray= [NSArray arrayWithObjects:@"热门",@"筛选", nil];
+//    NSArray *imgArray=[NSArray  arrayWithObjects:@"demotion_logo",@"demotion_logo", nil];
+//    NSArray *unimgArray=[NSArray arrayWithObjects:@"undemotion_logo",@"undemotion_logo", nil];
+//    
+//    for(int i=0;i<2;i++){
+//        DemotionControl *subView=[[DemotionControl alloc]initWithFrame:CGRectMake(view.frame.size.width/3*i+width/3, 0,view.frame.size.width/3, marginview.frame.size.height)];
+//        [subView setUserInteractionEnabled:YES];
+//        [subView setTag:i];
+//        [subView addTarget:self action:@selector(topOnClick:) forControlEvents:UIControlEventTouchUpInside];
+//        CGRect frame=self.view.frame;
+//        [subView initView:&frame withTag:i];
+//        [subView setBackgroundColor:[UIColor whiteColor]];
+//        [subView.textLabel setText:[titleArray objectAtIndex:i]];
+//        [subView.userLogo setImage:[UIImage imageNamed:[unimgArray objectAtIndex:i]] forState:UIControlStateNormal];
+//        [subView.userLogo setImage:[UIImage imageNamed:[imgArray objectAtIndex:i]] forState:UIControlStateSelected];
+//        [view addSubview:subView];
+//    }
+////    UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width/1.5,0,self.view.frame.size.width/3, titleHeight*3/3)];
+////    lab.text=@"渝北区";
+////    [lab setTextColor:[UIColor redColor]];
+////    lab.font=[UIFont systemFontOfSize:16];
+////    [view addSubview:lab];
+//    [marginview addSubview:view];
     
     
     
@@ -1033,9 +1072,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
 -(void)initTableView{
     
     bottomHeight=49;
-    
     projectTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                                  titleHeight+20+0.5+titleHeight,
+                                                                  titleHeight+20+0.5+self.view.frame.size.width/7,
                                                              self.view.frame.size.width,
                                                                   self.view.frame.size.height-titleHeight-20-0.5-titleHeight)];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
@@ -1144,20 +1182,20 @@ static NSString *identy = @"OrderRecordCell";
             cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
         }
         OrderRecordCell *porjectCell=(OrderRecordCell *)cell;
-        /*
         
-        int width=self.view.frame.size.width;
-        cell=[[ProjectTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        
+        //int width=self.view.frame.size.width;
+       // cell=[[ProjectTableCell alloc]initWithStyle:UITableViewCellStyleDefault //reuseIdentifier:nil];
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
-            [porjectCell.listItem.projectName setText:[NSString stringWithFormat:@"%@",title]];
+            [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
         }
         if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
             NSString *people=[dic objectForKey:@"people"];
             //     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-            NSString *str=[NSString stringWithFormat:@"已报%@人",people];
-            [porjectCell.listItem.joinLabel setText:str];
+            NSString *str=[NSString stringWithFormat:@"%@",people];
+            [porjectCell.orderNumbLabel setText:str];
             
 //            CGRect frame=porjectCell.listItem.joinLabel.frame;
 //            CGSize strSize=[str sizeWithFont:porjectCell.listItem.joinLabel.font maxSize:CGSizeMake(width, 0)];
@@ -1169,7 +1207,7 @@ static NSString *identy = @"OrderRecordCell";
         if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
             NSString *logo=[dic objectForKey:@"logo"];
             if (![logo isEqualToString:@""]) {
-                [porjectCell.listItem.logoView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+                [porjectCell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
                 
             }
             
@@ -1242,16 +1280,15 @@ static NSString *identy = @"OrderRecordCell";
 
             
             double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
-            
-            NSLog(@"---------\n\n\n lng:%f\n %f ",coords3.longitude,coords3.latitude);
+            NSLog(@"---------\n\n\n lng:%f\n  ",distance);
             if(distance>0.0){
                 if (distance/1000>1) {
-                    [porjectCell.listItem.typelabel3 setText:[NSString stringWithFormat:@"%.2f千米",(float)distance/1000]];
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
                 }else if (distance/1000<1 && distance/1000>0.5){
-                    [porjectCell.listItem.typelabel3 setText:[NSString stringWithFormat:@"%d米",(int)distance]];
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
                     
                 }else if (distance/1000<0.5){
-                    [porjectCell.listItem.typelabel3 setText:@"<500米"];
+                    [porjectCell.distanceLabel setText:@"<500m"];
                 }
             }
          
@@ -1279,7 +1316,7 @@ static NSString *identy = @"OrderRecordCell";
 //            frame.origin.x=porjectCell.listItem.joinLabel.frame.size.width+porjectCell.listItem.joinLabel.frame.origin.x+width/40;
 //            frame.size.width=width/3;
 //            [porjectCell.listItem.addressLabel setFrame:frame];
-            [porjectCell.listItem.addressLabel setText:[NSString stringWithFormat:@"%@",addr]];
+           // [porjectCell.listItem.addressLabel setText:[NSString stringWithFormat:@"%@",addr]];
         }
 //        if ([dic objectForKey:@"pname"] && ![[dic objectForKey:@"pname"] isEqual:[NSNull null]]) {
 //            NSString *pname=[dic objectForKey:@"pname"];
@@ -1297,7 +1334,7 @@ static NSString *identy = @"OrderRecordCell";
 //            frame.origin.x=porjectCell.listItem.typelabel.frame.size.width+porjectCell.listItem.typelabel.frame.origin.x+width/40;
 //            frame.size.width=strSize.width+frame.size.height/2;
 //            [porjectCell.listItem.typelabel1 setFrame:frame];
-            [porjectCell.listItem.typelabel1 setText:[NSString stringWithFormat:@"%@",grade]];
+            [porjectCell.ageLabel setText:[NSString stringWithFormat:@"%@",grade]];
         }
         if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
             NSNumber *btime=[dic objectForKey:@"btime"];
@@ -1305,18 +1342,14 @@ static NSString *identy = @"OrderRecordCell";
             NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
             [formatter setDateStyle:NSDateFormatterMediumStyle];
             [formatter setTimeStyle:NSDateFormatterShortStyle];
-            [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+            [formatter setDateFormat:@"MM月 dd HH:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
             NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
             [formatter setTimeZone:timeZone];
             NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
-            CGRect frame=porjectCell.listItem.typelabel2.frame;
             NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-            NSString *str=[self compareCurrentTime:confromTimespStr];
-            frame.size.width=[str length]*frame.size.height;
-            [porjectCell.listItem.typelabel2 setFrame:frame];
-            [porjectCell.listItem.typelabel2 setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+            [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
         }
-         */
+        
     }else if ([local1Array count]>0 && tableView.tag==1) {
         
         cell=[[UITableViewCell alloc]init];
