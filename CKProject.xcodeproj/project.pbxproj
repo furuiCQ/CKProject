@@ -323,6 +323,14 @@
 		49CE5C971D52CD8100B07AE5 /* hid_pas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5C911D52CD8100B07AE5 /* hid_pas@3x.png */; };
 		49CE5C981D52CD8100B07AE5 /* show_pas@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5C921D52CD8100B07AE5 /* show_pas@2x.png */; };
 		49CE5C991D52CD8100B07AE5 /* hid_pas@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5C931D52CD8100B07AE5 /* hid_pas@2x.png */; };
+		49CE5C9F1D52EB0700B07AE5 /* FDCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE5C9C1D52EB0700B07AE5 /* FDCalendar.m */; };
+		49CE5CA01D52EB0700B07AE5 /* FDCalendarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE5C9E1D52EB0700B07AE5 /* FDCalendarItem.m */; };
+		49CE5CA71D52EBDB00B07AE5 /* icon_next@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5CA11D52EBDB00B07AE5 /* icon_next@2x.png */; };
+		49CE5CA81D52EBDB00B07AE5 /* icon_next@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5CA21D52EBDB00B07AE5 /* icon_next@3x.png */; };
+		49CE5CA91D52EBDB00B07AE5 /* icon_next.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5CA31D52EBDB00B07AE5 /* icon_next.png */; };
+		49CE5CAA1D52EBDB00B07AE5 /* icon_previous.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5CA41D52EBDB00B07AE5 /* icon_previous.png */; };
+		49CE5CAB1D52EBDB00B07AE5 /* icon_previous@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5CA51D52EBDB00B07AE5 /* icon_previous@3x.png */; };
+		49CE5CAC1D52EBDB00B07AE5 /* icon_previous@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5CA61D52EBDB00B07AE5 /* icon_previous@2x.png */; };
 		49D02E5D1C828AF1006A3769 /* ScaleImgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D02E5C1C828AF1006A3769 /* ScaleImgViewController.m */; };
 		49D79E2C1C579EBC009EE6B0 /* RJBaseMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D79E271C579EBC009EE6B0 /* RJBaseMenu.m */; };
 		49D79E2D1C579EBC009EE6B0 /* RJGirdMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D79E291C579EBC009EE6B0 /* RJGirdMenu.m */; };
@@ -900,6 +908,16 @@
 		49CE5C911D52CD8100B07AE5 /* hid_pas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hid_pas@3x.png"; sourceTree = "<group>"; };
 		49CE5C921D52CD8100B07AE5 /* show_pas@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "show_pas@2x.png"; sourceTree = "<group>"; };
 		49CE5C931D52CD8100B07AE5 /* hid_pas@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hid_pas@2x.png"; sourceTree = "<group>"; };
+		49CE5C9B1D52EB0700B07AE5 /* FDCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCalendar.h; sourceTree = "<group>"; };
+		49CE5C9C1D52EB0700B07AE5 /* FDCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCalendar.m; sourceTree = "<group>"; };
+		49CE5C9D1D52EB0700B07AE5 /* FDCalendarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCalendarItem.h; sourceTree = "<group>"; };
+		49CE5C9E1D52EB0700B07AE5 /* FDCalendarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCalendarItem.m; sourceTree = "<group>"; };
+		49CE5CA11D52EBDB00B07AE5 /* icon_next@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_next@2x.png"; sourceTree = "<group>"; };
+		49CE5CA21D52EBDB00B07AE5 /* icon_next@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_next@3x.png"; sourceTree = "<group>"; };
+		49CE5CA31D52EBDB00B07AE5 /* icon_next.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_next.png; sourceTree = "<group>"; };
+		49CE5CA41D52EBDB00B07AE5 /* icon_previous.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_previous.png; sourceTree = "<group>"; };
+		49CE5CA51D52EBDB00B07AE5 /* icon_previous@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_previous@3x.png"; sourceTree = "<group>"; };
+		49CE5CA61D52EBDB00B07AE5 /* icon_previous@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_previous@2x.png"; sourceTree = "<group>"; };
 		49D02E5C1C828AF1006A3769 /* ScaleImgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleImgViewController.m; sourceTree = "<group>"; };
 		49D02E5E1C828AFC006A3769 /* ScaleImgViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScaleImgViewController.h; sourceTree = "<group>"; };
 		49D79E261C579EBC009EE6B0 /* RJBaseMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJBaseMenu.h; sourceTree = "<group>"; };
@@ -1696,6 +1714,7 @@
 		4977AF1A1C0DCDAD001F0D55 /* CustomView */ = {
 			isa = PBXGroup;
 			children = (
+				49CE5C9A1D52EB0700B07AE5 /* FDCalendar */,
 				49FE3F3C1C58EB7400FBCA7F /* ProgressHUD */,
 				49FE3F281C5853B000FBCA7F /* TreeTableView.h */,
 				49FE3F291C5853B000FBCA7F /* TreeTableView.m */,
@@ -1810,6 +1829,12 @@
 		49B056141D50B9FD00F0C79B /* thrid */ = {
 			isa = PBXGroup;
 			children = (
+				49CE5CA11D52EBDB00B07AE5 /* icon_next@2x.png */,
+				49CE5CA21D52EBDB00B07AE5 /* icon_next@3x.png */,
+				49CE5CA31D52EBDB00B07AE5 /* icon_next.png */,
+				49CE5CA41D52EBDB00B07AE5 /* icon_previous.png */,
+				49CE5CA51D52EBDB00B07AE5 /* icon_previous@3x.png */,
+				49CE5CA61D52EBDB00B07AE5 /* icon_previous@2x.png */,
 				49CE5C8E1D52CD8100B07AE5 /* show_pas.png */,
 				49CE5C8F1D52CD8100B07AE5 /* show_pas@3x.png */,
 				49CE5C901D52CD8100B07AE5 /* hid_pas.png */,
@@ -1854,6 +1879,17 @@
 				49539E681D50CE3C00D0E1D7 /* youth_image@2x.png */,
 			);
 			name = thrid;
+			sourceTree = "<group>";
+		};
+		49CE5C9A1D52EB0700B07AE5 /* FDCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				49CE5C9B1D52EB0700B07AE5 /* FDCalendar.h */,
+				49CE5C9C1D52EB0700B07AE5 /* FDCalendar.m */,
+				49CE5C9D1D52EB0700B07AE5 /* FDCalendarItem.h */,
+				49CE5C9E1D52EB0700B07AE5 /* FDCalendarItem.m */,
+			);
+			path = FDCalendar;
 			sourceTree = "<group>";
 		};
 		49EE21121C13DAFD00055CF9 /* OtherViewController */ = {
@@ -2140,6 +2176,7 @@
 				49541B681C30F6AE00CB023F /* qq_logo.png in Resources */,
 				496453A61C21420200EA5F67 /* sort_unselect.png in Resources */,
 				CEA721CA1D07C03D00035A86 /* 新闻-头条.png in Resources */,
+				49CE5CA71D52EBDB00B07AE5 /* icon_next@2x.png in Resources */,
 				49D79E631C57B48C009EE6B0 /* icon-50@2x.png in Resources */,
 				496453821C2135A700EA5F67 /* circle_select.png in Resources */,
 				49541B6D1C30F6AE00CB023F /* weibo_logo@3x.png in Resources */,
@@ -2148,6 +2185,7 @@
 				49DB848D1C2A805400C344B1 /* logo@3x.png in Resources */,
 				4999054E1CC25E5300353C00 /* zaojiao.png in Resources */,
 				4964540E1C2297B300EA5F67 /* parent_logo@3x.png in Resources */,
+				49CE5CA91D52EBDB00B07AE5 /* icon_next.png in Resources */,
 				CEA721DD1D07C05A00035A86 /* 返回@2x.png in Resources */,
 				49EBDB241C65C8C80057A50D /* deal_check@2x.png in Resources */,
 				4943032F1C7194B10050F0E5 /* Default~iphone.png in Resources */,
@@ -2175,6 +2213,7 @@
 				49EBB6311D516DE7005843B8 /* sort_select@2x.png in Resources */,
 				49EBB62F1D516DE7005843B8 /* girl_image@2x.png in Resources */,
 				49DB84931C2A8A5F00C344B1 /* right_logo@3x.png in Resources */,
+				49CE5CA81D52EBDB00B07AE5 /* icon_next@3x.png in Resources */,
 				496453881C2135A700EA5F67 /* sort_select.png in Resources */,
 				CEA721DE1D07C05A00035A86 /* 返回@3x.png in Resources */,
 				496453B51C21560600EA5F67 /* search_logo.png in Resources */,
@@ -2250,6 +2289,7 @@
 				4994430C1C47EE0F00FC67C6 /* details_defalut@3x.png in Resources */,
 				4999053D1CC25E5300353C00 /* skill@2x.png in Resources */,
 				49D79E691C57B48C009EE6B0 /* icon-76.png in Resources */,
+				49CE5CAA1D52EBDB00B07AE5 /* icon_previous.png in Resources */,
 				499905431CC25E5300353C00 /* sprint@2x.png in Resources */,
 				49D79E361C57A084009EE6B0 /* weixin@2x.png in Resources */,
 				49EBDB271C65C8C80057A50D /* deal_uncheck@2x.png in Resources */,
@@ -2334,6 +2374,7 @@
 				49DB84981C2A8DC300C344B1 /* icon@2x.png in Resources */,
 				49D79E6E1C57B60C009EE6B0 /* Icon-87.png in Resources */,
 				4999053B1CC25E5300353C00 /* music@3x.png in Resources */,
+				49CE5CAC1D52EBDB00B07AE5 /* icon_previous@2x.png in Resources */,
 				49EBB61F1D516DBD005843B8 /* main_select@2x.png in Resources */,
 				49541B6C1C30F6AE00CB023F /* weibo_logo@2x.png in Resources */,
 				49DB84871C2A7F8400C344B1 /* logo_bg@3x.png in Resources */,
@@ -2403,6 +2444,7 @@
 				49EBB6451D51B3D4005843B8 /* totop_image@2x.png in Resources */,
 				499905251CC25E5300353C00 /* beikao@2x.png in Resources */,
 				499443111C47EE7600FC67C6 /* main_defalut@2x.png in Resources */,
+				49CE5CAB1D52EBDB00B07AE5 /* icon_previous@3x.png in Resources */,
 				49DB84921C2A8A5F00C344B1 /* right_logo@2x.png in Resources */,
 				49EBB63F1D5180E7005843B8 /* news@2x.png in Resources */,
 				499443281C47F00800FC67C6 /* login_defalut.png in Resources */,
@@ -2589,6 +2631,7 @@
 				4977AEE91C0DCC1A001F0D55 /* main.m in Sources */,
 				493305831C183B3F005B9EDC /* MyRegistrationRecordViewController.m in Sources */,
 				49FE3F2D1C58541E00FBCA7F /* Node.m in Sources */,
+				49CE5CA01D52EB0700B07AE5 /* FDCalendarItem.m in Sources */,
 				4933057B1C1694A5005B9EDC /* CircleListItem.m in Sources */,
 				49FE3F2A1C5853B000FBCA7F /* TreeTableView.m in Sources */,
 				497E4E181C19C48800B9C556 /* RegisterViewController.m in Sources */,
@@ -2600,6 +2643,7 @@
 				4977AF251C0DD37D001F0D55 /* CircleViewController.m in Sources */,
 				49D02E5D1C828AF1006A3769 /* ScaleImgViewController.m in Sources */,
 				49D79E2E1C579EBC009EE6B0 /* RJShareView.m in Sources */,
+				49CE5C9F1D52EB0700B07AE5 /* FDCalendar.m in Sources */,
 				D37425581C4621560081E794 /* MsgContentViewController.m in Sources */,
 				49DB846C1C29706900C344B1 /* ECDrawerLayout.m in Sources */,
 				49AD459D1C2BBDD6004FE430 /* HttpModel.m in Sources */,
