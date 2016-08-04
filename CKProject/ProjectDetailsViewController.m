@@ -73,12 +73,12 @@
     NSNumber *advance_time;
     UITextView *neirong;
     
-//    保存图片数据
+    //    保存图片数据
     
     NSNumber *bt;
     
     NSMutableArray *tab;
-
+    UIControl *contentControl;
 }
 @end
 
@@ -113,14 +113,15 @@
 static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 - (void)viewDidLoad {
-   
-
+    
+    
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     [ProgressHUD show:@"加载中..."];
     selectWeekArry=[[NSMutableArray alloc]init];
     [self initTitle];
     [self initContent];
+    [self initBootomView];
     [self getProjectInfo];
     NSLog(@"kechengid:%@",projectId);
     // Do any additional setup after loading the view, typically from a nib.
@@ -130,7 +131,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     //设置顶部栏
     titleHeight=44;
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
+    [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     //新建左上角Label
     cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
     UIImageView *backView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
@@ -145,22 +146,22 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
     //[searchLabel setBackgroundColor:[UIColor whiteColor]];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
+    [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setText:@"课程详情"];
     
     //新建右上角的图形
-//    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
-//    msgLabel.userInteractionEnabled=YES;///
-//    UITapGestureRecognizer *shareGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share)];
-//    [msgLabel addGestureRecognizer:shareGesutre];
-//    UIImageView *shareView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_logo"]];
-//    [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/12.3/2, titleHeight/2-self.view.frame.size.width/12.3/2, self.view.frame.size.width/12.3, self.view.frame.size.width/12.3)];
-//    [msgLabel addSubview:shareView];
-//    [msgLabel setTextAlignment:NSTextAlignmentCenter];
+    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
+    msgLabel.userInteractionEnabled=YES;///
+    //        UITapGestureRecognizer *shareGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share)];
+    //        [msgLabel addGestureRecognizer:shareGesutre];
+    UIImageView *shareView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_logo"]];
+    [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/12.3/2, titleHeight/2-self.view.frame.size.width/12.3/2, self.view.frame.size.width/12.3, self.view.frame.size.width/12.3)];
+    [msgLabel addSubview:shareView];
+    [msgLabel setTextAlignment:NSTextAlignmentCenter];
     
     [titleView addSubview:cityLabel];
-//    [titleView addSubview:msgLabel];
+    [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
     
@@ -174,251 +175,342 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [scrollView setContentSize:CGSizeMake(width, hegiht)];
     [scrollView setBackgroundColor:[UIColor whiteColor]];
     
-    UIControl *instituteControl=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, width, width/5.3)];
+    [self initImageScrollView:projectTimeLabel];
+    
+    UIControl *instituteControl=[[UIControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y, width, width/3.5)];
     [instituteControl setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:252.f/255.f blue:252.f/255.f alpha:1.0]];
-    [instituteControl addTarget:self action:@selector(onClick) forControlEvents:UIControlEventTouchUpInside];
+    //[instituteControl addTarget:self action:@selector(onClick) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:instituteControl];
     
-    logoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/40, width/32, width/8, width/8)];
+    logoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/30, width/22, width/5, width/5)];
     [logoImageView setImage:[UIImage imageNamed:@"instdetails_defalut"]];
-    //  logoImageView.layer.cornerRadius=width/32;
+    logoImageView.layer.cornerRadius=width/32;
     logoImageView.layer.masksToBounds=YES;
     [instituteControl addSubview:logoImageView];
     
-    instituteNameLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImageView.frame.size.width+logoImageView.frame.origin.x+width*11/640, logoImageView.frame.origin.y, width/2, width/21.3)];
-    [instituteNameLabel setText:@""];
+    instituteNameLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImageView.frame.size.width+logoImageView.frame.origin.x+width/27.8, logoImageView.frame.origin.y, width-(logoImageView.frame.size.width+logoImageView.frame.origin.x+width/27.8), width/21.3)];
+    [instituteNameLabel setText:@"新东方英语培训中心"];
     [instituteNameLabel setFont:[UIFont systemFontOfSize:width/21.3]];
-    [instituteNameLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    
+    [instituteNameLabel setTextColor:[UIColor blackColor]];
     [instituteControl addSubview:instituteNameLabel];
-    
-    
-    
-    UILabel *bespeakLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImageView.frame.size.width+logoImageView.frame.origin.x+width*11/640, instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/22.8, width/32*2, width/32)];
-    [bespeakLabel setText:@"预约"];
-    [bespeakLabel setFont:[UIFont systemFontOfSize:width/32]];
-    [bespeakLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [instituteControl addSubview:bespeakLabel];
-    
-    numbLabel=[[UILabel alloc]initWithFrame:CGRectMake(bespeakLabel.frame.size.width+bespeakLabel.frame.origin.x+width*11/640, instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/22.8, width/20, width/32)];
-    [numbLabel setText:@"15"];
-    [numbLabel setFont:[UIFont systemFontOfSize:width/32]];
-    [numbLabel setTextColor:[UIColor redColor]];
-    [instituteControl addSubview:numbLabel];
-    
-    
-    ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(numbLabel.frame.size.width+numbLabel.frame.origin.x+width/40, instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/23, width/29*6, width/20)];
-    ratingBar.isIndicator=YES;
-    [ratingBar setImageDeselected:@"star_unselect" halfSelected:nil fullSelected:@"star_select" andDelegate:nil];
-    [ratingBar displayRating:4.0f];
-    [instituteControl addSubview:ratingBar];
-    
-    
-    
-    collectLabel=[[UIButton alloc]initWithFrame:CGRectMake(width-width/13-width/22.8, width/23, width/13, width/13)];
-    [collectLabel setImage:[UIImage imageNamed:@"collcet_unselect"] forState:UIControlStateNormal];
-    [collectLabel setImage:[UIImage imageNamed:@"collcet_select"] forState:UIControlStateSelected];
-    [collectLabel addTarget:self action:@selector(collectOnClick) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:collectLabel];
-    
-    
-    
-    
-    
-    
-    projectNameLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40,  instituteControl.frame.size.height+instituteControl.frame.origin.y+width/32, width-width/20-width/20, width/22.8)];
-    [projectNameLabel setText:@""];
-    [projectNameLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [projectNameLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-    [scrollView addSubview:projectNameLabel];
-    
+    //18px
     UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_logo"]];
-    [localImageView setFrame:CGRectMake(width/40, projectNameLabel.frame.size.height+projectNameLabel.frame.origin.y+width/40, width/21.3, width/16.8)];
+    [localImageView setFrame:CGRectMake(instituteNameLabel.frame.origin.x, instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/35.6, width/35.6, width/23.7)];
     UITapGestureRecognizer *addresGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openAddress)];
     [localImageView addGestureRecognizer:addresGesture];
     [localImageView setUserInteractionEnabled:YES];
-    [scrollView addSubview:localImageView];
+    [instituteControl addSubview:localImageView];
     
-
-
     
-    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40+width/21.3+width/40,  projectNameLabel.frame.size.height+projectNameLabel.frame.origin.y+width/20, width-(width/40+width/21.3+width/40)-width/40, width/29)];
-    [projectAddLabel setText:@""];
+    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(localImageView.frame.size.width+localImageView.frame.origin.x+width/49,  instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/37.6, width-(localImageView.frame.size.width+localImageView.frame.origin.x+width/49)-width/40, width/22.8)];
+    [projectAddLabel setText:@"渝中区太平洋大厦3楼"];
     [projectAddLabel addGestureRecognizer:addresGesture];
     [projectAddLabel setUserInteractionEnabled:YES];
     [projectAddLabel setTextColor:[UIColor colorWithRed:85.f/255.f green:85.f/255.f blue:85.f/255.f alpha:1.0]];
-    [projectAddLabel setFont:[UIFont systemFontOfSize:width/29]];
-    [scrollView addSubview:projectAddLabel];
+    [projectAddLabel setFont:[UIFont systemFontOfSize:width/22.8]];//28px
+    [instituteControl addSubview:projectAddLabel];
     
-    
-    
-
-    
-    
-    UIImageView *phoneImagView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@""]];
-    [phoneImagView setFrame:CGRectMake(localImageView.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/32, width/22, width/17)];
-//    UITapGestureRecognizer *callGesuture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callPhone)];
-//    [phoneImagView addGestureRecognizer:callGesuture];
-//    [phoneImagView setUserInteractionEnabled:YES];
-//    [phoneImagView setBackgroundColor:[UIColor greenColor]];
-//
-//    [scrollView addSubview:phoneImagView];
-    
-//    phoneLabel=[[UILabel alloc]initWithFrame:CGRectMake(projectAddLabel.frame.origin.x, projectAddLabel.frame.size.height+projectAddLabel.frame.origin.y+width/25.6, width-(projectAddLabel.frame.origin.x)-width/40, width/26.7)];
-//    [phoneLabel setText:@"联系电话：023-9523123"];
-//    [phoneLabel setTextColor:[UIColor colorWithRed:85.f/255.f green:85.f/255.f blue:85.f/255.f alpha:1.0]];
-//    [phoneLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-//    [phoneLabel setUserInteractionEnabled:YES];
-//    [phoneLabel addGestureRecognizer:callGesuture];
-//    [scrollView addSubview:phoneLabel];
-
-    
-    
-    
-    
-    projectTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40,  phoneImagView.frame.size.height+phoneImagView.frame.origin.y+width/53, width, width/29)];
-    [projectTimeLabel setText:@""];
-    [projectTimeLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];//
-    //  [projectTimeLabel setBackgroundColor:[UIColor greenColor]];
-    [projectTimeLabel setFont:[UIFont systemFontOfSize:width/29]];
-    [scrollView addSubview:projectTimeLabel];
-    
-    [self initImageScrollView:projectTimeLabel];
-    
-    //免费或者收费
-//        lei=[[UILabel alloc]initWithFrame:CGRectMake(width/2.5,  imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/20, width-(width/40+width/21.3+width/40)-width/40, width/29)];
-//        [lei setText:@"免费课"];
-//        [lei setTextColor:[UIColor greenColor]];
-//        [lei setFont:[UIFont systemFontOfSize:width/24]];
-//        [scrollView addSubview:lei];
-    
-    
-    
-    //    UILabel *beginTimeTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3.3,imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/32,width/24.6*5,width/24.6)];
-//    [beginTimeTopLabel setText:@"开课时间："];
-//    [beginTimeTopLabel setTextColor:[UIColor colorWithRed:76.f/255.f green:76.f/255.f blue:76.f/255.f alpha:1.0]];
-//    [beginTimeTopLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-//    [scrollView addSubview:beginTimeTopLabel];
-//    
-//    beginTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(beginTimeTopLabel.frame.size.width+beginTimeTopLabel.frame.origin.x,imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/32,width/29*10,width/29)];
-//    [beginTimeLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-//    [beginTimeLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-//    [scrollView addSubview:beginTimeLabel];
-  
-    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(width/40, imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/26.7, width-width/20, 1)];
-    [lineView setBackgroundColor:[UIColor colorWithRed:245.f/255.f green:245.f/255.f blue:245.f/255.f alpha:1.0]];
-    
+    ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(instituteNameLabel.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/35.6, width/29*6, width/20)];
+    ratingBar.isIndicator=YES;
+    [ratingBar setPadding:2];
+    [ratingBar setImageDeselected:@"star_normal" halfSelected:nil fullSelected:@"star_light" andDelegate:nil];
+    [ratingBar displayRating:4.0f];
+    [instituteControl addSubview:ratingBar];
+    //241,243,247)
+    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, instituteControl.frame.size.height+instituteControl.frame.origin.y, width, 0.5)];
+    [lineView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [scrollView addSubview:lineView];
     
+    UIControl *projectControl=[[UIControl alloc]initWithFrame:CGRectMake(0, lineView.frame.size.height+lineView.frame.origin.y, width, width/5.7)];
+    [projectControl setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:252.f/255.f blue:252.f/255.f alpha:1.0]];
+    [scrollView addSubview:projectControl];
     
-    bottomView=[[UIView alloc]initWithFrame:CGRectMake(0, lineView.frame.size.height+lineView.frame.origin.y+width/32, width, width/26.7+width/35.5+hegiht/5+width/16+width/9)];
-    //  [bottomView setBackgroundColor:[UIColor redColor]];
+    projectNameLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/29,  width/25.6, width*2/3, width/22.8)];
+    [projectNameLabel setText:@"暑假英语酷学计划"];
+    [projectNameLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+    [projectNameLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
+    [projectControl addSubview:projectNameLabel];
     
-    UILabel *detailLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40, 0,width-width/40-width/40, width/26.7)];
-    [detailLabel setText:@"详情:"];
-    [detailLabel setTextColor:[UIColor blackColor]];
-    [detailLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-    [bottomView addSubview:detailLabel];
-    detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(width/40, detailLabel.frame.size.height+detailLabel.frame.origin.y+width/35.5,  width-width/40-width/40, hegiht/5)];
-    [detailContentLabel setText:@""];
+    UILabel *ageLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/29,  projectNameLabel.frame.size.height+projectNameLabel.frame.origin.y+width/58, width*2/3, width/29)];
+    [ageLabel setText:@"适合年龄段：3-16岁"];
+    [ageLabel setFont:[UIFont systemFontOfSize:width/29]];
+    [ageLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
+    [projectControl addSubview:ageLabel];
+    
+    UILabel *distanceLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-width/16.8,  width/16.8, width/4, width/32)];
+    [distanceLabel setText:@"500 米"];
+    [distanceLabel setFont:[UIFont systemFontOfSize:width/32]];
+    [distanceLabel setTextAlignment:NSTextAlignmentRight];
+    [distanceLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
+    [projectControl addSubview:distanceLabel];
+    
+    UIView *line2View=[[UIView alloc]initWithFrame:CGRectMake(0, projectControl.frame.size.height+projectControl.frame.origin.y+width/45.7, width, width/45.7)];
+    [line2View setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
+    [scrollView addSubview:line2View];
+    
+    contentControl=[[UIControl alloc]initWithFrame:CGRectMake(0, line2View.frame.size.height+line2View.frame.origin.y, width, width/3.5)];
+    [contentControl setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:252.f/255.f blue:252.f/255.f alpha:1.0]];
+    [scrollView addSubview:contentControl];
+    
+    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((width-width/17.8*4)/2, width/20.6, width/17.8*4, width/17.8)];
+    [titleLabel setText:@"课程介绍"];
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [titleLabel setFont:[UIFont systemFontOfSize:width/17.8]];
+    [contentControl addSubview:titleLabel];
+    
+    UIView *line3View=[[UIView alloc]initWithFrame:CGRectMake(width/8.9, width/12.5,  width/5.2, 0.5)];
+    [line3View setBackgroundColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
+    [contentControl addSubview:line3View];
+    
+    
+    UIView *line4View=[[UIView alloc]initWithFrame:CGRectMake((width-width/8.9)-width/5.2, width/12.5, width/5.2, 0.5)];
+    [line4View setBackgroundColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
+    [contentControl  addSubview:line4View];
+    
+    UILabel *contentLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/30.4, width/33.6+titleLabel.frame.size.height+titleLabel.frame.origin.y, width/24.6*4, width/24.6)];
+    [contentLabel setText:@"课程简介"];
+    [contentLabel setTextAlignment:NSTextAlignmentLeft];
+    [contentLabel setFont:[UIFont systemFontOfSize:width/24.6]];
+    [contentControl addSubview:contentLabel];
+    detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(0, contentLabel.frame.size.height+contentLabel.frame.origin.y, width, 20)];
+    //    neirong.text=@"";
+    //    [neirong setTextColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    [detailContentLabel setText:@"惺惺惜惺惺"];
     detailContentLabel.editable=NO;
     [detailContentLabel setTextAlignment:NSTextAlignmentLeft];
     [detailContentLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
     [detailContentLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-    [bottomView addSubview:detailContentLabel];
+    detailContentLabel.backgroundColor=[UIColor whiteColor];
+    [contentControl addSubview:detailContentLabel];
     
-    
-   line=[[UILabel alloc]initWithFrame:CGRectMake(0, detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+3, width, 1)];
-    [line setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    
-    [bottomView addSubview:line];
-    tit=[[UILabel alloc]initWithFrame:CGRectMake(0, line.frame.origin.y+5, width/2, width/10)];
-    tit.text=@"＊体验课预约规则";
-    tit.font=[UIFont systemFontOfSize:width/22];
-    tit.textColor=[UIColor redColor];
-    [bottomView addSubview:tit];
-    neirong=[[UITextView alloc]initWithFrame:CGRectMake(width/20, tit.frame.origin.y+tit.frame.size.height+2, width-width/28, 20)];
-//    neirong.text=@"";
-//    [neirong setTextColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    
-    
-    [neirong setText:@""];
-    neirong.editable=NO;
-    [neirong setTextAlignment:NSTextAlignmentLeft];
-    [neirong setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [neirong setFont:[UIFont systemFontOfSize:width/26.7]];
-    neirong.backgroundColor=[UIColor whiteColor];
-    [bottomView addSubview:neirong];
-    
-    
-    
-//    //规则
-    //规则详情显示
-//    UILabel *lbe=[[UILabel alloc]initWithFrame:CGRectMake(0, guize.frame.origin.y+guize.frame.size.height+width/32, width, width/12)];
-//    
-//    lbe.text=[data objectForKey:@"lesson_rule"];
-//
-//    lbe.numberOfLines=0;
-//    [bottomView addSubview: lbe];
-//    上课时间选择按钮
-    timeSelectView=[[UIView alloc]initWithFrame:CGRectMake(0, detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/32, width, width/12.8)];
-    [timeSelectView setUserInteractionEnabled:YES];
-    [timeSelectView setBackgroundColor:[UIColor colorWithRed:245.f/255.f green:245.f/255.f blue:245.f/255.f alpha:1.0]];
-    UITapGestureRecognizer *timeSelectGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openTimeSelectPicker)];
-    [timeSelectView addGestureRecognizer:timeSelectGesture];
-    UILabel *timeSelectLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, width/40, width/26*7, width/26.7)];
-    [timeSelectLabel setText:@"上课时间选择"];
-    [timeSelectLabel setTextColor:[UIColor colorWithRed:77.f/255.f green:77.f/255.f blue:77.f/255.f alpha:1.0]];
-    [timeSelectLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-    UIImageView *timeSelectImageView=[[UIImageView alloc]initWithFrame:CGRectMake(timeSelectLabel.frame.size.width+timeSelectLabel.frame.origin.x+width/80, timeSelectLabel.frame.origin.y, width/26.7*9/16, width/26.7)];
-    [timeSelectImageView setImage:[UIImage imageNamed:@"go_logo"]];
-    
-    [timeSelectView addSubview:timeSelectLabel];
-    [timeSelectView addSubview:timeSelectImageView];
-    timeShowLabel=[[UILabel alloc]initWithFrame:CGRectMake(timeSelectImageView.frame.size.width+timeSelectImageView.frame.origin.x+width/80, width/40, width/2, width/26.7)];
-    [timeShowLabel setText:@""];
-    [timeShowLabel setTextColor:[UIColor colorWithRed:77.f/255.f green:77.f/255.f blue:77.f/255.f alpha:1.0]];
-    [timeShowLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-    
-    [timeSelectView addSubview:timeShowLabel];
-    [bottomView addSubview:timeSelectView];
-    
-//    UILabel *guize=[[UILabel alloc]initWithFrame:CGRectMake(0,timeSelectView.frame.origin.y+timeSelectView.frame.size.height+100, width, width/12.8)];
-//    [guize setText:@"*体验课预约规则"];
-//    guize.textColor=[UIColor redColor];
-//    [guize setFont:[UIFont systemFontOfSize:width/22]];
-//    [bottomView addSubview:guize];
-    
-    
-    registerLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
-    registerLabel.userInteractionEnabled=YES;
-    UITapGestureRecognizer *registerRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goOrderViewController)];
-    [registerLabel addGestureRecognizer:registerRecognizer];
-    if (isCancel) {
-        [registerLabel setText:@"取消蹭课"];
-    }else{
-        [registerLabel setText:@"我想蹭她"];
-        
-    }
-    [registerLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-    [registerLabel setTextAlignment:NSTextAlignmentCenter];
-    [registerLabel setTextColor:[UIColor whiteColor]];
-    [registerLabel setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    registerLabel.layer.cornerRadius=7.0;
-    registerLabel.layer.masksToBounds=YES;
-    
-    
-    
-    
-    [bottomView addSubview:registerLabel];
-    
-    
-    [scrollView addSubview:bottomView];
+    /*
+     UIImageView *phoneImagView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@""]];
+     [phoneImagView setFrame:CGRectMake(localImageView.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/32, width/22, width/17)];
+     //    UITapGestureRecognizer *callGesuture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callPhone)];
+     //    [phoneImagView addGestureRecognizer:callGesuture];
+     //    [phoneImagView setUserInteractionEnabled:YES];
+     //    [phoneImagView setBackgroundColor:[UIColor greenColor]];
+     //
+     //    [scrollView addSubview:phoneImagView];
+     
+     //    phoneLabel=[[UILabel alloc]initWithFrame:CGRectMake(projectAddLabel.frame.origin.x, projectAddLabel.frame.size.height+projectAddLabel.frame.origin.y+width/25.6, width-(projectAddLabel.frame.origin.x)-width/40, width/26.7)];
+     //    [phoneLabel setText:@"联系电话：023-9523123"];
+     //    [phoneLabel setTextColor:[UIColor colorWithRed:85.f/255.f green:85.f/255.f blue:85.f/255.f alpha:1.0]];
+     //    [phoneLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+     //    [phoneLabel setUserInteractionEnabled:YES];
+     //    [phoneLabel addGestureRecognizer:callGesuture];
+     //    [scrollView addSubview:phoneLabel];
+     
+     projectTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40,  phoneImagView.frame.size.height+phoneImagView.frame.origin.y+width/53, width, width/29)];
+     [projectTimeLabel setText:@""];
+     [projectTimeLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];//
+     //  [projectTimeLabel setBackgroundColor:[UIColor greenColor]];
+     [projectTimeLabel setFont:[UIFont systemFontOfSize:width/29]];
+     [scrollView addSubview:projectTimeLabel];
+     
+     
+     //免费或者收费
+     //        lei=[[UILabel alloc]initWithFrame:CGRectMake(width/2.5,  imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/20, width-(width/40+width/21.3+width/40)-width/40, width/29)];
+     //        [lei setText:@"免费课"];
+     //        [lei setTextColor:[UIColor greenColor]];
+     //        [lei setFont:[UIFont systemFontOfSize:width/24]];
+     //        [scrollView addSubview:lei];
+     
+     
+     
+     //    UILabel *beginTimeTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3.3,imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/32,width/24.6*5,width/24.6)];
+     //    [beginTimeTopLabel setText:@"开课时间："];
+     //    [beginTimeTopLabel setTextColor:[UIColor colorWithRed:76.f/255.f green:76.f/255.f blue:76.f/255.f alpha:1.0]];
+     //    [beginTimeTopLabel setFont:[UIFont systemFontOfSize:width/24.6]];
+     //    [scrollView addSubview:beginTimeTopLabel];
+     //
+     //    beginTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(beginTimeTopLabel.frame.size.width+beginTimeTopLabel.frame.origin.x,imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/32,width/29*10,width/29)];
+     //    [beginTimeLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
+     //    [beginTimeLabel setFont:[UIFont systemFontOfSize:width/24.6]];
+     //    [scrollView addSubview:beginTimeLabel];
+     
+     UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(width/40, imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/26.7, width-width/20, 1)];
+     [lineView setBackgroundColor:[UIColor colorWithRed:245.f/255.f green:245.f/255.f blue:245.f/255.f alpha:1.0]];
+     
+     [scrollView addSubview:lineView];
+     
+     
+     bottomView=[[UIView alloc]initWithFrame:CGRectMake(0, lineView.frame.size.height+lineView.frame.origin.y+width/32, width, width/26.7+width/35.5+hegiht/5+width/16+width/9)];
+     //  [bottomView setBackgroundColor:[UIColor redColor]];
+     
+     UILabel *detailLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40, 0,width-width/40-width/40, width/26.7)];
+     [detailLabel setText:@"详情:"];
+     [detailLabel setTextColor:[UIColor blackColor]];
+     [detailLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+     [bottomView addSubview:detailLabel];
+     detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(width/40, detailLabel.frame.size.height+detailLabel.frame.origin.y+width/35.5,  width-width/40-width/40, hegiht/5)];
+     [detailContentLabel setText:@""];
+     detailContentLabel.editable=NO;
+     [detailContentLabel setTextAlignment:NSTextAlignmentLeft];
+     [detailContentLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
+     [detailContentLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+     [bottomView addSubview:detailContentLabel];
+     
+     
+     line=[[UILabel alloc]initWithFrame:CGRectMake(0, detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+3, width, 1)];
+     [line setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+     
+     [bottomView addSubview:line];
+     tit=[[UILabel alloc]initWithFrame:CGRectMake(0, line.frame.origin.y+5, width/2, width/10)];
+     tit.text=@"＊体验课预约规则";
+     tit.font=[UIFont systemFontOfSize:width/22];
+     tit.textColor=[UIColor redColor];
+     [bottomView addSubview:tit];
+     neirong=[[UITextView alloc]initWithFrame:CGRectMake(width/20, tit.frame.origin.y+tit.frame.size.height+2, width-width/28, 20)];
+     //    neirong.text=@"";
+     //    [neirong setTextColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+     
+     
+     [neirong setText:@""];
+     neirong.editable=NO;
+     [neirong setTextAlignment:NSTextAlignmentLeft];
+     [neirong setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
+     [neirong setFont:[UIFont systemFontOfSize:width/26.7]];
+     neirong.backgroundColor=[UIColor whiteColor];
+     [bottomView addSubview:neirong];
+     
+     
+     
+     //    //规则
+     //规则详情显示
+     //    UILabel *lbe=[[UILabel alloc]initWithFrame:CGRectMake(0, guize.frame.origin.y+guize.frame.size.height+width/32, width, width/12)];
+     //
+     //    lbe.text=[data objectForKey:@"lesson_rule"];
+     //
+     //    lbe.numberOfLines=0;
+     //    [bottomView addSubview: lbe];
+     //    上课时间选择按钮
+     timeSelectView=[[UIView alloc]initWithFrame:CGRectMake(0, detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/32, width, width/12.8)];
+     [timeSelectView setUserInteractionEnabled:YES];
+     [timeSelectView setBackgroundColor:[UIColor colorWithRed:245.f/255.f green:245.f/255.f blue:245.f/255.f alpha:1.0]];
+     UITapGestureRecognizer *timeSelectGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openTimeSelectPicker)];
+     [timeSelectView addGestureRecognizer:timeSelectGesture];
+     UILabel *timeSelectLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, width/40, width/26*7, width/26.7)];
+     [timeSelectLabel setText:@"上课时间选择"];
+     [timeSelectLabel setTextColor:[UIColor colorWithRed:77.f/255.f green:77.f/255.f blue:77.f/255.f alpha:1.0]];
+     [timeSelectLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+     UIImageView *timeSelectImageView=[[UIImageView alloc]initWithFrame:CGRectMake(timeSelectLabel.frame.size.width+timeSelectLabel.frame.origin.x+width/80, timeSelectLabel.frame.origin.y, width/26.7*9/16, width/26.7)];
+     [timeSelectImageView setImage:[UIImage imageNamed:@"go_logo"]];
+     
+     [timeSelectView addSubview:timeSelectLabel];
+     [timeSelectView addSubview:timeSelectImageView];
+     timeShowLabel=[[UILabel alloc]initWithFrame:CGRectMake(timeSelectImageView.frame.size.width+timeSelectImageView.frame.origin.x+width/80, width/40, width/2, width/26.7)];
+     [timeShowLabel setText:@""];
+     [timeShowLabel setTextColor:[UIColor colorWithRed:77.f/255.f green:77.f/255.f blue:77.f/255.f alpha:1.0]];
+     [timeShowLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+     
+     [timeSelectView addSubview:timeShowLabel];
+     [bottomView addSubview:timeSelectView];
+     
+     //    UILabel *guize=[[UILabel alloc]initWithFrame:CGRectMake(0,timeSelectView.frame.origin.y+timeSelectView.frame.size.height+100, width, width/12.8)];
+     //    [guize setText:@"*体验课预约规则"];
+     //    guize.textColor=[UIColor redColor];
+     //    [guize setFont:[UIFont systemFontOfSize:width/22]];
+     //    [bottomView addSubview:guize];
+     
+     
+     registerLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
+     registerLabel.userInteractionEnabled=YES;
+     UITapGestureRecognizer *registerRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goOrderViewController)];
+     [registerLabel addGestureRecognizer:registerRecognizer];
+     if (isCancel) {
+     [registerLabel setText:@"取消蹭课"];
+     }else{
+     [registerLabel setText:@"我想蹭她"];
+     
+     }
+     [registerLabel setFont:[UIFont systemFontOfSize:width/24.6]];
+     [registerLabel setTextAlignment:NSTextAlignmentCenter];
+     [registerLabel setTextColor:[UIColor whiteColor]];
+     [registerLabel setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
+     registerLabel.layer.cornerRadius=7.0;
+     registerLabel.layer.masksToBounds=YES;
+     
+     
+     
+     
+     [bottomView addSubview:registerLabel];
+     
+     
+     [scrollView addSubview:bottomView];*/
     
     [self.view addSubview:scrollView];
     
 }
-
+-(void)initBootomView{
+    int width=self.view.frame.size.width;
+    int height=self.view.frame.size.height;
+    UIControl *collectControl=[[UIControl alloc]initWithFrame:CGRectMake(0,height-width/6.2, width/5.6, width/6.2)];
+    [collectControl setBackgroundColor:[UIColor whiteColor]];
+    
+    UILabel *collectNumLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, width/20, width/5.6, width/32)];
+    [collectNumLabel setText:@"288"];
+    [collectNumLabel setFont:[UIFont systemFontOfSize:width/32]];
+    [collectNumLabel setTextAlignment:NSTextAlignmentCenter];
+    [collectControl addSubview:collectNumLabel];
+    
+    UILabel *collectDefaultLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, collectNumLabel.frame.size.height+collectNumLabel.frame.origin.y+width/64, width/5.6, width/26.7)];
+    [collectDefaultLabel setText:@"收藏"];
+    [collectDefaultLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [collectDefaultLabel setTextAlignment:NSTextAlignmentCenter];
+    [collectControl addSubview:collectDefaultLabel];
+    
+    [self.view addSubview:collectControl];
+    //预约
+    UIControl *orderControl=[[UIControl alloc]initWithFrame:CGRectMake(collectControl.frame.size.width+collectControl.frame.origin.x,height-width/6.2, width/5.6, width/6.2)];
+    [orderControl setBackgroundColor:[UIColor whiteColor]];
+    
+    numbLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, width/20, width/5.6, width/32)];
+    [numbLabel setText:@"234"];
+    [numbLabel setFont:[UIFont systemFontOfSize:width/32]];
+    [numbLabel setTextAlignment:NSTextAlignmentCenter];
+    [orderControl addSubview:numbLabel];
+    
+    UILabel *orderDefaultLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, numbLabel.frame.size.height+numbLabel.frame.origin.y+width/64, width/5.6, width/26.7)];
+    [orderDefaultLabel setText:@"预约"];
+    [orderDefaultLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [orderDefaultLabel setTextAlignment:NSTextAlignmentCenter];
+    [orderControl addSubview:orderDefaultLabel];
+    
+    [self.view addSubview:orderControl];
+    //4.9  251 139 130
+    UIControl *getCollectControl=[[UIControl alloc]initWithFrame:CGRectMake(orderControl.frame.size.width+orderControl.frame.origin.x,height-width/6.2, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2, width/6.2)];
+    [getCollectControl setBackgroundColor:[UIColor colorWithRed:251.f/255.f green:139.f/255.f blue:130.f/255.f alpha:1.0]];
+    //37px高度：35px
+    UIImageView *collectImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/32, getCollectControl.frame.size.height/2-width/18.2/2, width/17.3, width/18.2)];
+    [collectImageView setImage:[UIImage imageNamed:@"start_white"]];
+    [getCollectControl addSubview:collectImageView];
+    
+    UILabel *collectNorLabel=[[UILabel alloc]initWithFrame:CGRectMake(collectImageView.frame.size.width+collectImageView.frame.origin.x+width/100, 0, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2-(collectImageView.frame.size.width+collectImageView.frame.origin.x+width/100), width/6.2)];
+    [collectNorLabel setText:@"收藏课程"];
+    [collectNorLabel setFont:[UIFont systemFontOfSize:width/20]];
+    [collectNorLabel setTextColor:[UIColor whiteColor]];
+    [collectNorLabel setTextAlignment:NSTextAlignmentLeft];
+    
+    [getCollectControl addSubview:collectNorLabel];
+    [self.view addSubview:getCollectControl];
+    
+    //
+    UIControl *getOrderControl=[[UIControl alloc]initWithFrame:CGRectMake(getCollectControl.frame.size.width+getCollectControl.frame.origin.x,height-width/6.2, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2, width/6.2)];
+    [getOrderControl setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:80.f/255.f blue:82.f/255.f alpha:1.0]];
+    
+    
+    
+    UILabel *orderNorLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2, width/6.2)];
+    [orderNorLabel setText:@"立即预约"];
+    [orderNorLabel setFont:[UIFont systemFontOfSize:width/20]];
+    [orderNorLabel setTextColor:[UIColor whiteColor]];
+    [orderNorLabel setTextAlignment:NSTextAlignmentCenter];
+    
+    [getOrderControl addSubview:orderNorLabel];
+    [self.view addSubview:getOrderControl];
+    
+}
 -(void)initTimePicker{
     selectWeekArry=nowWeekArray;
     int width=self.view.frame.size.width;
@@ -510,8 +602,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         }
     }
     amArray=[mutAmArray copy];
-//    item = amItemArray.count > 0 ? (TimeSelectItem *)[amItemArray lastObject]: (TimeSelectItem *)amLabel;
-//    TimeSelectItem *item=(TimeSelectItem *)[weekItemArray lastObject];
+    //    item = amItemArray.count > 0 ? (TimeSelectItem *)[amItemArray lastObject]: (TimeSelectItem *)amLabel;
+    //    TimeSelectItem *item=(TimeSelectItem *)[weekItemArray lastObject];
     TimeSelectItem *item=weekItemArray.count>0?(TimeSelectItem *)[weekItemArray lastObject]:(TimeSelectItem *)weekLabel;
     amLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
     [amLabel setText:@"上午"];
@@ -648,14 +740,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     //确定按钮
     if ([nightItemArray count]>0) {
-//       item = pmItemArray.count > 0 ? (TimeSelectItem *)[pmItemArray lastObject]: (TimeSelectItem *)pmLabel;
+        //       item = pmItemArray.count > 0 ? (TimeSelectItem *)[pmItemArray lastObject]: (TimeSelectItem *)pmLabel;
         item=(TimeSelectItem *)[nightItemArray lastObject];
         confirm=[[UILabel alloc]initWithFrame:CGRectMake(width/5.3, item.frame.size.height+item.frame.origin.y+width/14.5, width/1.6, width/9.1)];
     }else{
         item=(TimeSelectItem *)nightLabel;
         confirm=[[UILabel alloc]initWithFrame:CGRectMake(width/5.3, nightLabel.frame.size.height+nightLabel.frame.origin.y+width/14.5, width/1.6, width/9.1)];
     }
-     
+    
     [confirm setText:@"确定"];
     [confirm setTextAlignment:NSTextAlignmentCenter];
     [confirm setFont:[UIFont systemFontOfSize:width/21.3]];
@@ -666,7 +758,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [confirm setUserInteractionEnabled:YES];
     UITapGestureRecognizer *cofirmGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(timePickerConfirm)];
     [confirm addGestureRecognizer:cofirmGesture];
-//    -------------------
+    //    -------------------
     [timeSelectPicker addSubview:confirm];
     CGRect frame=timeSelectPicker.frame;
     frame.size.height=600;
@@ -819,7 +911,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     pmArray=[mutAmArray copy];
     //下午
     item = amItemArray.count > 0 ? (TimeSelectItem *)[amItemArray lastObject]: (TimeSelectItem *)amLabel;
-//    item=(TimeSelectItem *)[amItemArray lastObject];
+    //    item=(TimeSelectItem *)[amItemArray lastObject];
     pmLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
     [pmLabel setText:@"下午"];
     [pmLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
@@ -862,8 +954,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         }
     }
     nightArray=[mutAmArray copy];
-      item = pmItemArray.count > 0 ? (TimeSelectItem *)[pmItemArray lastObject]: (TimeSelectItem *)pmLabel;
-//    item=(TimeSelectItem *)[pmItemArray lastObject];
+    item = pmItemArray.count > 0 ? (TimeSelectItem *)[pmItemArray lastObject]: (TimeSelectItem *)pmLabel;
+    //    item=(TimeSelectItem *)[pmItemArray lastObject];
     nightLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
     [nightLabel setText:@"晚上"];
     [nightLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
@@ -964,7 +1056,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         selectWeekArry=nextWeekArray;
     }
     weekId=[NSNumber numberWithInt:(int)gesutre.view.tag];
-
+    
 }
 -(void)amOnClick:(UITapGestureRecognizer *)gesutre{
     NSLog(@"amOnClick");
@@ -1143,7 +1235,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }
             }
             [self initAmPmNightView:(int)item.tag];
-           
+            
         }else{
             [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
             [item setTextColor:[UIColor blackColor]];
@@ -1167,7 +1259,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     // totalCount = 1;
     
-    imageScrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, topView.frame.size.height+topView.frame.origin.y+width/21, width, width/3)];
+    imageScrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, width, width/1.6)];
     //  CGRect bounds = scrollview.frame;  //获取界面区域
     
     // pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, bounds.size.height, bounds.size.width, 30)];
@@ -1259,7 +1351,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         page++;
     }
     
-
+    
     //  滚动scrollview
     CGFloat x = page * imageScrollview.frame.size.width;
     imageScrollview.contentOffset = CGPointMake(x, 0);
@@ -1274,86 +1366,85 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     if ([timeShowLabel.text isEqualToString:@"本周日"]||[timeShowLabel.text isEqualToString:@"本周六"]||[timeShowLabel.text isEqualToString:@"本周五"]||[timeShowLabel.text isEqualToString:@"本周四"]||[timeShowLabel.text isEqualToString:@"本周三"]||[timeShowLabel.text isEqualToString:@"本周二"]||[timeShowLabel.text isEqualToString:@"本周一"]||[timeShowLabel.text isEqualToString:@"下周一"]||[timeShowLabel.text isEqualToString:@"下周二"]||[timeShowLabel.text isEqualToString:@"下周三"]||[timeShowLabel.text isEqualToString:@"下周四"]||[timeShowLabel.text isEqualToString:@"下周五"]||[timeShowLabel.text isEqualToString:@"下周六"]||[timeShowLabel.text isEqualToString:@"下周日"]) {
         UIAlertView * vi=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请选择具体时间" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
-             [vi show];
+        [vi show];
     }
     else
     {
-    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
-    if (isCancel) {
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(queue, ^{
-            //
-//            +(void)deleteMyLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBeginTime:(NSString *) begintime withadvancetime:(NSNumber *)advancetime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture
-//        [HttpHelper deleteMyLesson:L_ID withWeekId:WEEK_ID withWeekNum:WEEK_NUM withBeginTime:ORDER_TIME withadvancetime:(NSNumber *) withModel:myDelegate.model success:^(HttpModel *model) {
-//            
-//        } failure:^(NSError *error) {
-//            
-//        }];
-            [HttpHelper deleteMyLesson:L_ID withWeekId:WEEK_ID withWeekNum:WEEK_NUM withBeginTime:ORDER_TIME withModel:myDelegate.model success:^(HttpModel *model){
-                NSLog(@"%@",model.message);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                        //dataArray=[(NSMutableArray *)model.result mutableCopy];
-                        dispatch_async(dispatch_get_main_queue(), ^{
+        AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+        if (isCancel) {
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(queue, ^{
+                //
+                //            +(void)deleteMyLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBeginTime:(NSString *) begintime withadvancetime:(NSNumber *)advancetime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture
+                //        [HttpHelper deleteMyLesson:L_ID withWeekId:WEEK_ID withWeekNum:WEEK_NUM withBeginTime:ORDER_TIME withadvancetime:(NSNumber *) withModel:myDelegate.model success:^(HttpModel *model) {
+                //
+                //        } failure:^(NSError *error) {
+                //
+                //        }];
+                [HttpHelper deleteMyLesson:L_ID withWeekId:WEEK_ID withWeekNum:WEEK_NUM withBeginTime:ORDER_TIME withModel:myDelegate.model success:^(HttpModel *model){
+                    NSLog(@"%@",model.message);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                            //dataArray=[(NSMutableArray *)model.result mutableCopy];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                
+                                
+                            });
                             
                             
-                        });
+                        }else{
+                            
+                        }
+                        [self dismissViewControllerAnimated:YES completion:^{
+                            NSNotification *notification =[NSNotification notificationWithName:@"refresh" object:nil];
+                            [[NSNotificationCenter defaultCenter] postNotification:notification];
+                            NSNotification *notification2 =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
+                            [[NSNotificationCenter defaultCenter] postNotification:notification2];
+                        }];
                         
                         
-                    }else{
                         
+                    });
+                }failure:^(NSError *error){
+                    if (error.userInfo!=nil) {
+                        NSLog(@"%@",error.userInfo);
                     }
-                    [self dismissViewControllerAnimated:YES completion:^{
-                        NSNotification *notification =[NSNotification notificationWithName:@"refresh" object:nil];
-                        [[NSNotificationCenter defaultCenter] postNotification:notification];
-                        NSNotification *notification2 =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
-                        [[NSNotificationCenter defaultCenter] postNotification:notification2];
-                    }];
-                    
-                    
-                    
-                });
-            }failure:^(NSError *error){
-                if (error.userInfo!=nil) {
-                    NSLog(@"%@",error.userInfo);
+                }];
+            });
+        }else{
+            if (myDelegate.isLogin) {
+                OrderViewController *orderViewController=[[OrderViewController alloc]init];
+                [orderViewController setProjectId:[data objectForKey:@"id"]];
+                [orderViewController setWeekId:weekId];
+                [orderViewController setWeekNum:weekNum];
+                [orderViewController setBeginTime:beginTime];
+                if (advance_time==nil) {
+                    [orderViewController setAdvancetime: [NSNumber numberWithInteger:1]];
                 }
-            }];
-        });
-    }else{
-        if (myDelegate.isLogin) {
-            OrderViewController *orderViewController=[[OrderViewController alloc]init];
-            [orderViewController setProjectId:[data objectForKey:@"id"]];
-            [orderViewController setWeekId:weekId];
-            [orderViewController setWeekNum:weekNum];
-            [orderViewController setBeginTime:beginTime];
-            if (advance_time==nil) {
-                [orderViewController setAdvancetime: [NSNumber numberWithInteger:1]];
-                NSLog(@"111111111111111111111111111111111111111111111111111111111111111111111111111111111");
+                else{
+                    
+                    [orderViewController setAdvancetime:advance_time];
+                }
+                if(detailContentLabel.text.length>30){
+                    [orderViewController setContent:[detailContentLabel.text substringToIndex:30]];
+                }else{
+                    [orderViewController setContent:detailContentLabel.text];
+                }
+                NSLog(@"----------\n\n\n%@,%@,%@,%@,%@",[data objectForKey:@"id"],weekId,weekNum,beginTime,advance_time);
+                
+                [self presentViewController:orderViewController animated:YES completion:^{
+                    NSNotification *notification =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotification:notification];
+                }];
+                
             }
+            
+            
             else{
-            
-            [orderViewController setAdvancetime:advance_time];
+                LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+                [self presentViewController:loginRegViewController animated:YES completion:nil];
             }
-            if(detailContentLabel.text.length>30){
-                [orderViewController setContent:[detailContentLabel.text substringToIndex:30]];
-            }else{
-                [orderViewController setContent:detailContentLabel.text];
-            }
-            NSLog(@"----------\n\n\n%@,%@,%@,%@,%@",[data objectForKey:@"id"],weekId,weekNum,beginTime,advance_time);
-            
-            [self presentViewController:orderViewController animated:YES completion:^{
-                NSNotification *notification =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
-                [[NSNotificationCenter defaultCenter] postNotification:notification];
-            }];
-            
         }
-        
-        
-        else{
-            LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
-            [self presentViewController:loginRegViewController animated:YES completion:nil];
-        }
-    }
     }
 }
 -(void)cancelProject{
@@ -1386,7 +1477,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [organDetailsViewController setAritcleId:[data objectForKey:@"instid"]];
         [self presentViewController:organDetailsViewController animated:YES completion:nil];
     }
-    }
+}
 
 -(void)deleteProject{
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1481,21 +1572,21 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             
                             
                             NSLog(@"1111111111111111111111111111\n\n\n\n\n\n\n\n\n%@",advance_time);
-//                            NSString *sb=[NSString stringWithFormat:@"%@",dic];
-//                            UIAlertView *alt=[[UIAlertView alloc]initWithTitle:@"提示" message:sb delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"你觉得呢", nil];
-//                            [alt show];
+                            //                            NSString *sb=[NSString stringWithFormat:@"%@",dic];
+                            //                            UIAlertView *alt=[[UIAlertView alloc]initWithTitle:@"提示" message:sb delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"你觉得呢", nil];
+                            //                            [alt show];
                             
-                                                        if (![[dic objectForKey:@"img"] isEqualToString:@""]) {
+                            if (![[dic objectForKey:@"img"] isEqualToString:@""]) {
                                 NSString *images=[dic objectForKey:@"img"];
-                                                            
-                                                            
-                                                            
-                                                            NSLog(@"images:98765432132154789554522------------------\n\n%@",images);
+                                
+                                
+                                
+                                NSLog(@"images:98765432132154789554522------------------\n\n%@",images);
                                 NSArray *array = [images componentsSeparatedByString:@","];
-                                   //保存图片
-                              NSUserDefaults *faut=[NSUserDefaults standardUserDefaults];
-                                    [faut setObject:array forKey:@"pictures"];
-                                                            
+                                //保存图片
+                                NSUserDefaults *faut=[NSUserDefaults standardUserDefaults];
+                                [faut setObject:array forKey:@"pictures"];
+                                
                                 if ([array count]>0) {
                                     totalCount=[array count];
                                     pageControl.numberOfPages=totalCount;
@@ -1506,12 +1597,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                     }
                                     
                                     //    图片的宽
-                                    CGFloat imageW = imageScrollview.frame.size.width/3;
+                                    CGFloat imageW = imageScrollview.frame.size.width;
                                     //    CGFloat imageW = 300;
                                     //    图片高
                                     CGFloat imageH = imageScrollview.frame.size.height;
-                                    //图片之间的间隔
-                                    CGFloat paddingW=imageScrollview.frame.size.width/40;
                                     //    图片的Y
                                     CGFloat imageY = 0;
                                     
@@ -1520,32 +1609,23 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                         UIImageView *imageView = [[UIImageView alloc] init];
                                         [imageView setUserInteractionEnabled:YES];
                                         //        图片X
-                                        CGFloat imageX = i *(imageW+paddingW);
+                                        CGFloat imageX = i * imageW;
                                         //        设置frame
-                                        imageView.frame = CGRectMake(imageX+paddingW, imageY, imageW, imageH);
+                                        imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
                                         //        设置图片
                                         NSString *logo=[array objectAtIndex:i];
-                                        
-//                                        tab=[[NSMutableArray alloc]init];
-//                                        [tab addObject:logo];
-//                                    
-//                                        
-//                                        NSLog(@"----------\n\n%@",tab);
-                                        
-                                        
                                         
                                         [imageView setImage:[UIImage imageNamed:@"banner_default"]];
                                         [imageView setTag:i];
                                         UITapGestureRecognizer *openChorme=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageGesture:)];
                                         [imageView addGestureRecognizer:openChorme];
                                         [imageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-                                        NSLog(@"------789789789789\n\n\n\n\n%@",imageView.image);
-                                      
+                                        
                                         
                                         //        隐藏指示条
                                         imageScrollview.showsHorizontalScrollIndicator = NO;
                                         [imageScrollview addSubview:imageView];
-                                        CGFloat contentW = totalCount *(imageW+paddingW)+paddingW;
+                                        CGFloat contentW = totalCount *imageW;
                                         //不允许在垂直方向上进行滚动
                                         imageScrollview.contentSize = CGSizeMake(contentW, 0);
                                         
@@ -1555,75 +1635,70 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                         //    4.监听scrollview的滚动
                                         imageScrollview.delegate = self;
                                     }
-//                                    NSUserDefaults *de=[NSUserDefaults standardUserDefaults];
-//                                    [de setObject:tab forKey:@"tad"];
-//                                    NSLog(@"---------\n\n\n\n\n\n\n\n\n\n%@",tab);
+                                    
                                     CGRect bounds = imageScrollview.frame;  //获取界面区域
                                     
                                     
-                                    //                                    pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-30, bounds.size.width, 30)];
-                                    //                                    pageControl.numberOfPages = totalCount;//总的图片页数
-                                    //
-                                    //                                    [scrollView addSubview:pageControl];
+                                    pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-30, bounds.size.width, 30)];
+                                    pageControl.numberOfPages = totalCount;//总的图片页数
+                                    pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+                                    pageControl.pageIndicatorTintColor = [UIColor redColor];
+                                    [scrollView addSubview:pageControl];
                                 }
                             }
                             
                             NSString *st=[dic objectForKey:@"logo"];
-                            NSLog(@"九阴真经：、男、男、男、男、男、男、、n\n\n\n\n\n\n%@",st);
-                            
-                            
                             
                             if ([dic objectForKey:@"logo"]&& ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
                                 NSString *logo=[NSString stringWithFormat:@"%@",[dic objectForKey:@"logo"]];
                                 [logoImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-                                NSLog(@"22222222222222222\n\n\n%@",logoImageView.image);
-                                
-                                
                             }
                             if ([dic objectForKey:@"content"]&& ![[dic objectForKey:@"content"] isEqual:[NSNull null]]) {
                                 [detailContentLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"content"]]];
                                 CGRect frame=detailContentLabel.frame;
                                 frame.size.height=detailContentLabel.contentSize.height;
                                 [detailContentLabel setFrame:frame];
-                                frame=timeSelectView.frame;
+                                //                                frame=timeSelectView.frame;
                                 int width=self.view.frame.size.width;
+                                //
+                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/3;
+                                //
+                                //                                [timeSelectView setFrame:frame];
+                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height;
+                                //                                frame.size.height=1;
+                                //                                [line setFrame:frame];
+                                //                                //tit
+                                //                                frame.origin.y=line.frame.origin.y+line.frame.size.height+3;
+                                //                                frame.size.height=width/22;
+                                //                                [tit setFrame:frame];
+                                //
+                                //
+                                //                                //guize
+                                //                                neirong.text=[dic objectForKey:@"lesson_rule"];
+                                //                                CGRect frame1=neirong.frame;
+                                //                                    frame1.size.height=neirong.contentSize.height;
+                                //                                [neirong setFrame:frame1];
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //                                [registerLabel setFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
+                                //
+                                //                                frame=bottomView.frame;
+                                //
+                                //                                frame.size.height=registerLabel.frame.size.height+registerLabel.frame.origin.y+width/5.7;
+                                //                                [bottomView setFrame:frame];
+                                frame=contentControl.frame;
+                                frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y+width/23.7;
+                                [contentControl setFrame:frame];
                                 
-                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/3;
-                                
-                                [timeSelectView setFrame:frame];
-                                  frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height;
-                                frame.size.height=1;
-                                [line setFrame:frame];
-//tit
-                                frame.origin.y=line.frame.origin.y+line.frame.size.height+3;
-                                frame.size.height=width/22;
-                                [tit setFrame:frame];
-                                
-                                
-                                //guize
-                                neirong.text=[dic objectForKey:@"lesson_rule"];
-                                CGRect frame1=neirong.frame;
-                                frame1.origin.y=tit.frame.origin.y+tit.frame.size.height+width/20;
-                                
-                                frame1.size.height=neirong.contentSize.height;
-                                [neirong setFrame:frame1];
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                               
-                                [registerLabel setFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
-                                
-                                frame=bottomView.frame;
-                               
-                                frame.size.height=registerLabel.frame.size.height+registerLabel.frame.origin.y+width/5.7;
-                                [bottomView setFrame:frame];
-                                [scrollView setContentSize:CGSizeMake(width, bottomView.frame.size.height+bottomView.frame.origin.y)];
+                                [scrollView setContentSize:CGSizeMake(width, contentControl.frame.size.height+contentControl.frame.origin.y+width/6.2)];
                                 
                                 
                             }
@@ -1632,8 +1707,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             }
                             
                             
-//                            btime=[dic objectForKey:@"btime"];
-//                            NSLog(@"btime------>\n\n\n\n%@",btime);
+                            //                            btime=[dic objectForKey:@"btime"];
+                            //                            NSLog(@"btime------>\n\n\n\n%@",btime);
                             if ([dic objectForKey:@"btime"]&& ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
                                 NSNumber *number=[dic objectForKey:@"btime"];
                                 NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
@@ -1645,9 +1720,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 
                                 // NSString *str=[self compareCurrentTime:confromTimespStr];
                                 
-//                                //  [dateLabel setText:str];
-//                                [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-//                                [beginTimeLabel setText:[self getBeginTime:number]];
+                                //                                //  [dateLabel setText:str];
+                                //                                [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+                                //                                [beginTimeLabel setText:[self getBeginTime:number]];
                                 
                             }
                             if([dic objectForKey:@"insttitle"]&& ![[dic objectForKey:@"insttitle"] isEqual:[NSNull null]]){
@@ -1681,9 +1756,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
                                 phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
                                 [phoneLabel setText:[NSString stringWithFormat:@"联系电话:%@",phone]];
-
+                                
                             }
-//                            得到时间列表
+                            //                            得到时间列表
                             NSNumber *lid=[dic objectForKey:@"id"];
                             L_ID=lid;
                             NSNumber *begtime=[dic objectForKey:@"btime"];
@@ -1700,7 +1775,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 WEEK_NUM=[mylesson objectForKey:@"weeknum"];
                                 ORDER_TIME=[mylesson objectForKey:@"ordertime"];
                             }
-                          
+                            
                             
                         });
                         
@@ -1735,8 +1810,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                         dispatch_async(dispatch_get_main_queue(), ^{
                             NSDictionary *dic=model.result;
                             data=dic;
-                         bt=   [dic objectForKey:@"btime"];
-                          
+                            bt=[dic objectForKey:@"btime"];
+                            
                             if (![[dic objectForKey:@"img"] isEqualToString:@""]) {
                                 NSString *images=[dic objectForKey:@"img"];
                                 NSArray *array = [images componentsSeparatedByString:@","];
@@ -1752,12 +1827,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                     }
                                     
                                     //    图片的宽
-                                    CGFloat imageW = imageScrollview.frame.size.width/3;
+                                    CGFloat imageW = imageScrollview.frame.size.width;
                                     //    CGFloat imageW = 300;
                                     //    图片高
                                     CGFloat imageH = imageScrollview.frame.size.height;
-                                    //图片之间的间隔
-                                    CGFloat paddingW=imageScrollview.frame.size.width/40;
                                     //    图片的Y
                                     CGFloat imageY = 0;
                                     
@@ -1766,26 +1839,23 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                         UIImageView *imageView = [[UIImageView alloc] init];
                                         [imageView setUserInteractionEnabled:YES];
                                         //        图片X
-                                        CGFloat imageX = i *(imageW+paddingW);
+                                        CGFloat imageX = i * imageW;
                                         //        设置frame
-                                        imageView.frame = CGRectMake(imageX+paddingW, imageY, imageW, imageH);
+                                        imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
                                         //        设置图片
                                         NSString *logo=[array objectAtIndex:i];
-                                         NSLog(@"图片数据：\n\n\n\n\n\n\n%@",logo);
+                                        
                                         [imageView setImage:[UIImage imageNamed:@"banner_default"]];
                                         [imageView setTag:i];
                                         UITapGestureRecognizer *openChorme=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageGesture:)];
                                         [imageView addGestureRecognizer:openChorme];
-                                        if ([logo length]>0) {
-                                            [imageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-                                        }
-                                       
-//      http://211.149.190.90//Public/image/upload/20160607/575670b7b958f.jpg
-//                 http://211.149.190.90//Public/image/upload/20160607/575670a9e7098.jpg
+                                        [imageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+                                        
+                                        
                                         //        隐藏指示条
                                         imageScrollview.showsHorizontalScrollIndicator = NO;
                                         [imageScrollview addSubview:imageView];
-                                        CGFloat contentW = totalCount *(imageW+paddingW)+paddingW;
+                                        CGFloat contentW = totalCount *imageW;
                                         //不允许在垂直方向上进行滚动
                                         imageScrollview.contentSize = CGSizeMake(contentW, 0);
                                         
@@ -1795,16 +1865,18 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                         //    4.监听scrollview的滚动
                                         imageScrollview.delegate = self;
                                     }
+                                    
                                     CGRect bounds = imageScrollview.frame;  //获取界面区域
                                     
                                     
-                                    //                                    pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-30, bounds.size.width, 30)];
-                                    //                                    pageControl.numberOfPages = totalCount;//总的图片页数
-                                    //
-                                    //                                    [scrollView addSubview:pageControl];
+                                    pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-30, bounds.size.width, 30)];
+                                    pageControl.numberOfPages = totalCount;//总的图片页数
+                                    pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+                                    pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f  alpha:1.0];
+                                    [scrollView addSubview:pageControl];
                                 }
                             }
-                          
+                            
                             if ([dic objectForKey:@"logo"]&& ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
                                 NSString *logo=[NSString stringWithFormat:@"%@",[dic objectForKey:@"logo"]];
                                 [logoImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
@@ -1820,35 +1892,39 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 [detailContentLabel setFrame:frame];
                                 frame=timeSelectView.frame;
                                 int width=self.view.frame.size.width;
-                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/3;
-                                [timeSelectView setFrame:frame];
-                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+3;
-                                frame.size.height=1;
-                                [line setFrame:frame];
+                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/3;
+                                //                                [timeSelectView setFrame:frame];
+                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+3;
+                                //                                frame.size.height=1;
+                                //                                [line setFrame:frame];
+                                //
+                                //                                //tit
+                                //
+                                //                                frame.origin.y=line.frame.origin.y+line.frame.size.height+3;
+                                //                                frame.size.height=width/22;
+                                //                                [tit setFrame:frame];
+                                //
+                                //                                //guize
+                                //                                neirong.text=[dic objectForKey:@"lesson_rule"];
+                                //                                CGRect frame1=neirong.frame;
+                                //                                frame1.origin.y=tit.frame.origin.y+tit.frame.size.height+width/20;
+                                //
+                                //                                frame1.size.height=neirong.contentSize.height;
+                                //                                [neirong setFrame:frame1];
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //                                [registerLabel setFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
+                                //                                frame=bottomView.frame;
+                                //                                frame.size.height=registerLabel.frame.size.height+registerLabel.frame.origin.y+width/5.7;
+                                //                                [bottomView setFrame:frame];
+                                frame=contentControl.frame;
+                                frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y+width/23.7;
+                                [contentControl setFrame:frame];
                                 
-                                //tit
-                                
-                                frame.origin.y=line.frame.origin.y+line.frame.size.height+3;
-                                frame.size.height=width/22;
-                                [tit setFrame:frame];
-                                
-                                //guize
-                                neirong.text=[dic objectForKey:@"lesson_rule"];
-                                CGRect frame1=neirong.frame;
-                                frame1.origin.y=tit.frame.origin.y+tit.frame.size.height+width/20;
-                                
-                                frame1.size.height=neirong.contentSize.height;
-                                [neirong setFrame:frame1];
-                                
-                                
-                                
-                                
-                               
-                                [registerLabel setFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
-                                frame=bottomView.frame;
-                                frame.size.height=registerLabel.frame.size.height+registerLabel.frame.origin.y+width/5.7;
-                                [bottomView setFrame:frame];
-                                [scrollView setContentSize:CGSizeMake(width, bottomView.frame.size.height+bottomView.frame.origin.y)];
+                                [scrollView setContentSize:CGSizeMake(width, contentControl.frame.size.height+contentControl.frame.origin.y+width/6.2)];
                                 
                             }
                             if ([dic objectForKey:@"grade"]&& ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
@@ -1856,16 +1932,16 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             }
                             if ([dic objectForKey:@"btime"]&& ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
                                 NSNumber *number=[dic objectForKey:@"btime"];
-                               
-                               
+                                
+                                
                                 NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
                                 NSString *timeStamp2 =[formater stringFromNumber:number];
                                 long long int date1 = (long long int)[timeStamp2 intValue];
                                 aDate = [NSDate dateWithTimeIntervalSince1970:date1];
                                 
-//                                [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-//                                
-//                                [beginTimeLabel setText:[self getBeginTime:number]];
+                                //                                [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+                                //
+                                //                                [beginTimeLabel setText:[self getBeginTime:number]];
                                 
                                 
                             }
@@ -1889,17 +1965,17 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 [projectNameLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"title"]]];
                             }
                             //免费
-//                            int kis=[[dic objectForKey:@"price"]intValue];
-//                            if (kis==0) {
-//                                [lei setText:@"免费课"];
-//                                [lei setTextColor:[UIColor greenColor]];
-//                            }else
-//                            {
-//                                [lei setText:[NSString stringWithFormat:@"¥  %i",kis]];
-//                                [lei setFont:[UIFont systemFontOfSize:self.view.frame.size.width/22]];
-//                                lei.textColor=[UIColor orangeColor];
-//                            
-//                            }
+                            //                            int kis=[[dic objectForKey:@"price"]intValue];
+                            //                            if (kis==0) {
+                            //                                [lei setText:@"免费课"];
+                            //                                [lei setTextColor:[UIColor greenColor]];
+                            //                            }else
+                            //                            {
+                            //                                [lei setText:[NSString stringWithFormat:@"¥  %i",kis]];
+                            //                                [lei setFont:[UIFont systemFontOfSize:self.view.frame.size.width/22]];
+                            //                                lei.textColor=[UIColor orangeColor];
+                            //
+                            //                            }
                             
                             
                             if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
@@ -1916,15 +1992,15 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
                                 phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
                                 [phoneLabel setText:[NSString stringWithFormat:@"联系电话:%@",phone]];
-
+                                
                             }
                             
                             NSNumber *lid=[dic objectForKey:@"id"];
                             L_ID=lid;
                             NSNumber *begtime=[dic objectForKey:@"btime"];
                             [self getTimeList:lid andBTime:begtime];
-                           
-
+                            
+                            
                         });
                         
                     }else{
@@ -2032,10 +2108,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     CLLocationCoordinate2D coords2 = coordinate;
     CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToGcj02:coords2];
     
-//     + (CLLocationCoordinate2D)bd09ToWgs84:(CLLocationCoordinate2D)location;
+    //     + (CLLocationCoordinate2D)bd09ToWgs84:(CLLocationCoordinate2D)location;
     
     
-   
+    
     
     
     
@@ -2289,9 +2365,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
-
+    
     NSLog(@"87887888888888--\n\n\n%@",timeShowLabel.text);
-
+    
 }
 
 - (void)didReceiveMemoryWarning {
