@@ -19,7 +19,7 @@
 @property UITextField *userTextFiled;
 @property UITextField *codeTextFiled;
 @property UITextField *pasTextFiled;
-@property UILabel *sendLabel;
+@property UIButton *sendLabel;
 @property NSTimer *timer;
 @property int secondsCountDown; //倒计时总时长
 @property(strong,nonatomic)UIAlertView *alertView;
