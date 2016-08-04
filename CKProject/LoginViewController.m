@@ -92,73 +92,101 @@ TencentOAuth *tencentOAuth;
 -(void)initCotentView{
     int width=self.view.frame.size.width;
     
-    userTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(width/8, titleHeight+20+width/4.9, width, titleHeight)];
+    userTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(width/8, titleHeight+20+width/4.9, width-width/4, titleHeight)];
     [userTextFiled setPlaceholder:@"手机号"];
-    [userTextFiled setTextColor:[UIColor blackColor]];
-    [userTextFiled setValue:[UIColor blackColor] forKeyPath:DXPlaceholderColorKey];
+    [userTextFiled setTextColor:[UIColor colorWithRed:47.f/255.f green:47.f/255.f blue:47.f/255.f alpha:1.0]];
+    [userTextFiled setValue:[UIColor colorWithRed:47.f/255.f green:47.f/255.f blue:47.f/255.f alpha:1.0] forKeyPath:DXPlaceholderColorKey];
     [self.view addSubview:userTextFiled];
-    
-    pasTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(width/8, titleHeight+20+width/4.9+titleHeight+0.5, width, titleHeight)];
+   
+    UIView *line1View=[[UIView alloc]initWithFrame:CGRectMake(userTextFiled.frame.origin.x, userTextFiled.frame.size.height+userTextFiled.frame.origin.y, userTextFiled.frame.size.width, 0.5)];
+    [line1View setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:line1View];
+
+    pasTextFiled=[[UITextField alloc]initWithFrame:CGRectMake(width/8, line1View.frame.size.height+line1View.frame.origin.y, width-width/4-titleHeight, titleHeight)];
     [pasTextFiled setPlaceholder:@"请输入密码"];
-    [pasTextFiled setTextColor:[UIColor blackColor]];
-    [pasTextFiled setValue:[UIColor blackColor] forKeyPath:DXPlaceholderColorKey];
+    [pasTextFiled setTextColor:[UIColor colorWithRed:47.f/255.f green:47.f/255.f blue:47.f/255.f alpha:1.0]];
+    [pasTextFiled setValue:[UIColor colorWithRed:47.f/255.f green:47.f/255.f blue:47.f/255.f alpha:1.0] forKeyPath:DXPlaceholderColorKey];
     [pasTextFiled setSecureTextEntry:YES];
     [self.view addSubview:pasTextFiled];
+    UIButton *showPasImageView=[[UIButton alloc]initWithFrame:CGRectMake(pasTextFiled.frame.size.width+pasTextFiled.frame.origin.x, pasTextFiled.frame.origin.y, titleHeight, titleHeight)];
+    [showPasImageView setImage:[UIImage imageNamed:@"hid_pas"] forState:UIControlStateNormal];
+    [showPasImageView setImage:[UIImage imageNamed:@"show_pas"] forState:UIControlStateHighlighted];
+    [showPasImageView addTarget:self action:@selector(hidPas) forControlEvents:UIControlEventTouchUpInside];
+    [showPasImageView addTarget:self action:@selector(showPas) forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:showPasImageView];
     
-    loginLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/8, titleHeight+20+width/4.9+titleHeight+0.5+titleHeight+width/20, width-width/4, width/8.6)];
+    UIView *line2View=[[UIView alloc]initWithFrame:CGRectMake(pasTextFiled.frame.origin.x, pasTextFiled.frame.size.height+pasTextFiled.frame.origin.y, userTextFiled.frame.size.width, 0.5)];
+    [line2View setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:line2View];
+
+    
+    UILabel *forgetLabel=[[UILabel alloc]initWithFrame:CGRectMake(line2View.frame.origin.x, line2View.frame.size.height+line2View.frame.origin.y+width/32, width/4 , width/20)];
+    UITapGestureRecognizer *forgetRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goForgetViewController)];
+    forgetLabel.userInteractionEnabled=YES;
+    [forgetLabel addGestureRecognizer:forgetRecognizer];
+    [forgetLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [forgetLabel setTextAlignment:NSTextAlignmentLeft];
+    [forgetLabel setText:@"忘记密码？"];
+    [forgetLabel setTextColor:[UIColor colorWithRed:47.f/255.f green:47.f/255.f blue:47.f/255.f alpha:1.0]];
+    [self.view addSubview:forgetLabel];
+    
+    
+    UILabel *registerLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-line2View.frame.origin.x, line2View.frame.size.height+line2View.frame.origin.y+width/32, width/4 , width/20)];
+    UITapGestureRecognizer *registerRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goRegisterViewController)];
+    registerLabel.userInteractionEnabled=YES;
+    [registerLabel addGestureRecognizer:registerRecognizer];
+    [registerLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [registerLabel setTextAlignment:NSTextAlignmentRight];
+    [registerLabel setText:@"立即注册"];
+    [registerLabel setTextColor:[UIColor colorWithRed:47.f/255.f green:47.f/255.f blue:47.f/255.f alpha:1.0]];
+    [self.view addSubview:registerLabel];
+    
+    //16
+    loginLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/8, forgetLabel.frame.size.height+forgetLabel.frame.origin.y+width/16, width-width/4, width/8.6)];
     UITapGestureRecognizer *loginRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goLoginViewController)];
     loginLabel.userInteractionEnabled=YES;
     [loginLabel addGestureRecognizer:loginRecognizer];
-    [loginLabel setText:@"立即登录"];
-    [loginLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [loginLabel setText:@"登录"];
     [loginLabel setTextAlignment:NSTextAlignmentCenter];
     [loginLabel setTextColor:[UIColor whiteColor]];
     [loginLabel setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:100.f/255.f blue:103.f/255.f alpha:1.0]];
     [self.view addSubview:loginLabel];
     
-    
-    UILabel *forgetLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-width/40, titleHeight+20+width/40+titleHeight+0.5+titleHeight+width/20+width/9+width/40, width/4 , width/20)];
-    UITapGestureRecognizer *forgetRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goForgetViewController)];
-    forgetLabel.userInteractionEnabled=YES;
-    [forgetLabel addGestureRecognizer:forgetRecognizer];
-    [forgetLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-    [forgetLabel setTextAlignment:NSTextAlignmentRight];
-    [forgetLabel setText:@"忘记密码？"];
-    [forgetLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    [self.view addSubview:forgetLabel];
-    
+   
     
 }
 -(void)initOtherLoginView{
     int width=self.view.frame.size.width;
-    int height=self.view.frame.size.height;
-    UIView *line1View=[[UIView alloc]initWithFrame:CGRectMake(0, height-width/3-(width/32-0.5)/2, (width-width/32*6)/2-width/32, 0.5)];
-    [line1View setBackgroundColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [self.view addSubview:line1View];
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((width-width/32*6)/2, height-width/3-width/32, width/32*6, width/32)];
-    [titleLabel setText:@"其他登录方式"];
+    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((width-width/26.7*9)/2, loginLabel.frame.size.height+loginLabel.frame.origin.y+width/3.2, width/26.7*9, width/26.7)];
+    [titleLabel setText:@"或使用合作账号登录"];
     [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/32]];
+    [titleLabel setFont:[UIFont systemFontOfSize:width/26.7]];
     [titleLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     [self.view addSubview:titleLabel];
-    UIView *line2View=[[UIView alloc]initWithFrame:CGRectMake((width-width/32*6)/2+width/32*6+width/32, height-width/3-(width/32-0.5)/2, (width-width/32*6)/2-width/32, 0.5)];
+    
+    UIView *line1View=[[UIView alloc]initWithFrame:CGRectMake(width/8.9, loginLabel.frame.size.height+loginLabel.frame.origin.y+width/3,  width/5.2, 0.5)];
+    [line1View setBackgroundColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
+    [self.view addSubview:line1View];
+
+    
+    UIView *line2View=[[UIView alloc]initWithFrame:CGRectMake((width-width/8.9)-width/5.2,loginLabel.frame.size.height+loginLabel.frame.origin.y+width/3, width/5.2, 0.5)];
     [line2View setBackgroundColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     [self.view addSubview:line2View];
     
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, height-width/3, width, width/3)];
+    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.frame.size.height+titleLabel.frame.origin.y+width/6.4, width, width/3)];
     [self.view addSubview:view];
     
     NSArray *otherArray= [NSArray arrayWithObjects:@"微博",@"微信",@"QQ", nil];
-    NSArray *imageArray= [NSArray arrayWithObjects:@"weibo_logo",@"wx_logo",@"qq_logo", nil];
+    NSArray *imageArray= [NSArray arrayWithObjects:@"wx_logo",@"qq_logo",@"weibo_logo", nil];
    
    
 
     for (int i=0; i<[otherArray count]; i++) {
-                UIControl *control=[[UIControl alloc]initWithFrame:CGRectMake(width/3*i, 0, width/3, width/3)];
+        UIControl *control=[[UIControl alloc]initWithFrame:CGRectMake(width/3*i, 0, width/3, width/3)];
         [control setTag:i];
         [control addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
         [control setUserInteractionEnabled:YES];
-        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake((width/3-width/10)/2, width/8, width/10, width/10)];
+        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake((width/3-width/7)/2, 0, width/7, width/7)];
         [imageView setImage:[UIImage imageNamed:[imageArray objectAtIndex:i]]];
         [control addSubview:imageView];
         
@@ -167,28 +195,28 @@ TencentOAuth *tencentOAuth;
         [label setText:[otherArray objectAtIndex:i]];
         [label setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
         [label setFont:[UIFont systemFontOfSize:width/32]];
-        [control addSubview:label];
+      //  [control addSubview:label];
         
         if (![WXApi isWXAppInstalled] && i==1) {
-           // [control setHidden:YES];
+            [control setHidden:YES];
 
         }
         if (![WeiboSDK isWeiboAppInstalled] && i==0) {
-            //[control setHidden:YES];
+            [control setHidden:YES];
 
         }
         if (![TencentOAuth iphoneQQInstalled] && i==2) {
-          //  [control setHidden:YES];
+            [control setHidden:YES];
         }
 
         
         [view addSubview:control];
     }
     if(![WXApi isWXAppInstalled] && ![WeiboSDK isWeiboAppInstalled] && ![TencentOAuth iphoneQQInstalled]){
-       // [line1View setHidden:YES];
-       // [titleLabel setHidden:YES];
-       // [line2View setHidden:YES];
-       // [view setHidden:YES];
+            [line1View setHidden:YES];
+            [titleLabel setHidden:YES];
+            [line2View setHidden:YES];
+        [view setHidden:YES];
 
 
     }
@@ -213,6 +241,15 @@ TencentOAuth *tencentOAuth;
         default:
             break;
     }
+}
+-(void)hidPas{
+    NSLog(@"hidPas");
+    [pasTextFiled setSecureTextEntry:YES];
+}
+-(void)showPas{
+    NSLog(@"showPas");
+    [pasTextFiled setSecureTextEntry:NO];
+
 }
 static NSString *kAuthScope = @"snsapi_userinfo";
 static NSString *kAuthOpenID = @"wx53d8bade842345b7";
