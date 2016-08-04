@@ -92,7 +92,7 @@
     int width=self.frame.size.width*3;
     int height=self.frame.size.height;
     [lineView removeFromSuperview];
-    [view setFrame:CGRectMake(0, height*3/4-2, self.frame.size.width, 2)];
+    [view setFrame:CGRectMake(0, height*3/4-2, self.frame.size.width, 3)];
     
    // [lineView setFrame:CGRectMake(0, height*3/4/4, self.frame.size.width, height*3/4/2)];
 }

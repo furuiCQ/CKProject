@@ -14,5 +14,6 @@
 @property UILabel *moreLabel;
 @property UIImageView *logoImage;
 @property UIImageView *goImage;
-
+@property NSMutableArray *controlArray;
+@property BOOL isSelected;
 @end

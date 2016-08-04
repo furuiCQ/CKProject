@@ -21,6 +21,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "DemotionControl.h"
 #import "JZLocationConverter.h"
+#import "OrderRecordCell.h"
 @interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,TreeTableCellDelegate,CLLocationManagerDelegate>{
     NSArray *local1Array;
     NSArray *local2Array;
@@ -65,6 +66,8 @@
     UILabel *bi;
     NSString *lt;
     NSString *lg;
+    UINib *nib;
+
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
 @end
@@ -1127,6 +1130,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
     // return 3;
 }
+static NSString *identy = @"OrderRecordCell";
 
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -1134,9 +1138,16 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     UITableViewCell *cell;
     NSLog(@"tableView.tag %ld",(long)tableView.tag);
     if ([tableArray count]>0 && tableView.tag==0) {
+        static NSString *identy = @"CustomCell";
+        cell = [tableView dequeueReusableCellWithIdentifier:identy];
+        if(cell==nil){
+            cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
+        }
+        OrderRecordCell *porjectCell=(OrderRecordCell *)cell;
+        /*
+        
         int width=self.view.frame.size.width;
         cell=[[ProjectTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-        ProjectTableCell *porjectCell=(ProjectTableCell *)cell;
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
@@ -1243,8 +1254,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
                     [porjectCell.listItem.typelabel3 setText:@"<500米"];
                 }
             }
-            
-            
+         
 //            //NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
 //            double distance=[RJUtil LantitudeLongitudeDist:[lng doubleValue] other_Lat:[lat doubleValue] self_Lon:localLng self_Lat:localLat];
 //            NSLog(@"distance:%f",distance);
@@ -1260,6 +1270,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
 //            }
             
         }
+        
         
         if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
             NSString *addr=[dic objectForKey:@"addr"];
@@ -1305,7 +1316,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
             [porjectCell.listItem.typelabel2 setFrame:frame];
             [porjectCell.listItem.typelabel2 setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
         }
-        
+         */
     }else if ([local1Array count]>0 && tableView.tag==1) {
         
         cell=[[UITableViewCell alloc]init];
@@ -1397,12 +1408,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         }
         
     }
-    
-    
-    
-    
-    
-    
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

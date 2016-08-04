@@ -17,7 +17,9 @@
 ()<UITableViewDataSource,UITableViewDelegate>{
     NSArray *tableArray;
     UILabel *titleLabel;
-     NSString *str1;
+    NSString *str1;
+    
+    NSMutableArray *selcedIdArray;
 }
 
 @end
@@ -42,6 +44,7 @@
     [self initTitle];
     [self initSwitchBtn];
     tableArray = [NSArray arrayWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",nil];
+    selcedIdArray=[[NSMutableArray alloc]init];
     [self initProjectTableView];
     [self initOrgTableView];
     [projectTableView setHidden:NO];
@@ -93,7 +96,7 @@
     //设置顶部栏
     titleHeight=44;
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
+    [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     //新建左上角Label
     cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
     [cityLabel setBackgroundColor:[UIColor greenColor]];
@@ -103,7 +106,7 @@
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
     [searchLabel setText:@"分类"];
-    
+    [searchLabel setTextColor:[UIColor whiteColor]];
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
     [msgLabel setBackgroundColor:[UIColor greenColor]];
@@ -121,25 +124,31 @@
 -(void)initSwitchBtn{
     int width=self.view.frame.size.width;
     UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
-    [topView setBackgroundColor:[UIColor whiteColor]];
+    [topView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self.view addSubview:topView];
     NSArray *array = [NSArray arrayWithObjects:@"体验课",@"机构", nil];
     tabArray=[[NSMutableArray alloc]init];
     for (int i=0; i<[array count]; i++) {
-        TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count]-1, titleHeight)];
+        TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count], titleHeight)];
         [topBar addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
         [topBar setTag:i];
         [topBar setText:[array objectAtIndex:i]];
+        [topBar initView];
         if(i==[array count]-1){
             [topBar setIsEnd:YES];
         }
         if(i==0){
             [topBar setChecked:YES];
+            [topBar setIconColor:[UIColor colorWithRed:1.0 green:77.f/255.f blue:77.f/255.f alpha:1.0]];
+            [topBar setTextColor:[UIColor colorWithRed:1.0 green:77.f/255.f blue:77.f/255.f alpha:1.0]];
         }else{
             [topBar setChecked:NO];
+            [topBar setIconColor:[UIColor blackColor]];
+            [topBar setTextColor:[UIColor blackColor]];
+            
         }
-        [topBar initView];
         [topBar setLabelFont:[UIFont systemFontOfSize:width/22.8]];
+        [topBar setLineViewFill];
         [topView addSubview:topBar];
         [tabArray addObject:topBar];
     }
@@ -150,10 +159,12 @@
         TopBar *b=(TopBar *)object;
         if(b.tag!=topBar.tag){
             [b setChecked:NO];
-            [b setTextColor:[UIColor grayColor]];
+            [b setIconColor:[UIColor blackColor]];
+            [b setTextColor:[UIColor blackColor]];
         }else{
             [b setChecked:YES];
-            [b setTextColor:[UIColor orangeColor]];
+            [b setIconColor:[UIColor colorWithRed:1.0 green:77.f/255.f blue:77.f/255.f alpha:1.0]];
+            [b setTextColor:[UIColor colorWithRed:1.0 green:77.f/255.f blue:77.f/255.f alpha:1.0]];
             
         }
     }
@@ -184,7 +195,7 @@
     bottomHeight=49;
     
     projectTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                                  titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40
+                                                                  titleHeight+20+0.5+titleHeight*3/4
                                                                   ,
                                                                   self.view.frame.size.width,
                                                                   self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40)-bottomHeight)];
@@ -200,8 +211,7 @@
     bottomHeight=49;
     
     orgTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                              titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40
-                                                              ,
+                                                              titleHeight+20+0.5+titleHeight*3/4,
                                                               self.view.frame.size.width,
                                                               self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40)-bottomHeight)];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
@@ -273,51 +283,69 @@
         }else{
             number=[[orgDictionary objectAtIndex:[indexPath row]] count];
         }
+        bool isSelected=false;
+        if([selcedIdArray count]>0){
+            for (int i=0; i<[selcedIdArray count]; i++) {
+                NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
+                if(selectId ==indexPath){
+                    isSelected=true;
+                }
+            }
+        }
+        
         for (int i=0; i<number; i++) {
             int paddingheight=width/16;//每组的高度
-            
+            int offset=width/4.2;
+            int paddingwidth=width/16;
+            int controlWidth=width/5.7;
+            int controlHeight=width/12.5;
             UIControl *control=[[UIControl alloc]init];
             float y=0;
             float x=0;
-            x=width/22.8+(width-width/22.8)/3*(i%3);
-            y=(paddingheight+width/14)*(i/3)+dataCell.titleLabel.frame.size.height+dataCell.titleLabel.frame.origin.y+width/22.8;
-            [control setFrame:CGRectMake(x, y, (width-width/22.8)/3, width/14)];
-            [dataCell addSubview:control];
+            x=offset+(paddingwidth+controlWidth)*(i%3);
+            y=(paddingheight+controlHeight)*(i/3)+dataCell.titleLabel.frame.size.height+dataCell.titleLabel.frame.origin.y+paddingwidth;
+            [control setFrame:CGRectMake(x, y, width/5.7, width/12.5)];
             
-           
             if ([httpProjectArray count]>0 && httpProjectArray!=nil) {
                 NSArray *lesson=[[httpProjectArray objectAtIndex:[indexPath row]]objectForKey:@"lesson_group"];
                 str1=[[lesson objectAtIndex:i]objectForKey:@"title"];
-               
-
             }else{
                 str1=[[orgDictionary objectAtIndex:[indexPath row]]objectAtIndex:i];
                 
             }
-            CustomLabel *itemLabel=[[CustomLabel alloc]initWithFrame:CGRectMake(0, 0, width/26.7*([str1 length]+3), width/14)];
+            //111*51
+            CustomLabel *itemLabel=[[CustomLabel alloc]initWithFrame:CGRectMake(0, 0, width/5.7, width/12.5)];
             UITapGestureRecognizer *getsture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goProjectListViewController:)];
             [itemLabel addGestureRecognizer:getsture];
             [itemLabel setUserInteractionEnabled:YES];
             [itemLabel setSuperID:(int)[indexPath row]];
             [itemLabel setSubID:i];
             [itemLabel setText:str1];
-            NSLog(@"111111111111111111111111111111111111\n\n\n%@",str1);
-            
-            [itemLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+            [itemLabel setFont:[UIFont systemFontOfSize:width/35.5]];
             [itemLabel setTextAlignment:NSTextAlignmentCenter];
             [itemLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
             itemLabel.layer.masksToBounds=YES;
-            itemLabel.layer.cornerRadius=23/2;
+            itemLabel.layer.cornerRadius=3;
             itemLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
             itemLabel.layer.borderWidth=1;
             [itemLabel setFrame:CGRectMake((control.frame.size.width-itemLabel.frame.size.width)/2, 0, itemLabel.frame.size.width, itemLabel.frame.size.height)];
-            [itemLabel setBackgroundColor:[UIColor colorWithRed:244.f/255.f green:243.f/255.f blue:243.f/255.f alpha:1.0]];
-            [control addSubview:itemLabel];
-            //   if (i==[[orgDictionary objectAtIndex:[indexPath row]] count]-1) {
-            CGRect frame=cell.frame;
-            frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
-            cell.frame=frame;
-            //  }
+            [itemLabel setBackgroundColor:[UIColor whiteColor]];
+            if(isSelected==true){
+                [control addSubview:itemLabel];
+                [dataCell addSubview:control];
+                CGRect frame=cell.frame;
+                frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
+                cell.frame=frame;
+                [dataCell.titleLabel setTextColor:[UIColor colorWithRed:255.f/255.f green:82.f/255.f blue:82.f/255.f alpha:1.0]];
+                [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
+                [dataCell.goImage setImage:[UIImage imageNamed:@"arrow_light"]];
+
+            }else{
+                [cell setBackgroundColor:[UIColor whiteColor]];
+                [dataCell.titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
+                [dataCell.goImage setImage:[UIImage imageNamed:@"arrow"]];
+
+            }
         }
         //}
     }else if(tableView.tag==1 ){
@@ -326,46 +354,55 @@
         int width=self.view.frame.size.width;
         titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/35.6, width/21, width, width/26.7)];
         [titleLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-        [titleLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
         [cell addSubview:titleLabel];
         NSDictionary *inset=[httpOrgArray objectAtIndex:[indexPath row]];
         
-        
-        
-        
-        
         str= [inset objectForKey:@"title"];
         [titleLabel setText:[NSString stringWithFormat:@"%@",str]];
-             UIControl  *moreControl=[[UIControl alloc]initWithFrame:CGRectMake(width-width/10-width/20-width/25, width/21.3, width/10+width/20, width/16)];
+        UIControl  *moreControl=[[UIControl alloc]initWithFrame:CGRectMake(width-width/10-width/20-width/25, width/21, width/10+width/20, width/16)];
         [moreControl setUserInteractionEnabled:YES];
         [moreControl setTag:[indexPath row]];
         [moreControl addTarget:self action:@selector(onMoreClick:) forControlEvents:UIControlEventTouchUpInside];
-        UILabel *moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/10, width/16)];
+        UILabel *moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/10, width/26.7)];
         [moreLabel setText:@"更多"];
         [moreLabel setTextAlignment:NSTextAlignmentCenter];
         [moreLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-        [moreLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-        UIImageView *rightView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"more_logo"]];
-        [rightView setFrame:CGRectMake(width/10, width/32-width/40, width/20, width/20)];
+        UIImageView *rightView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"right_btn"]];
+        //10 × 17
+        [rightView setFrame:CGRectMake(width/10, 0, width/35, width/22)];
         [moreControl addSubview:moreLabel];
         [moreControl addSubview:rightView];
-        
         [cell addSubview:moreControl];
         
+        UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.frame.size.height+titleLabel.frame.origin.y+width/30,width, 0.5)];
+        [lineView setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
+        [cell addSubview:lineView];
+
         NSArray *instList=[inset objectForKey:@"inst"];
         if ([instList count]>0) {
             for (int i=0; i<[instList count]; i++) {
                 float x=0;
                 float y=0;
                 x=width/21+(width*3/7+width/23)*(i%2);
-                y=width/21+width/26.7+width/35.6+(width/3.8+width/23)*((int)(i/2));
+                y=width/21+lineView.frame.origin.y+width/35.6+(width/3.8+width/23)*((int)(i/2));
                 NSDictionary *inst=[instList objectAtIndex:i];
-                
-                
+                UIView *line2View;
+                if(i==2){
+                    line2View=[[UIView alloc]initWithFrame:CGRectMake(0, y,width, width/40)];
+                    [line2View setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
+                    [cell addSubview:line2View];
+                }
+                if(i==2){
+                    y=line2View.frame.size.height+y+width/32;
+                }
+                if(i==3){
+                    y=line2View.frame.size.height+y+width/16;
+                }
+
                 UIImageView *instImageView=[[UIImageView alloc]initWithFrame:CGRectMake(x,y, width*3/7, width/3.8)];
-                instImageView.layer.masksToBounds = YES;
-                instImageView.layer.cornerRadius = 3.0f;
-                 UITapGestureRecognizer *getsture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goOrganDetialsViewController:)];
+              //  instImageView.layer.masksToBounds = YES;
+              //  instImageView.layer.cornerRadius = 3.0f;
+                UITapGestureRecognizer *getsture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goOrganDetialsViewController:)];
                 [instImageView addGestureRecognizer:getsture];
                 [instImageView setUserInteractionEnabled:YES];
                 NSNumber *orgId=[[instList objectAtIndex:i]objectForKey:@"id"];
@@ -373,7 +410,7 @@
                 UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(0, width/3.8-width/15, instImageView.frame.size.width, width/15)];
                 [imageTitle setBackgroundColor:[UIColor colorWithRed:0.f/255.f green:0.f/255.f blue:0.f/255.f alpha:0.5]];
                 [imageTitle setTextAlignment:NSTextAlignmentCenter];
-                [imageTitle setFont:[UIFont systemFontOfSize:width/26.7]];
+                [imageTitle setFont:[UIFont boldSystemFontOfSize:width/26.7]];
                 [imageTitle setTextColor:[UIColor whiteColor]];
                 [imageTitle setText:@"汉昌培训"];
                 [instImageView addSubview:imageTitle];
@@ -382,7 +419,7 @@
                     if(logo!=nil && ![logo isEqualToString:@""]&& ![logo isEqual:[NSNull null]])
                     {
                         [instImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-  
+                        
                     }else{
                         [instImageView setImage:[UIImage imageNamed:@"instlist_defalut"]];
                     }
@@ -409,22 +446,22 @@
 }
 -(void)onMoreClick:(id)sender{
     
-//    NSString *ct=[inst objectForKey:@"title];
-//    NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
-//    [st setObject:ct forKey:@"biname"];
-
+    //    NSString *ct=[inst objectForKey:@"title];
+    //    NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
+    //    [st setObject:ct forKey:@"biname"];
+    
     UIControl *control=(UIControl *)sender;
     int indexrow=(int)control.tag;
     OrganismListViewController *organismListViewController=[[OrganismListViewController alloc]init];
     NSDictionary *dic=[httpOrgArray objectAtIndex:indexrow] ;
     NSNumber *orgId=[dic objectForKey:@"id"];
-                  
-                  NSString *cb=[dic objectForKey:@"title"];
-                  NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
-                  [st setObject:cb forKey:@"biname"];
-
-        [organismListViewController setProjectID:orgId];
-        [self presentViewController:organismListViewController animated:YES completion:nil];
+    
+    NSString *cb=[dic objectForKey:@"title"];
+    NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
+    [st setObject:cb forKey:@"biname"];
+    
+    [organismListViewController setProjectID:orgId];
+    [self presentViewController:organismListViewController animated:YES completion:nil];
 }
 -(void)goOrganDetialsViewController:(UITapGestureRecognizer *)gestrue{
     NSNumber *orgID=[NSNumber numberWithInt:(int)(gestrue.view.tag)];
@@ -432,23 +469,23 @@
     OrganDetailsViewController *projectListViewController=[[OrganDetailsViewController alloc]init];
     [projectListViewController setAritcleId:orgID];
     [self presentViewController:projectListViewController animated:YES completion:nil];
-
+    
     
 }
 -(void)goAllPorjectListViewController{
     NSLog(@"goAllPorjectListViewController");
     
     //UIView *view=gestrue.v
-//    ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-//    NSDictionary *dic=[httpProjectArray objectAtIndex:label.superID] ;
-//    NSNumber *orgId=[dic objectForKey:@"id"];
-//    
-//    NSArray *lesson=[dic objectForKey:@"lesson_group"];
-//    NSDictionary *data=[lesson objectAtIndex:label.subID];
-//    NSNumber *subId=[data objectForKey:@"id"];
-//    [projectListViewController setProjectID:orgId];
-//    [projectListViewController setProjectSubID:subId];
-//    [self presentViewController:projectListViewController animated:YES completion:nil];
+    //    ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
+    //    NSDictionary *dic=[httpProjectArray objectAtIndex:label.superID] ;
+    //    NSNumber *orgId=[dic objectForKey:@"id"];
+    //
+    //    NSArray *lesson=[dic objectForKey:@"lesson_group"];
+    //    NSDictionary *data=[lesson objectAtIndex:label.subID];
+    //    NSNumber *subId=[data objectForKey:@"id"];
+    //    [projectListViewController setProjectID:orgId];
+    //    [projectListViewController setProjectSubID:subId];
+    //    [self presentViewController:projectListViewController animated:YES completion:nil];
 }
 -(void)goProjectListViewController:(UITapGestureRecognizer *)gestrue{
     CustomLabel *label=(CustomLabel *)gestrue.view;
@@ -468,24 +505,39 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%ld",(long)indexPath.row);
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    //[tableView deselectRowAtIndexPath:indexPath animated:NO];
     if (tableView.tag==0) {
-        int indexrow=(int)indexPath.row;
-        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-        NSDictionary *str=[httpProjectArray objectAtIndex:indexrow];
-        if ([str objectForKey:@"id"]) {
-            NSNumber *number=[str objectForKey:@"id"];
-            [projectListViewController setProjectID:number];
-            [projectListViewController setProjectSubID:[NSNumber numberWithInt:0]];
-            
+        NSIndexPath *indexPath = [tableView indexPathForSelectedRow];
+        bool hasNumb=false;
+        if([selcedIdArray count]>0){
+            for (int i=0; i<[selcedIdArray count]; i++) {
+                NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
+                if(selectId ==indexPath){
+                    [selcedIdArray removeObjectAtIndex:i];
+                    hasNumb=true;
+                }
+            }
         }
-        if ([str objectForKey:@"title"]) {
-            [projectListViewController setTitleName:[str objectForKey:@"title"]];
-            
+        if(hasNumb==false){
+            [selcedIdArray addObject:indexPath];
         }
-        [self presentViewController: projectListViewController animated:YES completion:nil];
+        [tableView reloadData];
+//        int indexrow=(int)indexPath.row;
+//        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
+//        NSDictionary *str=[httpProjectArray objectAtIndex:indexrow];
+//        if ([str objectForKey:@"id"]) {
+//            NSNumber *number=[str objectForKey:@"id"];
+//            [projectListViewController setProjectID:number];
+//            [projectListViewController setProjectSubID:[NSNumber numberWithInt:0]];
+//            
+//        }
+//        if ([str objectForKey:@"title"]) {
+//            [projectListViewController setTitleName:[str objectForKey:@"title"]];
+//            
+//        }
+//        [self presentViewController: projectListViewController animated:YES completion:nil];
     }
-
+    
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell;
@@ -517,13 +569,13 @@
                     
                 }
                 [ProgressHUD dismiss];
-
+                
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
                 [ProgressHUD dismiss];
-
+                
             }
         }];
         

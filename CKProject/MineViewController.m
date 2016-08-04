@@ -15,6 +15,9 @@
     NSMutableArray *projectTableArray;
     UITableView *mainTableView;
     UINib *nib;
+    
+    
+    NSMutableArray *dataArray;
 
 }
 
@@ -41,6 +44,8 @@
 @synthesize hasMsg;
 - (void)viewDidLoad {
     [super viewDidLoad];
+    dataArray=[[NSMutableArray alloc]init];
+    [dataArray addObject:[NSNumber numberWithBool:YES]];
     [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"refresh_userInfo" object:nil];
@@ -325,7 +330,7 @@
     mainTableView.delegate                          = self;
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
     
-   // [self.view addSubview:mainTableView];
+   [self.view addSubview:mainTableView];
 
 }
 -(void)initSwitchBtn:(UIView *)superView{
@@ -708,18 +713,18 @@
     [userInfoArray addObject:userId];
 
 }
-static NSString *identy = @"OrderRecordCell";
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (!nib) {
-        nib = [UINib nibWithNibName:@"OrderRecordCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:identy];
-        NSLog(@"我是从nib过来的，%ld",(long)indexPath.row);
+    static NSString *identy = @"CustomCell";
+    OrderRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
+    if(cell==nil){
+        cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
     }
-    OrderRecordCell *cell=[tableView dequeueReusableCellWithIdentifier:identy forIndexPath:indexPath];
+   // [cell.titleLabel setText:@"123"];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -728,8 +733,11 @@ static NSString *identy = @"OrderRecordCell";
     return cell.frame.size.height;
     
 }
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 0;
+    return [dataArray count];
 }
 
 @end

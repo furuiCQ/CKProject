@@ -19,7 +19,8 @@
 @synthesize logoImage;
 @synthesize moreLabel;
 @synthesize goImage;
-
+@synthesize controlArray;
+@synthesize isSelected;
 /**
  *  构造方法(在初始化对象的时候会调用)
  *  一般在这个方法中添加需要显示的子控件
@@ -28,7 +29,8 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
+        controlArray=[[NSMutableArray alloc]init];
+
         CGRect rx = [ UIScreen mainScreen ].bounds;
         int width=rx.size.width;
         CGRect frame=self.frame;
@@ -39,11 +41,11 @@
         titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImage.frame.size.width+logoImage.frame.origin.x+width/64, width/21, width/2, width/22.8)];
         [titleLabel setText:@"早教"];
         [titleLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-        [titleLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
+        [titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
         [self addSubview:titleLabel];
       
-        goImage=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/21.3-width/53.3, width/20, width/53.3, width/26.7)];
-        [goImage setImage:[UIImage imageNamed:@"go_logo"]];
+        goImage=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/21.3-width/32, width/20, width/32, width/53)];
+        [goImage setImage:[UIImage imageNamed:@"arrow"]];
         [goImage setUserInteractionEnabled:YES];
         [self addSubview:goImage];
         
@@ -52,9 +54,9 @@
         [moreLabel setUserInteractionEnabled:YES];
         [moreLabel setFont:[UIFont systemFontOfSize:width/26.7]];
         [moreLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-        [self addSubview:moreLabel];
+       // [self addSubview:moreLabel];
         
-        frame.size.height=width*3/4;
+       // frame.size.height=width*3/4;
         self.frame=frame;
         
     }
