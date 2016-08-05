@@ -97,6 +97,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     sc=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     sc.contentSize=CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*4.3);
     [self.view addSubview:sc];
+    
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     localLat=myDelegate.latitude;
     localLng=myDelegate.longitude;

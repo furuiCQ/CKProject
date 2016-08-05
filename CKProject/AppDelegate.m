@@ -20,6 +20,7 @@
 #import "msViewController.h"
 #import "MationViewController.h"
 #import "HttpHelper.h"
+#import "FavourableViewController.h"
 #import "ViewController.h"
 @interface AppDelegate ()<WXApiDelegate>
 
@@ -49,29 +50,16 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
     
     
     //判断是否登陆，由登陆状态判断启动页面
-    NSArray *selectArray =[NSArray arrayWithObjects:@"main_select",@"news",@"junyouhui",@"sort_select",@"mine_select",nil];
-    NSArray *unselectArray =[NSArray arrayWithObjects:@"main_unselect",@"news",@"junyouhui",@"sort_unselect",@"mine_unselect",nil];
     NSArray *textArray =[NSArray arrayWithObjects:@"首页",@"新闻",@"聚优惠",@"分类",
                          @"我",nil];
-    NSArray *viewControllerArray =[NSArray arrayWithObjects:[[MainViewController alloc]init],[[ViewController alloc]init],[[SortViewController alloc]init],[[MineViewController alloc]init],[[MineViewController alloc]init],nil];
-    
+    NSArray *viewControllerArray =[NSArray arrayWithObjects:[[MainViewController alloc]init],[[ViewController alloc]init],[[FavourableViewController alloc]init],[[SortViewController alloc]init],[[MineViewController alloc]init],nil];
     MainTabBarViewController *mtvc=[[MainTabBarViewController alloc]init];
     NSMutableArray *vcArray=[[NSMutableArray alloc]init];
     
     for (int i=0; i<[textArray count]; i++) {
         UIViewController *vc=[viewControllerArray objectAtIndex:i];
-        vc.tabBarItem.title=[textArray objectAtIndex:i];
-        [vc.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                               [UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0],NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
-        [vc.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                               [UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0],NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
-        
-        vc.tabBarItem.image=[UIImage imageNamed:[unselectArray objectAtIndex:i]];
-        vc.tabBarItem.selectedImage=[UIImage imageNamed:[selectArray objectAtIndex:i]];
         [vcArray addObject:vc];
     }
-    [mtvc.tabBar setBackgroundColor:[UIColor colorWithRed:238.f/255.f green:238.f/255.f blue:238.f/255.f alpha:1.0]];
-    mtvc.tabBar.selectedImageTintColor=[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0];
     [mtvc setViewControllers:[vcArray copy]];
     self.window.rootViewController=mtvc;
     
@@ -85,67 +73,67 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
     //保存登录状态数据
     NSUserDefaults *defa=[NSUserDefaults standardUserDefaults];
     //保存登录状态数据
-//    NSUserDefaults *defa=[NSUserDefaults standardUserDefaults];
-//    [defa setObject:phone forKey:@"phon"];
-//    [defa setObject:password forKey:@"pas"];
-//    //获取UserDefault
-//    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    //    NSUserDefaults *defa=[NSUserDefaults standardUserDefaults];
+    //    [defa setObject:phone forKey:@"phon"];
+    //    [defa setObject:password forKey:@"pas"];
+    //    //获取UserDefault
+    //    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     NSString *name = [defa objectForKey:@"ipon"];
     NSString *password=[defa objectForKey:@"pas"];
     if (name!=nil&&password!=nil) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-          [HttpHelper loginAcount:name with:password success:^(HttpModel *model)
-           {
-                NSLog(@"%@",model.message);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                        AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        myDelegate.model=model;
-                        
-                    }else{
-                        
-                    }
-                    [ProgressHUD dismiss];
+            [HttpHelper loginAcount:name with:password success:^(HttpModel *model)
+             {
+                 NSLog(@"%@",model.message);
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     
+                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                         AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                         myDelegate.model=model;
+                         
+                     }else{
+                         
+                     }
+                     [ProgressHUD dismiss];
+                     
+                 });
                  
-                });
-                
-            }failure:^(NSError *error){
-                if (error.userInfo!=nil) {
-                    NSLog(@"error userInfo:===>%@",error.userInfo);
-                    NSString *localizedDescription=[error.userInfo objectForKey:@"NSLocalizedDescription"];
-                    if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
-                    }
-                    [ProgressHUD dismiss];
-                    
-                }
-            }];
+             }failure:^(NSError *error){
+                 if (error.userInfo!=nil) {
+                     NSLog(@"error userInfo:===>%@",error.userInfo);
+                     NSString *localizedDescription=[error.userInfo objectForKey:@"NSLocalizedDescription"];
+                     if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
+                     }
+                     [ProgressHUD dismiss];
+                     
+                 }
+             }];
         });
-
-
+        
+        
         isLogin=YES;
     }
-//    //获取storyboard
-//    
-//    //        self.window.rootViewController=mtvc;
-//    
-//    //    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-//    //如果用户未登陆则把根视图控制器改变成登陆视图控制器
-//    if (name == nil)
-//    {
-//        NSLog(@"%@",name);
-//        LoginViewController *vi=[[LoginViewController alloc]init];
-//        //        id view = [storyboard instantiateViewControllerWithIdentifier:@"LoginView"];
-//        self.window.rootViewController = vi;
-//    }
-//    else
-//    {
-//        self.window.rootViewController=mtvc;
-//        
-//    }
-//
-
+    //    //获取storyboard
+    //
+    //    //        self.window.rootViewController=mtvc;
+    //
+    //    //    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    //    //如果用户未登陆则把根视图控制器改变成登陆视图控制器
+    //    if (name == nil)
+    //    {
+    //        NSLog(@"%@",name);
+    //        LoginViewController *vi=[[LoginViewController alloc]init];
+    //        //        id view = [storyboard instantiateViewControllerWithIdentifier:@"LoginView"];
+    //        self.window.rootViewController = vi;
+    //    }
+    //    else
+    //    {
+    //        self.window.rootViewController=mtvc;
+    //
+    //    }
+    //
+    
     return YES;
 }
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
@@ -258,21 +246,21 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
      */
     SendAuthResp *aresp = (SendAuthResp *)resp;
     if (aresp.errCode== 0) {
-//        NSString *code = aresp.code;
-//        [self getAccess_token:code];
+        //        NSString *code = aresp.code;
+        //        [self getAccess_token:code];
     }
 }
 //-(void)getAccess_token:(NSString *)code
 //{
 //    NSString *url =[NSString stringWithFormat:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&secret=%@&code=%@&grant_type=authorization_code",WXKey,WXSECRET,code];
-//    
+//
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 //        NSURL *zoneUrl = [NSURL URLWithString:url];
 //        NSString *zoneStr = [NSString stringWithContentsOfURL:zoneUrl encoding:NSUTF8StringEncoding error:nil];
 //        NSData *data = [zoneStr dataUsingEncoding:NSUTF8StringEncoding];
 //        dispatch_async(dispatch_get_main_queue(), ^{
 //            if (data) {
-//                
+//
 //                NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"getWXUserInfo" object:dic];
 //                

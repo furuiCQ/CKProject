@@ -42,7 +42,7 @@
     NSString *lg;
     UINib *nib;
     UILabel *distanceLabel;
-
+    
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
 @end
@@ -71,10 +71,10 @@
     tableArray = [[NSArray alloc]init];
     
     [ProgressHUD show:@"加载中..."];
-
+    
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-  //  localLat=myDelegate.latitude;
-  //  localLng=myDelegate.longitude;
+    //  localLat=myDelegate.latitude;
+    //  localLng=myDelegate.longitude;
     
     
     locationManager = [[CLLocationManager alloc] init];
@@ -96,10 +96,10 @@
     
     
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-     [self getsavetab];
+    [self getsavetab];
     [self initTitle];
     [self initContent];
-   
+    
     [self getOrgInfo];
     
     
@@ -113,25 +113,25 @@
 -(void)getsavetab
 {
     
-//   http://211.149.190.90/api/instinfo?id=6
+    //   http://211.149.190.90/api/instinfo?id=6
     //    NSString *sp=[NSString stringWithFormat:@"%@",num];
     //    UIAlertView *vi=[[UIAlertView alloc]initWithTitle:@"提示" message:sp delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"123", nil];
     //    [vi show ];
     
-//    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?instid=%@",aritcleId];
-//    NSURL *url=[NSURL URLWithString:str];
-//    NSURLRequest *request=[NSURLRequest requestWithURL:url];
-//    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-//        
-//        id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-//        
-//        NSDictionary *db=[obj objectForKey:@"result"];
-//        aiy=[db objectForKey:@"lesson"];
-//        NSUserDefaults *defa=[NSUserDefaults standardUserDefaults];
-//        [defa setObject:aiy forKey:@"kay"];
-//        NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",aiy);
-//        
-//    }];
+    //    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?instid=%@",aritcleId];
+    //    NSURL *url=[NSURL URLWithString:str];
+    //    NSURLRequest *request=[NSURLRequest requestWithURL:url];
+    //    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
+    //
+    //        id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+    //
+    //        NSDictionary *db=[obj objectForKey:@"result"];
+    //        aiy=[db objectForKey:@"lesson"];
+    //        NSUserDefaults *defa=[NSUserDefaults standardUserDefaults];
+    //        [defa setObject:aiy forKey:@"kay"];
+    //        NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",aiy);
+    //
+    //    }];
     
 }
 
@@ -167,7 +167,7 @@
     //        UITapGestureRecognizer *shareGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share)];
     //        [msgLabel addGestureRecognizer:shareGesutre];
     UIImageView *shareView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_logo"]];
-    [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/12.3/2, titleHeight/2-self.view.frame.size.width/12.3/2, self.view.frame.size.width/12.3, self.view.frame.size.width/12.3)];
+    [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/16.8/2, titleHeight/2-self.view.frame.size.width/16.8/2, self.view.frame.size.width/16.8, self.view.frame.size.width/16.8)];
     [msgLabel addSubview:shareView];
     [msgLabel setTextAlignment:NSTextAlignmentCenter];
     
@@ -232,7 +232,7 @@
     [distanceLabel setTextAlignment:NSTextAlignmentRight];
     [distanceLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
     [instituteControl addSubview:distanceLabel];
-
+    
     
     
     [self initImageScrollView:instituteControl];
@@ -242,128 +242,128 @@
     [self initSwitchBtn:headerView];
     
     [self initTableView:headerView];
-
     
-//
-//    logoImage=[[UIImageView alloc]initWithFrame:CGRectMake(width/23, width/23, width/3, width/3)];
-//    [logoImage setImage:[UIImage imageNamed:@"instdetails_defalut"]];
-//    [view addSubview:logoImage];
-//    
-//    
-//    organNamelabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3+width/23+width/23, width/16, width-(width/3+width/23+width/23), width/23)];
-//    [organNamelabel setText:@"汉昌UI培训机构"];
-//    [view addSubview:organNamelabel];
-//    
-//    UILabel *bespeakLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3+width/23+width/23, width/16+width/23+width/45.7, width/15, width/32)];
-//    [bespeakLabel setText:@"预约"];
-//    [bespeakLabel setFont:[UIFont systemFontOfSize:width/32]];
-//    [bespeakLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-//    [view addSubview:bespeakLabel];
-//    
-//    numbLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/15+width/60+width/3+width/23+width/23, width/16+width/23+width/45.7, width/20, width/32)];
-//    [numbLabel setText:@"15"];
-//    [numbLabel setFont:[UIFont systemFontOfSize:width/32]];
-//    [numbLabel setTextColor:[UIColor redColor]];
-//    [view addSubview:numbLabel];
-//    
-//    
-//    ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(width/15+width/60+width/3+width/23+width/23+width/20, width/16+width/23+width/45.7-width/320, width/29*6, width/20)];
-//    ratingBar.isIndicator=YES;
-//    [ratingBar setImageDeselected:@"star_unselect" halfSelected:nil fullSelected:@"star_select" andDelegate:nil];
-//    [ratingBar displayRating:4.0f];
-//    [view addSubview:ratingBar];
-//    
-//    
-//    
-//    UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_logo"]];
-//    [localImageView setFrame:CGRectMake(width/3+width/23+width/23, width/16+width/23+width/45.7+width/32+width/11, width/35.5, width/29)];
-//    [localImageView setUserInteractionEnabled:YES];
-//    UITapGestureRecognizer *addresGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openAddress)];
-//    [localImageView addGestureRecognizer:addresGesture];
-//    
-//    [view addSubview:localImageView];
-//    
-//    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3+width/23+width/23+width/35.5+width/40, width/16+width/23+width/45.7+width/32+width/11.6, width-(width/3+width/23+width/23+width/35.5+width/40)-width/40, width/10)];
-//    [projectAddLabel setText:@"渝中区牛角沱太平洋广场3楼"];
-//    projectAddLabel.numberOfLines=0;
-//    [projectAddLabel setUserInteractionEnabled:YES];
-//    [projectAddLabel addGestureRecognizer:addresGesture];
-//    [projectAddLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-//    [projectAddLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-//    [view addSubview:projectAddLabel];
-//    
-//    UIImageView *phoneImagView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"phone_logo"]];
-//    [phoneImagView setFrame:CGRectMake(localImageView.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/32, width/22, width/17)];
-//    UITapGestureRecognizer *callGesuture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callPhone)];
-//    [phoneImagView setUserInteractionEnabled:YES];
-//    [phoneImagView addGestureRecognizer:callGesuture];
-//    [view addSubview:phoneImagView];
-//    
-//    
-//        phoneLabel=[[UILabel alloc]initWithFrame:CGRectMake(projectAddLabel.frame.origin.x, projectAddLabel.frame.size.height+projectAddLabel.frame.origin.y+width/25.6, width-(projectAddLabel.frame.origin.x)-width/40, width/26.7)];
-//        [phoneLabel setText:@"联系电话：023-9523123"];
-//        [phoneLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-//        [phoneLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-//        [phoneLabel setUserInteractionEnabled:YES];
-//        [phoneLabel addGestureRecognizer:callGesuture];
-//        [view addSubview:phoneLabel];
-//    
-//    
-//    [scrollView addSubview:view];
-//    
-//    
-//    
-//    
-//    
-//    UIView *whiteLineview=[[UIView alloc]initWithFrame:CGRectMake(0, width/2.5+width/46, width, width/23*2)];
-//    [whiteLineview setBackgroundColor:[UIColor whiteColor]];
-//    
-//    UILabel *proLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/23, width/46, width/2, width/46)];
-//    [proLabel setText:@"体验课"];
-//    [proLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-//    [proLabel setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
-//    [whiteLineview addSubview:proLabel];
-//
-//    UIImageView *goImage=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/21.3-width/53.3, width/46, width/53.3, width/26.7)];
-//    [goImage setImage:[UIImage imageNamed:@"go_logo"]];
-//    [goImage setUserInteractionEnabled:YES];
-//    [whiteLineview addSubview:goImage];
-//    
-//    UILabel *moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(goImage.frame.origin.x-goImage.frame.size.width-width/26.7*2, width/46, width/26.7*2, width/26.7)];
-//    [moreLabel setText:@"全部"];
-//    [moreLabel setUserInteractionEnabled:YES];
-//    [moreLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-//    [moreLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-//    [whiteLineview addSubview:moreLabel];
-//    UITapGestureRecognizer *allProjectGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goAllPorjectList)];
-//    [goImage addGestureRecognizer:allProjectGesture];
-//    [moreLabel addGestureRecognizer:allProjectGesture];
-//    
-//    
-//    [scrollView addSubview:whiteLineview];
-//    
-//    
-//    [self initTableView:scrollView];
-//    
-//    UIView *whiteLine2view=[[UIView alloc]initWithFrame:CGRectMake(0, projectTableView.frame.origin.y+projectTableView.frame.size.height, width,hegiht-20-(projectTableView.frame.origin.y+projectTableView.frame.size.height+width/23))];
-//    [whiteLine2view setBackgroundColor:[UIColor whiteColor]];
-//    
-//    UILabel *companyLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/23, width/23, width, width/23)];
-//    [companyLabel setText:@"公司简介"];
-//    [companyLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-//    [companyLabel setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
-//    
-//    [whiteLine2view addSubview:companyLabel];
-//    
-//    contentLabel=[[UITextView alloc]init];
-//    contentLabel.frame=CGRectMake(0, width/23+width/23+width/23, self.view.frame.size.width, self.view.frame.size.height);
-//    
-//    //    WithFrame:CGRectMake(width/23, width/23+width/23+width/23, self.view.frame.size.width, self.view.frame.size.height)
-//    //    //修复简介键盘弹出来
-//     contentLabel.editable=NO;
-//    
-//    [whiteLine2view addSubview:contentLabel];
- //   [scrollView addSubview:whiteLine2view];
+    
+    //
+    //    logoImage=[[UIImageView alloc]initWithFrame:CGRectMake(width/23, width/23, width/3, width/3)];
+    //    [logoImage setImage:[UIImage imageNamed:@"instdetails_defalut"]];
+    //    [view addSubview:logoImage];
+    //
+    //
+    //    organNamelabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3+width/23+width/23, width/16, width-(width/3+width/23+width/23), width/23)];
+    //    [organNamelabel setText:@"汉昌UI培训机构"];
+    //    [view addSubview:organNamelabel];
+    //
+    //    UILabel *bespeakLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3+width/23+width/23, width/16+width/23+width/45.7, width/15, width/32)];
+    //    [bespeakLabel setText:@"预约"];
+    //    [bespeakLabel setFont:[UIFont systemFontOfSize:width/32]];
+    //    [bespeakLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
+    //    [view addSubview:bespeakLabel];
+    //
+    //    numbLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/15+width/60+width/3+width/23+width/23, width/16+width/23+width/45.7, width/20, width/32)];
+    //    [numbLabel setText:@"15"];
+    //    [numbLabel setFont:[UIFont systemFontOfSize:width/32]];
+    //    [numbLabel setTextColor:[UIColor redColor]];
+    //    [view addSubview:numbLabel];
+    //
+    //
+    //    ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(width/15+width/60+width/3+width/23+width/23+width/20, width/16+width/23+width/45.7-width/320, width/29*6, width/20)];
+    //    ratingBar.isIndicator=YES;
+    //    [ratingBar setImageDeselected:@"star_unselect" halfSelected:nil fullSelected:@"star_select" andDelegate:nil];
+    //    [ratingBar displayRating:4.0f];
+    //    [view addSubview:ratingBar];
+    //
+    //
+    //
+    //    UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_logo"]];
+    //    [localImageView setFrame:CGRectMake(width/3+width/23+width/23, width/16+width/23+width/45.7+width/32+width/11, width/35.5, width/29)];
+    //    [localImageView setUserInteractionEnabled:YES];
+    //    UITapGestureRecognizer *addresGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openAddress)];
+    //    [localImageView addGestureRecognizer:addresGesture];
+    //
+    //    [view addSubview:localImageView];
+    //
+    //    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3+width/23+width/23+width/35.5+width/40, width/16+width/23+width/45.7+width/32+width/11.6, width-(width/3+width/23+width/23+width/35.5+width/40)-width/40, width/10)];
+    //    [projectAddLabel setText:@"渝中区牛角沱太平洋广场3楼"];
+    //    projectAddLabel.numberOfLines=0;
+    //    [projectAddLabel setUserInteractionEnabled:YES];
+    //    [projectAddLabel addGestureRecognizer:addresGesture];
+    //    [projectAddLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+    //    [projectAddLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    //    [view addSubview:projectAddLabel];
+    //
+    //    UIImageView *phoneImagView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"phone_logo"]];
+    //    [phoneImagView setFrame:CGRectMake(localImageView.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/32, width/22, width/17)];
+    //    UITapGestureRecognizer *callGesuture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callPhone)];
+    //    [phoneImagView setUserInteractionEnabled:YES];
+    //    [phoneImagView addGestureRecognizer:callGesuture];
+    //    [view addSubview:phoneImagView];
+    //
+    //
+    //        phoneLabel=[[UILabel alloc]initWithFrame:CGRectMake(projectAddLabel.frame.origin.x, projectAddLabel.frame.size.height+projectAddLabel.frame.origin.y+width/25.6, width-(projectAddLabel.frame.origin.x)-width/40, width/26.7)];
+    //        [phoneLabel setText:@"联系电话：023-9523123"];
+    //        [phoneLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+    //        [phoneLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    //        [phoneLabel setUserInteractionEnabled:YES];
+    //        [phoneLabel addGestureRecognizer:callGesuture];
+    //        [view addSubview:phoneLabel];
+    //
+    //
+    //    [scrollView addSubview:view];
+    //
+    //
+    //
+    //
+    //
+    //    UIView *whiteLineview=[[UIView alloc]initWithFrame:CGRectMake(0, width/2.5+width/46, width, width/23*2)];
+    //    [whiteLineview setBackgroundColor:[UIColor whiteColor]];
+    //
+    //    UILabel *proLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/23, width/46, width/2, width/46)];
+    //    [proLabel setText:@"体验课"];
+    //    [proLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+    //    [proLabel setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
+    //    [whiteLineview addSubview:proLabel];
+    //
+    //    UIImageView *goImage=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/21.3-width/53.3, width/46, width/53.3, width/26.7)];
+    //    [goImage setImage:[UIImage imageNamed:@"go_logo"]];
+    //    [goImage setUserInteractionEnabled:YES];
+    //    [whiteLineview addSubview:goImage];
+    //
+    //    UILabel *moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(goImage.frame.origin.x-goImage.frame.size.width-width/26.7*2, width/46, width/26.7*2, width/26.7)];
+    //    [moreLabel setText:@"全部"];
+    //    [moreLabel setUserInteractionEnabled:YES];
+    //    [moreLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    //    [moreLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
+    //    [whiteLineview addSubview:moreLabel];
+    //    UITapGestureRecognizer *allProjectGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goAllPorjectList)];
+    //    [goImage addGestureRecognizer:allProjectGesture];
+    //    [moreLabel addGestureRecognizer:allProjectGesture];
+    //
+    //
+    //    [scrollView addSubview:whiteLineview];
+    //
+    //
+    //    [self initTableView:scrollView];
+    //
+    //    UIView *whiteLine2view=[[UIView alloc]initWithFrame:CGRectMake(0, projectTableView.frame.origin.y+projectTableView.frame.size.height, width,hegiht-20-(projectTableView.frame.origin.y+projectTableView.frame.size.height+width/23))];
+    //    [whiteLine2view setBackgroundColor:[UIColor whiteColor]];
+    //
+    //    UILabel *companyLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/23, width/23, width, width/23)];
+    //    [companyLabel setText:@"公司简介"];
+    //    [companyLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+    //    [companyLabel setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
+    //
+    //    [whiteLine2view addSubview:companyLabel];
+    //
+    //    contentLabel=[[UITextView alloc]init];
+    //    contentLabel.frame=CGRectMake(0, width/23+width/23+width/23, self.view.frame.size.width, self.view.frame.size.height);
+    //
+    //    //    WithFrame:CGRectMake(width/23, width/23+width/23+width/23, self.view.frame.size.width, self.view.frame.size.height)
+    //    //    //修复简介键盘弹出来
+    //     contentLabel.editable=NO;
+    //
+    //    [whiteLine2view addSubview:contentLabel];
+    //   [scrollView addSubview:whiteLine2view];
     
     [self.view addSubview:scrollView];
     
@@ -480,13 +480,13 @@
     [scrollView addSubview:projectTableView];
 }
 -(void)goAllPorjectList{
-//    NSLog(@"------------------artid:%@",art);
+    //    NSLog(@"------------------artid:%@",art);
     
     ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
     NSUserDefaults *defa=[NSUserDefaults standardUserDefaults];
     [defa setObject:aritcleId forKey:@"nid"];
     NSLog(@"数组元素为：%@",tableArray);
-//    [projectListViewController setHasData:aiy];
+    //    [projectListViewController setHasData:aiy];
     [projectListViewController setTitleName:@"热门"];
     
     [projectListViewController setstd:1];
@@ -510,12 +510,12 @@
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSIndexPath是一个结构体，记录了组和行信息
-//    ProjectSimpleTableCell *cell=[[ProjectSimpleTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-//    //[cell setSelectionStyle:UITableViewCellStyleDefault];
-//    [cell setViewController:self];
-//    if (cell ==nil) {
-//        cell  = [[ProjectSimpleTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-//    }
+    //    ProjectSimpleTableCell *cell=[[ProjectSimpleTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    //    //[cell setSelectionStyle:UITableViewCellStyleDefault];
+    //    [cell setViewController:self];
+    //    if (cell ==nil) {
+    //        cell  = [[ProjectSimpleTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    //    }
     static NSString *identy = @"CustomCell";
     OrderRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
     if(cell==nil){
@@ -575,7 +575,7 @@
             }
             
         }
-
+        
         
         if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
             NSString *addr=[dic objectForKey:@"addr"];
@@ -617,7 +617,7 @@
             NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
             [cell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
         }
- 
+        
         
     }else{
         cell.textLabel.textAlignment=NSTextAlignmentCenter;
@@ -758,81 +758,81 @@
                             [phoneLabel setText:[NSString stringWithFormat:@"联系电话:%@",phone]];
                         }
                         if ([dic objectForKey:@"logo"]&& ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
-                                NSString *images=[dic objectForKey:@"logo"];
-                                NSArray *array = [images componentsSeparatedByString:@","];
-                                NSUserDefaults *de=[NSUserDefaults standardUserDefaults];
-                                [de setObject:array forKey:@"pictures"];
-                                if ([array count]>0) {
-                                    totalCount=[array count];
-                                    pageControl.numberOfPages=totalCount;
-                                    NSArray *views = [imageScrollview subviews];
-                                    for(UIView *view in views)
-                                    {
-                                        [view removeFromSuperview];
-                                    }
-                                    
-                                    //    图片的宽
-                                    CGFloat imageW = imageScrollview.frame.size.width;
-                                    //    CGFloat imageW = 300;
-                                    //    图片高
-                                    CGFloat imageH = imageScrollview.frame.size.height;
-                                    //    图片的Y
-                                    CGFloat imageY = 0;
-                                    
-                                    //   1.添加5张图片
-                                    for (int i = 0; i < [array count]; i++) {
-                                        UIImageView *imageView = [[UIImageView alloc] init];
-                                        [imageView setUserInteractionEnabled:YES];
-                                        //        图片X
-                                        CGFloat imageX = i * imageW;
-                                        //        设置frame
-                                        imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
-                                        //        设置图片
-                                        NSString *logo=[array objectAtIndex:i];
-                                        
-                                        [imageView setImage:[UIImage imageNamed:@"banner_default"]];
-                                        [imageView setTag:i];
-                                       // UITapGestureRecognizer *openChorme=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageGesture:)];
-                                      //  [imageView addGestureRecognizer:openChorme];
-                                        [imageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-                                        
-                                        
-                                        //        隐藏指示条
-                                        imageScrollview.showsHorizontalScrollIndicator = NO;
-                                        [imageScrollview addSubview:imageView];
-                                        CGFloat contentW = totalCount *imageW;
-                                        //不允许在垂直方向上进行滚动
-                                        imageScrollview.contentSize = CGSizeMake(contentW, 0);
-                                        
-                                        //    3.设置分页
-                                        imageScrollview.pagingEnabled = YES;
-                                        
-                                        //    4.监听scrollview的滚动
-                                        imageScrollview.delegate = self;
-                                    }
-                                    
-                                    CGRect bounds = imageScrollview.frame;  //获取界面区域
-                                    
-                                    
-                                    pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-30, bounds.size.width, 30)];
-                                    pageControl.numberOfPages = totalCount;//总的图片页数
-                                    pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
-                                    pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f  alpha:1.0];
-                                    [scrollView addSubview:pageControl];
+                            NSString *images=[dic objectForKey:@"logo"];
+                            NSArray *array = [images componentsSeparatedByString:@","];
+                            NSUserDefaults *de=[NSUserDefaults standardUserDefaults];
+                            [de setObject:array forKey:@"pictures"];
+                            if ([array count]>0) {
+                                totalCount=[array count];
+                                pageControl.numberOfPages=totalCount;
+                                NSArray *views = [imageScrollview subviews];
+                                for(UIView *view in views)
+                                {
+                                    [view removeFromSuperview];
                                 }
+                                
+                                //    图片的宽
+                                CGFloat imageW = imageScrollview.frame.size.width;
+                                //    CGFloat imageW = 300;
+                                //    图片高
+                                CGFloat imageH = imageScrollview.frame.size.height;
+                                //    图片的Y
+                                CGFloat imageY = 0;
+                                
+                                //   1.添加5张图片
+                                for (int i = 0; i < [array count]; i++) {
+                                    UIImageView *imageView = [[UIImageView alloc] init];
+                                    [imageView setUserInteractionEnabled:YES];
+                                    //        图片X
+                                    CGFloat imageX = i * imageW;
+                                    //        设置frame
+                                    imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
+                                    //        设置图片
+                                    NSString *logo=[array objectAtIndex:i];
+                                    
+                                    [imageView setImage:[UIImage imageNamed:@"banner_default"]];
+                                    [imageView setTag:i];
+                                    // UITapGestureRecognizer *openChorme=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageGesture:)];
+                                    //  [imageView addGestureRecognizer:openChorme];
+                                    [imageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+                                    
+                                    
+                                    //        隐藏指示条
+                                    imageScrollview.showsHorizontalScrollIndicator = NO;
+                                    [imageScrollview addSubview:imageView];
+                                    CGFloat contentW = totalCount *imageW;
+                                    //不允许在垂直方向上进行滚动
+                                    imageScrollview.contentSize = CGSizeMake(contentW, 0);
+                                    
+                                    //    3.设置分页
+                                    imageScrollview.pagingEnabled = YES;
+                                    
+                                    //    4.监听scrollview的滚动
+                                    imageScrollview.delegate = self;
+                                }
+                                
+                                CGRect bounds = imageScrollview.frame;  //获取界面区域
+                                
+                                
+                                pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-30, bounds.size.width, 30)];
+                                pageControl.numberOfPages = totalCount;//总的图片页数
+                                pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+                                pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f  alpha:1.0];
+                                [scrollView addSubview:pageControl];
+                            }
                             
                             if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
                                 [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
                                 NSNumber *lng=[dic objectForKey:@"lng"];
                                 NSNumber *lat=[dic objectForKey:@"lat"];
-                               
+                                
                                 CLLocationCoordinate2D coordinate;
                                 coordinate.latitude=[lat floatValue];
                                 
                                 coordinate.longitude=[lng floatValue];
                                 
                                 CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-                               
+                                
                                 lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
                                 lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
                                 NSString *longtitudeText=lg;
@@ -856,7 +856,7 @@
                                 }
                                 
                             }
-
+                            
                         }
                         
                         

@@ -31,6 +31,8 @@
     [super viewDidAppear:animated];
     viewControllArray=[[NSMutableArray alloc]init];
     [self initCustomNavItem];
+    [self visibleTabBar];
+    [self initCustomTabBar];
     self.delegate=self;
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (appDelegate.selectIndex!=5) {
@@ -66,12 +68,12 @@
     [self.view addSubview:topView];
     
 }
--(void)setSelectedIndex:(NSUInteger)selectedIndex
-{
-    AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDelegate.selectIndex = selectedIndex;
-   
-}
+//-(void)setSelectedIndex:(NSUInteger)selectedIndex
+//{
+//        AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        appDelegate.selectIndex = selectedIndex;
+//   
+//}
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
@@ -82,74 +84,82 @@
     
 }
 
-//-(void)onClick:(id)sender
-//{
-//    BottomBtn *btn=(BottomBtn *)sender;
-//    self.selectedIndex=btn.tag;
-//    if([btn.text isEqualToString:@""]){
-//        NSLog(@"点击按钮%ld",(long)btn.tag);
-//    }else{
-//        NSLog(@"点击底部按钮%ld",(long)btn.tag);
-//        for (NSObject *object in viewControllArray) {
-//            BottomBtn *b=(BottomBtn *)object;
-//            if(b.tag!=btn.tag){
-//                [b unCheck];
-//            }
-//        }
-//        [btn isCheck];
-//    }
-//
-//}
-//-(void)initCustomTabBar
-//{
-//    [self initBottomBtn:self.tabBar.frame.size itemNumb:4];
-//}
-//-(void)initBottomBtn:(CGSize)size itemNumb:(int)numb
-//
-//{
-//    NSArray *selectArray =[NSArray arrayWithObjects:@"main_select",@"sort_select",@"circle_select",@"mine_select",nil];
-//    NSArray *unselectArray =[NSArray arrayWithObjects:@"main_unselect",@"sort_unselect",@"circle_unselect",@"mine_unselect",nil];
-//    NSArray *textArray =[NSArray arrayWithObjects:@"首页",@"分类",@"圈子",
-//                         @"我",nil];
-//    
-//    
-//    
-//    bottomHeight=49;
-//    
-//    UIView *tabBarBackgroundView=[[UIView alloc] initWithFrame:CGRectMake(self.tabBar.frame.origin.x, self.tabBar.frame.origin.y, self.tabBar.frame.size.width, bottomHeight)];
-//    NSLog(@"======%f",self.navigationController.view.frame.size.height);
-//    [tabBarBackgroundView setBackgroundColor:[UIColor redColor]];
-//    [self.view addSubview:tabBarBackgroundView];
-//    
-//    CGFloat btnwidth=size.width;
-//    CGFloat btnhegiht=size.height;
-//   
-//    UIFont *font=[UIFont fontWithName:@"iconfont" size:23];
-//    UIColor *textColor=[UIColor blackColor];
-//    
-//    for (int i=0; i<numb; i++) {
-//        BottomBtn *btnView=[[BottomBtn alloc]initWithFrame:CGRectMake(btnwidth*i/numb+1, 1, btnwidth/numb-2, btnhegiht-2)];
-//        [btnView addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
-//        [btnView setTag:i];
-//        [btnView setSelectIcon:[selectArray objectAtIndex:i]];
-//        [btnView setUnSelectIcon:[unselectArray objectAtIndex:i]];
-//        [btnView setText:[textArray objectAtIndex:i]];
-//        [btnView setSelectColor:[UIColor orangeColor]];
-//        [btnView setUnSelectColor:[UIColor blackColor]];
-//
-//        
-//        [btnView setIconFont:font];
-//        [btnView setTextFont:[UIFont systemFontOfSize:15]];
-//        [btnView initView];
-//        if(i==0){
-//            [btnView isCheck];
-//        }else{
-//            [btnView unCheck];
-//        }
-//        [tabBarBackgroundView addSubview:btnView];
-//        [viewControllArray addObject:btnView];
-//    }
-//    
-//}
+-(void)onClick:(id)sender
+{
+    BottomBtn *btn=(BottomBtn *)sender;
+    self.selectedIndex=btn.tag;
+    if([btn.text isEqualToString:@""]){
+        NSLog(@"点击按钮%ld",(long)btn.tag);
+    }else{
+        NSLog(@"点击底部按钮%ld",(long)btn.tag);
+        for (NSObject *object in viewControllArray) {
+            BottomBtn *b=(BottomBtn *)object;
+            if(b.tag!=btn.tag){
+                [b unCheck];
+            }
+        }
+        [btn isCheck];
+        [self setSelectedIndex:btn.tag];
+    }
+
+}
+-(void)initCustomTabBar
+{
+    [self initBottomBtn:self.tabBar.frame.size itemNumb:5];
+}
+-(void)initBottomBtn:(CGSize)size itemNumb:(int)numb
+
+{
+    NSArray *selectArray =[NSArray arrayWithObjects:@"main_select",@"news",@"junyouhui",@"sort_select",@"mine_select",nil];
+    NSArray *unselectArray =[NSArray arrayWithObjects:@"main_unselect",@"news_normal",@"junyouhui_normal",@"sort_unselect",@"mine_unselect",nil];
+    NSArray *textArray =[NSArray arrayWithObjects:@"首页",@"新闻",@"聚优惠",@"分类",
+                         @"我",nil];
+    
+    
+    
+    bottomHeight=49;
+    
+    UIView *tabBarBackgroundView=[[UIView alloc] initWithFrame:CGRectMake(self.tabBar.frame.origin.x, self.tabBar.frame.origin.y, self.tabBar.frame.size.width, bottomHeight)];
+   [tabBarBackgroundView setBackgroundColor:[UIColor colorWithRed:242.f/255.f green:242.f/255.f  blue:242.f/255.f  alpha:1.0]];
+    [self.view addSubview:tabBarBackgroundView];
+    
+    CGFloat btnwidth=size.width;
+    CGFloat btnhegiht=size.height;
+   
+    UIFont *font=[UIFont fontWithName:@"iconfont" size:23];
+    UIColor *textColor=[UIColor blackColor];
+    
+    for (int i=0; i<numb; i++) {
+        BottomBtn *btnView=[[BottomBtn alloc]initWithFrame:CGRectMake(btnwidth*i/numb+1, 1, btnwidth/numb, btnhegiht-2)];
+        [btnView addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
+        [btnView setTag:i];
+        [btnView setSelectIcon:[selectArray objectAtIndex:i]];
+        [btnView setUnSelectIcon:[unselectArray objectAtIndex:i]];
+        [btnView setText:[textArray objectAtIndex:i]];
+        [btnView setSelectColor:[UIColor colorWithRed:1 green:99.f/255.f blue:99.f/255.f alpha:1.0]];
+        [btnView setUnSelectColor:[UIColor blackColor]];
+
+        
+        [btnView setIconFont:font];
+        [btnView setTextFont:[UIFont systemFontOfSize:self.view.frame.size.width/32]];
+        [btnView initView];
+        if(i==2){
+            CGRect frame=btnView.iconLabel.frame;
+            frame.size.width=self.view.frame.size.width/5.6;
+            frame.size.height=frame.size.width;
+            frame.origin.x=btnView.frame.size.width/2-frame.size.width/2;
+            frame.origin.y=-20;
+            [btnView.iconLabel setFrame:frame];
+        }
+        if(i==0){
+            [btnView isCheck];
+        }else{
+            [btnView unCheck];
+        }
+        [tabBarBackgroundView addSubview:btnView];
+        [viewControllArray addObject:btnView];
+    }
+    
+}
 
 @end

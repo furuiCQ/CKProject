@@ -26,7 +26,7 @@
 {
     self = [super init];
     if (self) {
-       //
+        //
     }
     return self;
 }
@@ -35,14 +35,14 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-
+        
         
     }
     return self;
 }
 -(void)setTextColor:(UIColor *)color{
     [textLabel setTextColor:color];
-
+    
 }
 -(void)isCheck{
     [iconLabel setImage:[UIImage imageNamed:selectIcon]];
@@ -51,18 +51,20 @@
 -(void)unCheck{
     [iconLabel setImage:[UIImage imageNamed:unSelectIcon]];
     [textLabel setTextColor:unSelectColor];
-
+    
 }
 -(void)initView{
-        [self setBackgroundColor:[UIColor greenColor]];
-        iconLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width/2-8, self.frame.size.height/6, 19, 19)];
-        [self addSubview:iconLabel];
-        textLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width/4, self.frame.size.height/6+19+self.frame.size.height/10, self.frame.size.width/2, self.frame.size.height/3-1)];
-        [textLabel setText:text];
-        [textLabel setTextAlignment:NSTextAlignmentCenter];
-        [textLabel setFont:[UIFont systemFontOfSize:self.frame.size.width/24.6]];
-        [self addSubview:textLabel];
-        
+    // [self setBackgroundColor:[UIColor greenColor]];
+    iconLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width/2-8, self.frame.size.height/6, 19, 19)];
+    iconLabel.contentMode = UIViewContentModeScaleAspectFit;
+    
+    [self addSubview:iconLabel];
+    textLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width/4+2, self.frame.size.height/6+19+self.frame.size.height/10, self.frame.size.width/2, self.frame.size.height/3-1)];
+    [textLabel setText:text];
+    [textLabel setTextAlignment:NSTextAlignmentCenter];
+    [textLabel setFont:textFont];
+    [self addSubview:textLabel];
+    
     
 }
 

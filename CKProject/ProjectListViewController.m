@@ -546,7 +546,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
     
     UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/1.3/2, view.frame.size.height, width/1.3/2, width/8)];
-    [confirmLabel setText:@"确定"];
+    [confirmLabel setText:@"完成"];
     [confirmLabel setTextAlignment:NSTextAlignmentCenter];
     [confirmLabel setTextColor:[UIColor whiteColor]];
     [confirmLabel setFont:[UIFont systemFontOfSize:width/20]];
