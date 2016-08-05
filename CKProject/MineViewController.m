@@ -108,12 +108,12 @@
     [searchLabel setText:@"个人中心"];
     
     //新建右上角的图形
-    msgLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/19-11, titleHeight/2-8, 11, 17)];
+    msgLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/19-2, titleHeight/2-7,4, 15)];
     [msgLabel setUserInteractionEnabled:YES];
     UITapGestureRecognizer *uITapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goMsgViewController)];
     [msgLabel addGestureRecognizer:uITapGestureRecognizer];
     
-    [msgLabel setImage:[UIImage imageNamed:@"msg_logo"]];
+    [msgLabel setImage:[UIImage imageNamed:@"menu_logo"]];
     
     pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
     

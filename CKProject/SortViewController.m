@@ -198,7 +198,7 @@
                                                                   titleHeight+20+0.5+titleHeight*3/4
                                                                   ,
                                                                   self.view.frame.size.width,
-                                                                  self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40)-bottomHeight)];
+                                                                  self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4)-bottomHeight)];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
     [projectTableView setBackgroundColor:[UIColor whiteColor]];
     projectTableView.dataSource                        = self;
@@ -213,7 +213,7 @@
     orgTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
                                                               titleHeight+20+0.5+titleHeight*3/4,
                                                               self.view.frame.size.width,
-                                                              self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4+self.view.frame.size.width/40)-bottomHeight)];
+                                                              self.view.frame.size.height-(titleHeight+20+0.5+titleHeight*3/4)-bottomHeight)];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
     [orgTableView setBackgroundColor:[UIColor whiteColor]];
     orgTableView.dataSource                        = self;
