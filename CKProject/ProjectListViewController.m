@@ -72,6 +72,8 @@
     
     UITableView *dataTableView;
     NSMutableArray *selcedIdArray;
+    UICollectionView * cityCollectView;
+    UICollectionView * gradCollectView;
     
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
@@ -373,46 +375,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [siftCotrol addSubview:siftLabel];
     [siftCotrol addSubview:siftImageView];
     [marginview addSubview:siftCotrol];
-    
-    
-    //    UIView *view=[[UIView alloc] initWithFrame:CGRectMake(width/40,0,width-width/20, titleHeight*3/4)];
-    //    [view setBackgroundColor:[UIColor whiteColor]];
-    //    bi=[[UILabel alloc]initWithFrame:CGRectMake(width/11, 0, width/5, titleHeight*3/4)];
-    //    bi.text=@"";
-    //    bi.font=[UIFont systemFontOfSize:width/25];
-    //    bi.textColor=[UIColor redColor];
-    //    [view addSubview:bi];
-    //
-    //
-    //    NSArray *titleArray= [NSArray arrayWithObjects:@"热门",@"筛选", nil];
-    //    NSArray *imgArray=[NSArray  arrayWithObjects:@"demotion_logo",@"demotion_logo", nil];
-    //    NSArray *unimgArray=[NSArray arrayWithObjects:@"undemotion_logo",@"undemotion_logo", nil];
-    //
-    //    for(int i=0;i<2;i++){
-    //        DemotionControl *subView=[[DemotionControl alloc]initWithFrame:CGRectMake(view.frame.size.width/3*i+width/3, 0,view.frame.size.width/3, marginview.frame.size.height)];
-    //        [subView setUserInteractionEnabled:YES];
-    //        [subView setTag:i];
-    //        [subView addTarget:self action:@selector(topOnClick:) forControlEvents:UIControlEventTouchUpInside];
-    //        CGRect frame=self.view.frame;
-    //        [subView initView:&frame withTag:i];
-    //        [subView setBackgroundColor:[UIColor whiteColor]];
-    //        [subView.textLabel setText:[titleArray objectAtIndex:i]];
-    //        [subView.userLogo setImage:[UIImage imageNamed:[unimgArray objectAtIndex:i]] forState:UIControlStateNormal];
-    //        [subView.userLogo setImage:[UIImage imageNamed:[imgArray objectAtIndex:i]] forState:UIControlStateSelected];
-    //        [view addSubview:subView];
-    //    }
-    ////    UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width/1.5,0,self.view.frame.size.width/3, titleHeight*3/3)];
-    ////    lab.text=@"渝北区";
-    ////    [lab setTextColor:[UIColor redColor]];
-    ////    lab.font=[UIFont systemFontOfSize:16];
-    ////    [view addSubview:lab];
-    //    [marginview addSubview:view];
-    
-    
-    
-    
-    
-}
+ }
 -(void)topOnClick:(id)sender{
     DemotionControl *btn=(DemotionControl *)sender;
     
@@ -503,20 +466,20 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [topView addSubview:localNowLabel];
     
     
-    allSortLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/22+localNowLabel.frame.size.width+localNowLabel.frame.origin.x
-                                                          , topLabel.frame.size.height+topLabel.frame.origin.y
-                                                          +width/26.7, width/5.7, width/12.3)];
-    [allSortLabel setTextColor:[UIColor whiteColor]];
-    [allSortLabel setText:@"年龄段"];
-    [allSortLabel setUserInteractionEnabled:YES];
+    allGradeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/22+localNowLabel.frame.size.width+localNowLabel.frame.origin.x
+                                                           , topLabel.frame.size.height+topLabel.frame.origin.y
+                                                           +width/26.7, width/5.7, width/12.3)];
+    [allGradeLabel setTextColor:[UIColor whiteColor]];
+    [allGradeLabel setText:@"年龄段"];
+    [allGradeLabel setUserInteractionEnabled:YES];
     UITapGestureRecognizer *allGraGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allGrade)];
-    [allSortLabel addGestureRecognizer:allGraGestrue];
-    [allSortLabel setFont:[UIFont systemFontOfSize:width/35.6]];
-    [allSortLabel setTextAlignment:NSTextAlignmentCenter];
-    [allSortLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
-    [allSortLabel.layer setCornerRadius:2];
-    [allSortLabel.layer setMasksToBounds:true];
-    [topView addSubview:allSortLabel];
+    [allGradeLabel addGestureRecognizer:allGraGestrue];
+    [allGradeLabel setFont:[UIFont systemFontOfSize:width/35.6]];
+    [allGradeLabel setTextAlignment:NSTextAlignmentCenter];
+    [allGradeLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
+    [allGradeLabel.layer setCornerRadius:2];
+    [allGradeLabel.layer setMasksToBounds:true];
+    [topView addSubview:allGradeLabel];
     
     
     bottomHeight=49;
@@ -533,7 +496,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [dataTableView setTag:4];
     [view addSubview:dataTableView];
     
-    [dataTableView setHidden:YES];
     //创建一个layout布局类
     UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
     //设置布局方向为垂直流布局
@@ -541,19 +503,37 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     //设置每个item的大小为100*100
     layout.itemSize = CGSizeMake(width/5.7, width/12.5);
     //创建collectionView 通过一个布局策略layout来创建
-    UICollectionView * collect = [[UICollectionView alloc]initWithFrame:CGRectMake(width/16,
-                                                                                   topView.frame.size.height+topView.frame.origin.y+width/40,
-                                                                                   width/1.3-width/8,
-                                                                                   view.frame.size.height-(topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout];
+    cityCollectView = [[UICollectionView alloc]initWithFrame:CGRectMake(width/16,
+                                                                        topView.frame.size.height+topView.frame.origin.y+width/40,
+                                                                        width/1.3-width/8,
+                                                                        view.frame.size.height-(topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout];
     //代理设置
-    collect.delegate=self;
-    collect.dataSource=self;
+    cityCollectView.delegate=self;
+    cityCollectView.dataSource=self;
+    [cityCollectView setTag:0];
     //注册item类型 这里使用系统的类型
-    [collect registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellid"];
-    [collect setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:collect];
-
+    [cityCollectView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellid"];
+    [cityCollectView setHidden:YES];
+    [view addSubview:cityCollectView];
     
+    //创建一个layout布局类
+    UICollectionViewFlowLayout * layout2 = [[UICollectionViewFlowLayout alloc]init];
+    //设置布局方向为垂直流布局
+    layout2.scrollDirection = UICollectionViewScrollDirectionVertical;
+    //设置每个item的大小为100*100
+    layout2.itemSize = CGSizeMake(width/5.7, width/12.5);
+    gradCollectView = [[UICollectionView alloc]initWithFrame:CGRectMake(width/16,
+                                                                        topView.frame.size.height+topView.frame.origin.y+width/40,
+                                                                        width/1.3-width/8,
+                                                                        view.frame.size.height-(topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout2];
+    //代理设置
+    gradCollectView.delegate=self;
+    gradCollectView.dataSource=self;
+    [gradCollectView setTag:1];
+    //注册item类型 这里使用系统的类型
+    [gradCollectView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellid2"];
+    [gradCollectView setHidden:YES];
+    [view addSubview:gradCollectView];
     
     
     UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, view.frame.size.height, width/1.3/2, width/8)];
@@ -580,142 +560,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [view addSubview:confirmLabel];
     
     [self getAllType];
-    
-    //    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-    //    [titleView setBackgroundColor:[UIColor whiteColor]];
-    //    [view addSubview:titleView];
-    //
-    //    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-    //    [cancelLabel setText:@"取消"];
-    //    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-    //    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    //    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-    //    [cancelLabel setUserInteractionEnabled:YES];
-    //    [cancelLabel setTag:0];
-    //    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-    //    [cancelLabel addGestureRecognizer:cancelGesture];
-    //    [titleView addSubview:cancelLabel];
-    //
-    //
-    //    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-    //    [titleLabel setText:@"筛选"];
-    //    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    //    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    //    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-    //    [titleView addSubview:titleLabel];
-    //
-    //
-    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
-    //    [confirmLabel setText:@"确定"];
-    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
-    //    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    //    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
-    //    [confirmLabel setUserInteractionEnabled:YES];
-    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
-    //    [confirmLabel addGestureRecognizer:confrimGesture];
-    //    [titleView addSubview:confirmLabel];
-    //
-    //
-    //
-    //    UIView *localBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46, view.frame.size.width, width/10)];
-    //    [localBgView setUserInteractionEnabled:YES];
-    //    UITapGestureRecognizer *addressGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allAddress)];
-    //    [localBgView addGestureRecognizer:addressGestrue];
-    //    [localBgView setBackgroundColor:[UIColor whiteColor]];
-    //    [view addSubview:localBgView];
-    //    //-------------------//------------//
-    //    UILabel *localLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (localBgView.frame.size.height-width/26)/2, width/2, width/26)];
-    //    [localLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    //    [localLabel setText:bi.text];
-    //    [localLabel setFont:[UIFont systemFontOfSize:width/26]];
-    //    [localBgView addSubview:localLabel];
-    //
-    //    localNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (localBgView.frame.size.height-width/29)/2, localBgView.frame.size.width*2/3, width/29)];
-    //    [localNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    //    [localNowLabel setText:addressString];
-    //    [localNowLabel setTextAlignment:NSTextAlignmentRight];
-    //    [localNowLabel setFont:[UIFont systemFontOfSize:width/29]];
-    //    [localBgView addSubview:localNowLabel];
-    //
-    //    UIImageView *rightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+localBgView.frame.size.width*3/4, (localBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
-    //
-    //    [rightLabel setImage:[UIImage imageNamed:@"right_logo"]];
-    //    [localBgView addSubview:rightLabel];
-    //
-    //
-    //
-    //
-    //
-    //    UIView *allSortBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46+width/10+width/40, view.frame.size.width, width/10)];
-    //    [allSortBgView setBackgroundColor:[UIColor whiteColor]];
-    //    [allSortBgView setUserInteractionEnabled:YES];
-    //    UITapGestureRecognizer *allTypeGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allType)];
-    //    [allSortBgView addGestureRecognizer:allTypeGestrue];
-    //    [view addSubview:allSortBgView];
-    //
-    //
-    //    allSortLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (allSortBgView.frame.size.height-width/26)/2, width/2, width/26)];
-    //    [allSortLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    //    [allSortLabel setText:@"全部分类"];
-    //    [allSortLabel setFont:[UIFont systemFontOfSize:width/26]];
-    //    [allSortBgView addSubview:allSortLabel];
-    //
-    //
-    //    typeNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (allSortBgView.frame.size.height-width/29)/2, allSortBgView.frame.size.width*2/3, width/29)];
-    //    [typeNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    //    [typeNowLabel setText:typeString];
-    //    [typeNowLabel setTextAlignment:NSTextAlignmentRight];
-    //    [typeNowLabel setFont:[UIFont systemFontOfSize:width/29]];
-    //    [allSortBgView addSubview:typeNowLabel];
-    //
-    //
-    //    UIImageView *allrightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+allSortBgView.frame.size.width*3/4, (allSortBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
-    //    //[allrightLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    //    [allrightLabel setImage:[UIImage imageNamed:@"right_logo"]];
-    //    [allrightLabel setUserInteractionEnabled:NO];
-    //    //[allrightLabel setTextAlignment:NSTextAlignmentRight];
-    //    //[allrightLabel setFont:[UIFont systemFontOfSize:width/22]];
-    //    [allSortBgView addSubview:allrightLabel];
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //    UIView *allGradeBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46+width/10+width/40+width/10+width/40, view.frame.size.width, width/10)];
-    //    [allGradeBgView setBackgroundColor:[UIColor whiteColor]];
-    //    [allGradeBgView setUserInteractionEnabled:YES];
-    //    UITapGestureRecognizer *allGraGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allGrade)];
-    //    [allGradeBgView addGestureRecognizer:allGraGestrue];
-    //    [view addSubview:allGradeBgView];
-    //
-    //
-    //    allGradeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (allGradeBgView.frame.size.height-width/26)/2, width/2, width/26)];
-    //    [allGradeLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    //    [allGradeLabel setText:@"年龄段"];
-    //    [allGradeLabel setFont:[UIFont systemFontOfSize:width/26]];
-    //    [allGradeBgView addSubview:allGradeLabel];
-    //
-    //
-    //    gradeNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (allGradeBgView.frame.size.height-width/29)/2, allGradeBgView.frame.size.width*2/3, width/29)];
-    //    [gradeNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    //    [gradeNowLabel setText:gradeString];
-    //    [gradeNowLabel setTextAlignment:NSTextAlignmentRight];
-    //    [gradeNowLabel setFont:[UIFont systemFontOfSize:width/29]];
-    //    [allGradeBgView addSubview:gradeNowLabel];
-    //
-    //
-    //    UIImageView *allGraderightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+allGradeBgView.frame.size.width*3/4, (allGradeBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
-    //    [allGraderightLabel setImage:[UIImage imageNamed:@"right_logo"]];
-    //    [allGraderightLabel setUserInteractionEnabled:NO];
-    //    [allGradeBgView addSubview:allGraderightLabel];
-    //
-    
-    
-    
-    
-    
+    [self getAllGrade];
+    [self getAllCity];
+
     firstLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
     firstLayout.width=view.frame.size.width;
     firstLayout.contentView=view;
@@ -729,252 +576,30 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
 }
 -(void)allGrade{
-    
-    
-//    int width=self.view.frame.size.width;
-//    int hegiht=self.view.frame.size.height;
-//    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-//    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-//    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-//    [titleView setBackgroundColor:[UIColor whiteColor]];
-//    [view addSubview:titleView];
-//    
-//    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-//    [cancelLabel setText:@"取消"];
-//    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-//    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-//    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-//    [cancelLabel setUserInteractionEnabled:YES];
-//    [cancelLabel setTag:5];
-//    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-//    [cancelLabel addGestureRecognizer:cancelGesture];
-//    [titleView addSubview:cancelLabel];
-//    
-//    
-//    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-//    [titleLabel setText:@"年龄"];
-//    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-//    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-//    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-//    [titleView addSubview:titleLabel];
-//    
-//    
-//    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
-//    //    [confirmLabel setText:@"确定"];
-//    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
-//    //    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-//    //    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
-//    //    [confirmLabel setUserInteractionEnabled:YES];
-//    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
-//    //    [confirmLabel addGestureRecognizer:confrimGesture];
-//    //    [titleView addSubview:confirmLabel];
-//    
-//    gradeTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-//                                                                width/10+2+width/40+width/46,
-//                                                                view.frame.size.width,
-//                                                                view.frame.size.height-(width/10+2+width/40+width/46))];
-//    [gradeTableView setBackgroundColor:[UIColor whiteColor]];
-//    gradeTableView.dataSource                        = self;
-//    gradeTableView.delegate                          = self;
-//    [gradeTableView setTag:5];
-//    [view addSubview:gradeTableView];
-//    
-//    
-//    gradeLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-//    gradeLayout.width=view.frame.size.width;
-//    gradeLayout.contentView=view;
-//    gradeLayout.delegate=self;
-//    [self.view addSubview:gradeLayout];
-//    
-//    gradeLayout.openFromRight = YES;
-//    [gradeLayout openDrawer];
-//    [ProgressHUD show:@"加载中..."];
-    
-    [self getAllGrade];
+    [gradCollectView setHidden:NO];
+    [dataTableView setHidden:YES];
+    [cityCollectView setHidden:YES];
+    [allGradeLabel setBackgroundColor:[UIColor colorWithRed:1 green:84.f/255.f blue:84.f/255.f alpha:1.0]];
+    [localNowLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
+    [allSortLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
     
 }
 -(void)allType{
-    int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:titleView];
-    
-    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-    [cancelLabel setText:@"取消"];
-    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-    [cancelLabel setUserInteractionEnabled:YES];
-    [cancelLabel setTag:4];
-    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-    [cancelLabel addGestureRecognizer:cancelGesture];
-    [titleView addSubview:cancelLabel];
-    
-    
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-    [titleLabel setText:@"分类"];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-    [titleView addSubview:titleLabel];
-    NSMutableArray *mutableArray=[[NSMutableArray alloc]init];
-    if([typeArray count]>0){
-        for (NSDictionary *dic in typeArray) {
-            NSNumber *superId=[dic objectForKey:@"id"];
-            
-            NSString *title=[dic objectForKey:@"title"];
-            
-            NSArray *lessonGroup=[dic objectForKey:@"lesson_group"];
-            
-            Node *superData=[[Node alloc]initWithParentId:-1 nodeId:[superId intValue] name:title depth:0 expand:YES withSuperId:[superId intValue] withSubId:[superId intValue]];
-            [mutableArray addObject:superData];
-            for (int i=0; i<[lessonGroup count]; i++) {
-                NSDictionary *d=[lessonGroup objectAtIndex:i];
-                NSNumber *subId=[d objectForKey:@"id"];
-                NSString *subtitle=[d objectForKey:@"title"];
-                BOOL expend=NO;
-                if ([selectSuperId isEqualToNumber:superId]) {
-                    expend=YES;
-                }
-                Node *subData=[[Node alloc]initWithParentId:[superId intValue] nodeId:[subId intValue] name:subtitle depth:1 expand:expend withSuperId:[superId intValue]withSubId:[subId intValue]];
-                [mutableArray addObject:subData];
-            }
-        }
-        
-    }
-    
-    
-    
-    typeTableView=[[TreeTableView alloc]initWithFrame:CGRectMake(0,
-                                                                 width/10+2+width/40+width/46,
-                                                                 view.frame.size.width,
-                                                                 view.frame.size.height-(width/10+2+width/40+width/46))withData:[mutableArray copy]];
-    [typeTableView setBackgroundColor:[UIColor whiteColor]];
-    typeTableView.treeTableCellDelegate=self;
-    [typeTableView setSelecetTitle:typeNowLabel.text];
-    //[typeTableView setTag:6];
-    [view addSubview:typeTableView];
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, endAddTableView.frame.size.width, width/29*3)];//创建一个视图（v_headerView）
-    
-    UILabel *textlabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21, width/29, typeTableView.frame.size.width, width/29)];
-    [textlabel setText:@"全部分类"];
-    [textlabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/26.7]];
-    [textlabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:33.f/255.f alpha:1.0]];
-    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(width/21, width/29*3-1, typeTableView.frame.size.width-width/21, 1)];
-    [lineView setBackgroundColor:[UIColor colorWithRed:215.f/255.f green:215.f/255.f blue:215.f/255.f alpha:1.0]];
-    [headerView addSubview:lineView];
-    
-    
-    UIImageView *rightView=[[UIImageView alloc]initWithFrame:CGRectMake(typeTableView.frame.size.width*4/5, self.view.frame.size.width/22.8, self.view.frame.size.width/22, self.view.frame.size.width/26.7)];
-    [rightView setImage:[UIImage imageNamed:@"select_logo"]];
-    
-    // [headerView addSubview:rightView];
-    
-    //   [headerView addSubview:textlabel];
-    
-    //    if (typeString==nil) {
-    //        typeTableView.tableHeaderView=headerView;
-    //    }
-    
-    
-    typeLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-    typeLayout.width=view.frame.size.width;
-    typeLayout.contentView=view;
-    typeLayout.delegate=self;
-    [self.view addSubview:typeLayout];
-    
-    typeLayout.openFromRight = YES;
-    [typeLayout openDrawer];
-    
+    [dataTableView setHidden:NO];
+    [cityCollectView setHidden:YES];
+    [gradCollectView setHidden:YES];
+    [allSortLabel setBackgroundColor:[UIColor colorWithRed:1 green:84.f/255.f blue:84.f/255.f alpha:1.0]];
+    [localNowLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
+    [allGradeLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
     
 }
 -(void)allAddress{
-    
-    
-    
-    int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:titleView];
-    
-    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-    [cancelLabel setText:@"取消"];
-    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-    [cancelLabel setUserInteractionEnabled:YES];
-    [cancelLabel setTag:1];
-    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-    [cancelLabel addGestureRecognizer:cancelGesture];
-    [titleView addSubview:cancelLabel];
-    
-    
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-    [titleLabel setText:@"区域"];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-    [titleView addSubview:titleLabel];
-    
-    
-    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
-    //    [confirmLabel setText:@"确定"];
-    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
-    //    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    //    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
-    //    [confirmLabel setUserInteractionEnabled:YES];
-    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
-    //    [confirmLabel addGestureRecognizer:confrimGesture];
-    //    [titleView addSubview:confirmLabel];
-    
-    //全部地区
-    //    UIView *vi=[[UIView alloc]initWithFrame:CGRectMake(0, titleView.frame.size.height+titleView.frame.origin.y+1, width, width/7)];
-    //    UILabel *li=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width, width/7)];
-    //    li.text=@"全部地区";
-    //
-    //    [vi addSubview:li];
-    //
-    //
-    //    [view addSubview:vi];
-    
-    addTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                              width/10+2+width/40+width/46,
-                                                              view.frame.size.width,
-                                                              view.frame.size.height-(width/10+2+width/40+width/46))];
-    [addTableView setBackgroundColor:[UIColor whiteColor]];
-    addTableView.dataSource                        = self;
-    addTableView.delegate                          = self;
-    //    addTableView.tableHeaderView=vi;
-    [addTableView setTag:1];
-    [view addSubview:addTableView];
-    
-   	twoLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-    twoLayout.width=view.frame.size.width;
-    twoLayout.contentView=view;
-    twoLayout.delegate=self;
-    [self.view addSubview:twoLayout];
-    
-    twoLayout.openFromRight = YES;
-    [twoLayout openDrawer];
-    if ([local1Array count]<=0) {
-        [ProgressHUD show:@"加载中..."];
-        [self getAllCity];
-    }else{
-        [addTableView reloadData];
-        NSIndexPath *idxPath = [NSIndexPath indexPathForRow:select1Id inSection:0];//定位到第8行
-        [addTableView scrollToRowAtIndexPath:idxPath
-                            atScrollPosition:UITableViewScrollPositionTop
-                                    animated:NO];
-        
-    }
-    
-    
+    [cityCollectView setHidden:NO];
+    [dataTableView setHidden:YES];
+    [gradCollectView setHidden:YES];
+    [localNowLabel setBackgroundColor:[UIColor colorWithRed:1 green:84.f/255.f blue:84.f/255.f alpha:1.0]];
+    [allGradeLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
+    [allSortLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
 }
 -(void)subAddress:(NSString *)selectString{
     
@@ -1698,13 +1323,13 @@ static NSString *identy = @"OrderRecordCell";
         addressString=@"";
         
     }else if(tableView.tag==4){
-//        NSDictionary *dic=[typeArray objectAtIndex:[indexPath row]];
-//        cid=[dic objectForKey:@"id"];
-//        NSString *str=[dic objectForKey:@"title"];
-//        [typeNowLabel setText:[NSString stringWithFormat:@"%@",str]];
-//        typeString=str;
-//        [typeLayout closeDrawer];
-//        [typeTableView.tableHeaderView setHidden:YES];
+        //        NSDictionary *dic=[typeArray objectAtIndex:[indexPath row]];
+        //        cid=[dic objectForKey:@"id"];
+        //        NSString *str=[dic objectForKey:@"title"];
+        //        [typeNowLabel setText:[NSString stringWithFormat:@"%@",str]];
+        //        typeString=str;
+        //        [typeLayout closeDrawer];
+        //        [typeTableView.tableHeaderView setHidden:YES];
         NSIndexPath *indexPath = [tableView indexPathForSelectedRow];
         bool hasNumb=false;
         if([selcedIdArray count]>0){
@@ -1815,7 +1440,8 @@ static NSString *identy = @"OrderRecordCell";
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                        [gradeTableView reloadData];
+                        // [gradeTableView reloadData];
+                        [gradCollectView reloadData];
                     });
                     
                     
@@ -1977,7 +1603,8 @@ static NSString *identy = @"OrderRecordCell";
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                        [addTableView reloadData];
+                       // [addTableView reloadData];
+                        [cityCollectView reloadData];
                     });
                     
                     
@@ -2269,18 +1896,36 @@ static NSString *identy = @"OrderRecordCell";
 }
 //返回每个分区的item个数
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 10;
+    if(collectionView.tag==0){
+        return [local1Array count];
+    }else {
+        return [gradeArray count];
+    }
 }
 
 //返回每个item
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell * cell  = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellid" forIndexPath:indexPath];
+    NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
+    UICollectionViewCell * cell;
+    NSDictionary *dic;
+    if (collectionView.tag==0) {
+        cell  = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellid" forIndexPath:indexPath];
+        dic=[local1Array objectAtIndex:[indexPath row]];
+        NSLog(@"local1Array count%ld", [local1Array count]);
+    }else if(collectionView.tag==1){
+        cell  = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellid2" forIndexPath:indexPath];
+        dic=[gradeArray objectAtIndex:[indexPath row]];
+        NSLog(@"gradeArray count%ld", [gradeArray count]);
+    }
     [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
+    [cell.layer setCornerRadius:5];
     CGRect frame=cell.frame;
     frame.origin.x=0;
     frame.origin.y=0;
     UILabel *label=[[UILabel alloc]initWithFrame:frame];
-    [label setText:@"王小明"];
+    [label setText:[dic objectForKey:@"title"]];
+    [label setTextAlignment:NSTextAlignmentCenter];
+    [label setFont:[UIFont systemFontOfSize:self.view.frame.size.width/35.5]];
     [cell addSubview:label];
     return cell;
 }
