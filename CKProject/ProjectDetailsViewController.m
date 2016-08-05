@@ -30,6 +30,7 @@
 #import "TimeSelectItem.h"
 #import "DayModel.h"
 #import "JZLocationConverter.h"
+#import "RJUtil.h"
 @interface ProjectDetailsViewController ()<UIScrollViewDelegate>{
     NSString *phone;
     UILabel *registerLabel;
@@ -79,6 +80,13 @@
     
     NSMutableArray *tab;
     UIControl *contentControl;
+    CLLocationManager *locationManager;
+    CLLocation *neloct;
+    NSString *lt;
+    NSString *lg;
+    UINib *nib;
+    UILabel *distanceLabel;
+    
 }
 @end
 
@@ -123,8 +131,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self initContent];
     [self initBootomView];
     [self getProjectInfo];
-    NSLog(@"kechengid:%@",projectId);
-    // Do any additional setup after loading the view, typically from a nib.
 }
 //初始化顶部菜单栏
 -(void)initTitle{
@@ -164,8 +170,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
-    
-    
 }
 -(void)initContent{
     int width=self.view.frame.size.width;
@@ -179,7 +183,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     UIControl *instituteControl=[[UIControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y, width, width/3.5)];
     [instituteControl setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:252.f/255.f blue:252.f/255.f alpha:1.0]];
-    //[instituteControl addTarget:self action:@selector(onClick) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:instituteControl];
     
     logoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/30, width/22, width/5, width/5)];
@@ -237,7 +240,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [ageLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
     [projectControl addSubview:ageLabel];
     
-    UILabel *distanceLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-width/16.8,  width/16.8, width/4, width/32)];
+    distanceLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-width/16.8,  width/16.8, width/4, width/32)];
     [distanceLabel setText:@"500 米"];
     [distanceLabel setFont:[UIFont systemFontOfSize:width/32]];
     [distanceLabel setTextAlignment:NSTextAlignmentRight];
@@ -273,8 +276,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [contentLabel setFont:[UIFont systemFontOfSize:width/24.6]];
     [contentControl addSubview:contentLabel];
     detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(0, contentLabel.frame.size.height+contentLabel.frame.origin.y, width, 20)];
-    //    neirong.text=@"";
-    //    [neirong setTextColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     [detailContentLabel setText:@"惺惺惜惺惺"];
     detailContentLabel.editable=NO;
     [detailContentLabel setTextAlignment:NSTextAlignmentLeft];
@@ -282,162 +283,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [detailContentLabel setFont:[UIFont systemFontOfSize:width/26.7]];
     detailContentLabel.backgroundColor=[UIColor whiteColor];
     [contentControl addSubview:detailContentLabel];
-    
-    /*
-     UIImageView *phoneImagView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@""]];
-     [phoneImagView setFrame:CGRectMake(localImageView.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/32, width/22, width/17)];
-     //    UITapGestureRecognizer *callGesuture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callPhone)];
-     //    [phoneImagView addGestureRecognizer:callGesuture];
-     //    [phoneImagView setUserInteractionEnabled:YES];
-     //    [phoneImagView setBackgroundColor:[UIColor greenColor]];
-     //
-     //    [scrollView addSubview:phoneImagView];
-     
-     //    phoneLabel=[[UILabel alloc]initWithFrame:CGRectMake(projectAddLabel.frame.origin.x, projectAddLabel.frame.size.height+projectAddLabel.frame.origin.y+width/25.6, width-(projectAddLabel.frame.origin.x)-width/40, width/26.7)];
-     //    [phoneLabel setText:@"联系电话：023-9523123"];
-     //    [phoneLabel setTextColor:[UIColor colorWithRed:85.f/255.f green:85.f/255.f blue:85.f/255.f alpha:1.0]];
-     //    [phoneLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-     //    [phoneLabel setUserInteractionEnabled:YES];
-     //    [phoneLabel addGestureRecognizer:callGesuture];
-     //    [scrollView addSubview:phoneLabel];
-     
-     projectTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40,  phoneImagView.frame.size.height+phoneImagView.frame.origin.y+width/53, width, width/29)];
-     [projectTimeLabel setText:@""];
-     [projectTimeLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];//
-     //  [projectTimeLabel setBackgroundColor:[UIColor greenColor]];
-     [projectTimeLabel setFont:[UIFont systemFontOfSize:width/29]];
-     [scrollView addSubview:projectTimeLabel];
-     
-     
-     //免费或者收费
-     //        lei=[[UILabel alloc]initWithFrame:CGRectMake(width/2.5,  imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/20, width-(width/40+width/21.3+width/40)-width/40, width/29)];
-     //        [lei setText:@"免费课"];
-     //        [lei setTextColor:[UIColor greenColor]];
-     //        [lei setFont:[UIFont systemFontOfSize:width/24]];
-     //        [scrollView addSubview:lei];
-     
-     
-     
-     //    UILabel *beginTimeTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/3.3,imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/32,width/24.6*5,width/24.6)];
-     //    [beginTimeTopLabel setText:@"开课时间："];
-     //    [beginTimeTopLabel setTextColor:[UIColor colorWithRed:76.f/255.f green:76.f/255.f blue:76.f/255.f alpha:1.0]];
-     //    [beginTimeTopLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-     //    [scrollView addSubview:beginTimeTopLabel];
-     //
-     //    beginTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(beginTimeTopLabel.frame.size.width+beginTimeTopLabel.frame.origin.x,imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/32,width/29*10,width/29)];
-     //    [beginTimeLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-     //    [beginTimeLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-     //    [scrollView addSubview:beginTimeLabel];
-     
-     UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(width/40, imageScrollview.frame.size.height+imageScrollview.frame.origin.y+width/26.7, width-width/20, 1)];
-     [lineView setBackgroundColor:[UIColor colorWithRed:245.f/255.f green:245.f/255.f blue:245.f/255.f alpha:1.0]];
-     
-     [scrollView addSubview:lineView];
-     
-     
-     bottomView=[[UIView alloc]initWithFrame:CGRectMake(0, lineView.frame.size.height+lineView.frame.origin.y+width/32, width, width/26.7+width/35.5+hegiht/5+width/16+width/9)];
-     //  [bottomView setBackgroundColor:[UIColor redColor]];
-     
-     UILabel *detailLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40, 0,width-width/40-width/40, width/26.7)];
-     [detailLabel setText:@"详情:"];
-     [detailLabel setTextColor:[UIColor blackColor]];
-     [detailLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-     [bottomView addSubview:detailLabel];
-     detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(width/40, detailLabel.frame.size.height+detailLabel.frame.origin.y+width/35.5,  width-width/40-width/40, hegiht/5)];
-     [detailContentLabel setText:@""];
-     detailContentLabel.editable=NO;
-     [detailContentLabel setTextAlignment:NSTextAlignmentLeft];
-     [detailContentLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-     [detailContentLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-     [bottomView addSubview:detailContentLabel];
-     
-     
-     line=[[UILabel alloc]initWithFrame:CGRectMake(0, detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+3, width, 1)];
-     [line setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-     
-     [bottomView addSubview:line];
-     tit=[[UILabel alloc]initWithFrame:CGRectMake(0, line.frame.origin.y+5, width/2, width/10)];
-     tit.text=@"＊体验课预约规则";
-     tit.font=[UIFont systemFontOfSize:width/22];
-     tit.textColor=[UIColor redColor];
-     [bottomView addSubview:tit];
-     neirong=[[UITextView alloc]initWithFrame:CGRectMake(width/20, tit.frame.origin.y+tit.frame.size.height+2, width-width/28, 20)];
-     //    neirong.text=@"";
-     //    [neirong setTextColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-     
-     
-     [neirong setText:@""];
-     neirong.editable=NO;
-     [neirong setTextAlignment:NSTextAlignmentLeft];
-     [neirong setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-     [neirong setFont:[UIFont systemFontOfSize:width/26.7]];
-     neirong.backgroundColor=[UIColor whiteColor];
-     [bottomView addSubview:neirong];
-     
-     
-     
-     //    //规则
-     //规则详情显示
-     //    UILabel *lbe=[[UILabel alloc]initWithFrame:CGRectMake(0, guize.frame.origin.y+guize.frame.size.height+width/32, width, width/12)];
-     //
-     //    lbe.text=[data objectForKey:@"lesson_rule"];
-     //
-     //    lbe.numberOfLines=0;
-     //    [bottomView addSubview: lbe];
-     //    上课时间选择按钮
-     timeSelectView=[[UIView alloc]initWithFrame:CGRectMake(0, detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/32, width, width/12.8)];
-     [timeSelectView setUserInteractionEnabled:YES];
-     [timeSelectView setBackgroundColor:[UIColor colorWithRed:245.f/255.f green:245.f/255.f blue:245.f/255.f alpha:1.0]];
-     UITapGestureRecognizer *timeSelectGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openTimeSelectPicker)];
-     [timeSelectView addGestureRecognizer:timeSelectGesture];
-     UILabel *timeSelectLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, width/40, width/26*7, width/26.7)];
-     [timeSelectLabel setText:@"上课时间选择"];
-     [timeSelectLabel setTextColor:[UIColor colorWithRed:77.f/255.f green:77.f/255.f blue:77.f/255.f alpha:1.0]];
-     [timeSelectLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-     UIImageView *timeSelectImageView=[[UIImageView alloc]initWithFrame:CGRectMake(timeSelectLabel.frame.size.width+timeSelectLabel.frame.origin.x+width/80, timeSelectLabel.frame.origin.y, width/26.7*9/16, width/26.7)];
-     [timeSelectImageView setImage:[UIImage imageNamed:@"go_logo"]];
-     
-     [timeSelectView addSubview:timeSelectLabel];
-     [timeSelectView addSubview:timeSelectImageView];
-     timeShowLabel=[[UILabel alloc]initWithFrame:CGRectMake(timeSelectImageView.frame.size.width+timeSelectImageView.frame.origin.x+width/80, width/40, width/2, width/26.7)];
-     [timeShowLabel setText:@""];
-     [timeShowLabel setTextColor:[UIColor colorWithRed:77.f/255.f green:77.f/255.f blue:77.f/255.f alpha:1.0]];
-     [timeShowLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-     
-     [timeSelectView addSubview:timeShowLabel];
-     [bottomView addSubview:timeSelectView];
-     
-     //    UILabel *guize=[[UILabel alloc]initWithFrame:CGRectMake(0,timeSelectView.frame.origin.y+timeSelectView.frame.size.height+100, width, width/12.8)];
-     //    [guize setText:@"*体验课预约规则"];
-     //    guize.textColor=[UIColor redColor];
-     //    [guize setFont:[UIFont systemFontOfSize:width/22]];
-     //    [bottomView addSubview:guize];
-     
-     
-     registerLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
-     registerLabel.userInteractionEnabled=YES;
-     UITapGestureRecognizer *registerRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goOrderViewController)];
-     [registerLabel addGestureRecognizer:registerRecognizer];
-     if (isCancel) {
-     [registerLabel setText:@"取消蹭课"];
-     }else{
-     [registerLabel setText:@"我想蹭她"];
-     
-     }
-     [registerLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-     [registerLabel setTextAlignment:NSTextAlignmentCenter];
-     [registerLabel setTextColor:[UIColor whiteColor]];
-     [registerLabel setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-     registerLabel.layer.cornerRadius=7.0;
-     registerLabel.layer.masksToBounds=YES;
-     
-     
-     
-     
-     [bottomView addSubview:registerLabel];
-     
-     
-     [scrollView addSubview:bottomView];*/
     
     [self.view addSubview:scrollView];
     
@@ -1356,9 +1201,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     CGFloat x = page * imageScrollview.frame.size.width;
     imageScrollview.contentOffset = CGPointMake(x, 0);
 }
+
 -(void)setSelect{
     collectLabel.selected=true;
 }
+
 -(void)goOrderViewController{
     if ([timeShowLabel.text isEqualToString:@""]) {
         [self openTimeSelectPicker];
@@ -1367,9 +1214,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     if ([timeShowLabel.text isEqualToString:@"本周日"]||[timeShowLabel.text isEqualToString:@"本周六"]||[timeShowLabel.text isEqualToString:@"本周五"]||[timeShowLabel.text isEqualToString:@"本周四"]||[timeShowLabel.text isEqualToString:@"本周三"]||[timeShowLabel.text isEqualToString:@"本周二"]||[timeShowLabel.text isEqualToString:@"本周一"]||[timeShowLabel.text isEqualToString:@"下周一"]||[timeShowLabel.text isEqualToString:@"下周二"]||[timeShowLabel.text isEqualToString:@"下周三"]||[timeShowLabel.text isEqualToString:@"下周四"]||[timeShowLabel.text isEqualToString:@"下周五"]||[timeShowLabel.text isEqualToString:@"下周六"]||[timeShowLabel.text isEqualToString:@"下周日"]) {
         UIAlertView * vi=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请选择具体时间" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
         [vi show];
-    }
-    else
-    {
+    }else{
         AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
         if (isCancel) {
             dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -1558,8 +1403,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             
             [HttpHelper getLessonInfo:projectId withModel:myDelegate.model success:^(HttpModel *model){
                 
-                NSLog(@"返回的结果123:%@",model.message);
-                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -1569,19 +1412,44 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             data=dic;
                             advance_time=[dic objectForKey:@"advancetime"];
                             
-                            
-                            
-                            NSLog(@"1111111111111111111111111111\n\n\n\n\n\n\n\n\n%@",advance_time);
-                            //                            NSString *sb=[NSString stringWithFormat:@"%@",dic];
-                            //                            UIAlertView *alt=[[UIAlertView alloc]initWithTitle:@"提示" message:sb delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"你觉得呢", nil];
-                            //                            [alt show];
+                            if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
+                                [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
+                                NSNumber *lng=[dic objectForKey:@"lng"];
+                                NSNumber *lat=[dic objectForKey:@"lat"];
+                                
+                                CLLocationCoordinate2D coordinate;
+                                coordinate.latitude=[lat floatValue];
+                                
+                                coordinate.longitude=[lng floatValue];
+                                
+                                CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
+                                
+                                lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
+                                lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
+                                NSString *longtitudeText=lg;
+                                NSString *latitudeText=lt;;
+                                
+                                CLLocationDegrees latitude=[latitudeText doubleValue];
+                                CLLocationDegrees longitude=[longtitudeText doubleValue];
+                                
+                                CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
+                                
+                                double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
+                                if(distance>0.0){
+                                    if (distance/1000>1) {
+                                        [distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
+                                    }else if (distance/1000<1 && distance/1000>0.5){
+                                        [distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
+                                        
+                                    }else if (distance/1000<0.5){
+                                        [distanceLabel setText:@"<500m"];
+                                    }
+                                }
+                                
+                            }
                             
                             if (![[dic objectForKey:@"img"] isEqualToString:@""]) {
                                 NSString *images=[dic objectForKey:@"img"];
-                                
-                                
-                                
-                                NSLog(@"images:98765432132154789554522------------------\n\n%@",images);
                                 NSArray *array = [images componentsSeparatedByString:@","];
                                 //保存图片
                                 NSUserDefaults *faut=[NSUserDefaults standardUserDefaults];
@@ -1646,9 +1514,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                     [scrollView addSubview:pageControl];
                                 }
                             }
-                            
                             NSString *st=[dic objectForKey:@"logo"];
-                            
                             if ([dic objectForKey:@"logo"]&& ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
                                 NSString *logo=[NSString stringWithFormat:@"%@",[dic objectForKey:@"logo"]];
                                 [logoImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
@@ -1660,40 +1526,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 [detailContentLabel setFrame:frame];
                                 //                                frame=timeSelectView.frame;
                                 int width=self.view.frame.size.width;
-                                //
-                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/3;
-                                //
-                                //                                [timeSelectView setFrame:frame];
-                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height;
-                                //                                frame.size.height=1;
-                                //                                [line setFrame:frame];
-                                //                                //tit
-                                //                                frame.origin.y=line.frame.origin.y+line.frame.size.height+3;
-                                //                                frame.size.height=width/22;
-                                //                                [tit setFrame:frame];
-                                //
-                                //
-                                //                                //guize
-                                //                                neirong.text=[dic objectForKey:@"lesson_rule"];
-                                //                                CGRect frame1=neirong.frame;
-                                //                                    frame1.size.height=neirong.contentSize.height;
-                                //                                [neirong setFrame:frame1];
-                                //
-                                //
-                                //
-                                //
-                                //
-                                //
-                                //
-                                //
-                                //
-                                //
-                                //                                [registerLabel setFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
-                                //
-                                //                                frame=bottomView.frame;
-                                //
-                                //                                frame.size.height=registerLabel.frame.size.height+registerLabel.frame.origin.y+width/5.7;
-                                //                                [bottomView setFrame:frame];
                                 frame=contentControl.frame;
                                 frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y+width/23.7;
                                 [contentControl setFrame:frame];
@@ -1706,29 +1538,17 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 [projectTimeLabel setText:[@"适合年龄段:"  stringByAppendingString:[dic objectForKey:@"grade"]]];
                             }
                             
-                            
-                            //                            btime=[dic objectForKey:@"btime"];
-                            //                            NSLog(@"btime------>\n\n\n\n%@",btime);
                             if ([dic objectForKey:@"btime"]&& ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
                                 NSNumber *number=[dic objectForKey:@"btime"];
                                 NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
                                 NSString *timeStamp2 =[formater stringFromNumber:number];
                                 long long int date1 = (long long int)[timeStamp2 intValue];
                                 aDate = [NSDate dateWithTimeIntervalSince1970:date1];
-                                //  aDate = [NSDate dateWithTimeIntervalSinceReferenceDate:[number integerValue]];
-                                
-                                
-                                // NSString *str=[self compareCurrentTime:confromTimespStr];
-                                
-                                //                                //  [dateLabel setText:str];
-                                //                                [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-                                //                                [beginTimeLabel setText:[self getBeginTime:number]];
                                 
                             }
                             if([dic objectForKey:@"insttitle"]&& ![[dic objectForKey:@"insttitle"] isEqual:[NSNull null]]){
                                 [instituteNameLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"insttitle"]]];
                             }
-                            NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
                             
                             if([dic objectForKey:@"people"]&& ![[dic objectForKey:@"people"] isEqual:[NSNull null]]){
                                 NSNumber *number=[dic objectForKey:@"people"];
@@ -1811,6 +1631,42 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             NSDictionary *dic=model.result;
                             data=dic;
                             bt=[dic objectForKey:@"btime"];
+                            
+                            if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
+                                [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
+                                NSNumber *lng=[dic objectForKey:@"lng"];
+                                NSNumber *lat=[dic objectForKey:@"lat"];
+                                
+                                CLLocationCoordinate2D coordinate;
+                                coordinate.latitude=[lat floatValue];
+                                
+                                coordinate.longitude=[lng floatValue];
+                                
+                                CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
+                                
+                                lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
+                                lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
+                                NSString *longtitudeText=lg;
+                                NSString *latitudeText=lt;;
+                                
+                                CLLocationDegrees latitude=[latitudeText doubleValue];
+                                CLLocationDegrees longitude=[longtitudeText doubleValue];
+                                
+                                double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
+                                if(distance>0.0){
+                                    if (distance/1000>1) {
+                                        [distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
+                                    }else if (distance/1000<1 && distance/1000>0.5){
+                                        [distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
+                                        
+                                    }else if (distance/1000<0.5){
+                                        [distanceLabel setText:@"<500m"];
+                                    }
+                                }
+                                
+                            }
+                            
+                            
                             
                             if (![[dic objectForKey:@"img"] isEqualToString:@""]) {
                                 NSString *images=[dic objectForKey:@"img"];

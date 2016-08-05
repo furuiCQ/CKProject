@@ -38,7 +38,7 @@
         [logoImage setImage:[UIImage imageNamed:@"zaojiao_logo"]];
         [self addSubview:logoImage];
         
-        titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImage.frame.size.width+logoImage.frame.origin.x+width/64, width/21, width/2, width/22.8)];
+        titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImage.frame.size.width+logoImage.frame.origin.x+width/18.2, width/21, width/2, width/22.8)];
         [titleLabel setText:@"早教"];
         [titleLabel setFont:[UIFont systemFontOfSize:width/22.8]];
         [titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
@@ -61,6 +61,13 @@
         
     }
     return self;
+}
+-(void)setNewFrame:(int)relwidth{
+    CGRect rx = [ UIScreen mainScreen ].bounds;
+    int width=rx.size.width;
+    [goImage setFrame:CGRectMake(relwidth-width/21.3-width/32, width/20, width/32, width/53)];
+    [moreLabel setFrame:CGRectMake(goImage.frame.origin.x-goImage.frame.size.width-width/26.7*2, width/21, width/26.7*2, width/26.7)];
+
 }
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {

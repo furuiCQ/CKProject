@@ -294,7 +294,7 @@
         }
         
         for (int i=0; i<number; i++) {
-            int paddingheight=width/16;//每组的高度
+            int paddingheight=width/45.7;//每组的高度
             int offset=width/4.2;
             int paddingwidth=width/16;
             int controlWidth=width/5.7;

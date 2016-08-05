@@ -16,4 +16,5 @@
 @property UIImageView *goImage;
 @property NSMutableArray *controlArray;
 @property BOOL isSelected;
+-(void)setNewFrame:(int)relwidth;
 @end
