@@ -1168,7 +1168,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
     // return 3;
 }
-static NSString *identy = @"OrderRecordCell";
 
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{

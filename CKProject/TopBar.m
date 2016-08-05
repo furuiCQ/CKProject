@@ -67,9 +67,9 @@
     textLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/3, height*3/4-2)];
     [textLabel setText:text];
     [textLabel setTextAlignment:NSTextAlignmentCenter];
-    view=[[UIView alloc]initWithFrame:CGRectMake(width/6-width/10, height*3/4-2, width/5, 2)];
+    view=[[UIView alloc]initWithFrame:CGRectMake(width/6-width/10, height*3/4-1.5, width/5, 1.5)];
     lineView=[[UIView alloc]initWithFrame:CGRectMake(width/3-0.5, height*3/4/4, 0.5, height*3/4/2)];
-    [lineView setBackgroundColor:[UIColor colorWithRed:146.f/255.f green:146.f/255.f blue:146.f/255.f alpha:1.0]];
+    [lineView setBackgroundColor:[UIColor colorWithRed:182.f/255.f green:182.f/255.f blue:182.f/255.f alpha:1.0]];
     
     if(checked){
         

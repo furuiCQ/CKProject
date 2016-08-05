@@ -27,5 +27,8 @@
 @property UILabel *projectAddLabel;
 @property UITextView *contentLabel;
 
-
+@property(strong,nonatomic)UIScrollView *imageScrollview;
+@property(strong,nonatomic)UIPageControl *pageControl;
+@property(strong,nonatomic)NSTimer *timer;
+@property(nonatomic)NSInteger totalCount;
 @end
