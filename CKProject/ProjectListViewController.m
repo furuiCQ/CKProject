@@ -24,7 +24,7 @@
 #import "OrderRecordCell.h"
 #import "SortProjectListTableCell.h"
 #import "CustomLabel.h"
-@interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,TreeTableCellDelegate,CLLocationManagerDelegate>{
+@interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,TreeTableCellDelegate,CLLocationManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
     NSArray *local1Array;
     NSArray *local2Array;
     NSArray *local3Array;
@@ -533,6 +533,29 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [dataTableView setTag:4];
     [view addSubview:dataTableView];
     
+    [dataTableView setHidden:YES];
+    //创建一个layout布局类
+    UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
+    //设置布局方向为垂直流布局
+    layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    //设置每个item的大小为100*100
+    layout.itemSize = CGSizeMake(width/5.7, width/12.5);
+    //创建collectionView 通过一个布局策略layout来创建
+    UICollectionView * collect = [[UICollectionView alloc]initWithFrame:CGRectMake(width/16,
+                                                                                   topView.frame.size.height+topView.frame.origin.y+width/40,
+                                                                                   width/1.3-width/8,
+                                                                                   view.frame.size.height-(topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout];
+    //代理设置
+    collect.delegate=self;
+    collect.dataSource=self;
+    //注册item类型 这里使用系统的类型
+    [collect registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellid"];
+    [collect setBackgroundColor:[UIColor whiteColor]];
+    [view addSubview:collect];
+
+    
+    
+    
     UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, view.frame.size.height, width/1.3/2, width/8)];
     [cancelLabel setText:@"重置"];
     [cancelLabel setTextAlignment:NSTextAlignmentCenter];
@@ -706,64 +729,66 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
 }
 -(void)allGrade{
-    int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:titleView];
-    
-    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-    [cancelLabel setText:@"取消"];
-    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-    [cancelLabel setUserInteractionEnabled:YES];
-    [cancelLabel setTag:5];
-    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-    [cancelLabel addGestureRecognizer:cancelGesture];
-    [titleView addSubview:cancelLabel];
     
     
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-    [titleLabel setText:@"年龄"];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-    [titleView addSubview:titleLabel];
-    
-    
-    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
-    //    [confirmLabel setText:@"确定"];
-    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
-    //    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    //    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
-    //    [confirmLabel setUserInteractionEnabled:YES];
-    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
-    //    [confirmLabel addGestureRecognizer:confrimGesture];
-    //    [titleView addSubview:confirmLabel];
-    
-    gradeTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                                width/10+2+width/40+width/46,
-                                                                view.frame.size.width,
-                                                                view.frame.size.height-(width/10+2+width/40+width/46))];
-    [gradeTableView setBackgroundColor:[UIColor whiteColor]];
-    gradeTableView.dataSource                        = self;
-    gradeTableView.delegate                          = self;
-    [gradeTableView setTag:5];
-    [view addSubview:gradeTableView];
-    
-    
-    gradeLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-    gradeLayout.width=view.frame.size.width;
-    gradeLayout.contentView=view;
-    gradeLayout.delegate=self;
-    [self.view addSubview:gradeLayout];
-    
-    gradeLayout.openFromRight = YES;
-    [gradeLayout openDrawer];
-    [ProgressHUD show:@"加载中..."];
+//    int width=self.view.frame.size.width;
+//    int hegiht=self.view.frame.size.height;
+//    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
+//    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+//    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
+//    [titleView setBackgroundColor:[UIColor whiteColor]];
+//    [view addSubview:titleView];
+//    
+//    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
+//    [cancelLabel setText:@"取消"];
+//    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
+//    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
+//    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
+//    [cancelLabel setUserInteractionEnabled:YES];
+//    [cancelLabel setTag:5];
+//    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
+//    [cancelLabel addGestureRecognizer:cancelGesture];
+//    [titleView addSubview:cancelLabel];
+//    
+//    
+//    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
+//    [titleLabel setText:@"年龄"];
+//    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+//    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
+//    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
+//    [titleView addSubview:titleLabel];
+//    
+//    
+//    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
+//    //    [confirmLabel setText:@"确定"];
+//    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
+//    //    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
+//    //    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
+//    //    [confirmLabel setUserInteractionEnabled:YES];
+//    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
+//    //    [confirmLabel addGestureRecognizer:confrimGesture];
+//    //    [titleView addSubview:confirmLabel];
+//    
+//    gradeTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
+//                                                                width/10+2+width/40+width/46,
+//                                                                view.frame.size.width,
+//                                                                view.frame.size.height-(width/10+2+width/40+width/46))];
+//    [gradeTableView setBackgroundColor:[UIColor whiteColor]];
+//    gradeTableView.dataSource                        = self;
+//    gradeTableView.delegate                          = self;
+//    [gradeTableView setTag:5];
+//    [view addSubview:gradeTableView];
+//    
+//    
+//    gradeLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
+//    gradeLayout.width=view.frame.size.width;
+//    gradeLayout.contentView=view;
+//    gradeLayout.delegate=self;
+//    [self.view addSubview:gradeLayout];
+//    
+//    gradeLayout.openFromRight = YES;
+//    [gradeLayout openDrawer];
+//    [ProgressHUD show:@"加载中..."];
     
     [self getAllGrade];
     
@@ -2237,8 +2262,38 @@ static NSString *identy = @"OrderRecordCell";
     
     
 }
+#pragma mark
+//返回分区个数
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
+//返回每个分区的item个数
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return 10;
+}
+
+//返回每个item
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell * cell  = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellid" forIndexPath:indexPath];
+    [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
+    CGRect frame=cell.frame;
+    frame.origin.x=0;
+    frame.origin.y=0;
+    UILabel *label=[[UILabel alloc]initWithFrame:frame];
+    [label setText:@"王小明"];
+    [cell addSubview:label];
+    return cell;
+}
+//这个是两行cell之间的间距（上下行cell的间距）
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+{
+    return 10;
+}
 
 
-
+//两个cell之间的间距（同一行的cell的间距）
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
+    return 0;
+}
 
 @end
