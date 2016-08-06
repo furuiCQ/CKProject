@@ -89,7 +89,6 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    
 }
 /*
 // Only override drawRect: if you perform custom drawing.

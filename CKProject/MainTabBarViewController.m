@@ -18,7 +18,7 @@
 @interface MainTabBarViewController()<UITabBarControllerDelegate>
 {
     NSUInteger _lastSelectedIndex;
-
+    
 }
 @end
 
@@ -39,9 +39,9 @@
         self.selectedIndex=appDelegate.selectIndex;
     }else{
         self.selectedIndex=0;
-
+        
     }
-
+    
 }
 
 /**
@@ -68,12 +68,13 @@
     [self.view addSubview:topView];
     
 }
-//-(void)setSelectedIndex:(NSUInteger)selectedIndex
-//{
-//        AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
-//        appDelegate.selectIndex = selectedIndex;
-//   
-//}
+-(void)setSelectedIndex:(NSUInteger)selectedIndex
+{
+    [super setSelectedIndex:selectedIndex];
+    AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.selectIndex = selectedIndex;
+    
+}
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
@@ -101,7 +102,7 @@
         [btn isCheck];
         [self setSelectedIndex:btn.tag];
     }
-
+    
 }
 -(void)initCustomTabBar
 {
@@ -120,12 +121,12 @@
     bottomHeight=49;
     
     UIView *tabBarBackgroundView=[[UIView alloc] initWithFrame:CGRectMake(self.tabBar.frame.origin.x, self.tabBar.frame.origin.y, self.tabBar.frame.size.width, bottomHeight)];
-   [tabBarBackgroundView setBackgroundColor:[UIColor colorWithRed:242.f/255.f green:242.f/255.f  blue:242.f/255.f  alpha:1.0]];
+    [tabBarBackgroundView setBackgroundColor:[UIColor colorWithRed:242.f/255.f green:242.f/255.f  blue:242.f/255.f  alpha:1.0]];
     [self.view addSubview:tabBarBackgroundView];
     
     CGFloat btnwidth=size.width;
     CGFloat btnhegiht=size.height;
-   
+    
     UIFont *font=[UIFont fontWithName:@"iconfont" size:23];
     UIColor *textColor=[UIColor blackColor];
     
@@ -138,7 +139,7 @@
         [btnView setText:[textArray objectAtIndex:i]];
         [btnView setSelectColor:[UIColor colorWithRed:1 green:99.f/255.f blue:99.f/255.f alpha:1.0]];
         [btnView setUnSelectColor:[UIColor blackColor]];
-
+        
         
         [btnView setIconFont:font];
         [btnView setTextFont:[UIFont systemFontOfSize:self.view.frame.size.width/32]];

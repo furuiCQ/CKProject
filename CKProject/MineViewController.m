@@ -345,15 +345,6 @@
         }
             break;
             
-            
-        case 2:
-        {
-            SettingViewController *settingViewController=[[SettingViewController alloc]init];
-            [self presentViewController: settingViewController animated:YES completion:nil];
-        }
-            
-            break;
-            
         default:
             NSLog(@"头像被点击");
             
@@ -652,6 +643,31 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [dataArray count];
+}
+-(void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath slide:(YiSlideDirection)slideDirection{
+    if(slideDirection==YiRightDirection){
+        NSLog(@"didSelectRowAtIndexPath%ld",(long)[indexPath row]);
+        switch ([indexPath row]) {
+            case 0:
+            {
+                
+            }
+                break;
+            case 1:
+            {
+                
+            }
+                break;
+            case 6:
+            {
+                SettingViewController *settingViewController=[[SettingViewController alloc]init];
+                [self presentViewController: settingViewController animated:YES completion:nil];
+            }
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 @end
