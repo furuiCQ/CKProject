@@ -30,7 +30,7 @@
 #import "ViewController.h"
 //
 //HttpHelper.m
-@interface MainViewController ()<CLLocationManagerDelegate,UITextFieldDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,CLLocationManagerDelegate>{
+@interface MainViewController ()<CLLocationManagerDelegate,UITextFieldDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>{
     CLLocationManager *locationmanager;
     NSArray *tableArray;
     BOOL _isLoading;
@@ -38,7 +38,6 @@
     int connectCount;
     int mainConnectCount;
     UITableView *addTableView;
-    ECDrawerLayout *twoLayout;
     YiRefreshHeader *refreshHeader;
     YiRefreshFooter *refreshFooter;
     NSArray *localArray;
@@ -56,7 +55,7 @@
     NSMutableArray *chasetArray;
     NSString *customServiceNumber;
     //修改
-    UIScrollView   *sc;
+    UIView   *sc;
     UICollectionView *acollectionView;
     NSNumber *lat3;
     NSNumber *lng3;
@@ -94,15 +93,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [super viewDidLoad];
     db=[[NSMutableArray alloc]init];
     [self getnews];
-    sc=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    sc.contentSize=CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*4.3);
+    sc=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [sc setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self.view addSubview:sc];
     
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     localLat=myDelegate.latitude;
     localLng=myDelegate.longitude;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hiddenPoint) name:@"hiddenpoint" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showPoint) name:@"showpoint" object:nil];
     [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     if (IS_IOS8) {
         [UIApplication sharedApplication].idleTimerDisabled = TRUE;
@@ -121,22 +118,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [ProgressHUD show:@"加载中..."];
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    // 设置定位精度
-    // kCLLocationAccuracyNearestTenMeters:精度10米
-    // kCLLocationAccuracyHundredMeters:精度100 米
-    // kCLLocationAccuracyKilometer:精度1000 米
-    // kCLLocationAccuracyThreeKilometers:精度3000米
-    // kCLLocationAccuracyBest:设备使用电池供电时候最高的精度
-    // kCLLocationAccuracyBestForNavigation:导航情况下最高精度，一般要有外接电源时才能使用
+   
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
-    // distanceFilter是距离过滤器，为了减少对定位装置的轮询次数，位置的改变不会每次都去通知委托，而是在移动了足够的距离时才通知委托程序
-    // 它的单位是米，这里设置为至少移动1000再通知委托处理更新;
     locationManager.distanceFilter = 100.0f; // 如果设为kCLDistanceFilterNone，则每秒更新一次;
     [locationManager startUpdatingLocation];
     
-    [self getHotLesson];
-    [self creatAlertView];
+    [self getNewHotLesson];
     [self getMainSlider];
     [self initImageScrollView];
     [self initMainView];
@@ -147,20 +134,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     neloct=newLocation;
-    
-    //    NSLog(@"纬度:%f",oldLocation.coordinate.latitude);
-    //    NSLog(@"经度:%f",oldLocation.coordinate.longitude);
     [manager stopUpdatingLocation];
-    //    CLLocationCoordinate2D wgsPt = newLocation.coordinate;
-    
-    //    CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
-    
-    //    //当使用模拟器定位在中国大陆以外地区，计算GCJ-02坐标还是返回WGS-84
-    //    _pt1Lable.text = [NSString stringWithFormat:@"WGS-84(国际标准坐标)：\n %f,%f",wgsPt.latitude,wgsPt.longitude];
-    //    _pt2Lable.text = [NSString stringWithFormat:@"GCJ-02(中国国测局坐标(火星坐标))：\n %f,%f",gcjPt.latitude,gcjPt.longitude];
-    //    _pt3Lable.text = [NSString stringWithFormat:@"BD-09(百度坐标)：\n %f,%f",bdPt.latitude,bdPt.longitude];
-    // 停止位置更新
-    
+  
 }
 
 // 定位失误时触发
@@ -231,7 +206,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     // totalCount = 1;
     
-    scrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, titleHeight+20, self.view.frame.size.width, self.view.frame.size.width/2)];
+    scrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width/2)];
     
     //  CGRect bounds = scrollview.frame;  //获取界面区域
     
@@ -275,9 +250,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     [sc addSubview:scrollview];
     
-    //  [self.view addSubview:pageControl];
-    
-    //  [self addTimer];
 }
 -(void)initMainView{
     int width=self.view.frame.size.width;
@@ -421,32 +393,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [lifeView addSubview:lifeimageview];
     [sc addSubview:lifeView];
     
-    
-    
-    
-    //    int viewWidth=(width-width/640)/2;
-    //    int viewHeight=width/5.3;
-    //    int x=(width-width/640)/2+width/320;
-    //    int y=scrollview.frame.origin.y+scrollview.frame.size.height+width/64;
-    //    NSArray *imageArray=[[NSArray alloc]initWithObjects:@"teen",@"sprint",@"skill",@"girl",@"k12",@"生活体验",nil];
-    //    NSArray *titleArray=[[NSArray alloc]initWithObjects:@"青少年专区",@"育婴早教",@"技能满分",@"女生专属",@"k12",@"生活体验",nil];
-    //    NSArray *contentArray=[[NSArray alloc]initWithObjects:@"德智体美全面发展",@"给宝贝找一个放心的",@"各种专业技能走起",@"点我变女神",@"基础教育一点通",@"精彩生活，从这里开始",nil];
-    //
-    //    chasetArray=[[NSMutableArray alloc]init];
-    //    for(int i=0;i<6;i++){
-    //        CharesectionView *subView=[[CharesectionView alloc]initWithFrame:CGRectMake((i%2)*x, y+(i/2)*(width/320+viewHeight),viewWidth, viewHeight)];
-    //        CGRect frame=self.view.frame;
-    //        [subView initView:&frame withTag:i];
-    //        [subView.iconView setImage:[UIImage imageNamed:[imageArray objectAtIndex:i]]];
-    //        [subView.titleLabel setText:[titleArray objectAtIndex:i]];
-    //        [subView.contentLabel setText:[contentArray objectAtIndex:i]];
-    //        [subView setUserInteractionEnabled:YES];
-    //        [subView addTarget:self action:@selector(menuGesture:) forControlEvents:UIControlEventTouchUpInside];
-    //        [subView setTag:i];
-    //        [chasetArray addObject:subView];
-    //        [sc addSubview:subView];
-    //
-    //    }
     [self getslid:lifeView];
     //新闻头条
     xinwen=[[UIView alloc]initWithFrame:CGRectMake(0, lifeView.frame.size.height+lifeView.frame.origin.y+1+width/26.7, width, width/8)];
@@ -467,7 +413,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     
     [sc addSubview:xinwen];
-    
+    [sc setFrame:CGRectMake(0, 0, width, xinwen.frame.size.height+xinwen.frame.origin.y)];
     [self initHotProjectTableView:xinwen];
     [self getCharsection];
     
@@ -475,8 +421,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 //新闻头条的数据
 -(void)getslid:(UIView *)subView{
-    int width=self.view.frame.size.width;
-    
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [HttpHelper getXW:self success:^(HttpModel *model){
@@ -540,15 +484,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     {
         page++;
     }
-    
-    //  滚动scrollview
-    
-    
-    
     CGFloat x = page*st.frame.size.height;
     st.contentOffset = CGPointMake(0, x);
-    
-    
 }
 -(void)getCharsection{
     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
@@ -613,30 +550,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         NSLog(@"功能暂未开通");
     }
 }
-//拨打电话按钮的功能实现
--(void)callCustomerService{
-    NSLog(@"callCustomerService");
-    if(customServiceNumber){
-        NSLog(@"%@",customServiceNumber);
-        //        NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
-        //        NSString *phone=[formater stringFromNumber:customServiceNumber];
-        
-        NSString *ipone=[NSString stringWithFormat:@"tel://%@",customServiceNumber];
-        NSURL *url=[NSURL URLWithString:ipone];
-        [[UIApplication sharedApplication] openURL:url];
-    }
-    
-}
-
 -(void)initHotProjectTableView:(UIControl *)view{
     bottomHeight=49;
     
     int width=self.view.frame.size.width;
-    //  CharesectionView *subView=(CharesectionView *)[chasetArray lastObject];
     mainTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                               view.frame.size.height+view.frame.origin.y,
+                                                               titleHeight+20,
                                                                self.view.frame.size.width,
-                                                               self.view.frame.size.height*3.8)];
+                                                               self.view.frame.size.height-titleHeight-20-titleHeight)];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
     [mainTableView setBackgroundColor:[UIColor whiteColor]];
     mainTableView.dataSource                        = self;
@@ -644,62 +565,25 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
     
     
-    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, view.frame.origin.y+view.frame.size.height+2, width, width/8.8)];
+    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, sc.frame.size.height+2, width, width/8.8)];
     [headerView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self initSwitchBtn:headerView];
-    //    [headerView setBackgroundColor:[UIColor whiteColor]];
-    //    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(width/40, width/16, width/3, 1)];
-    //    [lineView setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
-    //    UIImageView *logoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(lineView.frame.size.width+lineView.frame.origin.x+width/26, width/26, width/21, width/21)];
-    //    [logoImageView setImage:[UIImage imageNamed:@"hot"]];
-    //    [headerView addSubview:logoImageView];
-    //    mainTableView.scrollEnabled=NO;
-    //    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(logoImageView.frame.size.width+logoImageView.frame.origin.x+width/160
-    //                                                            , width/22.8, width/26.7*6, width/26.7)];
-    //    [label setText:@"热门体验课"];
-    //    [label setTextColor:[UIColor colorWithRed:230.f/255.f green:0.f/255.f blue:18.f/255.f alpha:1.0]];
-    //    [label setFont:[UIFont systemFontOfSize:width/26.7]];
-    //    [headerView addSubview:label];
-    //
-    //    UIView *line1View=[[UIView alloc]initWithFrame:CGRectMake(label.frame.size.width+label.frame.origin.x+width/26, width/16, width/3, 1)];
-    //    [line1View setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
-    //
-    //    [headerView addSubview:lineView];
-    //    [headerView addSubview:line1View];
-    [mainTableView setTableHeaderView:headerView];
+    [sc addSubview:headerView];
+    [sc setFrame:CGRectMake(0, 0, width, headerView.frame.size.height+headerView.frame.origin.y)];
+    [mainTableView setTableHeaderView:sc];
     
-    
-    [sc addSubview:mainTableView];
-    //    //添加刷新
-    //    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
-    //    [_refreshControl setTintColor:[UIColor grayColor]];
-    //
-    //    [_refreshControl addTarget:self
-    //                        action:@selector(refreshView:)
-    //              forControlEvents:UIControlEventValueChanged];
-    //    [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
-    //    [mainTableView addSubview:_refreshControl];
+    [self.view addSubview:mainTableView];
     
     refreshHeader=[[YiRefreshHeader alloc] init];
     refreshHeader.scrollView=mainTableView;
     [refreshHeader header];
     refreshHeader.beginRefreshingBlock=^(){
     };
-    //    refreshFooter=[[YiRefreshFooter alloc] init];
-    //    refreshFooter.scrollView=mainTableView;
-    //    [refreshFooter footer];
-    //    refreshFooter.beginRefreshingBlock=^(){
-    //    };
-    
-    
-    //
-    
+   
 }
 -(void)initSwitchBtn:(UIView *)superView{
     int width=self.view.frame.size.width;
-    //    UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
-    //    [topView setBackgroundColor:[UIColor whiteColor]];
-    //    [self.view addSubview:topView];
+    
     NSArray *array = [NSArray arrayWithObjects:@"推荐",@"热门",@"最新",@"附近", nil];
     projectTableArray=[[NSMutableArray alloc]init];
     for (int i=0; i<[array count]; i++) {
@@ -742,114 +626,31 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             
         }
     }
-}
-
-//-(void)showAddress{
-//
-//
-//    int width=self.view.frame.size.width;
-//    int hegiht=self.view.frame.size.height;
-//    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-//    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-//    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-//    [titleView setBackgroundColor:[UIColor whiteColor]];
-//    [view addSubview:titleView];
-//
-//    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-//    [cancelLabel setText:@"取消"];
-//    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-//    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-//    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-//    [cancelLabel setUserInteractionEnabled:YES];
-//    [cancelLabel setTag:1];
-//    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-//    [cancelLabel addGestureRecognizer:cancelGesture];
-//    [titleView addSubview:cancelLabel];
-//
-//
-//    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-//    [titleLabel setText:@"区域"];
-//    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-//    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-//    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-//    [titleView addSubview:titleLabel];
-//
-//
-//    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
-//    //    [confirmLabel setText:@"确定"];
-//    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
-//    //    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-//    //    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
-//    //    [confirmLabel setUserInteractionEnabled:YES];
-//    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
-//    //    [confirmLabel addGestureRecognizer:confrimGesture];
-//    //    [titleView addSubview:confirmLabel];
-//
-//
-//
-//    addTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-//                                                              width/10+2+width/40+width/46,
-//                                                              view.frame.size.width,
-//                                                              view.frame.size.height-(width/10+2+width/40+width/46))];
-//    [addTableView setBackgroundColor:[UIColor whiteColor]];
-//    addTableView.dataSource                        = self;
-//    addTableView.delegate                          = self;
-//    [addTableView setTag:1];
-//    [view addSubview:addTableView];
-//
-//   	twoLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-//    twoLayout.width=view.frame.size.width;
-//    twoLayout.contentView=view;
-//    twoLayout.delegate=self;
-//    [self.view addSubview:twoLayout];
-//    twoLayout.openFromRight = YES;
-//    [twoLayout openDrawer];
-//    if ([localArray count]<=0) {
-//        [self getAllCity];
-//    }else{
-//        [addTableView reloadData];
-//        NSIndexPath *idxPath = [NSIndexPath indexPathForRow:selectId inSection:0];//定位到第8行
-//        [addTableView scrollToRowAtIndexPath:idxPath
-//                            atScrollPosition:UITableViewScrollPositionTop
-//                                    animated:NO];
-//
-//    }
-//
-//
-//
-//}
-#pragma mark - ECDrawerLayoutDelegate
-- (void) drawerLayoutDidOpen:(id)sender
-{
-    
-    NSLog(@"drawerLayout open");
-}
-- (void) drawerLayoutDidClose:(id)sender
-{
-    NSLog(@"drawerLayout close");
-}
--(void)closeDrawLayout:(id)sender{
-    UITapGestureRecognizer *gesutre=(UITapGestureRecognizer *)sender;
-    switch (gesutre.view.tag) {
+    switch (topBar.tag) {
+        case 0:
+        {
+            [self getNewHotLesson];
+        }
+            break;
         case 1:
         {
-            [twoLayout closeDrawer];
-            
+            [self getHotLesson];
         }
-            
-            
-            
+            break;
+        case 2:
+        {
+            [self getNewLesson];
+        }
+            break;
+        case 3:
+        {
+            [self getNearByLesson];
+        }
             break;
             
         default:
             break;
     }
-    NSLog(@"closeDrawLayout close");
-}
--(void)confirmDrawLayout{
-    NSLog(@"confirmDrawLayout close");
-    //   [layout closeDrawer];
-    
 }
 
 -(void)getAllCity{
@@ -991,39 +792,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)removeTimer
 {
     [timer invalidate];
-}
-
-
--(void)initTableView{
-    bottomHeight=49;
-    
-    mainTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                               titleHeight+20+self.view.frame.size.width/2.8,
-                                                               self.view.frame.size.width,
-                                                               self.view.frame.size.height-self.view.frame.size.width/2.8-titleHeight-20-bottomHeight)];
-    NSLog(@"%f",self.tabBarController.view.frame.size.height);
-    [mainTableView setBackgroundColor:[UIColor whiteColor]];
-    mainTableView.dataSource                        = self;
-    mainTableView.delegate                          = self;
-    mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
-    [self.view addSubview:mainTableView];
-    
-    
-    refreshHeader=[[YiRefreshHeader alloc] init];
-    refreshHeader.scrollView=mainTableView;
-    [refreshHeader header];
-    refreshHeader.beginRefreshingBlock=^(){
-        
-    };
-    //    refreshFooter=[[YiRefreshFooter alloc] init];
-    //    refreshFooter.scrollView=mainTableView;
-    //    [refreshFooter footer];
-    //    refreshFooter.beginRefreshingBlock=^(){
-    //    };
-    
-    
-    //
-    
 }
 
 #pragma mark - 数据源方法
@@ -1387,7 +1155,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 localNumber=[dic objectForKey:@"id"];
                 [cityLabel setText:[NSString stringWithFormat:@"%@",[str substringToIndex:2]]];
             }
-            [twoLayout closeDrawer];
+           // [twoLayout closeDrawer];
             [self getMainData];
             
             
@@ -1397,22 +1165,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         default:
             break;
     }
-    //    ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-    //    NSDictionary *str=[tableArray objectAtIndex:[indexPath row]];
-    //    if ([str objectForKey:@"id"]) {
-    //        NSNumber *number=[str objectForKey:@"id"];
-    //        [projectListViewController setProjectID:number];
-    //    }
-    //    if ([str objectForKey:@"title"]) {
-    //        [projectListViewController setTitleName:[str objectForKey:@"title"]];
-    //
-    //    }
-    //    [self presentViewController: projectListViewController animated:YES completion:nil];
+   
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
-    // NSLog(@"高度:%f",cell.frame.size.height);
     return cell.frame.size.height;
     
 }
@@ -1421,84 +1178,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self showAlertView];
 }
 
--(void)creatAlertView{
-    int width=self.view.frame.size.width;
-    
-    searchView = [[UIView alloc] initWithFrame:CGRectMake(width/20, width/5, width-width/10, width/2)];
-    [searchView setBackgroundColor:[UIColor whiteColor]];
-    searchView.layer.cornerRadius=2.0f;
-    
-    keyText=[[UITextField alloc]initWithFrame:CGRectMake(width/20, width/20, searchView.frame.size.width-width/10, width/10)];
-    [keyText setText:@"关键字"];
-    [keyText setFont:[UIFont systemFontOfSize:width/26.7]];
-    keyText.layer.cornerRadius=2.0f;
-    [keyText setBackgroundColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [searchView addSubview:keyText];
-    
-    UILabel *timeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+width/10+width/40+width/60, width/26.7*3, width/26.7)];
-    [timeLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-    [timeLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [timeLabel setText:@"时 间"];
-    [searchView addSubview:timeLabel];
-    
-    UITextField *monthField=[[UITextField alloc]initWithFrame:CGRectMake(width/20+width/26.7*3, width/20+width/10+width/40, width/3.5, width/15)];
-    [monthField setText:@"07"];
-    monthField.layer.cornerRadius=3.0f;
-    [monthField setTextAlignment:NSTextAlignmentCenter];
-    [monthField setFont:[UIFont systemFontOfSize:width/26.7]];
-    [monthField setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [monthField setBackgroundColor:[UIColor colorWithRed:238.f/255.f green:238.f/255.f blue:238.f/255.f alpha:1.0]];
-    [searchView addSubview:monthField];
-    
-    UILabel *monthLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26.7*3+width/3.5+width/80, width/20+width/10+width/40+width/60, width/26, width/26.7)];
-    [monthLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-    [monthLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [monthLabel setText:@"月"];
-    [searchView addSubview:monthLabel];
-    
-    UITextField *dayField=[[UITextField alloc]initWithFrame:CGRectMake(width/20+width/26.7*3+width/3.5+width/26+width/40, width/20+width/10+width/40, width/3.5, width/15)];
-    [dayField setText:@"07"];
-    dayField.layer.cornerRadius=3.0f;
-    [dayField setTextAlignment:NSTextAlignmentCenter];
-    [dayField setFont:[UIFont systemFontOfSize:width/26.7]];
-    [dayField setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [dayField setBackgroundColor:[UIColor colorWithRed:238.f/255.f green:238.f/255.f blue:238.f/255.f alpha:1.0]];
-    [searchView addSubview:dayField];
-    
-    UILabel *dayLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26.7*3+width/3.5+width/26+width/3.5+width/40+width/80, width/20+width/10+width/40+width/60, width/26, width/26.7)];
-    [dayLabel setFont:[UIFont systemFontOfSize:12]];
-    [dayLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [dayLabel setText:@"日"];
-    [searchView addSubview:dayLabel];
-    
-    
-    UILabel *searchLabel=[[UILabel alloc]initWithFrame:CGRectMake(searchView.frame.size.width/4,width/20+width/10+width/40+width/60+width/10, searchView.frame.size.width/2, width/9)];
-    //   UITapGestureRecognizer *searchRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchData)];
-    searchLabel.userInteractionEnabled=YES;
-    //   [searchLabel addGestureRecognizer:searchRecognizer];
-    [searchLabel setText:@"搜索"];
-    [searchLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-    [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setTextColor:[UIColor orangeColor]];
-    searchLabel.layer.borderColor=[UIColor orangeColor].CGColor;
-    searchLabel.layer.cornerRadius=15.0;
-    searchLabel.layer.borderWidth = 1; //要设置的描边宽
-    searchLabel.layer.masksToBounds=YES;
-    [searchView addSubview:searchLabel];
-    
-    
-    
-}
--(NSString *) compareCurrentTime:(NSDate*) date
-//
-{
-    //    NSDateFormatter *format=[[NSDateFormatter alloc] init];
-    //    [format setDateFormat:@"yyyy-MM-dd"];
-    //    NSDate *fromdate=[format dateFromString:compareString];
-    //    NSTimeZone *fromzone = [NSTimeZone systemTimeZone];
-    //    NSInteger frominterval = [fromzone secondsFromGMTForDate: fromdate];
-    //
-    //    NSDate *compareDate = [fromdate  dateByAddingTimeInterval: frominterval];
+-(NSString *) compareCurrentTime:(NSDate*) date{
+   
     NSTimeInterval  timeInterval = [date timeIntervalSinceNow];
     long temp = 0;
     NSString *result;
@@ -1627,46 +1308,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     
 }
-//-(void)getHotLesson{
-//    NSNumber *userId=[NSNumber numberWithInt:0];
-//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-//    dispatch_async(queue, ^{
-//
-//        [HttpHelper getHotLesson:userId success:^(HttpModel *model){
-//            NSLog(@"%@",model.message);
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//                    myDelegate.model=model;
-//                    tableArray=(NSArray *)model.result;
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//
-//                        [mainTableView reloadData];
-//                        _isLoading=false;
-//
-//                    });
-//
-//
-//                }
-//                [refreshHeader endRefreshing];
-//                [ProgressHUD dismiss];
-//
-//            });
-//        }failure:^(NSError *error){
-//            if (error.userInfo!=nil) {
-//                NSLog(@"%@",error.userInfo);
-//
-//            }
-//            [refreshHeader endRefreshing];
-//            [ProgressHUD dismiss];
-//
-//        }];
-//
-//
-//    });
-//
-//
-//}
 -(void)getHotLesson{
     NSNumber *userId=[NSNumber numberWithInt:0];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -1683,10 +1324,154 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             ar=[NSNumber numberWithDouble:29.5];
             ngg=[NSNumber numberWithDouble:106.5];
         }
-        
-        NSLog(@"77777777-%f", neloct.coordinate.longitude) ;
         [HttpHelper getHotLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
-            NSLog(@"热门课程数据：\n\n\n\n\n%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    myDelegate.model=model;
+                    tableArray=(NSArray *)model.result;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [mainTableView reloadData];
+                        _isLoading=false;
+                        
+                    });
+                    
+                    
+                }
+                [refreshHeader endRefreshing];
+                [ProgressHUD dismiss];
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                
+            }
+            [refreshHeader endRefreshing];
+            [ProgressHUD dismiss];
+            
+        }];
+        
+        
+    });
+    
+    
+}
+-(void)getNewHotLesson{
+    NSNumber *userId=[NSNumber numberWithInt:0];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+        
+        NSNumber *ar=[stand objectForKey:@"lttt"];
+        NSNumber *ngg=[stand objectForKey:@"nggg"];
+        if (ar==NULL&&ngg==NULL) {
+            ar=[NSNumber numberWithDouble:29.5];
+            ngg=[NSNumber numberWithDouble:106.5];
+        }
+        if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+            ar=[NSNumber numberWithDouble:29.5];
+            ngg=[NSNumber numberWithDouble:106.5];
+        }
+        [HttpHelper getNewHotLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    myDelegate.model=model;
+                    tableArray=(NSArray *)model.result;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [mainTableView reloadData];
+                        _isLoading=false;
+                        
+                    });
+                    
+                    
+                }
+                [refreshHeader endRefreshing];
+                [ProgressHUD dismiss];
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                
+            }
+            [refreshHeader endRefreshing];
+            [ProgressHUD dismiss];
+            
+        }];
+        
+        
+    });
+    
+    
+}
+-(void)getNewLesson{
+    NSNumber *userId=[NSNumber numberWithInt:0];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+        
+        NSNumber *ar=[stand objectForKey:@"lttt"];
+        NSNumber *ngg=[stand objectForKey:@"nggg"];
+        if (ar==NULL&&ngg==NULL) {
+            ar=[NSNumber numberWithDouble:29.5];
+            ngg=[NSNumber numberWithDouble:106.5];
+        }
+        if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+            ar=[NSNumber numberWithDouble:29.5];
+            ngg=[NSNumber numberWithDouble:106.5];
+        }
+        [HttpHelper getNewLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    myDelegate.model=model;
+                    tableArray=(NSArray *)model.result;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [mainTableView reloadData];
+                        _isLoading=false;
+                        
+                    });
+                    
+                    
+                }
+                [refreshHeader endRefreshing];
+                [ProgressHUD dismiss];
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                
+            }
+            [refreshHeader endRefreshing];
+            [ProgressHUD dismiss];
+            
+        }];
+        
+        
+    });
+    
+    
+}
+-(void)getNearByLesson{
+    NSNumber *userId=[NSNumber numberWithInt:0];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+        
+        NSNumber *ar=[stand objectForKey:@"lttt"];
+        NSNumber *ngg=[stand objectForKey:@"nggg"];
+        if (ar==NULL&&ngg==NULL) {
+            ar=[NSNumber numberWithDouble:29.5];
+            ngg=[NSNumber numberWithDouble:106.5];
+        }
+        if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+            ar=[NSNumber numberWithDouble:29.5];
+            ngg=[NSNumber numberWithDouble:106.5];
+        }
+        [HttpHelper getNearByLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1782,15 +1567,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     [self presentViewController: searchViewController animated:YES completion:nil];
 }
-//-(void)goneAlertView{
-//    if (searchView!=nil) {
-//        [searchView removeFromSuperview];
-//        isShowing=NO;
-//
-//        [searchField resignFirstResponder];
-//    }
-//
-//}
 -(void)getMainSlider{
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
@@ -1812,7 +1588,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             {
                                 [view removeFromSuperview];
                             }
-                            
                             //    图片的宽
                             CGFloat imageW = scrollview.frame.size.width;
                             //    CGFloat imageW = 300;
@@ -1899,17 +1674,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     NSString *url=[dic objectForKey:@"url"];
     if (![url isEqual:@""] && url!=nil && ![url isEqual:[NSNull null]]) {
         
-        NSLog(@"111111111111111111111111---------\n\n\n\n%@",url);
         if ([url rangeOfString:@"http://"].location !=NSNotFound) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
         }
-        
         else
         {
             NSString *sur=[NSString stringWithFormat:@"http://211.149.190.90/%@",url];
-            
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:sur]];
-            //        http://211.149.190.90/m/20160126/index.html
         }
     }
     
@@ -1929,23 +1700,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     [super viewDidDisappear:animated];
 }
--(void)hiddenPoint{
-    [pointView setHidden:YES];
-}
--(void)showPoint{
-    [pointView setHidden:NO];
-    
-}
 -(void)goCityViewController{
     CityViewController *cityViewController=[[CityViewController alloc]init];
     [self presentViewController: cityViewController animated:YES completion:nil];
 }
--(void)viewWillDisappear:(BOOL)animated
-{
-    //    [timer3 invalidate];
-    
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

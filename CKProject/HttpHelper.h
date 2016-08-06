@@ -82,7 +82,10 @@ static NSString * const API_READ_MSG=@"messageinfo";
 
 static NSString *const API_UPLOAD=@"uploads";
 //二期
-static NSString *const API_HOT_LESSON=@"newhotlesson";
+static NSString *const API_NEW_HOT_LESSON=@"newhotlesson";
+static NSString *const API_NearBy_LESSON=@"nearlesson";
+static NSString *const API_NEW_LESSON=@"newlesson";
+static NSString *const API_HOT_LESSON=@"hotlesson";
 static NSString *const API_CHARSECTION=@"charsection";
 static NSString *const API_TIMELIST=@"weeklist";
 
@@ -95,7 +98,9 @@ static NSString *const API_TIMELIST=@"weeklist";
 +(void)searchData:(NSNumber *)aid withData:(NSString *)sqlstring success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getCharsection:(NSNumber *)userId success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)getHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
-//getHotLesson:userId withlgn:[NSNumber numberWithDouble:106.5] withlat:[NSNumber numberWithDouble:29.5] withstatus:[NSNumber numberWithInt:2]
++(void)getNewHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
++(void)getNewLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
++(void)getNearByLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 //一期接口
 +(void)getMsgInfo:(NSNumber *)msgId withModel:(HttpModel *)model success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)accessLogin:(NSString *)uid withUserName:(NSString *)userName withToken:(NSString *)token withType:(NSString *)type  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

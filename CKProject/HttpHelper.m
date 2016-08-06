@@ -29,7 +29,46 @@
         failture(error);
     }];
 }
-//首页人们课程获取
+//nearby
++(void)getNearByLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
+    NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
+                            @{ @"name": @"lng", @"value": lng},
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": status}
+                            ];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_NearBy_LESSON] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
+//首页最新课程获取
++(void)getNewLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
+    NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
+                            @{ @"name": @"lng", @"value": lng},
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": status}
+                            ];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_NEW_LESSON] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
+//首页热门课程获取
++(void)getNewHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
+    NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
+                            @{ @"name": @"lng", @"value": lng},
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": status}
+                            ];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_NEW_HOT_LESSON] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
+//首页推荐课程获取
 +(void)getHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
     NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
                             @{ @"name": @"lng", @"value": lng},
@@ -42,6 +81,7 @@
         failture(error);
     }];
 }
+
 +(void)getMsgInfo:(NSNumber *)msgId withModel:(HttpModel *)model success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture
 {
     NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
