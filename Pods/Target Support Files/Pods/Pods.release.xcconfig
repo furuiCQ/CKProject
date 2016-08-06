@@ -1,6 +1,6 @@
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AMSlideMenu" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/WeiboSDK" "${PODS_ROOT}/Headers/Public/YiRefresh"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/WeiboSDK" "${PODS_ROOT}/Headers/Public/YiRefresh"
 LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/WeiboSDK/libWeiboSDK"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AMSlideMenu" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/WeiboSDK" -isystem "${PODS_ROOT}/Headers/Public/YiRefresh"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"AMSlideMenu" -l"SDWebImage" -l"WeiboSDK" -l"YiRefresh" -l"sqlite3" -l"z" -framework "CoreGraphics" -framework "CoreTelephony" -framework "CoreText" -framework "Foundation" -framework "ImageIO" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/WeiboSDK" -isystem "${PODS_ROOT}/Headers/Public/YiRefresh"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"SDWebImage" -l"WeiboSDK" -l"YiRefresh" -l"sqlite3" -l"z" -framework "CoreGraphics" -framework "CoreTelephony" -framework "CoreText" -framework "Foundation" -framework "ImageIO" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit"
 PODS_ROOT = ${SRCROOT}/Pods

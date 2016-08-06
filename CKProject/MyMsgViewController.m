@@ -85,7 +85,7 @@
     int width=self.view.frame.size.width;
     //  int height=self.view.frame.size.height;
     
-    NSArray *tableArray = [NSArray arrayWithObjects:@"评论",@"收藏的帖子",@"系统消息", nil];
+    NSArray *tableArray = [NSArray arrayWithObjects:@"系统消息",@"课程提醒", nil];
     
     for(int i=0;i<[tableArray count];i++){
         //我的报名记录

@@ -86,7 +86,7 @@
     NSString *lg;
     UINib *nib;
     UILabel *distanceLabel;
-    
+    UIView *allShowView;
 }
 @end
 
@@ -160,8 +160,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
     msgLabel.userInteractionEnabled=YES;///
-    //        UITapGestureRecognizer *shareGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share)];
-    //        [msgLabel addGestureRecognizer:shareGesutre];
+    UITapGestureRecognizer *shareGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share)];
+    [msgLabel addGestureRecognizer:shareGesutre];
     UIImageView *shareView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_logo"]];
     [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/16.8/2, titleHeight/2-self.view.frame.size.width/16.8/2, self.view.frame.size.width/16.8, self.view.frame.size.width/16.8)];
     [msgLabel addSubview:shareView];
@@ -2030,61 +2030,69 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 -(void)initShareView{
     int width=self.view.frame.size.width;
-    UIView *allShowView=[[UIView alloc]initWithFrame:CGRectMake(width-width/9.1-width/64, titleHeight+20, width/9.1, width)];
+    allShowView=[[UIView alloc]initWithFrame:CGRectMake(width-width/9.1-width/64+width/160, titleHeight+20, width/9.1, width)];
     
     NSArray *imageArray=[[NSArray alloc]initWithObjects:[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"], nil];
     int y=0;
     int paddingHeight=width/35.6;
     for (int i=0; i<[imageArray count]; i++) {
-        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, (y+paddingHeight)*i, width/9.1, width/9.1)];
+        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, (y+paddingHeight+width/9.1)*i, width/9.1, width/9.1)];
         [imageView setImage:[imageArray objectAtIndex:i]];
         [allShowView addSubview:imageView];
     }
+    [allShowView setHidden:YES];
+    [self.view addSubview:allShowView];
 }
 -(void)share{
-    //[ShareTools shareToQQ];
-    NSString *title=[@"这里有免费的"stringByAppendingString:searchLabel.text];
-    NSString *txt;
-    if ([detailContentLabel.text length]>30) {
-        txt=[detailContentLabel.text substringToIndex:30];
+    if(allShowView.hidden){
+        [allShowView setHidden:NO];
     }else{
-        txt=detailContentLabel.text;
+        [allShowView setHidden:YES];
+        
     }
-    NSString *description=txt;
-    NSString *imageurl=[[NSString alloc]init];
-    NSString *url=@"http://211.149.190.90/m/20160126/index.html";
-    
-    
-    NSDictionary *jsonData=[NSDictionary  dictionaryWithObjectsAndKeys:title,@"title",
-                            description,@"description",imageurl,@"imageurl",url,@"url",nil];
-    [RJShareView showGridMenuWithTitle:@"分享到..."
-                            itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
-                                images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"]]
-                             shareJson:jsonData
-                        selectedHandle:^(NSInteger index){
-                            switch (index) {
-                                case 1:
-                                case 2:
-                                    if (![WXApi isWXAppInstalled]) {
-                                        // [ProgressHUD showError:@"未安装微信！"];
-                                    }
-                                    break;
-                                    
-                                case 3:
-                                    if (![WeiboSDK isWeiboAppInstalled]) {
-                                        // [ProgressHUD showError:@"未安装微博！"];
-                                    }
-                                    break;
-                                    
-                                case 4:
-                                case 5:
-                                    if (![TencentOAuth iphoneQQInstalled]) {
-                                        // [ProgressHUD showError:@"未安装QQ！"];
-                                    }
-                                    break;
-                                    
-                            }
-                        }];
+    //[ShareTools shareToQQ];
+    //    NSString *title=[@"这里有免费的"stringByAppendingString:searchLabel.text];
+    //    NSString *txt;
+    //    if ([detailContentLabel.text length]>30) {
+    //        txt=[detailContentLabel.text substringToIndex:30];
+    //    }else{
+    //        txt=detailContentLabel.text;
+    //    }
+    //    NSString *description=txt;
+    //    NSString *imageurl=[[NSString alloc]init];
+    //    NSString *url=@"http://211.149.190.90/m/20160126/index.html";
+    //
+    //
+    //    NSDictionary *jsonData=[NSDictionary  dictionaryWithObjectsAndKeys:title,@"title",
+    //                            description,@"description",imageurl,@"imageurl",url,@"url",nil];
+    //    [RJShareView showGridMenuWithTitle:@"分享到..."
+    //                            itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
+    //                                images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"]]
+    //                             shareJson:jsonData
+    //                        selectedHandle:^(NSInteger index){
+    //                            switch (index) {
+    //                                case 1:
+    //                                case 2:
+    //                                    if (![WXApi isWXAppInstalled]) {
+    //                                        // [ProgressHUD showError:@"未安装微信！"];
+    //                                    }
+    //                                    break;
+    //
+    //                                case 3:
+    //                                    if (![WeiboSDK isWeiboAppInstalled]) {
+    //                                        // [ProgressHUD showError:@"未安装微博！"];
+    //                                    }
+    //                                    break;
+    //
+    //                                case 4:
+    //                                case 5:
+    //                                    if (![TencentOAuth iphoneQQInstalled]) {
+    //                                        // [ProgressHUD showError:@"未安装QQ！"];
+    //                                    }
+    //                                    break;
+    //
+    //                            }
+    //                        }];
 }
 -(void)testTimeList{
     [self getTimeList:[NSNumber numberWithInt:0] andBTime:[NSNumber numberWithInt:0]];

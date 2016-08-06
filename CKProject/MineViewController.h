@@ -16,7 +16,6 @@
 #import "UserInfoViewController.h"
 #import "HttpModel.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-
 @interface MineViewController : UIViewController
 @property int titleHeight;
 @property(strong,nonatomic)UIImageView *leftImage;
