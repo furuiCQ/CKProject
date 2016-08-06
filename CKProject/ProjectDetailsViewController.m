@@ -130,6 +130,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self initTitle];
     [self initContent];
     [self initBootomView];
+    [self initShareView];
     [self getProjectInfo];
 }
 //初始化顶部菜单栏
@@ -2026,6 +2027,19 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     
     
+}
+-(void)initShareView{
+    int width=self.view.frame.size.width;
+    UIView *allShowView=[[UIView alloc]initWithFrame:CGRectMake(width-width/9.1-width/64, titleHeight+20, width/9.1, width)];
+    
+    NSArray *imageArray=[[NSArray alloc]initWithObjects:[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"], nil];
+    int y=0;
+    int paddingHeight=width/35.6;
+    for (int i=0; i<[imageArray count]; i++) {
+        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, (y+paddingHeight)*i, width/9.1, width/9.1)];
+        [imageView setImage:[imageArray objectAtIndex:i]];
+        [allShowView addSubview:imageView];
+    }
 }
 -(void)share{
     //[ShareTools shareToQQ];
