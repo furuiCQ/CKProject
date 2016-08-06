@@ -424,6 +424,8 @@
 		49CE5DF31D55833600B07AE5 /* YiSlideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE5DF01D55833600B07AE5 /* YiSlideMenu.m */; };
 		49CE5DF71D559B1300B07AE5 /* SettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE5DF51D559B1300B07AE5 /* SettingCell.m */; };
 		49CE5DF81D559B1300B07AE5 /* SettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5DF61D559B1300B07AE5 /* SettingCell.xib */; };
+		49CE5DFC1D55C64F00B07AE5 /* FavourableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE5DFA1D55C64F00B07AE5 /* FavourableCell.m */; };
+		49CE5DFD1D55C64F00B07AE5 /* FavourableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49CE5DFB1D55C64F00B07AE5 /* FavourableCell.xib */; };
 		49D02E5D1C828AF1006A3769 /* ScaleImgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D02E5C1C828AF1006A3769 /* ScaleImgViewController.m */; };
 		49D79E2C1C579EBC009EE6B0 /* RJBaseMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D79E271C579EBC009EE6B0 /* RJBaseMenu.m */; };
 		49D79E2D1C579EBC009EE6B0 /* RJGirdMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D79E291C579EBC009EE6B0 /* RJGirdMenu.m */; };
@@ -1080,6 +1082,9 @@
 		49CE5DF41D559B1300B07AE5 /* SettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingCell.h; sourceTree = SOURCE_ROOT; };
 		49CE5DF51D559B1300B07AE5 /* SettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingCell.m; sourceTree = SOURCE_ROOT; };
 		49CE5DF61D559B1300B07AE5 /* SettingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingCell.xib; sourceTree = SOURCE_ROOT; };
+		49CE5DF91D55C64F00B07AE5 /* FavourableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavourableCell.h; sourceTree = SOURCE_ROOT; };
+		49CE5DFA1D55C64F00B07AE5 /* FavourableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavourableCell.m; sourceTree = SOURCE_ROOT; };
+		49CE5DFB1D55C64F00B07AE5 /* FavourableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FavourableCell.xib; sourceTree = SOURCE_ROOT; };
 		49D02E5C1C828AF1006A3769 /* ScaleImgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleImgViewController.m; sourceTree = "<group>"; };
 		49D02E5E1C828AFC006A3769 /* ScaleImgViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScaleImgViewController.h; sourceTree = "<group>"; };
 		49D79E261C579EBC009EE6B0 /* RJBaseMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJBaseMenu.h; sourceTree = "<group>"; };
@@ -1369,6 +1374,9 @@
 		493305841C183E14005B9EDC /* CustomListViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				49CE5DF91D55C64F00B07AE5 /* FavourableCell.h */,
+				49CE5DFA1D55C64F00B07AE5 /* FavourableCell.m */,
+				49CE5DFB1D55C64F00B07AE5 /* FavourableCell.xib */,
 				49CE5DF41D559B1300B07AE5 /* SettingCell.h */,
 				49CE5DF51D559B1300B07AE5 /* SettingCell.m */,
 				49CE5DF61D559B1300B07AE5 /* SettingCell.xib */,
@@ -2106,12 +2114,12 @@
 			isa = PBXGroup;
 			children = (
 				497FB52A1C3BDD8A0078E055 /* OrganismListViewController.h */,
-				497FB52B1C3BDD8A0078E055 /* OrganismListViewController.m */,
 				49EE21131C13DB2400055CF9 /* ProjectDetailsViewController.h */,
 				49EE21141C13DB3800055CF9 /* ProjectDetailsViewController.m */,
 				49EE21161C13DB4C00055CF9 /* ProjectListViewController.h */,
 				49EE21171C13DB5400055CF9 /* ProjectListViewController.m */,
 				4933057C1C1699D5005B9EDC /* CircleListViewController.h */,
+				497FB52B1C3BDD8A0078E055 /* OrganismListViewController.m */,
 				4933057D1C1699DD005B9EDC /* CircleListViewController.m */,
 				494621881C23EC8C00E372ED /* OrganDetailsViewController.h */,
 				494621891C23EC9400E372ED /* OrganDetailsViewController.m */,
@@ -2479,6 +2487,7 @@
 				49CE5D981D5464E600B07AE5 /* sort_select@2x.png in Resources */,
 				499442FB1C477B3B00FC67C6 /* select_logo.png in Resources */,
 				49FE3F351C58700800FBCA7F /* gray_down_logo@2x.png in Resources */,
+				49CE5DFD1D55C64F00B07AE5 /* FavourableCell.xib in Resources */,
 				499905371CC25E5300353C00 /* language@2x.png in Resources */,
 				49CE5D781D5464E600B07AE5 /* main_select.png in Resources */,
 				49541B521C2E7D3400CB023F /* discuss_logo.png in Resources */,
@@ -2920,6 +2929,7 @@
 				49DB846C1C29706900C344B1 /* ECDrawerLayout.m in Sources */,
 				49AD459D1C2BBDD6004FE430 /* HttpModel.m in Sources */,
 				10322D061C0EBBCE00945A89 /* CLLocation+YCLocation.m in Sources */,
+				49CE5DFC1D55C64F00B07AE5 /* FavourableCell.m in Sources */,
 				49CE5DF31D55833600B07AE5 /* YiSlideMenu.m in Sources */,
 				493305A21C19A307005B9EDC /* AboutViewController.m in Sources */,
 				4977AF3F1C117F8B001F0D55 /* ProjectTableCell.m in Sources */,
