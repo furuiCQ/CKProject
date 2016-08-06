@@ -73,7 +73,7 @@
     [super setSelectedIndex:selectedIndex];
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.selectIndex = selectedIndex;
-    
+    _lastSelectedIndex=selectedIndex;
 }
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
@@ -101,6 +101,8 @@
         }
         [btn isCheck];
         [self setSelectedIndex:btn.tag];
+        _lastSelectedIndex=btn.tag;
+
     }
     
 }
@@ -152,7 +154,7 @@
             frame.origin.y=-20;
             [btnView.iconLabel setFrame:frame];
         }
-        if(i==0){
+        if(i==_lastSelectedIndex){
             [btnView isCheck];
         }else{
             [btnView unCheck];
