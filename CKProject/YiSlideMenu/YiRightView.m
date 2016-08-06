@@ -11,6 +11,8 @@
 @interface YiRightView ()<UITableViewDelegate,UITableViewDataSource>{
     UITableView *tableView;
     NSArray *dataArray;
+    NSArray *imageArray;
+    NSString *phone;
 }
 
 @end
@@ -18,7 +20,9 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    phone=@"";
     dataArray=[[NSArray alloc]initWithObjects:@"我的优惠券",@"性别",@"修改密码",@"电话",@"地址",@"联系我们",@"设置",@"退出登录", nil];
+    imageArray=[[NSArray alloc]initWithObjects:@"ticket-",@"gender",@"password",@"phone",@"Location",@"contact",@"Settings-",@"LogOut", nil];
     self = [super initWithFrame:frame];
     if (self) {
         float viewWidth=frame.size.width;
@@ -61,7 +65,10 @@
     }
     return self;
 }
-
+-(void)setUserPhone:(NSString *)_phone{
+    phone=_phone;
+    [tableView reloadData];
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [dataArray count];
 }
@@ -77,6 +84,26 @@
     }
     [cell setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     [cell.titleLabel setText:[dataArray objectAtIndex:[indexPath row]]];
+    [cell.logoImage setImage:[UIImage imageNamed:[imageArray objectAtIndex:[indexPath row]]]];
+    [cell.rightView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
+    if([indexPath row]==1){
+        
+        
+    }else if([indexPath row]==3){
+        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, cell.rightView.frame.size.width-10, cell.rightView.frame.size.height)];
+        [label setText:phone];
+        [label setFont:[UIFont systemFontOfSize:15]];
+        [label setTextColor:[UIColor whiteColor]];
+        [label setTextAlignment:NSTextAlignmentRight];
+        [cell.rightView addSubview:label];
+
+        
+    }else{//Chevron_ic-2
+        UIImageView *image=[[UIImageView alloc]initWithFrame:CGRectMake(cell.rightView.frame.size.width-9-10, cell.rightView.frame.size.height/2-17/2, 9, 17)];
+        [image setImage:[UIImage imageNamed:@"Chevron_ic-2"]];
+        [cell.rightView addSubview:image];
+    }
+
     // [cell.titleLabel setText:@"123"];
     return cell;
 }

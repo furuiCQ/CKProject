@@ -13,6 +13,7 @@
     UIImageView *userImageView;
 }
 @property id<YiRightViewDelegate> delegate;
+-(void)setUserPhone:(NSString *)_phone;
 @end
 @protocol YiRightViewDelegate<NSObject>
 - (void)rightDidSelectRowAtIndexPath:(NSIndexPath *)indexPath;

@@ -14,7 +14,7 @@
 #import "FVCustomAlertView.h"
 #import "NSString+Extension.h"
 #import "SearchViewController.h"
-
+#import "CityViewController.h"
 @interface MainViewController : UIViewController
 
 @property(strong,nonatomic)CustomTextField *cityLabel;

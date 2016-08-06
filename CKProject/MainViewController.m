@@ -180,7 +180,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     //新建左上角Label
     UILabel *contextLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/5, titleHeight)];
-    UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showAddress)];
+    UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goCityViewController)];
     [contextLabel addGestureRecognizer:gesture];
     [contextLabel setUserInteractionEnabled:YES];
     [titleView addSubview:contextLabel];
@@ -743,12 +743,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         }
     }
 }
--(void)showAddress{
-    UIAlertView  *at=[[UIAlertView alloc]initWithTitle:@"提示" message:@"现未开通其他城市" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-    [at show];
-    
-    
-}
+
 //-(void)showAddress{
 //
 //
@@ -1941,96 +1936,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [pointView setHidden:NO];
     
 }
-
-
-
-//#pragma 集合视图
-//#pragma 集合视图的协议方法
-////定义展示的UICollectionViewCell的个数
-//
-//-( NSInteger )collectionView:( UICollectionView *)collectionView numberOfItemsInSection:( NSInteger )section
-//
-//{
-//
-//    NSLog(@"22------------\n\n %i",db.count);
-//    return db.count ;
-//
-//}
-//
-////定义展示的Section的个数
-//
-//-( NSInteger )numberOfSectionsInCollectionView:( UICollectionView *)collectionView
-//
-//{
-//
-//    return 1 ;
-//
-//}
-//
-////每个UICollectionView展示的内容
-//
-//-( UICollectionViewCell *)collectionView:( UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath
-//
-//{
-//
-//    teseCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier : @"acell" forIndexPath :indexPath];
-//    NSDictionary *ary=[db objectAtIndex:indexPath.row];
-//    NSLog(@"9999999999:\n\n\n\n\n\n\n%@",[ary objectForKey:@"title"]);
-//    cell.tils.text=[ary objectForKey:@"title"];
-//    cell.backgroundColor=[UIColor whiteColor];
-//
-////    cell.ima.image=[UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
-////    cell.tile.text=[titleArray objectAtIndex:indexPath.row];
-////    cell.deta.text=[contentArray objectAtIndex:indexPath.row];
-//    return cell;
-//
-//}
-//
-//#pragma mark --UICollectionViewDelegate
-//
-////UICollectionView被选中时调用的方法
-//
-//-( void )collectionView:( UICollectionView *)collectionView didSelectItemAtIndexPath:( NSIndexPath *)indexPath
-//
-//{
-//   ViewController *ma=[[ViewController alloc]init];
-//    [self presentViewController:ma animated:YES completion:nil];
-//
-//
-////    cell. backgroundColor = [ UIColor colorWithRed :(( arc4random ()% 255 )/ 255.0 ) green :(( arc4random ()% 255 )/ 255.0 ) blue :(( arc4random ()% 255 )/ 255.0 ) alpha : 1.0f ];
-//
-//}
-//
-////返回这个UICollectionViewCell是否可以被选择
-//
-//-( BOOL )collectionView:( UICollectionView *)collectionView shouldSelectItemAtIndexPath:( NSIndexPath *)indexPath
-//
-//{
-//    return YES ;
-//}
-//
-//#pragma mark --UICollectionViewDelegateFlowLayout
-//
-////定义每个UICollectionView的大小
-//
-//- ( CGSize )collectionView:( UICollectionView *)collectionView layout:( UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:( NSIndexPath *)indexPath
-//
-//{
-//
-//    return CGSizeMake ( acollectionView.frame.size.width, acollectionView.frame.size.height/5 );
-//
-//}
-//
-////定义每个UICollectionView 的边距
-//
-//-( UIEdgeInsets )collectionView:( UICollectionView *)collectionView layout:( UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:( NSInteger )section
-//
-//{
-//    
-//    return UIEdgeInsetsMake ( 0 , 0 , 0 , 0 );
-//    
-//}
-
+-(void)goCityViewController{
+    CityViewController *cityViewController=[[CityViewController alloc]init];
+    [self presentViewController: cityViewController animated:YES completion:nil];
+}
 -(void)viewWillDisappear:(BOOL)animated
 {
     //    [timer3 invalidate];

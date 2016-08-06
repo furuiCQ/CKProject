@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, YiSlideDirection) {
 @property UILabel *navTitleLabel;
 -(void)navLeftBtAction;
 -(void)navRightBtAction;
+-(void)setUserPhone:(NSString *)_phone;
 @end
 
 

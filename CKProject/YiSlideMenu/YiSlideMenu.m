@@ -181,7 +181,16 @@
     }
  
 }
+-(void)setUserPhone:(NSString *)_phone{
+    //
+    for(UIView *view in [rightBgView subviews]){
+        if([view isKindOfClass:[YiRightView class]]){
+            YiRightView *rightView=(YiRightView *)view;
+            [rightView setUserPhone:_phone];
 
+        }
+    }
+}
 
 -(void)leftViewDidSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     

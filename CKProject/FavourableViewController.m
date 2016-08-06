@@ -50,10 +50,10 @@
     UIControl *control=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, width/2-0.2, width/3.5)];
     [control setBackgroundColor:[UIColor whiteColor]];
     
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/32, width/12.8, control.frame.size.width/2, width/21.3)];
+    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/32, width/12.8, control.frame.size.width/2, width/27.8)];
     [titleLabel setText:@"限时抢购"];
     [titleLabel setTextAlignment:NSTextAlignmentLeft];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/21.3]];
+    [titleLabel setFont:[UIFont systemFontOfSize:width/27.8]];
     [control addSubview:titleLabel];
     
     UILabel *contentLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/32, titleLabel.frame.size.height+titleLabel.frame.origin.y+width/32, control.frame.size.width/2, width/32)];

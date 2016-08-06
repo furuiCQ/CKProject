@@ -367,7 +367,7 @@ static NSString *kAuthState = @"xxx";
         {
             AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             myDelegate.isLogin=YES;
-            [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
                 NSNotification *notification =[NSNotification notificationWithName:@"login" object:nil];
                 [[NSNotificationCenter defaultCenter] postNotification:notification];
             }];

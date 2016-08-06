@@ -20,7 +20,7 @@
     
     NSMutableArray *dataArray;
     YiSlideMenu *slideMenu;
-
+    UIAlertView *alertView;
 }
 
 @end
@@ -53,14 +53,14 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"login" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLogoutStauets) name:@"logout" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
-   // [self initTitle];
-   // [self initContentView];
+    // [self initTitle];
+    // [self initContentView];
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(myDelegate.isLogin){
         [ProgressHUD show:@"加载中..."];
         [self changeLoginStauets];
     }
-
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -111,10 +111,10 @@
     //新建右上角的图形
     msgLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/19-2, titleHeight/2-7,4, 15)];
     [msgLabel setUserInteractionEnabled:YES];
-   
+    
     UITapGestureRecognizer *menuapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openRightMenu)];
     [msgLabel addGestureRecognizer:menuapGestureRecognizer];
-
+    
     [msgLabel setImage:[UIImage imageNamed:@"menu_logo"]];
     
     pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
@@ -131,7 +131,7 @@
     [slideMenu.centerView addSubview:titleView];
 }
 -(void)initContentView{
-   
+    
     titleHeight=44;
     
     int width=self.view.frame.size.width;
@@ -156,11 +156,17 @@
     [tableHeaderView addSubview:whiteImageView];
     
     UIImageView *commentImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/17.8, imageView.frame.size.height+imageView.frame.origin.y-width/12, width/6, width/6)];
+    UITapGestureRecognizer *messageGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goMyRegViewController)];
+    [commentImageView setUserInteractionEnabled:YES];
+    [commentImageView addGestureRecognizer:messageGestureRecognizer];
     [commentImageView setImage:[UIImage imageNamed:@"message"]];
     [tableHeaderView addSubview:commentImageView];
     
     UIImageView *addImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/17.8-width/6, imageView.frame.size.height+imageView.frame.origin.y-width/12, width/6, width/6)];
     [addImageView setImage:[UIImage imageNamed:@"add"]];
+    UITapGestureRecognizer *addGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goMyInvitationViewController)];
+    [addImageView setUserInteractionEnabled:YES];
+    [addImageView addGestureRecognizer:addGestureRecognizer];
     [tableHeaderView addSubview:addImageView];
     
     userImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/2-width/5.2, imageView.frame.size.height+imageView.frame.origin.y-width/5.2, width/2.6, width/2.6)];
@@ -229,7 +235,7 @@
     [tableHeaderView addSubview:nodataImageView];
     
     [tableHeaderView setFrame:CGRectMake(0, 0, width, headerView.frame.size.height+headerView.frame.origin.y)];
-   
+    
     mainTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
                                                                0,
                                                                width,
@@ -239,17 +245,15 @@
     mainTableView.delegate                          = self;
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
     mainTableView.tableHeaderView=tableHeaderView;
-   //[self.view addSubview:mainTableView];
-   [slideMenu.centerView addSubview:mainTableView];
-
+    //[self.view addSubview:mainTableView];
+    [slideMenu.centerView addSubview:mainTableView];
+    
 }
 -(void)initSwitchBtn:(UIView *)superView{
     titleHeight=44;
     int width=self.view.frame.size.width;
-    //    UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
-    //    [topView setBackgroundColor:[UIColor whiteColor]];
-    //    [self.view addSubview:topView];
-    NSArray *array = [NSArray arrayWithObjects:@"预约6",@"受理成功6", nil];
+    
+    NSArray *array = [NSArray arrayWithObjects:@"预约-",@"受理成功-", nil];
     projectTableArray=[[NSMutableArray alloc]init];
     for (int i=0; i<[array count]; i++) {
         TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count], titleHeight)];
@@ -308,47 +312,15 @@
 }
 
 -(void)goMsgViewControll{
-    
     MyMsgViewController *myMsgViewController=[[MyMsgViewController alloc]init];
     [self presentViewController: myMsgViewController animated:YES completion:nil];
 }
 -(void)onClick:(id)sender{
-    UIButton *control=(UIButton*)sender;
-    NSLog(@"个人中心列表点击中.....%ld",(long)control.tag);
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
         LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
-    }
-    switch (control.tag)
-    {
-        case 0:
-        {
-            MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
-            [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
-        }
-            break;
-            //        case 1:
-            //        {
-            //
-            //            MyInvitationViewController *myInvitationViewController=[[MyInvitationViewController alloc]init];
-            //            [self presentViewController: myInvitationViewController animated:YES completion:nil];
-            //        }
-            //            break;
-            
-        case 1:
-        {
-            MyCollectViewController *myCollectViewController=[[MyCollectViewController alloc]init];
-            [self presentViewController: myCollectViewController animated:YES completion:nil];
-            
-        }
-            break;
-            
-        default:
-            NSLog(@"头像被点击");
-            
-            break;
     }
 }
 -(void)goMsgViewController{
@@ -364,15 +336,11 @@
     [self presentViewController: myMsgViewController animated:YES completion:nil];
     
 }
--(void)gotoViewController{
-    NSLog(@"头像被点击");
-}
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:imageView];
     int stringFloatx = (int)(touchPoint.x);
     int stringFloaty = (int)(touchPoint.y);
-    
     //选中登陆注册按钮
     if (stringFloatx>self.view.frame.size.width/2-self.view.frame.size.width/10
         && stringFloaty>self.view.frame.size.height/8+self.view.frame.size.width/20+self.view.frame.size.width/30 && stringFloatx<self.view.frame.size.width/2-self.view.frame.size.width/10+self.view.frame.size.width/6 && stringFloaty<self.view.frame.size.height/8+self.view.frame.size.width/20+self.view.frame.size.width/30+self.view.frame.size.width/6) {
@@ -381,50 +349,21 @@
             [self presentViewController:loginRegViewController animated:YES completion:nil];
         }
     }
-    
-    if (stringFloatx>self.view.frame.size.width/2-self.view.frame.size.width/12
-        && stringFloaty>self.view.frame.size.height/8-self.view.frame.size.width/6+self.view.frame.size.width/30 && stringFloatx<self.view.frame.size.width/2-self.view.frame.size.width/12+self.view.frame.size.width/6 && stringFloaty<self.view.frame.size.height/8+self.view.frame.size.width/30) {
-        //        个人资料页面
-        if(!loginedControl.hidden){
-            UIAlertView *ip=[[UIAlertView alloc]initWithTitle:@"提示" message:@"个人资料修改暂未开放" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-            [ip show];
-            //            UserInfoViewController *userInfoViewController=[[UserInfoViewController alloc]init];
-            //            [userInfoViewController setUserInfoArry:userInfoArray];
-            //            [self presentViewController: userInfoViewController animated:YES completion:nil];
-            //            跳转
-            //            msViewController *vi=[[msViewController alloc]init];
-            //        [self presentViewController: vi animated:YES completion:nil];
-            //            [self.navigationController pushViewController:mi animated:YES];
-            //
-            //            anTableViewController *pa=[[anTableViewController alloc]init];
-            //            [self presentViewController: pa animated:YES completion:nil];
-            //            [self.navigationController pushViewController:pa animated:YES];
-            
-            
-        }
-    }
 }
 -(void)openRightMenu{
     slideMenu.navRightBtAction;
 }
 -(void)changeLoginStauets{
-    
     [loginedControl setHidden:NO];
     [unloginControl setHidden:YES];
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     HttpModel *httpModel=appDelegate.model;
-    NSLog(@"获取数据：－－－－－－－%@",httpModel.result);
     if([httpModel.result count]>0){
         [userNameLabel setText:[httpModel.result objectForKey:@"username"]];
-        
-        //        imageView.image=[UIImage imageNamed:[httpModel.result objectForKey:@"logo"]];
     }
     [userTelLabel setText:[NSString stringWithFormat:@"%@", httpModel.tel]];
-    
-    
+    [slideMenu setUserPhone:[NSString stringWithFormat:@"%@", httpModel.tel]];
     [self getUserInfo];
-    
-    
 }
 -(void)changeLogoutStauets{
     
@@ -437,6 +376,7 @@
     NSNotification *notification =[NSNotification notificationWithName:@"hiddenpoint" object:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.isLogin=NO;
     appDelegate.model=nil;
     [userImageView setImage:[UIImage imageNamed:@"logo"]];
 }
@@ -483,7 +423,7 @@
         if (myDelegate.model!=nil) {
             
             [HttpHelper getUserInfo:myDelegate.model success:^(HttpModel *model){
-                NSLog(@"2222222222222223___%@",model.message);
+                NSLog(@"2222222222222223___%@",model.result);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -546,11 +486,31 @@
             break;
     }
 }
+-(void)goMyRegViewController{
+    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (!myDelegate.isLogin) {
+        LoginViewController *loginViewController=[[LoginViewController alloc]init];
+        [self presentViewController:loginViewController animated:YES completion:nil];
+        return;
+    }
+    MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
+    [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
+}
+-(void)goMyInvitationViewController{
+    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (!myDelegate.isLogin) {
+        LoginViewController *loginViewController=[[LoginViewController alloc]init];
+        [self presentViewController:loginViewController animated:YES completion:nil];
+        return;
+    }
+    MyInvitationViewController *myInvitationViewController=[[MyInvitationViewController alloc]init];
+    [self presentViewController: myInvitationViewController animated:YES completion:nil];
+}
 -(void)setData:(NSDictionary *)dic{
     
     
     
-    NSNumber *userId=[dic objectForKey:@"id"];
+    // NSNumber *userId=[dic objectForKey:@"id"];
     NSString *username=[dic objectForKey:@"username"];
     NSNumber *tel=[dic objectForKey:@"tel"];
     NSString *logo=[dic objectForKey:@"logo"];
@@ -559,7 +519,7 @@
     
     NSNumber *bk=[dic objectForKey:@"bk"];
     NSNumber *acce=[dic objectForKey:@"acce"];
-    NSNumber *inter=[dic objectForKey:@"inter"];
+    //  NSNumber *inter=[dic objectForKey:@"inter"];
     NSNumber *ismessage=[dic objectForKey:@"ismessage"];
     
     NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
@@ -575,9 +535,9 @@
     if (![acce isEqual:[NSNull null]]) {
         [sucessNumbLabel setText:[NSString stringWithFormat:@"%@",acce]];
     }
-    if (![inter isEqual:[NSNull null]]) {
-        [postNumbLabel setText:[NSString stringWithFormat:@"%@",inter]];
-    }
+    //    if (![inter isEqual:[NSNull null]]) {
+    //        [postNumbLabel setText:[NSString stringWithFormat:@"%@",inter]];
+    //    }
     if (![username isEqual:[NSNull null]]) {
         [userNameLabel setText:[NSString stringWithFormat:@"%@",username]];
     }
@@ -612,11 +572,22 @@
     }else{
         [userInfoArray addObject:@"女"];
     }
+    
+    for (int i=0; i< [projectTableArray count];i++) {
+        TopBar *topBar=(TopBar *)[projectTableArray objectAtIndex:i];
+        if(i==0){
+            [topBar.textLabel setText:[NSString stringWithFormat:@"预约%@",bk]];
+        }
+        if(i==1){
+            [topBar.textLabel setText:[NSString stringWithFormat:@"受理成功%@",acce]];
+
+        }
+    }
     [userInfoArray addObject:@""];
     [userInfoArray addObject:tel];
     [userInfoArray addObject:addr];
-    [userInfoArray addObject:userId];
-
+    //  [userInfoArray addObject:userId];
+    
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identy = @"CustomCell";
@@ -624,7 +595,7 @@
     if(cell==nil){
         cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
     }
-   // [cell.titleLabel setText:@"123"];
+    // [cell.titleLabel setText:@"123"];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -664,10 +635,63 @@
                 [self presentViewController: settingViewController animated:YES completion:nil];
             }
                 break;
+            case 7:
+            {
+                [self logout];
+            }
+                break;
             default:
                 break;
         }
     }
 }
+//－－－－－－－－－－－－－－－－－－－－－－－－
+-(void)logout{
+    AppDelegate *myDelegate = ( AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if (myDelegate.model!=nil) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [HttpHelper logoutAcount:myDelegate.model success:^(HttpModel *model){
+                NSLog(@"%@",model.message);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                        if (alertView==nil) {
+                            alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                            alertView.delegate=self;
+                        }
+                        [alertView setTag:1];
+                        [alertView setMessage:model.message];
+                        [alertView show];
+                    }else{
+                        
+                    }
+                });
+                
+            }failure:^(NSError *error){
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
+                }
+            }];
+        });
+        
+    }
+}
+//AlertView已经消失时执行的事件
+-(void)alertView:(UIAlertView *)uiAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"didDismissWithButtonIndex");
+    switch (uiAlertView.tag) {
+        case 1:
+        {
+            [self changeLogoutStauets];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
 
 @end
