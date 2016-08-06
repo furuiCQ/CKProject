@@ -47,7 +47,7 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
     //向微信注册
     [WXApi registerApp:@"wxd1cc67205c307199"];
     
-    
+    [application setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
     
     //判断是否登陆，由登陆状态判断启动页面
     NSArray *textArray =[NSArray arrayWithObjects:@"首页",@"新闻",@"聚优惠",@"分类",

@@ -64,7 +64,7 @@
     //自定义电池栏 可遮盖或不遮盖
     UIView *topView=[[UIView alloc]init];
     [topView setFrame:CGRectMake(0, 0, self.view.frame.size.width, 20)];
-    [topView setBackgroundColor:[UIColor whiteColor]];
+    [topView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     [self.view addSubview:topView];
     
 }

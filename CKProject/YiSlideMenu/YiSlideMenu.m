@@ -106,7 +106,9 @@
         rightBgView.backgroundColor=[UIColor whiteColor];
 
         
-        
+//        NSArray * dataArray=[[NSArray alloc]initWithObjects:@"我的优惠券",@"性别",@"修改密码",@"电话",@"地址",@"联系我们",@"设置",@"退出登录", nil];
+//        }
+
         YiRightView *rightView=[[YiRightView alloc] initWithFrame:CGRectMake(0 , 0, RightWidth, viewHeight)];
         rightView.clipsToBounds=YES;
         rightView.delegate=self;

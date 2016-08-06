@@ -10,6 +10,7 @@
 @protocol YiRightViewDelegate;
 @interface YiRightView : UIView{
     id<YiRightViewDelegate> delegate;
+    UIImageView *userImageView;
 }
 @property id<YiRightViewDelegate> delegate;
 @end
