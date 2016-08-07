@@ -27,6 +27,7 @@
 @property (strong, nonatomic) NSString *wbCurrentUserID;
 @property double latitude;//纬度
 @property double longitude;//经度
+@property NSNumber *localNumber;//当前aid
 @property BOOL isLogin;
 @property TencentOAuth *QQauth; 
 

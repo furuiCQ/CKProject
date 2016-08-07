@@ -536,38 +536,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }];
             });
         }else{
-            if (myDelegate.isLogin) {
-                OrderViewController *orderViewController=[[OrderViewController alloc]init];
-                [orderViewController setProjectId:[data objectForKey:@"id"]];
-                [orderViewController setWeekId:weekId];
-                [orderViewController setWeekNum:weekNum];
-                [orderViewController setBeginTime:beginTime];
-                if (advance_time==nil) {
-                    [orderViewController setAdvancetime: [NSNumber numberWithInteger:1]];
-                }
-                else{
-                    
-                    [orderViewController setAdvancetime:advance_time];
-                }
-                if(detailContentLabel.text.length>30){
-                    [orderViewController setContent:[detailContentLabel.text substringToIndex:30]];
-                }else{
-                    [orderViewController setContent:detailContentLabel.text];
-                }
-                NSLog(@"----------\n\n\n%@,%@,%@,%@,%@",[data objectForKey:@"id"],weekId,weekNum,beginTime,advance_time);
-                
-                [self presentViewController:orderViewController animated:YES completion:^{
-                    NSNotification *notification =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
-                    [[NSNotificationCenter defaultCenter] postNotification:notification];
-                }];
-                
-            }
             
-            
-            else{
-                LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
-                [self presentViewController:loginRegViewController animated:YES completion:nil];
-            }
         }
     }
 }
@@ -1320,16 +1289,40 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[@"tel:%@" stringByAppendingString:phone]]];
     }
 }
--(void)orderClick:(NSNumber *)weekId withWeekNum:(NSNumber *)weeknum withBegintime:(NSString *)beginTime{
+-(void)orderClick:(NSNumber *)weekId withWeekNum:(NSNumber *)weekNum withBegintime:(NSString *)beginTime{
     NSLog(@"orderClick");
     [CustomPopView disMiss:picker];
+    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (myDelegate.isLogin) {
+        OrderViewController *orderViewController=[[OrderViewController alloc]init];
+        [orderViewController setProjectId:[data objectForKey:@"id"]];
+        [orderViewController setWeekId:weekId];
+        [orderViewController setWeekNum:weekNum];
+        [orderViewController setBeginTime:beginTime];
+        if (advance_time==nil) {
+            [orderViewController setAdvancetime: [NSNumber numberWithInteger:1]];
+        }
+        else{
+            [orderViewController setAdvancetime:advance_time];
+        }
+        if(detailContentLabel.text.length>30){
+            [orderViewController setContent:[detailContentLabel.text substringToIndex:30]];
+        }else{
+            [orderViewController setContent:detailContentLabel.text];
+        }
+        NSLog(@"----------\n\n\n%@,%@,%@,%@,%@",[data objectForKey:@"id"],weekId,weekNum,beginTime,advance_time);
+        
+        [self presentViewController:orderViewController animated:YES completion:^{
+            NSNotification *notification =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotification:notification];
+        }];
+        
+    }else{
+        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        [self presentViewController:loginRegViewController animated:YES completion:nil];
+    }
 }
--(void)viewWillDisappear:(BOOL)animated
-{
-    
-    NSLog(@"87887888888888--\n\n\n%@",timeShowLabel.text);
-    
-}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

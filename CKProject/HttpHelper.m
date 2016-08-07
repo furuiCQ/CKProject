@@ -55,6 +55,7 @@
         failture(error);
     }];
 }
+
 //首页热门课程获取
 +(void)getNewHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
     NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},

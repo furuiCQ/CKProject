@@ -36,7 +36,7 @@
 
 @property NSNumber* projectID;
 @property NSNumber* projectSubID;
-@property NSArray *tableArray;
+@property NSMutableArray *tableArray;
 @property NSString *titleName;
 -(void)setHotModel:(NSString *)sqlString;
 -(void)searchData:(NSString *)data withTime:(NSString *)date withAid:(NSNumber *)aid;

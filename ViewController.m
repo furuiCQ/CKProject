@@ -72,7 +72,6 @@
     [self.view addSubview:goTopView];
 }
 -(void)goTop{
-    NSLog(@"goTop===================");
     [vi setContentOffset:CGPointMake(0,0) animated:YES];
 }
 - (void)selectClickAction:(NSInteger)index {
@@ -90,35 +89,24 @@
             ary=[duc objectForKey:@"4"];
             break;
         case 4:
-            ary=[duc objectForKey:@"5"];            break;
+            ary=[duc objectForKey:@"5"];
+            break;
         default:
             ary=[duc objectForKey:@"6"];
             break;
     }
+    [vi reloadData];
     
     
 }
 -(void)getsj{
-    //    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/news"];
-    //    NSURL *url=[NSURL URLWithString:str];
-    //    NSURLRequest *request=[NSURLRequest requestWithURL:url];
-    //    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-    //
-    //        id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-    //        duc=[obj objectForKey:@"result"];
-    //        ;
-    //        [vi reloadData];
-    //        [ProgressHUD dismiss];
-    //
-    //
-    //    }];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
         [HttpHelper getliebiao:self
                        success:^(HttpModel *model){
                            
-                           NSLog(@"%@",model.message);
+                           NSLog(@"%@",model.result);
                            
                            dispatch_async(dispatch_get_main_queue(), ^{
                                
@@ -126,13 +114,9 @@
                                    duc=model.result ;
                                    NSLog(@"model.result----->%@",duc);
                                    [vi reloadData];
-                                   //                                          [ProgressHUD dismiss]
-                                   
                                }else{
                                    
                                }
-                               
-                               
                            });
                        }failure:^(NSError *error){
                            if (error.userInfo!=nil) {
@@ -171,7 +155,7 @@
     
     
     
-    [titleView addSubview:cityLabel];
+   // [titleView addSubview:cityLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
 }

@@ -3521,7 +3521,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frainism.ckProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "35c0b3a7-e9cc-4040-a819-e0f96c7a5eb2";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -3546,7 +3546,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frainism.ckProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "35c0b3a7-e9cc-4040-a819-e0f96c7a5eb2";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

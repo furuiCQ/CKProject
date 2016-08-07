@@ -29,6 +29,7 @@
 #import "MationViewController.h"
 #import "ViewController.h"
 #import "ProjectTimePicker.h"
+#import "OrderRecordCell.h";
 //HttpHelper.m
 @interface MainViewController ()<CLLocationManagerDelegate,UITextFieldDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>{
     CLLocationManager *locationmanager;
@@ -50,7 +51,6 @@
     CLLocation *neloct;
     double localLat;
     double localLng;
-    CLLocationManager *locationManager;
     NSArray *list;
     NSMutableArray *chasetArray;
     NSString *customServiceNumber;
@@ -98,10 +98,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [sc setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self.view addSubview:sc];
     
-    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    localLat=myDelegate.latitude;
-    localLng=myDelegate.longitude;
+    //    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //    localLat=myDelegate.latitude;
+    //    localLng=myDelegate.longitude;
+    
     [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
+    
     if (IS_IOS8) {
         [UIApplication sharedApplication].idleTimerDisabled = TRUE;
         locationmanager = [[CLLocationManager alloc] init];
@@ -117,33 +119,16 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     localArray=[[NSArray alloc]init];
     localNumber=[[NSNumber alloc]init];
     [ProgressHUD show:@"加载中..."];
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
     
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    locationManager.distanceFilter = 100.0f; // 如果设为kCLDistanceFilterNone，则每秒更新一次;
-    [locationManager startUpdatingLocation];
-    
-    [self getNewHotLesson];
     [self getMainSlider];
     [self initImageScrollView];
     [self initMainView];
     
+    [self getLat];
     [self getCity];
-}
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
-{
-    neloct=newLocation;
-    [manager stopUpdatingLocation];
+    [self getNewHotLesson];
     
 }
-
-// 定位失误时触发
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"error:%@",error);
-}
-
 
 //初始化顶部菜单栏
 -(void)initTitle{
@@ -534,18 +519,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     myDelegate.model=model;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         chasetResult=(NSArray *)model.result;
-                        //                        for (int i=0; i<[chasetResult count]; i++) {
-                        //                            CharesectionView *subView=(CharesectionView *)[chasetArray objectAtIndex:i];
-                        //                            NSDictionary *dic=[chasetResult objectAtIndex:i];
-                        //                            NSString *logoUrl=[dic objectForKey:@"logo"];
-                        //                            if ([logoUrl length]>0) {
-                        //                                [subView.iconView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logoUrl]]];
-                        //                            }
-                        //                            [subView.titleLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"title"]]];
-                        //                            [subView.contentLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"smalltitle"]]];
-                        //                            [subView setSqlString:[NSString stringWithFormat:@"%@",[dic objectForKey:@"sqlstring"]]];
-                        //                        }
-                        //
                         for(UIView *view in [sc subviews]){
                             if([[view subviews]count]>0){
                                 for(UIView *subview in [view subviews]){
@@ -570,7 +543,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                             NSDictionary *dic=[chasetResult objectAtIndex:(subview.tag-201)];
                                             UIImageView *imageview=(UIImageView *)subview;
                                             NSString *logoUrl=[dic objectForKey:@"logo"];
-                                           // [imageview sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logoUrl]]];
+                                            // [imageview sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logoUrl]]];
                                         }
                                     }
                                 }
@@ -756,7 +729,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)nextImage
 {
     int page = (int)pageControl.currentPage;
-    NSLog(@"pppppppp:%i",page);
     if (page == totalCount-1) {
         page = 0;
     }else
@@ -772,7 +744,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 // scrollview滚动的时候调用
 - (void)scrollViewDidScroll:(UIScrollView *)uiScrollView
 {
-    //NSLog(@"滚动中");
     //    计算页码
     //    页码 = (contentoffset.x + scrollView一半宽度)/scrollView宽度
     if (uiScrollView.tag==2) {
@@ -785,10 +756,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         CGFloat scrollviewW =  st.frame.size.height;
         CGFloat x = st.contentOffset.y;
         int page = (x + scrollviewW / 2) /  scrollviewW;
-        NSLog(@"页数； %i",page);
         pag.currentPage = page;
     }
-    
     if (!_isLoading && uiScrollView.tag==0) { // 判断是否处于刷新状态，刷新中就不执行
         // 取内容的高度：
         
@@ -882,6 +851,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     return 0;
 }
+static NSString *identy = @"OrderRecordCell";
 
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -893,149 +863,67 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     
     if ([tableArray count]>0 && tableView.tag==0) {
-        NSDictionary *str=[tableArray objectAtIndex:[indexPath row]];
-        NSNumber *projectId=[str objectForKey:@"id"];
-        NSString *logoUrl=[str objectForKey:@"logo"];
-        CGRect frame = [cell frame];
-        CGRect rx = [ UIScreen mainScreen ].bounds;
-        int width=rx.size.width;
-        UIView *subview=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width, width/3.6+width/16)];
-        [subview setBackgroundColor:[UIColor whiteColor]];
-        //287x178
-        UIImageView *proejctImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/32,width/32, width/2.2, width/3.6)];
-        [proejctImageView setImage:[UIImage imageNamed:@"instlist_defalut"]];
-        if ([logoUrl length]>0) {
-            [proejctImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logoUrl]]];
+        static NSString *identy = @"CustomCell";
+        cell = [tableView dequeueReusableCellWithIdentifier:identy];
+        if(cell==nil){
+            cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
         }
-        [subview setTag:[projectId intValue]];
+        OrderRecordCell *porjectCell=(OrderRecordCell *)cell;
         
         
-        [subview addSubview:proejctImageView];
-        
-        
-        UILabel *projectName=[[UILabel alloc]initWithFrame:CGRectMake(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/45.7, proejctImageView.frame.origin.y, width-(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/128+width/42.7), width/25.6)];
-        [projectName setText:[NSString stringWithFormat:@"%@",[str objectForKey:@"title"]]];
-        [projectName setTextColor:[UIColor blackColor]];
-        [projectName setFont:[UIFont systemFontOfSize:width/25.6]];
-        [subview addSubview:projectName];
-        
-        UILabel *organName=[[UILabel alloc]initWithFrame:CGRectMake(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/45.7, projectName.frame.origin.y+projectName.frame.size.height+width/21.3, width-(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/128+width/42.7), width/29)];
-        [organName setText:[NSString stringWithFormat:@"%@",[str objectForKey:@"insttitle"]]];
-        [organName setTextColor:[UIColor colorWithRed:165.f/255.f green:165.f/255.f blue:165.f/255.f alpha:2.0]];
-        [organName setFont:[UIFont systemFontOfSize:width/29]];
-        [subview addSubview:organName];
-        
-        
-        
-        
-        UIImageView *freeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/45.7,
-                                                                                organName.frame.size.height+organName.frame.origin.y+width/26.7, width/26.7, width/18.8)];
-        [freeImageView setImage:[UIImage imageNamed:@"free_image"]];
-        
-        [subview addSubview:freeImageView];
-        
-        UILabel *sut=[[UILabel alloc]initWithFrame:CGRectMake(freeImageView.frame.size.width+freeImageView.frame.origin.x+width/80,
-                                                              organName.frame.size.height+organName.frame.origin.y+width/26.7, width/15, width/18.8)];
-        
-        double price=[[str objectForKey:@"price"]doubleValue];
-        if (price==0) {
-            [sut setText:@"免费"];
-            [sut setTextColor:[UIColor colorWithRed:90.f/255.f green:201.f/255.f blue:170.f/255.f alpha:1.0]];
-            [sut  setFont:[UIFont systemFontOfSize:width/32]];
+        //int width=self.view.frame.size.width;
+        // cell=[[ProjectTableCell alloc]initWithStyle:UITableViewCellStyleDefault //reuseIdentifier:nil];
+        NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
+        if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
+            NSString *title=[dic objectForKey:@"title"];
+            [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
         }
-        else
-        {
-            [sut setText:[NSString stringWithFormat:@"¥%@",[str objectForKey:@"price"]]];
-            [sut setTextColor:[UIColor orangeColor]];
-            [sut  setFont:[UIFont systemFontOfSize:width/32]];
+        if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
+            NSString *people=[dic objectForKey:@"people"];
+            NSString *str=[NSString stringWithFormat:@"已报%@人",people];
+            [porjectCell.orderNumbLabel setText:str];
             
         }
         
-        [subview addSubview:sut];
-        
-        
-        UILabel *openLabel=[[UILabel alloc]initWithFrame:CGRectMake(sut.frame.size.width+sut.frame.origin.x+width/18, sut.frame.origin.y, width/32*5.5, width/18.8)];
-        [openLabel setText:@"适应年龄段:"];
-        [openLabel setTextColor:[UIColor colorWithRed:165.f/255.f green:165.f/255.f blue:165.f/255.f alpha:1.0]];
-        [openLabel setFont:[UIFont systemFontOfSize:width/32]];
-        [subview addSubview:openLabel];
-        
-        UILabel *openTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(openLabel.frame.size.width+openLabel.frame.origin.x, sut.frame.origin.y, width/32*5, width/18.8)];
-        [openTimeLabel setTextColor:[UIColor colorWithRed:165.f/255.f green:165.f/255.f blue:165.f/255.f alpha:1.0]];
-        [openTimeLabel setFont:[UIFont systemFontOfSize:width/32]];
-        [openTimeLabel setTextAlignment:NSTextAlignmentLeft];
-        [subview addSubview:openTimeLabel];
-        if([str objectForKey:@"grade"] && ![[str objectForKey:@"grade"] isEqual:[NSNull null]]){
-            NSString *created=[str objectForKey:@"grade"];
-            [openTimeLabel setText:created];
+        if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
+            NSString *logo=[dic objectForKey:@"logo"];
+            if (![logo isEqualToString:@""]) {
+                [porjectCell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+                
+            }
+            
         }
-        
-        
-        //21 × 29
-        UIImageView *orderImageView=[[UIImageView alloc]initWithFrame:CGRectMake(proejctImageView.frame.size.width+proejctImageView.frame.origin.x+width/45.7,
-                                                                                 freeImageView.frame.size.height+freeImageView.frame.origin.y+width/32, width/30, width/22)];
-        [orderImageView setImage:[UIImage imageNamed:@"order_image"]];
-        [subview addSubview:orderImageView];
-        
-        UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(orderImageView.frame.size.width+orderImageView.frame.origin.x+width/64, orderImageView.frame.origin.y, width/35.5*6, width/20)];
-        [imageTitle setTextAlignment:NSTextAlignmentLeft];
-        [imageTitle setFont:[UIFont systemFontOfSize:width/35.5]];
-        [imageTitle setTextColor:[UIColor grayColor]];
-        [imageTitle setText:[NSString stringWithFormat:@"已报%@人",[str objectForKey:@"ordernum"]]];
-        [subview addSubview:imageTitle];
-        
-        UILabel *distanceLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/35.5-width/35.5*6,imageTitle.frame.origin.y, width/35.5*6, width/20)];
-        [distanceLabel setText:@"2km"];
-        [distanceLabel setTextAlignment:NSTextAlignmentRight];
-        [distanceLabel setTextColor:[UIColor colorWithRed:165.f/255.f green:165.f/255.f blue:165.f/255.f alpha:1.0]];
-        [distanceLabel setFont:[UIFont systemFontOfSize:width/35.5]];
-        [subview addSubview:distanceLabel];
-        
-        if ([str objectForKey:@"lng"] && ![[str objectForKey:@"lng"] isEqual:[NSNull null]] &&
-            [str objectForKey:@"lat"] && ![[str objectForKey:@"lat"] isEqual:[NSNull null]]) {
-            NSNumber *lng=[str objectForKey:@"lng"];
-            NSNumber *lat=[str objectForKey:@"lat"];
-            //转化为坐标
-            
-            //    NSLog(@"得到的纬度:%f",neloct.coordinate.latitude);
-            //    NSLog(@"经度:%f",neloct.coordinate.longitude);
-            NSNumber *at=[NSNumber numberWithDouble:neloct.coordinate.latitude];
-            NSNumber *ng=[NSNumber numberWithDouble:neloct.coordinate.longitude];
-            NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
-            [stand setObject: at forKey:@"lttt"];
-            [stand setObject:ng forKey:@"nggg"];
-            //            + (CLLocationCoordinate2D)bd09ToGcj02:(CLLocationCoordinate2D)location;
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude=[lat floatValue];
-            
-            coordinate.longitude=[lng floatValue];
-            
-            CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-            //               CLLocationCoordinate2D wgsPt = newLocation.coordinate;
-            //
-            //               CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
-            
-            
-            double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
-            
-            //    NSLog(@"---------\n\n\n lng:%f\n %f ",coords3.longitude,coords3.latitude);
+        if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
+            NSNumber *range=[dic objectForKey:@"range"];
+            double distance=[range doubleValue];
             if(distance>0.0){
                 if (distance/1000>1) {
-                    [distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
                 }else if (distance/1000<1 && distance/1000>0.5){
-                    [distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
                     
                 }else if (distance/1000<0.5){
-                    [distanceLabel setText:@"<500m"];
+                    [porjectCell.distanceLabel setText:@"<500m"];
                 }
             }
         }
-        
-        
-        [cell addSubview:subview];
-        frame.size.height=width/3.6+width/16;
-        [subview setFrame:frame];
-        cell.frame = frame;
+        if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
+            NSString *grade=[dic objectForKey:@"grade"];
+            [porjectCell.ageLabel setText:[NSString stringWithFormat:@"适应年龄段:%@",grade]];
+        }
+        if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
+            NSNumber *btime=[dic objectForKey:@"btime"];
+            NSInteger myInteger = [btime integerValue];
+            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateStyle:NSDateFormatterMediumStyle];
+            [formatter setTimeStyle:NSDateFormatterShortStyle];
+            [formatter setDateFormat:@"MM月 dd HH:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+            [formatter setTimeZone:timeZone];
+            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+            [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+        }
         
     }else if ([localArray count]>0 && tableView.tag==1) {
         
@@ -1325,8 +1213,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [[CCLocationManager shareLocation] getLocationCoordinate:^(CLLocationCoordinate2D locationCorrrdinate) {
             
             NSLog(@"%f %f",locationCorrrdinate.latitude,locationCorrrdinate.longitude);
-            [wself setLabelText:[NSString stringWithFormat:@"%f %f",locationCorrrdinate.latitude,locationCorrrdinate.longitude]];
-            
+            AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            myDelegate.latitude=locationCorrrdinate.latitude;
+            myDelegate.longitude=locationCorrrdinate.longitude;
+            localLat= myDelegate.latitude;
+            localLng=myDelegate.longitude;
         }];
     }
     
@@ -1334,37 +1225,30 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 -(void)getCity
 {
-    //   __block __weak MainViewController *wself = self;
-    
     if (IS_IOS8) {
         
         [[CCLocationManager shareLocation]getCity:^(NSString *cityString) {
             NSLog(@"当前城市:%@",cityString);
-            // [wself setLabelText:cityString];
             [cityLabel setText:cityString];
-        }];
-        
-    }
-    
-}
-
-
--(void)getAllInfo
-{
-    __block NSString *string;
-    __block __weak MainViewController *wself = self;
-    
-    
-    if (IS_IOS8) {
-        
-        [[CCLocationManager shareLocation]getLocationCoordinate:^(CLLocationCoordinate2D locationCorrrdinate) {
-            string = [NSString stringWithFormat:@"%f %f",locationCorrrdinate.latitude,locationCorrrdinate.longitude];
-        } withAddress:^(NSString *addressString) {
-            NSLog(@"%@",addressString);
-            string = [NSString stringWithFormat:@"%@\n%@",string,addressString];
-            [wself setLabelText:string];
+            NSString *path = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"txt"];
+            NSError *error = [[NSError alloc]init];
+            NSString *_localData = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+            NSRange rang  = [_localData rangeOfString:cityString];
+            NSLog(@"%@",NSStringFromRange(rang));
+            NSString *str=[_localData substringWithRange:NSMakeRange(rang.location-10, rang.length+18)];
+            NSLog(@"%@",str);
+            NSLog(@"%lu",(unsigned long)[str length]);
+            NSArray *dataArray=[str componentsSeparatedByString:NSLocalizedString(@",", nil)];
+            NSString *provStr=[dataArray objectAtIndex:2];
+            NSString *cityStr=[dataArray objectAtIndex:0];
+            cityStr=[cityStr substringWithRange:NSMakeRange(1, cityStr.length-2)];
+            NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
+            NSNumber *_selectCityId=[formater numberFromString:cityStr];
+            AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            myDelegate.localNumber=_selectCityId;
             
         }];
+        
     }
     
 }
@@ -1373,12 +1257,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
-        
         NSNumber *ar=[stand objectForKey:@"lttt"];
         NSNumber *ngg=[stand objectForKey:@"nggg"];
         if (ar==NULL&&ngg==NULL) {
-            ar=[NSNumber numberWithDouble:29.5];
-            ngg=[NSNumber numberWithDouble:106.5];
+            ar=[NSNumber numberWithDouble:localLat];
+            ngg=[NSNumber numberWithDouble:localLng];
         }
         if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
             ar=[NSNumber numberWithDouble:29.5];
@@ -1422,12 +1305,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
-        
         NSNumber *ar=[stand objectForKey:@"lttt"];
         NSNumber *ngg=[stand objectForKey:@"nggg"];
         if (ar==NULL&&ngg==NULL) {
-            ar=[NSNumber numberWithDouble:29.5];
-            ngg=[NSNumber numberWithDouble:106.5];
+            ar=[NSNumber numberWithDouble:localLat];
+            ngg=[NSNumber numberWithDouble:localLng];
         }
         if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
             ar=[NSNumber numberWithDouble:29.5];
@@ -1475,8 +1357,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         NSNumber *ar=[stand objectForKey:@"lttt"];
         NSNumber *ngg=[stand objectForKey:@"nggg"];
         if (ar==NULL&&ngg==NULL) {
-            ar=[NSNumber numberWithDouble:29.5];
-            ngg=[NSNumber numberWithDouble:106.5];
+            ar=[NSNumber numberWithDouble:localLat];
+            ngg=[NSNumber numberWithDouble:localLng];
         }
         if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
             ar=[NSNumber numberWithDouble:29.5];
@@ -1524,8 +1406,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         NSNumber *ar=[stand objectForKey:@"lttt"];
         NSNumber *ngg=[stand objectForKey:@"nggg"];
         if (ar==NULL&&ngg==NULL) {
-            ar=[NSNumber numberWithDouble:29.5];
-            ngg=[NSNumber numberWithDouble:106.5];
+            ar=[NSNumber numberWithDouble:localLat];
+            ngg=[NSNumber numberWithDouble:localLng];
         }
         if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
             ar=[NSNumber numberWithDouble:29.5];

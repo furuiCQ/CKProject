@@ -26,56 +26,37 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="free_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="KsP-vK-r83">
                         <rect key="frame" x="162" y="59" width="12" height="17"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="zan_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="aex-XE-xfB">
-                        <rect key="frame" x="199" y="59" width="15" height="14"/>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="免费" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hEJ-86-7xj" userLabel="free_label">
                         <rect key="frame" x="176" y="56" width="24" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" red="0.24313725490196078" green="0.80784313725490198" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="18-30岁" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Hc-NE-c2O" userLabel="age">
-                        <rect key="frame" x="217" y="57" width="50" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                        <color key="textColor" red="0.58056891025641022" green="0.58056891025641022" blue="0.58056891025641022" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="clock.png" translatesAutoresizingMaskIntoConstraints="NO" id="NEa-F1-TEr">
-                        <rect key="frame" x="161" y="84" width="15" height="15"/>
-                    </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="07月18-20 20:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="da6-sK-eXb" userLabel="time">
-                        <rect key="frame" x="178" y="81" width="94" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="order_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="PTR-aa-eic">
-                        <rect key="frame" x="275" y="84" width="10" height="15"/>
+                        <rect key="frame" x="161" y="84" width="10" height="15"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="452" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YUy-FC-hMi" userLabel="order_numb">
-                        <rect key="frame" x="287" y="81" width="25" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="1500m" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IfQ-cW-pxN" userLabel="distance">
-                        <rect key="frame" x="270" y="57" width="42" height="21"/>
+                        <rect key="frame" x="257" y="83" width="55" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                         <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zag-hY-TRA">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=" 中国 中国 中国 中国 中国 中国 中国 中国 中国 中国" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zag-hY-TRA">
                         <rect key="frame" x="161" y="8" width="151" height="33"/>
-                        <attributedString key="attributedText">
-                            <fragment content=" 中国 中国 中国 中国 中国 中国 中国 中国 中国 中国">
-                                <attributes>
-                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <font key="NSFont" size="14" name="HelveticaNeue"/>
-                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                </attributes>
-                            </fragment>
-                        </attributedString>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="18-30岁" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Hc-NE-c2O" userLabel="age">
+                        <rect key="frame" x="208" y="56" width="104" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <color key="textColor" red="0.58056891025641022" green="0.58056891025641022" blue="0.58056891025641022" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="452" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YUy-FC-hMi" userLabel="order_numb">
+                        <rect key="frame" x="175" y="81" width="74" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
@@ -87,17 +68,14 @@
                 <outlet property="freeLabel" destination="hEJ-86-7xj" id="MFE-2E-5oT"/>
                 <outlet property="logoImage" destination="7tw-My-v25" id="dRW-rG-cWA"/>
                 <outlet property="orderNumbLabel" destination="YUy-FC-hMi" id="COs-S8-Fr4"/>
-                <outlet property="timeLabel" destination="da6-sK-eXb" id="elK-SU-zrc"/>
                 <outlet property="titleLabel" destination="Zag-hY-TRA" id="OKw-o6-Ief"/>
             </connections>
-            <point key="canvasLocation" x="-22" y="280"/>
+            <point key="canvasLocation" x="-22" y="279.75"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="5.jpg" width="550" height="802"/>
-        <image name="clock.png" width="15" height="15"/>
         <image name="free_image.png" width="12" height="17"/>
         <image name="order_image.png" width="10" height="14"/>
-        <image name="zan_logo.png" width="16" height="14"/>
     </resources>
 </document>

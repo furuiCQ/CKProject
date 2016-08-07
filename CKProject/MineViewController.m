@@ -21,6 +21,7 @@
     NSMutableArray *dataArray;
     YiSlideMenu *slideMenu;
     UIAlertView *alertView;
+    UIImageView *nodataImageView;
 }
 
 @end
@@ -230,7 +231,7 @@
     [tableHeaderView addSubview:headerView];
     [self initSwitchBtn:headerView];
     //241 × 200
-    UIImageView *nodataImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/2-width/5.2, headerView.frame.size.height+headerView.frame.origin.y+2, width/2.6, width/3.2)];
+    nodataImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/2-width/5.2, headerView.frame.size.height+headerView.frame.origin.y+2, width/2.6, width/3.2)];
     [nodataImageView setImage:[UIImage imageNamed:@"mine_nodata"]];
     [tableHeaderView addSubview:nodataImageView];
     
@@ -364,6 +365,7 @@
     [userTelLabel setText:[NSString stringWithFormat:@"%@", httpModel.tel]];
     [slideMenu setUserPhone:[NSString stringWithFormat:@"%@", httpModel.tel]];
     [self getUserInfo];
+    [self getData];
 }
 -(void)changeLogoutStauets{
     
@@ -595,7 +597,59 @@
     if(cell==nil){
         cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
     }
-    // [cell.titleLabel setText:@"123"];
+    OrderRecordCell *porjectCell=(OrderRecordCell *)cell;
+    NSDictionary *dic=[dataArray objectAtIndex:[indexPath row]];
+    if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
+        NSString *title=[dic objectForKey:@"title"];
+        [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
+    }
+    if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
+        NSString *people=[dic objectForKey:@"people"];
+        NSString *str=[NSString stringWithFormat:@"已报%@人",people];
+        [porjectCell.orderNumbLabel setText:str];
+        
+    }
+    
+    if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
+        NSString *logo=[dic objectForKey:@"logo"];
+        if (![logo isEqualToString:@""]) {
+            [porjectCell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+            
+        }
+        
+    }
+    if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
+        NSNumber *range=[dic objectForKey:@"range"];
+        double distance=[range doubleValue];
+        if(distance>0.0){
+            if (distance/1000>1) {
+                [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
+            }else if (distance/1000<1 && distance/1000>0.5){
+                [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
+                
+            }else if (distance/1000<0.5){
+                [porjectCell.distanceLabel setText:@"<500m"];
+            }
+        }
+    }
+    if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
+        NSString *grade=[dic objectForKey:@"grade"];
+        [porjectCell.ageLabel setText:[NSString stringWithFormat:@"适应年龄段:%@",grade]];
+    }
+    if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
+        NSNumber *btime=[dic objectForKey:@"btime"];
+        NSInteger myInteger = [btime integerValue];
+        NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterMediumStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
+        [formatter setDateFormat:@"MM月 dd HH:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+        NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+        [formatter setTimeZone:timeZone];
+        NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+        NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+        [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+    }
+
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -645,6 +699,39 @@
         }
     }
 }
+//预约列表
+-(void)getData{
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        AppDelegate *myDelegate=( AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    dataArray=[(NSMutableArray *)model.result mutableCopy];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [nodataImageView setHidden:YES];
+                        [mainTableView reloadData];
+                        
+                    });
+                }else{
+                    
+                }
+                [ProgressHUD dismiss];
+                
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                [ProgressHUD dismiss];
+                
+            }
+        }];
+    });
+    
+}
+
+
 //－－－－－－－－－－－－－－－－－－－－－－－－
 -(void)logout{
     AppDelegate *myDelegate = ( AppDelegate *)[[UIApplication sharedApplication] delegate];

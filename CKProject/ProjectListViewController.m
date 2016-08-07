@@ -24,6 +24,9 @@
 #import "OrderRecordCell.h"
 #import "SortProjectListTableCell.h"
 #import "CustomLabel.h"
+#import "YiRefreshHeader.h"
+#import "YiRefreshFooter.h"
+
 @interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,TreeTableCellDelegate,CLLocationManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
     NSArray *local1Array;
     NSArray *local2Array;
@@ -75,6 +78,10 @@
     UICollectionView * cityCollectView;
     UICollectionView * gradCollectView;
     
+    int pageNumb;
+    BOOL _isLoading;
+    YiRefreshHeader *refreshHeader;
+    YiRefreshFooter *refreshFooter;
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
 @end
@@ -108,7 +115,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     if (tableArray==nil) {
-        tableArray = [[NSArray alloc]init];
+        tableArray = [[NSMutableArray alloc]init];
     }
     local1Array = [[NSArray alloc]init];
     local2Array = [[NSArray alloc]init];
@@ -123,7 +130,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     cid=[NSNumber numberWithInt:0];
     gid=[NSNumber numberWithInt:0];
     pid=[[NSNumber alloc]initWithInt:-1];
-    
+    pageNumb=1;
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     localLat=myDelegate.latitude;
     localLng=myDelegate.longitude;
@@ -133,7 +140,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     selectCity2String=@"";
     selectCity3String=@"";
     
-    //将这个试着写入下方打包成一个方法，解决初次进入问题
     [self initTitle];
     [self initSelectView];
     //shuju，
@@ -142,31 +148,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         [self tit];
     }
     if (std==2) {
-        [self jp];
-    }
-    else
-    {
+        [self searchData];
+    }else{
         [self getData];
     }
-    locationManager = [[CLLocationManager alloc] init];
-    //    定位的数据
-    locationManager.delegate = self;
-    
-    // 设置定位精度grayNearestTenMeters:精度10米
-    // kCLLocationAccuracyHundredMeters:精度100 米
-    // kCLLocationAccuracyKilometer:精度1000 米
-    // kCLLocationAccuracyThreeKilometers:精度3000米
-    // kCLLocationAccuracyBest:设备使用电池供电时候最高的精度
-    // kCLLocationAccuracyBestForNavigation:导航情况下最高精度，一般要有外接电源时才能使用
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
-    // distanceFilter是距离过滤器，为了减少对定位装置的轮询次数，位置的改变不会每次都去通知委托，而是在移动了足够的距离时才通知委托程序
-    // 它的单位是米，这里设置为至少移动1000再通知委托处理更新;
-    locationManager.distanceFilter = 1000.0f; // 如果设为kCLDistanceFilterNone，则每秒更新一次;
-    [locationManager startUpdatingLocation];
-    
-    
-    // Do any additional setup after loading the view, typically from a nib.
 }
 
 -(void)tit
@@ -183,23 +168,24 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
         
         NSDictionary *db=[obj objectForKey:@"result"];
-        tableArray=[db objectForKey:@"lesson"];
+        NSArray *dataArray=[db objectForKey:@"lesson"];
+        [tableArray addObjectsFromArray:dataArray];
         
         NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",tableArray);
         [projectTableView reloadData];
         [ProgressHUD dismiss];
     }];
-    
-    
-    
 }
--(void)jp
+-(void)searchData
 {
     [ProgressHUD show:@"加载中..."];
     
     NSUserDefaults *src=[NSUserDefaults standardUserDefaults];
     NSString *bt1=[src objectForKey:@"kp"];
-    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?date=%@",bt1];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?date=%@&lng=%f&lat=%f&status=2&pn=%d&pc=10",bt1,
+                   myDelegate.longitude,myDelegate.latitude,pageNumb];
+   // http://211.149.190.90/api/searchs?date=2016-08-07&lng=106.674072&lat=29.510639&status=2&pn=1&pc=10
     NSURL *url=[NSURL URLWithString:str];
     NSURLRequest *request=[NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
@@ -207,66 +193,21 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
         
         NSDictionary *db=[obj objectForKey:@"result"];
-        tableArray=[db objectForKey:@"lesson"];
+        NSArray *dataArray=[db objectForKey:@"lesson"];
+        [tableArray addObjectsFromArray:dataArray];
         
         NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",tableArray);
         [projectTableView reloadData];
+        [refreshFooter endRefreshing];
+        _isLoading=NO;
         [ProgressHUD dismiss];
         
     }];
-    
-    
-    
 }
-
-
-
-
-
 -(void)setstd:(int)num
 {
     std=num;
 }
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
-{
-    neloct=newLocation;
-    //    // 获取经纬度
-    //    NSLog(@"纬度:%f",newLocation.coordinate.latitude);
-    //    NSLog(@"经度:%f",newLocation.coordinate.longitude);
-    
-    
-    
-    
-    
-    [manager stopUpdatingLocation];
-    //
-    //    CLLocationCoordinate2D wgsPt = newLocation.coordinate;
-    
-    //    CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
-    
-    //    //当使用模拟器定位在中国大陆以外地区，计算GCJ-02坐标还是返回WGS-84
-    //    _pt1Lable.text = [NSString stringWithFormat:@"WGS-84(国际标准坐标)：\n %f,%f",wgsPt.latitude,wgsPt.longitude];
-    //    _pt2Lable.text = [NSString stringWithFormat:@"GCJ-02(中国国测局坐标(火星坐标))：\n %f,%f",gcjPt.latitude,gcjPt.longitude];
-    //    _pt3Lable.text = [NSString stringWithFormat:@"BD-09(百度坐标)：\n %f,%f",bdPt.latitude,bdPt.longitude];
-    // 停止位置更新
-    
-}
--(CLGeocoder *)geocoder
-{
-    if (_geocoder==nil) {
-        _geocoder=[[CLGeocoder alloc]init];
-    }
-    return _geocoder;
-}
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"error:%@",error);
-}
-//-(void)setHasData:(NSArray *)array{
-//    tableArray=array;
-//}
 //初始化顶部菜单栏
 -(void)initTitle{
     //设置顶部栏
@@ -825,6 +766,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
               forControlEvents:UIControlEventValueChanged];
     [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
     [projectTableView addSubview:_refreshControl];
+    
+    refreshFooter=[[YiRefreshFooter alloc] init];
+    refreshFooter.scrollView=projectTableView;
+    [refreshFooter footer];
+    refreshFooter.beginRefreshingBlock=^(){
+    };
 }
 
 -(void) refreshView:(UIRefreshControl *)refresh
@@ -925,15 +872,9 @@ static NSString *identy = @"OrderRecordCell";
         }
         if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
             NSString *people=[dic objectForKey:@"people"];
-            //     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-            NSString *str=[NSString stringWithFormat:@"%@",people];
+            NSString *str=[NSString stringWithFormat:@"已报%@人",people];
             [porjectCell.orderNumbLabel setText:str];
-            
-            //            CGRect frame=porjectCell.listItem.joinLabel.frame;
-            //            CGSize strSize=[str sizeWithFont:porjectCell.listItem.joinLabel.font maxSize:CGSizeMake(width, 0)];
-            //            frame.size.width= strSize.width;
-            //            [porjectCell.listItem.joinLabel setFrame:frame];
-            
+          
         }
         
         if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
@@ -944,75 +885,9 @@ static NSString *identy = @"OrderRecordCell";
             }
             
         }
-        if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
-            [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
-            NSNumber *lng=[dic objectForKey:@"lng"];
-            NSNumber *lat=[dic objectForKey:@"lat"];
-            
-            //得到当前坐标
-            
-            //转化为坐标
-            
-            //            NSLog(@"纬度:%f",neloct.coordinate.latitude);
-            //            NSLog(@"经度:%f",neloct.coordinate.longitude);
-            //            + (CLLocationCoordinate2D)bd09ToGcj02:(CLLocationCoordinate2D)location;
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude=[lat floatValue];
-            
-            coordinate.longitude=[lng floatValue];
-            
-            CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-            //               CLLocationCoordinate2D wgsPt = newLocation.coordinate;
-            //
-            //               CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
-            //1.获得输入的经纬度
-            lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
-            lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-            NSString *longtitudeText=lg;
-            NSString *latitudeText=lt;;
-            
-            CLLocationDegrees latitude=[latitudeText doubleValue];
-            CLLocationDegrees longitude=[longtitudeText doubleValue];
-            
-            CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
-            //2.反地理编码
-            [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-                if (error||placemarks.count==0) {
-                    bi.text=@"你的地址没找到，可能在月球上";
-                }else//编码成功
-                {
-                    //显示最前面的地标信息
-                    NSLog(@"111111:%@",placemarks);
-                    CLPlacemark *firstPlacemark=[placemarks firstObject];
-                    
-                    NSLog(@"2222-%@",firstPlacemark.name);
-                    //经纬度
-                    for (CLPlacemark *place in placemarks) {
-                        NSDictionary *location =[place addressDictionary];
-                        NSLog(@"国家：%@",[location objectForKey:@"Country"]);
-                        NSLog(@"城市：%@",[location objectForKey:@"State"]);
-                        NSLog(@"区：%@",[location objectForKey:@"SubLocality"]);
-                        
-                        NSLog(@"位置：%@", place.name);
-                        NSLog(@"国家：%@", place.country);
-                        NSLog(@"城市：%@", place.locality);
-                        NSLog(@"区：%@", place.subLocality);
-                        bi.text=place.subLocality;
-                        NSLog(@"街道：%@", place.thoroughfare);
-                        NSLog(@"子街道：%@", place.subThoroughfare);
-                        
-                    }
-                    //------
-                    //                    CLLocationDegrees latitude=firstPlacemark.location.coordinate.latitude;
-                    //                    CLLocationDegrees longitude=firstPlacemark.location.coordinate.longitude;
-                    //                    lt=[NSString stringWithFormat:@"%.2f",latitude];
-                    //                    lg=[NSString stringWithFormat:@"%.2f",longitude];
-                }
-            }];
-            
-            
-            double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
-            NSLog(@"---------\n\n\n lng:%f\n  ",distance);
+        if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
+            NSNumber *range=[dic objectForKey:@"range"];
+            double distance=[range doubleValue];
             if(distance>0.0){
                 if (distance/1000>1) {
                     [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
@@ -1023,50 +898,10 @@ static NSString *identy = @"OrderRecordCell";
                     [porjectCell.distanceLabel setText:@"<500m"];
                 }
             }
-            
-            //            //NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-            //            double distance=[RJUtil LantitudeLongitudeDist:[lng doubleValue] other_Lat:[lat doubleValue] self_Lon:localLng self_Lat:localLat];
-            //            NSLog(@"distance:%f",distance);
-            //            if(distance>0.0){
-            //                if (distance/1000>1) {
-            //                    [porjectCell.listItem.typelabel3 setText:[NSString stringWithFormat:@"约%dkm",(int)distance/1000]];
-            //
-            //                }else if (distance/1000<1 && distance/1000>0.5){
-            //                    [porjectCell.listItem.typelabel3 setText:@"<1000m"];
-            //                }else if (distance/1000<0.5){
-            //                    [porjectCell.listItem.typelabel3 setText:@"<500m"];
-            //                }
-            //            }
-            
         }
-        
-        
-        if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
-            NSString *addr=[dic objectForKey:@"addr"];
-            //            CGRect frame=porjectCell.listItem.addressLabel.frame;
-            //            CGSize strSize=[addr sizeWithFont:porjectCell.listItem.addressLabel.font maxSize:CGSizeMake(width, 0)];
-            //            frame.origin.x=porjectCell.listItem.joinLabel.frame.size.width+porjectCell.listItem.joinLabel.frame.origin.x+width/40;
-            //            frame.size.width=width/3;
-            //            [porjectCell.listItem.addressLabel setFrame:frame];
-            // [porjectCell.listItem.addressLabel setText:[NSString stringWithFormat:@"%@",addr]];
-        }
-        //        if ([dic objectForKey:@"pname"] && ![[dic objectForKey:@"pname"] isEqual:[NSNull null]]) {
-        //            NSString *pname=[dic objectForKey:@"pname"];
-        //            CGRect frame=porjectCell.listItem.typelabel.frame;
-        //            CGSize strSize=[pname sizeWithFont:porjectCell.listItem.typelabel.font maxSize:CGSizeMake(width, 0)];
-        //            frame.size.width= strSize.width+frame.size.height/2;
-        //            [porjectCell.listItem.typelabel setFrame:frame];
-        ////            [porjectCell.listItem.typelabel setText:[NSString stringWithFormat:@"%@",pname]];
-        //        }
         if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
             NSString *grade=[dic objectForKey:@"grade"];
-            //width/40
-            //            CGRect frame=porjectCell.listItem.typelabel1.frame;
-            //            CGSize strSize=[grade sizeWithFont:porjectCell.listItem.typelabel1.font maxSize:CGSizeMake(width, 0)];
-            //            frame.origin.x=porjectCell.listItem.typelabel.frame.size.width+porjectCell.listItem.typelabel.frame.origin.x+width/40;
-            //            frame.size.width=strSize.width+frame.size.height/2;
-            //            [porjectCell.listItem.typelabel1 setFrame:frame];
-            [porjectCell.ageLabel setText:[NSString stringWithFormat:@"%@",grade]];
+            [porjectCell.ageLabel setText:[NSString stringWithFormat:@"适应年龄段:%@",grade]];
         }
         if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
             NSNumber *btime=[dic objectForKey:@"btime"];
@@ -1614,6 +1449,7 @@ static NSString *identy = @"OrderRecordCell";
     if (projectID!=0 && projectID!=nil) {
         NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
         NSNumber *Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+        
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             //            withlng:[NSNumber numberWithDouble:106.5] withlat:[NSNumber numberWithDouble:29.5] withnums:[NSNumber numberWithInt:2]
@@ -1678,7 +1514,7 @@ static NSString *identy = @"OrderRecordCell";
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     NSDictionary *result=model.result;
                     
-                    tableArray=(NSArray *)[result objectForKey:@"lesson"];
+                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1916,6 +1752,36 @@ static NSString *identy = @"OrderRecordCell";
 //两个cell之间的间距（同一行的cell的间距）
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
     return 0;
+}
+
+// scrollview滚动的时候调用
+- (void)scrollViewDidScroll:(UIScrollView *)uiScrollView
+{
+    if (!_isLoading && uiScrollView.tag==0) { // 判断是否处于刷新状态，刷新中就不执行
+        float height = uiScrollView.contentSize.height > projectTableView.frame.size.height?projectTableView.frame.size.height : uiScrollView.contentSize.height;
+        if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
+            
+            // 调用上拉刷新方法
+            [refreshFooter beginRefreshing];
+            NSLog(@"上拉加载");
+            pageNumb++;
+            _isLoading=true;
+            if(std==2){
+                [self searchData];
+            }
+            
+        }
+        if (- uiScrollView.contentOffset.y / projectTableView.frame.size.height > 0.2) {
+            
+            // 调用下拉刷新方法
+            NSLog(@"刷新");
+            [refreshHeader beginRefreshing];
+            _isLoading=true;
+        }
+        
+    }
+    
+    
 }
 
 @end

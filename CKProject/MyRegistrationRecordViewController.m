@@ -301,24 +301,6 @@
                 long long int date2 = (long long int)[timeStamp3 intValue];
                 NSDate *eDate = [NSDate dateWithTimeIntervalSince1970:date2];
                 NSTimeInterval eTimer = [eDate timeIntervalSinceNow];
-//                
-//                if(eTimer<0){
-//                    //已结束
-//                    [cell.statue2Label setText:@"已结束"];
-//                    [cell.statue2Label setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-//                    cell.statue2Label.layer.borderColor=[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0].CGColor;
-//                }else if(bTimer<0 && eTimer>0){
-//                    //已开课
-//                    [cell.statue2Label setText:@"已开课"];
-//                    [cell.statue2Label setTextColor:[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0]];
-//                    cell.statue2Label.layer.borderColor=[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0].CGColor;
-//                }else{
-//                    //未开课
-//                    [cell.statue2Label setText:@"未开课"];
-//                    [cell.statue2Label setTextColor:[UIColor colorWithRed:245.f/255.f green:7.f/255.f blue:35.f/255.f alpha:1.0]];
-//                    cell.statue2Label.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
-//                    
-//                }
                 
             }
         }
