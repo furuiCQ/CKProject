@@ -479,8 +479,8 @@
         case 2://发帖
         {
             
-            MyInvitationViewController *myInvitationViewController=[[MyInvitationViewController alloc]init];
-            [self presentViewController: myInvitationViewController animated:YES completion:nil];
+            MyCollectViewController *myCollectViewController=[[MyCollectViewController alloc]init];
+            [self presentViewController: myCollectViewController animated:YES completion:nil];
         }
             break;
             
@@ -505,8 +505,8 @@
         [self presentViewController:loginViewController animated:YES completion:nil];
         return;
     }
-    MyInvitationViewController *myInvitationViewController=[[MyInvitationViewController alloc]init];
-    [self presentViewController: myInvitationViewController animated:YES completion:nil];
+    MyCollectViewController *myCollectViewController=[[MyCollectViewController alloc]init];
+    [self presentViewController: myCollectViewController animated:YES completion:nil];
 }
 -(void)setData:(NSDictionary *)dic{
     

@@ -89,6 +89,10 @@
     UIView *allShowView;
     ProjectTimePicker *picker;
     NSDictionary *timeData;
+    
+    UIImageView *collectImageView;
+    UILabel *collectNorLabel;
+    BOOL selected;
 }
 @end
 
@@ -98,7 +102,6 @@
 @synthesize searchLabel;
 @synthesize msgLabel;
 @synthesize bottomHeight;
-@synthesize collectLabel;
 @synthesize projectId;
 @synthesize logoImageView;
 @synthesize instituteNameLabel;
@@ -328,12 +331,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     //4.9  251 139 130
     UIControl *getCollectControl=[[UIControl alloc]initWithFrame:CGRectMake(orderControl.frame.size.width+orderControl.frame.origin.x,height-width/6.2, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2, width/6.2)];
     [getCollectControl setBackgroundColor:[UIColor colorWithRed:251.f/255.f green:139.f/255.f blue:130.f/255.f alpha:1.0]];
+    [getCollectControl addTarget:self action:@selector(collectOnClick) forControlEvents:UIControlEventTouchUpInside];
     //37px高度：35px
-    UIImageView *collectImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/32, getCollectControl.frame.size.height/2-width/18.2/2, width/17.3, width/18.2)];
+    collectImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/32, getCollectControl.frame.size.height/2-width/18.2/2, width/17.3, width/18.2)];
+    
     [collectImageView setImage:[UIImage imageNamed:@"start_white"]];
     [getCollectControl addSubview:collectImageView];
     
-    UILabel *collectNorLabel=[[UILabel alloc]initWithFrame:CGRectMake(collectImageView.frame.size.width+collectImageView.frame.origin.x+width/100, 0, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2-(collectImageView.frame.size.width+collectImageView.frame.origin.x+width/100), width/6.2)];
+    collectNorLabel=[[UILabel alloc]initWithFrame:CGRectMake(collectImageView.frame.size.width+collectImageView.frame.origin.x+width/100, 0, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2-(collectImageView.frame.size.width+collectImageView.frame.origin.x+width/100), width/6.2)];
     [collectNorLabel setText:@"收藏课程"];
     [collectNorLabel setFont:[UIFont systemFontOfSize:width/20]];
     [collectNorLabel setTextColor:[UIColor whiteColor]];
@@ -345,17 +350,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     //
     UIControl *getOrderControl=[[UIControl alloc]initWithFrame:CGRectMake(getCollectControl.frame.size.width+getCollectControl.frame.origin.x,height-width/6.2, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2, width/6.2)];
     [getOrderControl setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:80.f/255.f blue:82.f/255.f alpha:1.0]];
-    
-    
+    [getOrderControl addTarget:self action:@selector(openTimeSelectPicker) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *orderNorLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, (width-orderControl.frame.size.width-orderControl.frame.origin.x)/2, width/6.2)];
     [orderNorLabel setText:@"立即预约"];
     [orderNorLabel setFont:[UIFont systemFontOfSize:width/20]];
     [orderNorLabel setTextColor:[UIColor whiteColor]];
     [orderNorLabel setTextAlignment:NSTextAlignmentCenter];
-    [orderNorLabel setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *orderGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openTimeSelectPicker)];
-    [orderNorLabel addGestureRecognizer:orderGesture];
     [getOrderControl addSubview:orderNorLabel];
     [self.view addSubview:getOrderControl];
     
@@ -482,7 +483,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 
 -(void)setSelect{
-    collectLabel.selected=true;
+    selected=true;
 }
 
 -(void)goOrderViewController{
@@ -550,16 +551,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
-    collectLabel.selected=!collectLabel.selected;//每次点击都改变按钮的状态
+    selected=!selected;//每次点击都改变按钮的状态
     
-    if(collectLabel.selected){
+    if(selected){
         [self collectionProject];
     }else{
         [self deleteProject];
     }
-    
-    //在此实现不打勾时的方法
-    
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -622,6 +620,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                          
                                          dispatch_async(dispatch_get_main_queue(), ^{
                                              
+                                             [collectNorLabel setText:@"已收藏"];
                                              
                                          });
                                          
@@ -676,11 +675,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
                                 NSString *longtitudeText=lg;
                                 NSString *latitudeText=lt;;
-                                
-                                CLLocationDegrees latitude=[latitudeText doubleValue];
-                                CLLocationDegrees longitude=[longtitudeText doubleValue];
-                                
-                                CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
                                 
                                 double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
                                 if(distance>0.0){
@@ -816,9 +810,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
                                 NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
                                 if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
-                                    collectLabel.selected=false;
+                                   selected=false;
+                                    [collectNorLabel setText:@"收藏课程"];
                                 }else{
-                                    collectLabel.selected=true;
+                                    selected=true;
+                                    [collectNorLabel setText:@"已收藏"];
                                 }
                             }
                             if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
@@ -896,9 +892,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
                                 NSString *longtitudeText=lg;
                                 NSString *latitudeText=lt;;
-                                
-                                CLLocationDegrees latitude=[latitudeText doubleValue];
-                                CLLocationDegrees longitude=[longtitudeText doubleValue];
                                 
                                 double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
                                 if(distance>0.0){
@@ -1040,14 +1033,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
                                 [projectAddLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]]];
                             }
-                            if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
-                                NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
-                                if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
-                                    collectLabel.selected=false;
-                                }else{
-                                    collectLabel.selected=true;
-                                }
-                            }
+//                            if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
+//                                NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
+//                                if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
+//                                   selected=false;
+//                                }else{
+//                                    collectLabel.selected=true;
+//                                }
+//                            }
                             if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
                                 phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
                                 [phoneLabel setText:[NSString stringWithFormat:@"联系电话:%@",phone]];

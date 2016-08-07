@@ -519,9 +519,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [allSortLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
 }
 -(void)subAddress:(NSString *)selectString{
-    
-    
-    
     int width=self.view.frame.size.width;
     int hegiht=self.view.frame.size.height;
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
@@ -548,19 +545,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
     [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
     [titleView addSubview:titleLabel];
-    
-    
-    //    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
-    //    [confirmLabel setText:@"确定"];
-    //    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
-    //    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    //    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
-    //    [confirmLabel setUserInteractionEnabled:YES];
-    //    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout)];
-    //    [confirmLabel addGestureRecognizer:confrimGesture];
-    //    [titleView addSubview:confirmLabel];
-    //
-    
     
     subAddTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
                                                                  width/10+2+width/40+width/46,
@@ -645,7 +629,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, endAddTableView.frame.size.width, width/29*3)];//创建一个视图（v_headerView）
     UILabel *textlabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21, width/29, endAddTableView.frame.size.width, width/29)];
-    //    headerView.backgroundColor=[UIColor whiteColor]
     [textlabel setText:selectString];
     [textlabel setFont:[UIFont systemFontOfSize:width/29]];
     [textlabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
@@ -666,7 +649,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         [endAddTableView scrollToRowAtIndexPath:idxPath
                                atScrollPosition:UITableViewScrollPositionTop
                                        animated:NO];
-        
     }
     
     
@@ -844,8 +826,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
             break;
     }
     return 0;
-    
-    // return 3;
 }
 static NSString *identy = @"OrderRecordCell";
 
@@ -861,10 +841,6 @@ static NSString *identy = @"OrderRecordCell";
             cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
         }
         OrderRecordCell *porjectCell=(OrderRecordCell *)cell;
-        
-        
-        //int width=self.view.frame.size.width;
-        // cell=[[ProjectTableCell alloc]initWithStyle:UITableViewCellStyleDefault //reuseIdentifier:nil];
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
