@@ -16,10 +16,10 @@
     UILabel *timeLabel;
     UITextView *contentTextView;
     UILabel *keyTextField;
-    UIDatePicker *uiPatePicker;
     UILabel *sendAssessLabel;
     //
     NSArray *ary;
+    NSDate *selectDate;
 }
 
 @end
@@ -40,6 +40,7 @@
     UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [imageView setImage:[UIImage imageNamed:@"login_bg"]];
     [self.view addSubview:imageView];
+    selectDate=[NSDate date];
     [ProgressHUD show:@"加载中..."];
     [self initTitle];
     [self initContentView];
@@ -106,6 +107,7 @@
     
 }
 - (void)getSelectData:(NSDate *)date{
+    selectDate=date;
     [self tzshuj:date];
 }
 //值发生改变时
@@ -200,56 +202,16 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];//设置输出的格式
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     NSString *data=keyTextField.text;
-    NSDate *selected = [uiPatePicker date];
+    NSDate *selected = selectDate;
     NSString *date=[dateFormatter stringFromDate:selected];
     NSUserDefaults *src=[NSUserDefaults standardUserDefaults];
     [src setObject:date forKey:@"kp"];
-    //    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    //    dispatch_async(queue, ^{
-    //        [HttpHelper searchData:aid withData:data withDate:date  success:^(HttpModel *model){
-    //
-    //            dispatch_async(dispatch_get_main_queue(), ^{
-    //                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-    //                    NSDictionary *result=model.result;
-    //
-    //                    ary=(NSArray *)[result objectForKey:@"lesson"];
-    //                    NSLog(@"tabl----%@",ary);
-    //                    NSUserDefaults *skp=[NSUserDefaults standardUserDefaults];
-    //                    [skp setObject:ary forKey:@"ary"];
-    //
-    //
-    //                    dispatch_async(dispatch_get_main_queue(), ^{
-    //
-    ////                        [projectTableView reloadData];
-    //                    });
-    //
-    //
-    //                }else{
-    //
-    //                }
-    //                [ProgressHUD dismiss];
-    //
-    //
-    //
-    //
-    //            });
-    //        }failure:^(NSError *error){
-    //            if (error.userInfo!=nil) {
-    //                NSLog(@"%@",error.userInfo);
-    //
-    //            }
-    //            [ProgressHUD dismiss];
-    //
-    //        }];
-    //
-    //
-    //    });
-    
+   
     ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-    [projectListViewController setTitleName:@"搜索结果"];
     [projectListViewController setstd:2];
+    [projectListViewController setTitleName:[NSString stringWithFormat:@"%@课程",date]];
     [self presentViewController:projectListViewController animated:YES completion:nil];
-    //    [projectListViewController searchData:data withTime:date withAid:aid];
+  //  [projectListViewController searchData:data withTime:date withAid:aid];
     
     
 }
@@ -259,7 +221,6 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     NSDate *selected = [NSDate date];
     NSString *date1=[dateFormatter stringFromDate:selected];
-    NSLog(@"1111111---\n\n%@  ppppp", date1);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [HttpHelper getLessonCount:[NSNumber numberWithInt:500000] andstrd:date1 success:^(HttpModel *model){
@@ -279,7 +240,7 @@
                         
                         NSMutableAttributedString *str=[[NSMutableAttributedString alloc] initWithString:data];
                         
-                        [str addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:NSMakeRange(6,[[NSString stringWithFormat:@"%@",number] length])];
+                        [str addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:1.0 green:99.f/255.f blue:99.f/255.f alpha:1.0] range:NSMakeRange(6,[[NSString stringWithFormat:@"%@",number] length])];
                         [str addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:self.view.frame.size.width/19] range:NSMakeRange(6,[[NSString stringWithFormat:@"%@",number] length])];
                         
                         [keyTextField setAttributedText:str];

@@ -105,7 +105,6 @@
 static NSString * const DEFAULT_LOCAL_AID = @"500000";
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ProgressHUD show:@"加载中..."];
     
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     if (tableArray==nil) {
@@ -128,55 +127,27 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     localLat=myDelegate.latitude;
     localLng=myDelegate.longitude;
-    //    localLat=29.6515600000;
-    //    localLng=106.5849920000;
-    //百度地图：29.6515600000,106.5849920000
-    //    NSUserDefaults *st=[NSUserDefaults standardUserDefaults];
-    //    tableArray=[st objectForKey:@"kay"]
     
     addressString=@"";
     selectCity1String=@"";
     selectCity2String=@"";
     selectCity3String=@"";
     
-    //        NSUserDefaults *sd=[NSUserDefaults standardUserDefaults];
-    //        NSNumber *artid=[sd objectForKey:@"nid"];
-    //        NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?instid=%@",artid];
-    //        NSURL *url=[NSURL URLWithString:str];
-    //        NSURLRequest *request=[NSURLRequest requestWithURL:url];
-    //        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-    //
-    //            id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-    //
-    //            NSDictionary *db=[obj objectForKey:@"result"];
-    //            tableArray=[db objectForKey:@"lesson"];
-    //
-    //            NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",tableArray);
-    //            [self initTitle];
-    //            [self initSelectView];
-    //            [self initTableView];
-    //            [self getData];
-    //            [self getAllType];
-    //        }];
     //将这个试着写入下方打包成一个方法，解决初次进入问题
     [self initTitle];
     [self initSelectView];
     //shuju，
     [self initTableView];
     if (std==1) {
-        NSLog(@"123");
         [self tit];
     }
     if (std==2) {
-        NSLog(@"234");
         [self jp];
     }
     else
     {
-        NSLog(@"345----------");
         [self getData];
     }
-    // [self getAllType];
     locationManager = [[CLLocationManager alloc] init];
     //    定位的数据
     locationManager.delegate = self;
@@ -200,6 +171,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
 
 -(void)tit
 {
+    [ProgressHUD show:@"加载中..."];
+    
     NSUserDefaults *sd=[NSUserDefaults standardUserDefaults];
     NSNumber *artid=[sd objectForKey:@"nid"];
     NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?instid=%@",artid];
@@ -214,6 +187,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         
         NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",tableArray);
         [projectTableView reloadData];
+        [ProgressHUD dismiss];
     }];
     
     
@@ -221,6 +195,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
 }
 -(void)jp
 {
+    [ProgressHUD show:@"加载中..."];
+    
     NSUserDefaults *src=[NSUserDefaults standardUserDefaults];
     NSString *bt1=[src objectForKey:@"kp"];
     NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?date=%@",bt1];
@@ -235,6 +211,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         
         NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",tableArray);
         [projectTableView reloadData];
+        [ProgressHUD dismiss];
+        
     }];
     
     
@@ -247,9 +225,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
 
 -(void)setstd:(int)num
 {
-    
     std=num;
-    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
@@ -313,7 +289,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
     [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
-    [searchLabel setText:@""];
+    [searchLabel setText:titleName];
     
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
@@ -375,7 +351,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [siftCotrol addSubview:siftLabel];
     [siftCotrol addSubview:siftImageView];
     [marginview addSubview:siftCotrol];
- }
+}
 -(void)topOnClick:(id)sender{
     DemotionControl *btn=(DemotionControl *)sender;
     
@@ -562,7 +538,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [self getAllType];
     [self getAllGrade];
     [self getAllCity];
-
+    
     firstLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
     firstLayout.width=view.frame.size.width;
     firstLayout.contentView=view;
@@ -1603,7 +1579,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                       // [addTableView reloadData];
+                        // [addTableView reloadData];
                         [cityCollectView reloadData];
                     });
                     
@@ -1633,6 +1609,7 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getData{
+    [ProgressHUD show:@"加载中..."];
     
     if (projectID!=0 && projectID!=nil) {
         NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
@@ -1680,7 +1657,7 @@ static NSString *identy = @"OrderRecordCell";
     }
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
-    // NSLog(@"点点点");
+    [ProgressHUD dismiss];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

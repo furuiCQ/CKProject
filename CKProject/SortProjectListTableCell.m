@@ -34,20 +34,21 @@
         CGRect rx = [ UIScreen mainScreen ].bounds;
         int width=rx.size.width;
         CGRect frame=self.frame;
-        logoImage=[[UIImageView alloc]initWithFrame:CGRectMake(width/21.3, width/40, width/11.4, width/11.4)];
+        logoImage=[[UIImageView alloc]initWithFrame:CGRectMake(width/20, width/25, width/20, width/16)];
         [logoImage setImage:[UIImage imageNamed:@"zaojiao_logo"]];
+        logoImage.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:logoImage];
         
         titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImage.frame.size.width+logoImage.frame.origin.x+width/18.2, width/21, width/2, width/22.8)];
         [titleLabel setText:@"早教"];
-        [titleLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+        [titleLabel setFont:[UIFont systemFontOfSize:width/30]];
         [titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
         [self addSubview:titleLabel];
       
         goImage=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/21.3-width/32, width/20, width/32, width/53)];
         [goImage setImage:[UIImage imageNamed:@"arrow"]];
         [goImage setUserInteractionEnabled:YES];
-        [self addSubview:goImage];
+         [self addSubview:goImage];
         
         moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(goImage.frame.origin.x-goImage.frame.size.width-width/26.7*2, width/21, width/26.7*2, width/26.7)];
         [moreLabel setText:@"全部"];

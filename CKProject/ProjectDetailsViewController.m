@@ -31,7 +31,7 @@
 #import "DayModel.h"
 #import "JZLocationConverter.h"
 #import "RJUtil.h"
-@interface ProjectDetailsViewController ()<UIScrollViewDelegate>{
+@interface ProjectDetailsViewController ()<UIScrollViewDelegate,PickerDelegate>{
     NSString *phone;
     UILabel *registerLabel;
     NSDate *aDate;
@@ -87,6 +87,8 @@
     UINib *nib;
     UILabel *distanceLabel;
     UIView *allShowView;
+    ProjectTimePicker *picker;
+    NSDictionary *timeData;
 }
 @end
 
@@ -121,12 +123,11 @@
 static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 - (void)viewDidLoad {
-    
-    
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     [ProgressHUD show:@"加载中..."];
     selectWeekArry=[[NSMutableArray alloc]init];
+    timeData=[[NSDictionary alloc]init];
     [self initTitle];
     [self initContent];
     [self initBootomView];
@@ -352,748 +353,25 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [orderNorLabel setFont:[UIFont systemFontOfSize:width/20]];
     [orderNorLabel setTextColor:[UIColor whiteColor]];
     [orderNorLabel setTextAlignment:NSTextAlignmentCenter];
-    
+    [orderNorLabel setUserInteractionEnabled:YES];
+    UITapGestureRecognizer *orderGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openTimeSelectPicker)];
+    [orderNorLabel addGestureRecognizer:orderGesture];
     [getOrderControl addSubview:orderNorLabel];
     [self.view addSubview:getOrderControl];
     
 }
 -(void)initTimePicker{
-    selectWeekArry=nowWeekArray;
-    int width=self.view.frame.size.width;
-    timeSelectPicker=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width, width*10/6)];
-    [timeSelectPicker setBackgroundColor:[UIColor whiteColor]];
-    UIImageView *closeButton=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/24.6-width/14.2, width/42.7, width/14.2, width/14.2)];
-    [closeButton setImage:[UIImage imageNamed:@"close_btn"]];
-    [closeButton setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *closegesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closePopView:)];
-    [closeButton addGestureRecognizer:closegesture];
-    [timeSelectPicker addSubview:closeButton];
+    picker=[[ProjectTimePicker alloc]initWithFrame:CGRectMake(0, self.view.frame.size.width/1.8, self.view.frame.size.width, self.view.frame.size.height-self.view.frame.size.width/1.8)];
+    [picker setBackgroundColor:[UIColor clearColor]];
+    picker.pickerDelegate=self;
+    [picker setData:timeData];
+    [picker initView:nil];
     
-    //星期
-    weekLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, width/18.3, width/22.8*2, width/22.8)];
-    [weekLabel setText:@"本周"];
-    [weekLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    [weekLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [weekLabel setUserInteractionEnabled:YES];
-    [weekLabel setTag:0];
-    UITapGestureRecognizer *weekLabelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectWeekClick:)];
-    [weekLabel addGestureRecognizer:weekLabelGesture];
-    [timeSelectPicker addSubview:weekLabel];
-    
-    nextWeekLabel=[[UILabel alloc]initWithFrame:CGRectMake(weekLabel.frame.size.width+weekLabel.frame.origin.x+width/11.4, width/18.3, width/22.8*2, width/22.8)];
-    [nextWeekLabel setText:@"下周"];
-    [nextWeekLabel setTextColor:[UIColor colorWithRed:153.f/255.f green:153.f/255.f blue:153.f/255.f alpha:1.0]];
-    [nextWeekLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [nextWeekLabel setUserInteractionEnabled:YES];
-    [nextWeekLabel setTag:1];
-    UITapGestureRecognizer *nextWeekLabelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectWeekClick:)];
-    [nextWeekLabel addGestureRecognizer:nextWeekLabelGesture];
-    [timeSelectPicker addSubview:nextWeekLabel];
-    
-    //初始化参数
-    weekId=[NSNumber numberWithInt:0];
-    weekNum=[NSNumber numberWithInt:0];
-    
-    weekItemArray=[[NSMutableArray alloc]init];
-    NSArray *weekArray=[NSArray arrayWithObjects:@"天",@"一",@"二",@"三",@"四",@"五",@"六",nil];
-    for (int i=0; i<[weekArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+weekLabel.frame.size.height+weekLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/9, width/14.5)];
-        NSString *str=[weekArray objectAtIndex:i];
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        DayModel *dayModel=(DayModel *)[nowWeekArray objectAtIndex:i];
-        
-        NSLog(@"---------------\n\n\n daymodel:%@:%@:%@:%@",dayModel.day,dayModel.am,dayModel.pm,dayModel.night);
-        
-        if ([dayModel.am isEqualToString:@""] && [dayModel.pm isEqualToString:@""] &&[dayModel.night isEqualToString:@""] ) {
-            [item setTextColor:[UIColor whiteColor]];
-            [item setFocused:NO];
-        }else{
-            [item setTextColor:[UIColor blackColor]];
-            [item setFocused:YES];
-            
-        }
-        if (i==0) {
-            [item setSelected:YES];
-            [item setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-        }else{
-            [item setSelected:NO];
-            [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        }
-        [item setTag:i];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(weekOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [weekItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    //上午
-    DayModel *dayModel=(DayModel *)[nowWeekArray objectAtIndex:0];
-    
-    NSArray *amArray = [dayModel.am componentsSeparatedByString:@","];
-    NSMutableArray *mutAmArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[amArray count]; i++) {
-        if (![[amArray objectAtIndex:i] isEqualToString:@""]) {
-            [mutAmArray addObject:[amArray objectAtIndex:i]];
-        }
-    }
-    amArray=[mutAmArray copy];
-    //    item = amItemArray.count > 0 ? (TimeSelectItem *)[amItemArray lastObject]: (TimeSelectItem *)amLabel;
-    //    TimeSelectItem *item=(TimeSelectItem *)[weekItemArray lastObject];
-    TimeSelectItem *item=weekItemArray.count>0?(TimeSelectItem *)[weekItemArray lastObject]:(TimeSelectItem *)weekLabel;
-    amLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
-    [amLabel setText:@"上午"];
-    [amLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-    [amLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [timeSelectPicker addSubview:amLabel];
-    amItemArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[amArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+amLabel.frame.size.height+amLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/8, width/14.5)];
-        NSString *str=[amArray objectAtIndex:i];
-        
-        
-        NSLog(@"---------------------\n\n\n%@",str);
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        [item setTextColor:[UIColor blackColor]];
-        [item setTag:i];
-        [item setFocused:YES];
-        [item setSelected:NO];
-        [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(amOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [amItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    
-    NSArray *pmArray = [dayModel.pm componentsSeparatedByString:@","];
-    mutAmArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[pmArray count]; i++) {
-        if (![[pmArray objectAtIndex:i] isEqualToString:@""]) {
-            [mutAmArray addObject:[pmArray objectAtIndex:i]];
-        }
-    }
-    pmArray=[mutAmArray copy];
-    //下午
-#warning  修改位置 1
-    item = amItemArray.count > 0 ? (TimeSelectItem *)[amItemArray lastObject]: (TimeSelectItem *)amLabel;
-    pmLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
-    [pmLabel setText:@"下午"];
-    [pmLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-    [pmLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [timeSelectPicker addSubview:pmLabel];
-    pmItemArray=[[NSMutableArray alloc]init];
-    
-    for (int i=0; i<[pmArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+pmLabel.frame.size.height+pmLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/8, width/14.5)];
-        NSString *str=[pmArray objectAtIndex:i];
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        [item setTextColor:[UIColor blackColor]];
-        [item setTag:i];
-        [item setFocused:YES];
-        [item setSelected:NO];
-        [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(pmOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [pmItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    //晚上
-    NSArray *nightArray = [dayModel.night componentsSeparatedByString:@","];
-    mutAmArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[nightArray count]; i++) {
-        if (![[nightArray objectAtIndex:i] isEqualToString:@""]) {
-            [mutAmArray addObject:[nightArray objectAtIndex:i]];
-        }
-    }
-    nightArray=[mutAmArray copy];
-    
-#warning  修改位置 2
-    item = pmItemArray.count > 0 ? (TimeSelectItem *)[pmItemArray lastObject]: (TimeSelectItem *)pmLabel;
-    nightLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
-    [nightLabel setText:@"晚上"];
-    [nightLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-    [nightLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [timeSelectPicker addSubview:nightLabel];
-    nightItemArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[nightArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+nightLabel.frame.size.height+nightLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/8, width/14.5)];
-        NSString *str=[nightArray objectAtIndex:i];
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        if (true) {
-            [item setTextColor:[UIColor whiteColor]];
-        }else{
-            [item setTextColor:[UIColor blackColor]];
-        }
-        if (true) {
-            
-        }else{
-            
-        }
-        [item setTag:i];
-        [item setFocused:YES];
-        [item setSelected:NO];
-        [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(nightOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [nightItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    //确定按钮
-    if ([nightItemArray count]>0) {
-        //       item = pmItemArray.count > 0 ? (TimeSelectItem *)[pmItemArray lastObject]: (TimeSelectItem *)pmLabel;
-        item=(TimeSelectItem *)[nightItemArray lastObject];
-        confirm=[[UILabel alloc]initWithFrame:CGRectMake(width/5.3, item.frame.size.height+item.frame.origin.y+width/14.5, width/1.6, width/9.1)];
-    }else{
-        item=(TimeSelectItem *)nightLabel;
-        confirm=[[UILabel alloc]initWithFrame:CGRectMake(width/5.3, nightLabel.frame.size.height+nightLabel.frame.origin.y+width/14.5, width/1.6, width/9.1)];
-    }
-    
-    [confirm setText:@"确定"];
-    [confirm setTextAlignment:NSTextAlignmentCenter];
-    [confirm setFont:[UIFont systemFontOfSize:width/21.3]];
-    [confirm setTextColor:[UIColor whiteColor]];
-    [confirm setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    confirm.layer.masksToBounds=YES;
-    confirm.layer.cornerRadius=width/40;
-    [confirm setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *cofirmGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(timePickerConfirm)];
-    [confirm addGestureRecognizer:cofirmGesture];
-    //    -------------------
-    [timeSelectPicker addSubview:confirm];
-    CGRect frame=timeSelectPicker.frame;
-    frame.size.height=600;
-    [timeSelectPicker setFrame:frame];
-    
-    
-    
-    
-    
-    
-    
-}
--(void)initWeekDay:(int)number{
-    for (int i=0; i<[weekItemArray count]; i++) {
-        TimeSelectItem *item=(TimeSelectItem *)[weekItemArray objectAtIndex:i];
-        [item removeFromSuperview];
-    }
-    [weekItemArray removeAllObjects];
-    
-    int width=self.view.frame.size.width;
-    NSArray *dataArray;
-    if (number==0) {
-        dataArray=[nowWeekArray copy];
-    }else{
-        dataArray=[nextWeekArray copy];
-    }
-    weekItemArray=[[NSMutableArray alloc]init];
-    NSArray *weekArray=[NSArray arrayWithObjects:@"日",@"一",@"二",@"三",@"四",@"五",@"六",nil];
-    for (int i=0; i<[weekArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+weekLabel.frame.size.height+weekLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/8, width/14.5)];
-        NSString *str=[weekArray objectAtIndex:i];
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        DayModel *dayModel=(DayModel *)[dataArray objectAtIndex:i];
-        if ([dayModel.am isEqualToString:@""] && [dayModel.pm isEqualToString:@""] &&[dayModel.night isEqualToString:@""] ) {
-            [item setTextColor:[UIColor whiteColor]];
-            [item setFocused:NO];
-        }else{
-            [item setTextColor:[UIColor blackColor]];
-            [item setFocused:YES];
-            
-        }
-        if (i==0) {
-            [item setSelected:YES];
-            [item setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-        }else{
-            [item setSelected:NO];
-            [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        }
-        [item setTag:i];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(weekOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [weekItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    [self initAmPmNightView:0];
-}
--(void)initAmPmNightView:(int)number{
-    for (int i=0; i<[amItemArray count]; i++) {
-        TimeSelectItem *item=(TimeSelectItem *)[amItemArray objectAtIndex:i];
-        [item removeFromSuperview];
-    }
-    [amItemArray removeAllObjects];
-    
-    for (int i=0; i<[pmItemArray count]; i++) {
-        TimeSelectItem *item=(TimeSelectItem *)[pmItemArray objectAtIndex:i];
-        [item removeFromSuperview];
-    }
-    [pmItemArray removeAllObjects];
-    
-    for (int i=0; i<[nightItemArray count]; i++) {
-        TimeSelectItem *item=(TimeSelectItem *)[nightItemArray objectAtIndex:i];
-        [item removeFromSuperview];
-    }
-    [nightItemArray removeAllObjects];
-    [confirm removeFromSuperview];
-    [amLabel removeFromSuperview];
-    [pmLabel removeFromSuperview];
-    [nightLabel removeFromSuperview];
-    
-    int width=self.view.frame.size.width;
-    //上午
-    DayModel *dayModel=[[DayModel alloc]init];
-    for (int i=0; i<[selectWeekArry count]; i++) {
-        DayModel *model=[selectWeekArry objectAtIndex:i];
-        if ([model.day intValue]==number) {
-            dayModel=model;
-        }
-    }
-    NSArray *amArray = [dayModel.am componentsSeparatedByString:@","];
-    NSMutableArray *mutAmArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[amArray count]; i++) {
-        if (![[amArray objectAtIndex:i] isEqualToString:@""]) {
-            [mutAmArray addObject:[amArray objectAtIndex:i]];
-        }
-    }
-    amArray=[mutAmArray copy];
-    TimeSelectItem *item=(TimeSelectItem *)[weekItemArray lastObject];
-    amLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
-    [amLabel setText:@"上午"];
-    [amLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-    [amLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [timeSelectPicker addSubview:amLabel];
-    amItemArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[amArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+amLabel.frame.size.height+amLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/8, width/14.5)];
-        NSString *str=[amArray objectAtIndex:i];
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        [item setTextColor:[UIColor blackColor]];
-        [item setTag:i];
-        [item setFocused:YES];
-        [item setSelected:NO];
-        [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(amOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [amItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    
-    NSArray *pmArray = [dayModel.pm componentsSeparatedByString:@","];
-    mutAmArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[pmArray count]; i++) {
-        if (![[pmArray objectAtIndex:i] isEqualToString:@""]) {
-            [mutAmArray addObject:[pmArray objectAtIndex:i]];
-        }
-    }
-    pmArray=[mutAmArray copy];
-    //下午
-    item = amItemArray.count > 0 ? (TimeSelectItem *)[amItemArray lastObject]: (TimeSelectItem *)amLabel;
-    //    item=(TimeSelectItem *)[amItemArray lastObject];
-    pmLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
-    [pmLabel setText:@"下午"];
-    [pmLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-    [pmLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [timeSelectPicker addSubview:pmLabel];
-    pmItemArray=[[NSMutableArray alloc]init];
-    
-    for (int i=0; i<[pmArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+pmLabel.frame.size.height+pmLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/8, width/14.5)];
-        NSString *str=[pmArray objectAtIndex:i];
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        [item setTextColor:[UIColor blackColor]];
-        [item setTag:i];
-        [item setFocused:YES];
-        [item setSelected:NO];
-        [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(pmOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [pmItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    //晚上
-    NSArray *nightArray = [dayModel.night componentsSeparatedByString:@","];
-    mutAmArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[nightArray count]; i++) {
-        if (![[nightArray objectAtIndex:i] isEqualToString:@""]) {
-            [mutAmArray addObject:[nightArray objectAtIndex:i]];
-        }
-    }
-    nightArray=[mutAmArray copy];
-    item = pmItemArray.count > 0 ? (TimeSelectItem *)[pmItemArray lastObject]: (TimeSelectItem *)pmLabel;
-    //    item=(TimeSelectItem *)[pmItemArray lastObject];
-    nightLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21.3, item.frame.origin.y+item.frame.size.height+width/32, width/22.8*2, width/22.8)];
-    [nightLabel setText:@"晚上"];
-    [nightLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-    [nightLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [timeSelectPicker addSubview:nightLabel];
-    nightItemArray=[[NSMutableArray alloc]init];
-    for (int i=0; i<[nightArray count]; i++) {
-        int paddingheight=width/35.5;//每组的高度
-        int paddingwidth=width/22.8;//item横向距离
-        float y=0;
-        float x=0;
-        x=width/21.3+width/8*(i%5)+paddingwidth*(i%5);
-        y=(paddingheight+width/14.5)*(i/5)+nightLabel.frame.size.height+nightLabel.frame.origin.y+width/22.8;
-        TimeSelectItem *item=[[TimeSelectItem alloc]initWithFrame:CGRectMake(x,y, width/8, width/14.5)];
-        NSString *str=[nightArray objectAtIndex:i];
-        [item setText:str];
-        [item setTextAlignment:NSTextAlignmentCenter];
-        [item setFont:[UIFont systemFontOfSize:width/26.7]];
-        if (true) {
-            [item setTextColor:[UIColor whiteColor]];
-        }else{
-            [item setTextColor:[UIColor blackColor]];
-        }
-        if (true) {
-            
-        }else{
-            
-        }
-        [item setTag:i];
-        [item setFocused:YES];
-        [item setSelected:NO];
-        [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-        item.layer.masksToBounds=YES;
-        item.layer.cornerRadius=width/80;
-        
-        [item setUserInteractionEnabled:YES];
-        UITapGestureRecognizer *weekGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(nightOnClick:)];
-        [item addGestureRecognizer:weekGesture];
-        [nightItemArray addObject:item];
-        [timeSelectPicker addSubview:item];
-    }
-    //确定按钮
-    if ([nightItemArray count]>0) {
-        item=(TimeSelectItem *)[nightItemArray lastObject];
-        confirm=[[UILabel alloc]initWithFrame:CGRectMake(width/5.3, item.frame.size.height+item.frame.origin.y+width/14.5, width/1.6, width/9.1)];
-    }else{
-        confirm=[[UILabel alloc]initWithFrame:CGRectMake(width/5.3, nightLabel.frame.size.height+nightLabel.frame.origin.y+width/14.5, width/1.6, width/9.1)];
-    }
-    [confirm setText:@"确定"];
-    [confirm setTextAlignment:NSTextAlignmentCenter];
-    [confirm setFont:[UIFont systemFontOfSize:width/21.3]];
-    [confirm setTextColor:[UIColor whiteColor]];
-    [confirm setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    confirm.layer.masksToBounds=YES;
-    confirm.layer.cornerRadius=width/40;
-    [confirm setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *cofirmGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(timePickerConfirm)];
-    [confirm addGestureRecognizer:cofirmGesture];
-    
-    [timeSelectPicker addSubview:confirm];
-    CGRect frame=timeSelectPicker.frame;
-    frame.size.height=600;
-    [timeSelectPicker setFrame:frame];
-    
-}
-
--(void)timePickerConfirm{
-    NSLog(@"timePickerConfirm");
-    NSString *str=@"";
-    if ([weekId isEqualToNumber:[NSNumber numberWithInt:0]]) {
-        str=[str stringByAppendingFormat:@"%@",@"本周"];
-    }else{
-        str=[str stringByAppendingFormat:@"%@",@"下周"];
-    }
-    NSArray *weekArray=[NSArray arrayWithObjects:@"日",@"一",@"二",@"三",@"四",@"五",@"六",nil];
-    str=[str stringByAppendingFormat:@"%@",[weekArray objectAtIndex:[weekNum intValue]]];
-    if (beginTime) {
-        str=[str stringByAppendingFormat:@"%@",beginTime];
-    }
-    [timeShowLabel setText:str];
-    NSLog(@"9999999999999999-%@",str);
-    [CustomPopView disMiss:timeSelectPicker];
-    
-}
-//选择本周还是下周
--(void)selectWeekClick:(UITapGestureRecognizer *)gesutre{
-    if (gesutre.view.tag==0) {
-        [weekLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-        [nextWeekLabel setTextColor:[UIColor colorWithRed:153.f/255.f green:153.f/255.f blue:153.f/255.f alpha:1.0]];
-    }else{
-        [nextWeekLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-        [weekLabel setTextColor:[UIColor colorWithRed:153.f/255.f green:153.f/255.f blue:153.f/255.f alpha:1.0]];
-    }
-    [self initWeekDay:(int)gesutre.view.tag];
-    if (gesutre.view.tag==0) {
-        selectWeekArry=nowWeekArray;
-    }else{
-        selectWeekArry=nextWeekArray;
-    }
-    weekId=[NSNumber numberWithInt:(int)gesutre.view.tag];
-    
-}
--(void)amOnClick:(UITapGestureRecognizer *)gesutre{
-    NSLog(@"amOnClick");
-    TimeSelectItem *item=(TimeSelectItem *)gesutre.view;
-    if (item.focused) {
-        item.selected=!item.selected;
-        if (item.selected) {
-            [item setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor whiteColor]];
-            beginTime=item.text;
-            for(int i=0;i<[amItemArray count];i++){
-                TimeSelectItem *subitem=[amItemArray objectAtIndex:i];
-                if (subitem.tag!=item.tag) {
-                    subitem.selected=NO;
-                    [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                    if(subitem.focused){
-                        [subitem setTextColor:[UIColor blackColor]];
-                    }else{
-                        [subitem setTextColor:[UIColor whiteColor]];
-                    }
-                    
-                }
-            }
-            for(int i=0;i<[nightItemArray count];i++){
-                TimeSelectItem *subitem=[nightItemArray objectAtIndex:i];
-                subitem.selected=NO;
-                [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                if(subitem.focused){
-                    [subitem setTextColor:[UIColor blackColor]];
-                }else{
-                    [subitem setTextColor:[UIColor whiteColor]];
-                }
-                
-            }
-            for(int i=0;i<[pmItemArray count];i++){
-                TimeSelectItem *subitem=[pmItemArray objectAtIndex:i];
-                subitem.selected=NO;
-                [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                if(subitem.focused){
-                    [subitem setTextColor:[UIColor blackColor]];
-                }else{
-                    [subitem setTextColor:[UIColor whiteColor]];
-                }
-                
-                
-            }
-        }else{
-            [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor blackColor]];
-        }
-        
-    }
-}
--(void)nightOnClick:(UITapGestureRecognizer *)gesutre{
-    NSLog(@"nightOnClick");
-    TimeSelectItem *item=(TimeSelectItem *)gesutre.view;
-    if (item.focused) {
-        item.selected=!item.selected;
-        if (item.selected) {
-            beginTime=item.text;
-            [item setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor whiteColor]];
-            for(int i=0;i<[nightItemArray count];i++){
-                TimeSelectItem *subitem=[nightItemArray objectAtIndex:i];
-                if (subitem.tag!=item.tag) {
-                    subitem.selected=NO;
-                    [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                    if(subitem.focused){
-                        [subitem setTextColor:[UIColor blackColor]];
-                    }else{
-                        [subitem setTextColor:[UIColor whiteColor]];
-                    }
-                    
-                }
-            }
-            for(int i=0;i<[pmItemArray count];i++){
-                TimeSelectItem *subitem=[pmItemArray objectAtIndex:i];
-                subitem.selected=NO;
-                [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                if(subitem.focused){
-                    [subitem setTextColor:[UIColor blackColor]];
-                }else{
-                    [subitem setTextColor:[UIColor whiteColor]];
-                }
-                
-                
-            }
-            for(int i=0;i<[amItemArray count];i++){
-                TimeSelectItem *subitem=[amItemArray objectAtIndex:i];
-                subitem.selected=NO;
-                [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                if(subitem.focused){
-                    [subitem setTextColor:[UIColor blackColor]];
-                }else{
-                    [subitem setTextColor:[UIColor whiteColor]];
-                }
-            }
-            
-        }else{
-            [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor blackColor]];
-        }
-        
-    }
-}
--(void)pmOnClick:(UITapGestureRecognizer *)gesutre{
-    NSLog(@"pmOnClick");
-    TimeSelectItem *item=(TimeSelectItem *)gesutre.view;
-    if (item.focused) {
-        item.selected=!item.selected;
-        if (item.selected) {
-            beginTime=item.text;
-            [item setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor whiteColor]];
-            for(int i=0;i<[pmItemArray count];i++){
-                TimeSelectItem *subitem=[pmItemArray objectAtIndex:i];
-                if (subitem.tag!=item.tag) {
-                    subitem.selected=NO;
-                    [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                    if(subitem.focused){
-                        [subitem setTextColor:[UIColor blackColor]];
-                    }else{
-                        [subitem setTextColor:[UIColor whiteColor]];
-                    }
-                    
-                }
-            }
-            for(int i=0;i<[amItemArray count];i++){
-                TimeSelectItem *subitem=[amItemArray objectAtIndex:i];
-                subitem.selected=NO;
-                [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                if(subitem.focused){
-                    [subitem setTextColor:[UIColor blackColor]];
-                }else{
-                    [subitem setTextColor:[UIColor whiteColor]];
-                }
-            }
-            for(int i=0;i<[nightItemArray count];i++){
-                TimeSelectItem *subitem=[nightItemArray objectAtIndex:i];
-                subitem.selected=NO;
-                [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                if(subitem.focused){
-                    [subitem setTextColor:[UIColor blackColor]];
-                }else{
-                    [subitem setTextColor:[UIColor whiteColor]];
-                }
-                
-            }
-        }else{
-            [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor blackColor]];
-        }
-        
-    }
-}
--(void)weekOnClick:(UITapGestureRecognizer *)gesutre{
-    NSLog(@"weekOnClick");
-    TimeSelectItem *item=(TimeSelectItem *)gesutre.view;
-    if (item.focused) {
-        item.selected=!item.selected;
-        if (item.selected) {
-            [item setBackgroundColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor whiteColor]];
-            NSLog(@"--------数组：%@",weekItemArray);
-            for(int i=0;i<[weekItemArray count];i++){
-                TimeSelectItem *subitem=[weekItemArray objectAtIndex:i];
-                if (subitem.tag!=item.tag) {
-                    subitem.selected=NO;
-                    [subitem setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-                    if(subitem.focused){
-                        [subitem setTextColor:[UIColor blackColor]];
-                    }else{
-                        [subitem setTextColor:[UIColor whiteColor]];
-                    }
-                    
-                }
-            }
-            [self initAmPmNightView:(int)item.tag];
-            
-        }else{
-            [item setBackgroundColor:[UIColor colorWithRed:235.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
-            [item setTextColor:[UIColor blackColor]];
-        }
-        
-    }
-    weekNum=[NSNumber numberWithInt:(int)item.tag];
 }
 -(void)openTimeSelectPicker{
     
     [self initTimePicker];
-    [CustomPopView addViewAndShow:timeSelectPicker];
+    [CustomPopView addViewAndShow:picker];
 }
 -(void)closePopView:(UITapGestureRecognizer *)gesutre{
     [CustomPopView disMiss:gesutre.view.superview];
@@ -1749,34 +1027,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 [detailContentLabel setFrame:frame];
                                 frame=timeSelectView.frame;
                                 int width=self.view.frame.size.width;
-                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+width/3;
-                                //                                [timeSelectView setFrame:frame];
-                                //                                frame.origin.y=detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height+3;
-                                //                                frame.size.height=1;
-                                //                                [line setFrame:frame];
-                                //
-                                //                                //tit
-                                //
-                                //                                frame.origin.y=line.frame.origin.y+line.frame.size.height+3;
-                                //                                frame.size.height=width/22;
-                                //                                [tit setFrame:frame];
-                                //
-                                //                                //guize
-                                //                                neirong.text=[dic objectForKey:@"lesson_rule"];
-                                //                                CGRect frame1=neirong.frame;
-                                //                                frame1.origin.y=tit.frame.origin.y+tit.frame.size.height+width/20;
-                                //
-                                //                                frame1.size.height=neirong.contentSize.height;
-                                //                                [neirong setFrame:frame1];
-                                //
-                                //
-                                //
-                                //
-                                //
-                                //                                [registerLabel setFrame:CGRectMake(width/10, timeSelectView.frame.origin.y+timeSelectView.frame.size.height+width/9, width*8/10, width/9)];
-                                //                                frame=bottomView.frame;
-                                //                                frame.size.height=registerLabel.frame.size.height+registerLabel.frame.origin.y+width/5.7;
-                                //                                [bottomView setFrame:frame];
+                                
                                 frame=contentControl.frame;
                                 frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y+width/23.7;
                                 [contentControl setFrame:frame];
@@ -1795,11 +1046,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 NSString *timeStamp2 =[formater stringFromNumber:number];
                                 long long int date1 = (long long int)[timeStamp2 intValue];
                                 aDate = [NSDate dateWithTimeIntervalSince1970:date1];
-                                
-                                //                                [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
-                                //
-                                //                                [beginTimeLabel setText:[self getBeginTime:number]];
-                                
                                 
                             }
                             if([dic objectForKey:@"insttitle"]&& ![[dic objectForKey:@"insttitle"] isEqual:[NSNull null]]){
@@ -1821,19 +1067,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]){
                                 [projectNameLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"title"]]];
                             }
-                            //免费
-                            //                            int kis=[[dic objectForKey:@"price"]intValue];
-                            //                            if (kis==0) {
-                            //                                [lei setText:@"免费课"];
-                            //                                [lei setTextColor:[UIColor greenColor]];
-                            //                            }else
-                            //                            {
-                            //                                [lei setText:[NSString stringWithFormat:@"¥  %i",kis]];
-                            //                                [lei setFont:[UIFont systemFontOfSize:self.view.frame.size.width/22]];
-                            //                                lei.textColor=[UIColor orangeColor];
-                            //
-                            //                            }
-                            
                             
                             if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
                                 [projectAddLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]]];
@@ -1881,23 +1114,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     
 }
--(NSString *)getBeginTime:(NSNumber *)created{
-    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-    NSString *timeString=[f stringFromNumber:created];
-    
-    NSNumberFormatter *fomate=[[NSNumberFormatter alloc]init];
-    NSNumber *number=[fomate numberFromString:timeString];
-    NSInteger myInteger = [number integerValue];
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"YYYY-MM-dd"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
-    NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
-    [formatter setTimeZone:timeZone];
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
-    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-    return confromTimespStr;
-}
+
 //点击进入大图片
 -(void)imageGesture:(UITapGestureRecognizer *)gesutre{
     UIImageView *imageView=(UIImageView *)gesutre.view;
@@ -1907,37 +1124,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self presentViewController:scaleImgViewController animated:YES completion:nil];
     
 }
-- (void)timerFireMethod:(NSTimer*)theTimer
-{
-    NSTimeInterval  aTimer = [aDate timeIntervalSinceNow];
-    if (aTimer>0) {
-        int day=(int)(aTimer/3600/24);
-        NSString *d=[NSString stringWithFormat:@"%d",day];
-        int hour = (int)(aTimer - day*24*3600)/3600;
-        NSString *h=[NSString stringWithFormat:@"%d",hour];
-        
-        int minute = (int)(aTimer- day*3600*24 - hour*3600)/60;
-        NSString *m=[NSString stringWithFormat:@"%d",minute];
-        
-        int second = aTimer- day*3600*24 - hour*3600 - minute*60;
-        NSString *s=[NSString stringWithFormat:@"%d",second];
-        
-        
-        NSString *dural = [NSString stringWithFormat:@"离开课还剩%d天%d时%d分%d秒",day,hour,minute,second];
-        NSMutableAttributedString *str=[[NSMutableAttributedString alloc] initWithString:dural];
-        
-        [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(5,[d length])];
-        [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(5+[d length]+1,[h length])];
-        [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(5+[d length]+1+[h length]+1,[m length])];
-        [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(5+[d length]+1+[h length]+1+[m length]+1,[s length])];
-        
-        [countDownLabel setAttributedText:str];
-    }else{
-        [countDownLabel setText:@"已开课"];
-    }
-    
-}
-
 -(void)openAddress{
     //获取当前位置
     
@@ -2094,121 +1280,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     //                            }
     //                        }];
 }
--(void)testTimeList{
-    [self getTimeList:[NSNumber numberWithInt:0] andBTime:[NSNumber numberWithInt:0]];
-}
--(void)resolvTimeList:(NSDictionary *)result{
-    nowWeekArray=[[NSMutableArray alloc]init];
-    nextWeekArray=[[NSMutableArray alloc]init];
-    NSArray *now_week=[result objectForKey:@"now_week"];
-    NSLog(@"now_week:\n\n\n\n\n%@",now_week);
-    for(int j=0;j<7;j++){
-        DayModel *dayModel=[[DayModel alloc]init];
-        for (int i=0; i<[now_week count]; i++) {
-            NSDictionary *dic=[now_week objectAtIndex:i];
-            NSNumber *weeks=[dic objectForKey:@"weeks"];
-            dayModel.day=[NSNumber numberWithInt:j];
-            NSLog(@"291291291---%@",dayModel.pm);
-            if (dayModel.am==nil) {
-                dayModel.am=@"";
-            }
-            if (dayModel.pm==nil) {
-                dayModel.pm=@"";
-            }
-            if (dayModel.night==nil) {
-                dayModel.night=@"";
-            }
-            if([weeks intValue]==j){
-                NSNumber *man=[dic objectForKey:@"man"];
-                switch ([man intValue]) {
-                    case 1://上午
-                    {
-                        dayModel.am=[dayModel.am stringByAppendingFormat:@",%@",[dic objectForKey:@"begintime"]];
-                    }
-                        break;
-                    case 2://下午
-                    {
-                        dayModel.pm=[dayModel.pm stringByAppendingFormat:@",%@",[dic objectForKey:@"begintime"]];
-                        
-                    }
-                        break;
-                    case 3://晚上
-                    {
-                        dayModel.night=[dayModel.night stringByAppendingFormat:@",%@",[dic objectForKey:@"begintime"]];
-                        
-                    }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        [nowWeekArray addObject:dayModel];
-    }
-    
-    NSArray *next_week=[result objectForKey:@"next_week"];
-    for(int j=0;j<7;j++){
-        DayModel *dayModel=[[DayModel alloc]init];
-        
-        
-        
-        
-        
-        for (int i=0; i<[now_week count]; i++) {
-            NSDictionary *dic=[next_week objectAtIndex:i];
-            NSNumber *weeks=[dic objectForKey:@"weeks"];
-            dayModel.day=[NSNumber numberWithInt:j];
-            if (dayModel.am==nil) {
-                dayModel.am=@"";
-            }
-            if (dayModel.pm==nil) {
-                dayModel.pm=@"";
-            }
-            if (dayModel.night==nil) {
-                dayModel.night=@"";
-            }
-            if([weeks intValue]==j){
-                NSNumber *man=[dic objectForKey:@"man"];
-                switch ([man intValue]) {
-                    case 1://上午
-                    {
-                        dayModel.am=[dayModel.am stringByAppendingFormat:@",%@",[dic objectForKey:@"begintime"]];
-                    }
-                        break;
-                    case 2://下午
-                    {
-                        dayModel.pm=[dayModel.pm stringByAppendingFormat:@",%@",[dic objectForKey:@"begintime"]];
-                        
-                    }
-                        break;
-                    case 3://晚上
-                    {
-                        dayModel.night=[dayModel.night stringByAppendingFormat:@",%@",[dic objectForKey:@"begintime"]];
-                        
-                    }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        [nextWeekArray addObject:dayModel];
-    }
-    NSLog(@"nowWeekArray:%@",nowWeekArray);
-    NSLog(@"nextWeekArray:%@",nextWeekArray);
-    
-}
 -(void)getTimeList:(NSNumber *)lid andBTime:(NSNumber *)btime{
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     HttpModel *model=myDelegate.model;
     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-    if (model.aid==nil) {
-        model.aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
-    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
-        [HttpHelper getTimeList:lid withBeginTime:btime withAid:model.aid success:^(HttpModel *model){
+        [HttpHelper getTimeList:lid withBeginTime:btime withAid:[NSNumber numberWithInteger:500100] success:^(HttpModel *model){
             
             NSLog(@"%@",model.message);
             
@@ -2218,7 +1297,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                        [self resolvTimeList:model.result];
+                        timeData=model.result;
                     });
                     
                 }else{
@@ -2240,6 +1319,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     if (phone) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[@"tel:%@" stringByAppendingString:phone]]];
     }
+}
+-(void)orderClick:(NSNumber *)weekId withWeekNum:(NSNumber *)weeknum withBegintime:(NSString *)beginTime{
+    NSLog(@"orderClick");
+    [CustomPopView disMiss:picker];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {

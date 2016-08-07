@@ -1,0 +1,356 @@
+//
+//  ProjectTimePicker.m
+//  CKProject
+//
+//  Created by furui on 16/8/7.
+//  Copyright © 2016年 furui. All rights reserved.
+//
+
+#import "ProjectTimePicker.h"
+@interface ProjectTimePicker()
+{
+    NSArray *dataArray;
+    NSArray *weekDayArray;
+    NSArray *dayLabelArray;
+    NSMutableArray *weekDayBtnArray;
+    NSMutableArray *morningBtnArray;
+    NSMutableArray *afternoonBtnArray;
+    NSMutableArray *nightBtnArray;
+    NSMutableArray *timeLabelArray;
+    
+    UIColor *normalColor;
+    UIColor *lightColor;
+    UIColor *noColor;
+    
+    NSDictionary *nowdata;
+    
+    NSMutableDictionary *timeDictionary;
+    
+    UIView *weekSelectView;
+    UIView *nextWeekSelectView;
+    UIView *nowWeekView;
+    
+    NSNumber *weekId;
+    NSNumber *weekNum;
+    NSString *beginTime;
+    UILabel *nextTitleLabel;
+    UILabel *titleLabel;
+}
+@end
+
+@implementation ProjectTimePicker
+
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        //
+    }
+    return self;
+}
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    dataArray=[[NSArray alloc]initWithObjects:@"S",@"M",@"T",@"W",@"T",@"F",@"S", nil];
+    weekDayArray=[[NSArray alloc]initWithObjects:@"周日",@"周一",@"周二",@"周三",@"周四",@"周五",@"周六",nil];
+    dayLabelArray=[[NSArray alloc]initWithObjects:@"上午",@"下午",@"晚上",nil];
+    weekDayBtnArray=[[NSMutableArray alloc]init];
+    morningBtnArray=[[NSMutableArray alloc]init];
+    afternoonBtnArray=[[NSMutableArray alloc]init];
+    nightBtnArray=[[NSMutableArray alloc]init];
+    timeLabelArray=[[NSMutableArray alloc]init];
+    timeDictionary=[[NSMutableDictionary alloc]init];
+    normalColor=[UIColor blackColor];
+    lightColor=[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0];
+    noColor=[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0];
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        
+        
+    }
+    return self;
+}
+-(void)setData:(NSDictionary *)data{
+    nowdata=data;
+    weekId=[NSNumber numberWithInt:0];
+    weekNum=[NSNumber numberWithInt:0];
+    beginTime=@"";
+    NSArray *dic=[nowdata objectForKey:@"now_week"];
+    NSMutableArray *multArray0=[[NSMutableArray alloc]init];
+    NSMutableArray *multArray1=[[NSMutableArray alloc]init];
+    NSMutableArray *multArray2=[[NSMutableArray alloc]init];
+    NSMutableArray *multArray3=[[NSMutableArray alloc]init];
+    NSMutableArray *multArray4=[[NSMutableArray alloc]init];
+    NSMutableArray *multArray5=[[NSMutableArray alloc]init];
+    NSMutableArray *multArray6=[[NSMutableArray alloc]init];
+    for(NSDictionary *dmm in dic){
+        NSNumber *weeks=[dmm objectForKey:@"weeks"];
+        switch ([weeks intValue]) {
+            case 0:
+            {
+                [multArray0 addObject:dmm];
+            }
+                break;
+            case 1:
+            {
+                [multArray1 addObject:dmm];
+                
+            }
+                break;
+            case 2:
+            {
+                [multArray2 addObject:dmm];
+                
+            }
+                break;
+            case 3:
+            {
+                [multArray3 addObject:dmm];
+                
+            }
+                break;
+            case 4:
+            {
+                [multArray4 addObject:dmm];
+                
+            }
+                break;
+            case 5:
+            {
+                [multArray5 addObject:dmm];
+                
+            }
+                break;
+            case 6:
+            {
+                [multArray6 addObject:dmm];
+                
+            }
+                break;
+        }
+    }
+    [timeDictionary setObject:multArray0 forKey:@"0"];
+    [timeDictionary setObject:multArray1 forKey:@"1"];
+    [timeDictionary setObject:multArray2 forKey:@"2"];
+    [timeDictionary setObject:multArray3 forKey:@"3"];
+    [timeDictionary setObject:multArray4 forKey:@"4"];
+    [timeDictionary setObject:multArray5 forKey:@"5"];
+    [timeDictionary setObject:multArray6 forKey:@"6"];
+    
+    NSLog(@"setData",nowdata);
+}
+-(void)initView:(CGRect *)frame
+{
+    CGRect rx = [ UIScreen mainScreen ].bounds;
+    int screenWidth=rx.size.width;
+    int screenHeight=rx.size.height;
+    nextWeekSelectView=[[UIView alloc]initWithFrame:CGRectMake(screenWidth/14.8, 4, screenWidth-screenWidth/14.8*2, screenWidth/8)];
+    [nextWeekSelectView setBackgroundColor:[UIColor colorWithRed:133.f/255.f green:52.f/255.f blue:52.f/255.f alpha:1]];
+    [nextWeekSelectView.layer setCornerRadius:5];
+    [self addSubview:nextWeekSelectView];
+    //下周            大小：36px   37px
+    nextTitleLabel=[[UILabel alloc]initWithFrame:CGRectMake(nextWeekSelectView.frame.size.width/2-screenWidth/17.8, screenWidth/22, screenWidth/17.8*2, screenWidth/17.8)];
+    [nextTitleLabel setText:@"下周"];
+    [nextTitleLabel setFont:[UIFont systemFontOfSize:screenWidth/20]];
+    [nextTitleLabel setTextColor:[UIColor colorWithRed:133.f/255.f green:133.f/255.f blue:133.f/255.f alpha:1]];
+    [nextTitleLabel setTextAlignment:NSTextAlignmentCenter];
+    [nextWeekSelectView addSubview:nextTitleLabel];
+    
+    UIButton *nextLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 10, 32, 24)];
+    [nextLeftButton setImage:[UIImage imageNamed:@"icon_previous"] forState:UIControlStateNormal];
+    [nextLeftButton setAlpha:0.7];
+    [nextLeftButton addTarget:self action:@selector(setPreviousMonthDate) forControlEvents:UIControlEventTouchUpInside];
+    [nextWeekSelectView addSubview:nextLeftButton];
+    
+    UIButton *nextRightButton = [[UIButton alloc] initWithFrame:CGRectMake(nextWeekSelectView.frame.size.width - 37, 10, 32, 24)];
+    [nextRightButton setImage:[UIImage imageNamed:@"icon_next"] forState:UIControlStateNormal];
+    [nextRightButton setAlpha:0.7];
+    [nextRightButton addTarget:self action:@selector(setNextMonthDate) forControlEvents:UIControlEventTouchUpInside];
+    [nextWeekSelectView addSubview:nextRightButton];
+
+    //
+    nowWeekView=[[UIView alloc]initWithFrame:CGRectMake(screenWidth/32, screenWidth/8, screenWidth-screenWidth/16, screenWidth/0.9)];
+    [nowWeekView setBackgroundColor:[UIColor whiteColor]];
+    [self addSubview:nowWeekView];
+    
+    weekSelectView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, nowWeekView.frame.size.width, screenWidth/6.5)];
+    [weekSelectView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
+    [weekSelectView.layer setCornerRadius:5];
+    [nowWeekView addSubview:weekSelectView];
+    //本周            大小：36px   37px
+    titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(weekSelectView.frame.size.width/2-screenWidth/17.8, screenWidth/17.8, screenWidth/17.8*2, screenWidth/17.8)];
+    [titleLabel setText:@"本周"];
+    [titleLabel setFont:[UIFont systemFontOfSize:screenWidth/17.8]];
+    [titleLabel setTextColor:[UIColor whiteColor]];
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [weekSelectView addSubview:titleLabel];
+    
+    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 10, 32, 24)];
+    [leftButton setImage:[UIImage imageNamed:@"icon_previous"] forState:UIControlStateNormal];
+    [leftButton addTarget:self action:@selector(setPreviousMonthDate) forControlEvents:UIControlEventTouchUpInside];
+    [weekSelectView addSubview:leftButton];
+    
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(weekSelectView.frame.size.width - 37, 10, 32, 24)];
+    [rightButton setImage:[UIImage imageNamed:@"icon_next"] forState:UIControlStateNormal];
+    [rightButton addTarget:self action:@selector(setNextMonthDate) forControlEvents:UIControlEventTouchUpInside];
+    [weekSelectView addSubview:rightButton];
+    
+    //
+    for(int i=0;i<[dataArray count];i++){
+        NSString *str=[dataArray objectAtIndex:i];
+        UILabel *topTitle=[[UILabel alloc]initWithFrame:CGRectMake(weekSelectView.frame.size.width/7*i, weekSelectView.frame.size.height+weekSelectView.frame.origin.y+screenWidth/13.3, weekSelectView.frame.size.width/7, screenWidth/20)];
+        [topTitle setText:str];
+        [topTitle setTextAlignment:NSTextAlignmentCenter];
+        [topTitle setFont:[UIFont systemFontOfSize:screenWidth/20]];
+        [topTitle setTextColor:[UIColor colorWithRed:51.f/255.f green:54.f/255.f blue:59.f/255.f alpha:1.0]];
+        [nowWeekView addSubview:topTitle];
+    }
+    //66 65 间隔16
+    for(int i=0;i<[weekDayArray count];i++){
+        NSString *str=[weekDayArray objectAtIndex:i];
+        UILabel *topTitle=[[UILabel alloc]initWithFrame:CGRectMake(screenWidth/34*(i+1)+screenWidth/10*i, weekSelectView.frame.size.height+weekSelectView.frame.origin.y+screenWidth/6.4, screenWidth/10, screenWidth/10)];
+        [topTitle setText:str];
+        [topTitle setFont:[UIFont systemFontOfSize:screenWidth/26.7]];
+        [topTitle setTextAlignment:NSTextAlignmentCenter];
+        [topTitle setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
+        [topTitle.layer setCornerRadius:screenWidth/20];
+        if(i==0){
+            [topTitle.layer setMasksToBounds:YES];
+            [topTitle setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
+            [topTitle.layer setBorderColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0].CGColor];
+            [topTitle.layer setBorderWidth:2];
+        }else{
+            [topTitle.layer setMasksToBounds:NO];
+            [topTitle setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
+            [topTitle.layer setBorderWidth:0];
+        }
+        [topTitle setTag:i];
+        UITapGestureRecognizer *getsure=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(weekGesture:)];
+        [topTitle addGestureRecognizer:getsure];
+        [topTitle setUserInteractionEnabled:YES];
+        [nowWeekView addSubview:topTitle];
+        [weekDayBtnArray addObject:topTitle];
+    }
+    for(int i=0;i<[dayLabelArray count];i++){
+        //上午
+        UILabel *morningLabel=[[UILabel alloc]initWithFrame:CGRectMake(screenWidth/18.8,weekSelectView.frame.size.height+weekSelectView.frame.origin.y+screenWidth/3.4+screenWidth/8.5*i+screenWidth/23.7*i, screenWidth/23.7*2, screenWidth/23.7)];
+        [morningLabel setText:[dayLabelArray objectAtIndex:i]];
+        [morningLabel setTextAlignment:NSTextAlignmentLeft];
+        [morningLabel setFont:[UIFont systemFontOfSize:screenWidth/23.7]];
+        [nowWeekView addSubview:morningLabel];
+    }
+    [self initTimeView:@"0"];
+    //34px  54px    宽度：492px高度：80px
+    UILabel *orderProject=[[UILabel alloc]initWithFrame:CGRectMake(screenWidth/11.8, nowWeekView.frame.size.height-screenWidth/18.8-screenWidth/8, screenWidth/1.3, screenWidth/8)];
+    [orderProject setText:@"查看选定时间课程"];//大小：32px
+    [orderProject setTextColor:[UIColor whiteColor]];
+    [orderProject setTextAlignment:NSTextAlignmentCenter];
+    [orderProject setBackgroundColor:[UIColor colorWithRed:1 green:99.f/255.f blue:99.f/255.f alpha:1.0]];
+    UITapGestureRecognizer *getsure=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(orderGesture:)];
+    [orderProject addGestureRecognizer:getsure];
+    [orderProject setUserInteractionEnabled:YES];
+    [nowWeekView addSubview:orderProject];
+}
+-(void)initTimeView:(NSString *)time {
+    CGRect rx = [ UIScreen mainScreen ].bounds;
+    int screenWidth=rx.size.width;
+    //236   宽度：67px高度：19px  50
+    int tag=0;
+    NSMutableArray *array=[timeDictionary objectForKey:time];
+    for(int i=0;i<[array count];i++){
+        NSDictionary *dic=[array objectAtIndex:i];
+        NSLog(@"dic====>%@",[dic objectForKey:@"man"]);
+        int man=[(NSNumber *)[dic objectForKey:@"man"] intValue];
+        int paddingwidth=screenWidth/12.8;
+        int offset=screenWidth/22;
+        int x=offset+(screenWidth/9.5+paddingwidth)*i;
+        int y=screenWidth/2.7+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
+        switch (man) {
+            case 1:{
+                y=screenWidth/2.7+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
+            }
+                break;
+            case 2:{
+                if(tag==0){
+                    tag=i;
+                }
+                y=screenWidth/1.9+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
+                x=offset+(screenWidth/9.5+paddingwidth)*(i-tag);
+            }
+                break;
+            case 3:{
+                if(i-tag>=1){
+                    tag=i;
+                }
+                y=screenWidth/1.4+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
+                x=offset+(screenWidth/9.5+paddingwidth)*(i-tag);
+            }
+                break;
+        }
+        UILabel *timeLabel=[[UILabel alloc]initWithFrame:CGRectMake(x,y, screenWidth/9.5, screenWidth/33.6)];
+        [timeLabel setText:[dic objectForKey:@"begintime"]];
+        [timeLabel setTextAlignment:NSTextAlignmentLeft];
+        [timeLabel setTag:i];
+        [timeLabel setFont:[UIFont systemFontOfSize:screenWidth/26.7]];
+        UITapGestureRecognizer *getsure=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(timeGesture:)];
+        [timeLabel addGestureRecognizer:getsure];
+        [timeLabel setUserInteractionEnabled:YES];
+        [nowWeekView addSubview:timeLabel];
+        [timeLabelArray addObject:timeLabel];
+    }
+    
+}
+
+-(void)orderGesture:(UITapGestureRecognizer *)getsure{
+    NSLog(@"orderGesture");
+    [_pickerDelegate orderClick:weekId withWeekNum:weekNum withBegintime:beginTime];
+}
+-(void)dismiss{
+    [self setHidden:YES];
+}
+-(void)show{
+    [self setHidden:NO];
+}
+-(void)setPreviousMonthDate{
+    NSLog(@"setPreviousMonthDate");
+}
+-(void)setNextMonthDate{
+    NSLog(@"setNextMonthDate");
+}
+-(void)timeGesture:(UITapGestureRecognizer *)getsure{
+    NSInteger *selectId=getsure.view.tag;
+    for(UILabel *label in timeLabelArray){
+        if(label.tag==selectId){
+            beginTime=label.text;
+            [label setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
+        }else{
+            [label setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
+        }
+    }
+    
+}
+-(void)weekGesture:(UITapGestureRecognizer *)getsure{
+    NSInteger *selectId=getsure.view.tag;
+    for(UILabel *label in weekDayBtnArray){
+        if(label.tag==selectId){
+            [label.layer setMasksToBounds:YES];
+            [label setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
+            [label.layer setBorderColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0].CGColor];
+            [label.layer setBorderWidth:2];
+            for(UILabel *label in timeLabelArray){
+                [label removeFromSuperview];
+            }
+            int num=getsure.view.tag;
+            weekNum=[NSNumber numberWithInt:num];
+            [self initTimeView:[NSString stringWithFormat:@"%d",num ]];
+            
+        }else{
+            [label.layer setMasksToBounds:NO];
+            [label setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
+            [label.layer setBorderWidth:0];
+        }
+    }
+    
+}
+@end

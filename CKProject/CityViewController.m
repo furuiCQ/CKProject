@@ -8,6 +8,8 @@
 #import "HttpHelper.h"
 #import "FavourableCell.h"
 #import "CityViewController.h"
+#import "AppDelegate.h"
+#import "ProjectTimePicker.h"
 @interface CityViewController(){
     NSArray *dataArray;
 }
@@ -35,6 +37,8 @@
     [self initTitle];
     [self initContentView];
 }
+
+
 /**
  *自定义标题栏
  */

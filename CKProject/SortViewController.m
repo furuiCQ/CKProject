@@ -20,6 +20,9 @@
     NSString *str1;
     
     NSMutableArray *selcedIdArray;
+    NSArray *selectImageArray;
+    NSArray *normalImageArray;
+    
 }
 
 @end
@@ -44,6 +47,8 @@
     [self initTitle];
     [self initSwitchBtn];
     tableArray = [NSArray arrayWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",nil];
+    selectImageArray=[NSArray arrayWithObjects:@"dance_pressed_ic",@"Language_pressed_ic",@"sports_pressed_ic",@"music_pressed_ic",@"Vocational-and-technical_pressed_ic",@"Wushu_pressed_ic" ,@"paint_pressed_ic" ,@"open-book_pressed_ic" ,@"Health-and-beauty_pressed_ic" ,@"classroom_pressed_ic" ,@"Study-abroad_pressed_ic",nil];
+    normalImageArray=[NSArray arrayWithObjects:@"dance_nor_ic",@"Language_nor_ic",@"sports_nor_ic",@"music_nor_ic",@"Vocational-and-technical_nor_ic",@"Wushu_nor_ic" ,@"paint_nor_ic",@"open-book_nor_ic" ,@"Health-and-beauty_nor_ic" ,@"classroom_nor_ic" ,@"Study-abroad_nor_ic",nil];
     selcedIdArray=[[NSMutableArray alloc]init];
     [self initProjectTableView];
     [self initOrgTableView];
@@ -204,6 +209,7 @@
     projectTableView.dataSource                        = self;
     projectTableView.delegate                          = self;
     projectTableView.rowHeight                         = self.view.bounds.size.height/7;
+    projectTableView.separatorStyle = NO;
     projectTableView.tag=0;
     [self.view addSubview:projectTableView];
 }
@@ -329,7 +335,7 @@
             itemLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
             itemLabel.layer.borderWidth=1;
             [itemLabel setFrame:CGRectMake((control.frame.size.width-itemLabel.frame.size.width)/2, 0, itemLabel.frame.size.width, itemLabel.frame.size.height)];
-            [itemLabel setBackgroundColor:[UIColor whiteColor]];
+            [itemLabel setBackgroundColor:[UIColor colorWithRed:248.f/255.f green:248.f/255.f blue:248.f/255.f alpha:1.0]];
             if(isSelected==true){
                 [control addSubview:itemLabel];
                 [dataCell addSubview:control];
@@ -339,12 +345,12 @@
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:255.f/255.f green:82.f/255.f blue:82.f/255.f alpha:1.0]];
                 [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow_light"]];
-
+                [dataCell.logoImage setImage:[UIImage imageNamed:[selectImageArray objectAtIndex:[indexPath row]]]];
             }else{
                 [cell setBackgroundColor:[UIColor whiteColor]];
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow"]];
-
+                [dataCell.logoImage setImage:[UIImage imageNamed:[normalImageArray objectAtIndex:[indexPath row]]]];
             }
         }
         //}
@@ -377,7 +383,7 @@
         UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.frame.size.height+titleLabel.frame.origin.y+width/30,width, 0.5)];
         [lineView setBackgroundColor:[UIColor colorWithRed:229.f/255.f green:229.f/255.f blue:229.f/255.f alpha:1.0]];
         [cell addSubview:lineView];
-
+        
         NSArray *instList=[inset objectForKey:@"inst"];
         if ([instList count]>0) {
             for (int i=0; i<[instList count]; i++) {
@@ -398,10 +404,10 @@
                 if(i==3){
                     y=line2View.frame.size.height+y+width/16;
                 }
-
+                
                 UIImageView *instImageView=[[UIImageView alloc]initWithFrame:CGRectMake(x,y, width*3/7, width/3.8)];
-              //  instImageView.layer.masksToBounds = YES;
-              //  instImageView.layer.cornerRadius = 3.0f;
+                //  instImageView.layer.masksToBounds = YES;
+                //  instImageView.layer.cornerRadius = 3.0f;
                 UITapGestureRecognizer *getsture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goOrganDetialsViewController:)];
                 [instImageView addGestureRecognizer:getsture];
                 [instImageView setUserInteractionEnabled:YES];
@@ -522,20 +528,20 @@
             [selcedIdArray addObject:indexPath];
         }
         [tableView reloadData];
-//        int indexrow=(int)indexPath.row;
-//        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-//        NSDictionary *str=[httpProjectArray objectAtIndex:indexrow];
-//        if ([str objectForKey:@"id"]) {
-//            NSNumber *number=[str objectForKey:@"id"];
-//            [projectListViewController setProjectID:number];
-//            [projectListViewController setProjectSubID:[NSNumber numberWithInt:0]];
-//            
-//        }
-//        if ([str objectForKey:@"title"]) {
-//            [projectListViewController setTitleName:[str objectForKey:@"title"]];
-//            
-//        }
-//        [self presentViewController: projectListViewController animated:YES completion:nil];
+        //        int indexrow=(int)indexPath.row;
+        //        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
+        //        NSDictionary *str=[httpProjectArray objectAtIndex:indexrow];
+        //        if ([str objectForKey:@"id"]) {
+        //            NSNumber *number=[str objectForKey:@"id"];
+        //            [projectListViewController setProjectID:number];
+        //            [projectListViewController setProjectSubID:[NSNumber numberWithInt:0]];
+        //
+        //        }
+        //        if ([str objectForKey:@"title"]) {
+        //            [projectListViewController setTitleName:[str objectForKey:@"title"]];
+        //
+        //        }
+        //        [self presentViewController: projectListViewController animated:YES completion:nil];
     }
     
 }
