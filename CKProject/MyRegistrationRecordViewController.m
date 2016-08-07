@@ -73,37 +73,36 @@
     //设置顶部栏
     titleHeight=44;
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
-    
+    [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     //新建左上角Label
     cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
-    [cityLabel setTextAlignment:NSTextAlignmentCenter];
-    cityLabel.userInteractionEnabled=YES;//
     UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
     [imageView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/35/2, titleHeight/2-self.view.frame.size.width/20/2, self.view.frame.size.width/35, self.view.frame.size.width/20)];
     [cityLabel addSubview:imageView];
+    
+    [cityLabel setTextAlignment:NSTextAlignmentCenter];
+    cityLabel.userInteractionEnabled=YES;///
     UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMiss:)];
     [cityLabel addGestureRecognizer:gesture];
     
     //新建查询视图
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
-    //  [searchLabel setBackgroundColor:[UIColor whiteColor]];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
+    [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setText:@"我的报名记录"];
     
-    //    //新建右上角的图形
-    //    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
-    //    [msgLabel setBackgroundColor:[UIColor greenColor]];
-    //    [msgLabel setText:@"未知"];
-    //    [msgLabel setTextAlignment:NSTextAlignmentCenter];
+    //新建右上角的图形
+    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
+    [msgLabel setBackgroundColor:[UIColor greenColor]];
+    [msgLabel setText:@"未知"];
+    [msgLabel setTextAlignment:NSTextAlignmentCenter];
     
     [titleView addSubview:cityLabel];
-    //    [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
-}
--(void)disMiss:(UITapGestureRecognizer *)recognizer{
+    
+}-(void)disMiss:(UITapGestureRecognizer *)recognizer{
     // NSLog(@"点点点");
     [self dismissViewControllerAnimated:YES completion:^{
         //通过委托协议传值
@@ -121,20 +120,26 @@
     NSArray *array = [NSArray arrayWithObjects:@"全部",@"预约",@"已受理",@"受理失败", nil];
     tabArray=[[NSMutableArray alloc]init];
     for (int i=0; i<[array count]; i++) {
-        TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count]-1, titleHeight)];
-        [topBar addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
+        TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count], titleHeight)];
+        [topBar addTarget:self action:@selector(topBarOnClick:) forControlEvents:UIControlEventTouchUpInside];
         [topBar setTag:i];
         [topBar setText:[array objectAtIndex:i]];
-        if(i==2){
+        [topBar initView];
+        if(i==[array count]-1){
             [topBar setIsEnd:YES];
         }
         if(i==0){
             [topBar setChecked:YES];
+            [topBar setIconColor:[UIColor redColor]];
+            [topBar setTextColor:[UIColor redColor]];
         }else{
             [topBar setChecked:NO];
+            [topBar setIconColor:[UIColor blackColor]];
+            [topBar setTextColor:[UIColor blackColor]];
+            
         }
-        [topBar initView];
-        [topBar setLabelFont:[UIFont systemFontOfSize:width/29]];
+        [topBar setLabelFont:[UIFont systemFontOfSize:width/22.8]];
+        [topBar setLineViewFill];
         [topView addSubview:topBar];
         [tabArray addObject:topBar];
     }
@@ -304,9 +309,6 @@
                 
             }
         }
-
-        
-        
         if ([dic objectForKey:@"status"] && ![[dic objectForKey:@"status"] isEqual:[NSNull null]]) {
             NSNumber *status=[dic objectForKey:@"status"];
            NSNumber *atime=[dic objectForKey:@"atime"];
