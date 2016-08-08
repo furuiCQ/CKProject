@@ -12,6 +12,9 @@
 #import "msViewController.h"
 #import "OrderRecordCell.h"
 #import "YiSlideMenu.h"
+#import "ChangePhoneViewController.h"
+#import "ChangeNickNameViewController.h"
+#import "ChangePassViewController.h"
 @interface MineViewController ()<UITableViewDelegate,UITableViewDataSource,YiSlideMenuDelegate>{
     NSMutableArray *projectTableArray;
     UITableView *mainTableView;
@@ -691,12 +694,15 @@
                 break;
             case 2:
             {
-                NSLog(@"修改密码");
+                ChangePassViewController *changePassViewController=[[ChangePassViewController alloc]init];
+                [self presentViewController: changePassViewController animated:YES completion:nil];
             }
                 break;
             case 3:
             {
-                NSLog(@"修改电话");
+                ChangePhoneViewController *changePhoneViewController=[[ChangePhoneViewController alloc]init];
+                [self presentViewController: changePhoneViewController animated:YES completion:nil];
+                
             }
                 break;
             case 4:

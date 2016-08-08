@@ -1630,12 +1630,12 @@
 		490B5EAD1D58657700C37E85 /* UserViewController */ = {
 			isa = PBXGroup;
 			children = (
+				49EBDB291C65C8DF0057A50D /* UserDealViewController.h */,
+				49EBDB2A1C65C8DF0057A50D /* UserDealViewController.m */,
 				490B5EB41D5866A400C37E85 /* ChangePassViewController.h */,
 				490B5EB51D5866A400C37E85 /* ChangePassViewController.m */,
 				490B5EB11D58668800C37E85 /* ChangeNickNameViewController.h */,
 				490B5EB21D58668800C37E85 /* ChangeNickNameViewController.m */,
-				49EBDB291C65C8DF0057A50D /* UserDealViewController.h */,
-				49EBDB2A1C65C8DF0057A50D /* UserDealViewController.m */,
 				490B5EAE1D5865C400C37E85 /* ChangePhoneViewController.h */,
 				490B5EAF1D5865CE00C37E85 /* ChangePhoneViewController.m */,
 			);
