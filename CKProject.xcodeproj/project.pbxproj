@@ -23,6 +23,7 @@
 		490B5E6A1D580B9200C37E85 /* accept_sucess@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E5E1D580B9200C37E85 /* accept_sucess@2x.png */; };
 		490B5E6B1D580B9200C37E85 /* accept_sucess.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E5F1D580B9200C37E85 /* accept_sucess.png */; };
 		490B5E6C1D580B9200C37E85 /* accept_sucess@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E601D580B9200C37E85 /* accept_sucess@3x.png */; };
+		490B5E6F1D581D9100C37E85 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 490B5E6E1D581D9100C37E85 /* BaseViewController.m */; };
 		491EB6D71CC47034006A0AEC /* DayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 491EB6D61CC47034006A0AEC /* DayModel.m */; };
 		492881D71C2E35A00059A327 /* UILabel+JJKAlertActionFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 492881D61C2E35A00059A327 /* UILabel+JJKAlertActionFont.m */; };
 		492881DA1C2E500A0059A327 /* ImageCompress.m in Sources */ = {isa = PBXBuildFile; fileRef = 492881D91C2E500A0059A327 /* ImageCompress.m */; };
@@ -717,6 +718,8 @@
 		490B5E5E1D580B9200C37E85 /* accept_sucess@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accept_sucess@2x.png"; sourceTree = "<group>"; };
 		490B5E5F1D580B9200C37E85 /* accept_sucess.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = accept_sucess.png; sourceTree = "<group>"; };
 		490B5E601D580B9200C37E85 /* accept_sucess@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accept_sucess@3x.png"; sourceTree = "<group>"; };
+		490B5E6D1D581D8100C37E85 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		490B5E6E1D581D9100C37E85 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		491EB6D51CC47022006A0AEC /* DayModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DayModel.h; sourceTree = "<group>"; };
 		491EB6D61CC47034006A0AEC /* DayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayModel.m; sourceTree = "<group>"; };
 		492881D51C2E35920059A327 /* UILabel+JJKAlertActionFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+JJKAlertActionFont.h"; sourceTree = "<group>"; };
@@ -2056,6 +2059,8 @@
 				4977AEF81C0DCC1A001F0D55 /* Info.plist */,
 				494303301C7194D60050F0E5 /* Images.xcassets */,
 				4977AEE71C0DCC1A001F0D55 /* Supporting Files */,
+				490B5E6D1D581D8100C37E85 /* BaseViewController.h */,
+				490B5E6E1D581D9100C37E85 /* BaseViewController.m */,
 			);
 			path = CKProject;
 			sourceTree = "<group>";
@@ -3318,6 +3323,7 @@
 				4933058D1C1937F8005B9EDC /* MyInvitationViewController.m in Sources */,
 				49541B7C1C31025400CB023F /* SendInvitationViewController.m in Sources */,
 				493305871C184825005B9EDC /* TopBar.m in Sources */,
+				490B5E6F1D581D9100C37E85 /* BaseViewController.m in Sources */,
 				49FE3F411C58EB7400FBCA7F /* ProgressHUD.m in Sources */,
 				497FB52F1C3BDDCF0078E055 /* OrgListItem.m in Sources */,
 				4977AF2B1C0DD47F001F0D55 /* MainTabBarViewController.m in Sources */,

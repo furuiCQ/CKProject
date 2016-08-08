@@ -738,6 +738,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     projectTableView.delegate                          = self;
     projectTableView.rowHeight                         = self.view.bounds.size.height/7;
     [projectTableView setTag:0];
+    projectTableView.separatorStyle=NO;
     [self.view addSubview:projectTableView];
     //添加刷新
     UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];

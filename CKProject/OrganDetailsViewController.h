@@ -10,7 +10,9 @@
 #import "RatingBar.h"
 #import "ProjectSimpleTableCell.h"
 #import "ProjectDetailsViewController.h"
-@interface OrganDetailsViewController : UIViewController
+#import "BaseViewController.h"
+
+@interface OrganDetailsViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

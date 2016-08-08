@@ -8,7 +8,8 @@
 
 
 #import <UIKit/UIKit.h>
-@interface MsgContentViewController : UIViewController
+#import "BaseViewController.h"
+@interface MsgContentViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

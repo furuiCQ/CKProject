@@ -507,11 +507,34 @@
         failture(error);
     }];
 }
-+(void)getLessonInfo:(NSNumber *)projectId withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
++(void)getLessonInfo:(NSNumber *)projectId withModel:(HttpModel *)model  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
                             @{ @"name": @"token", @"value": model.token},
                             @{ @"name": @"uid", @"value": model.uid},
                             @{@"name":@"id",@"value":projectId}];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_LESSON_INFO] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
++(void)getLessonInfo:(NSNumber *)projectId withLng:(NSNumber *)lng withLat:(NSNumber *)lat  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
+                            @{ @"name": @"token", @"value": model.token},
+                            @{ @"name": @"uid", @"value": model.uid},
+                            @{@"name":@"id",@"value":projectId},
+                            @{@"name":@"lng",@"value":lng},
+                            @{@"name":@"lat",@"value":lat}];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_LESSON_INFO] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
++(void)getLessonInfo:(NSNumber *)projectId withLng:(NSNumber *)lng withLat:(NSNumber *)lat success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{@"name":@"id",@"value":projectId},
+                              @{@"name":@"lng",@"value":lng},
+                              @{@"name":@"lat",@"value":lat}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_LESSON_INFO] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
@@ -662,6 +685,20 @@
                              @{@"name":@"pn",@"value":pn},
                              @{@"name":@"pc",@"value":pc}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_MYLESSON_LIST] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
++(void)getFavoriteProjectList:(NSNumber *)pn withPageLine:(NSNumber *)pc withLng:(NSNumber *)lng withLat:(NSNumber *)lat  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[ @{ @"name": @"tel", @"value": model.tel},
+                             @{ @"name": @"token", @"value": model.token},
+                             @{ @"name": @"uid", @"value": model.uid},
+                             @{@"name":@"pn",@"value":pn},
+                             @{@"name":@"pc",@"value":pc},
+                             @{@"name":@"lng",@"value":lng},
+                             @{@"name":@"lat",@"value":lat}];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_MYFAVORITE] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
         failture(error);

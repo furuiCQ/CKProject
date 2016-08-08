@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ProjectListViewController.h"
-@interface SearchViewController : UIViewController
+#import "BaseViewController.h"
+@interface SearchViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

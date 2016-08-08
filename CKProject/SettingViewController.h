@@ -12,8 +12,8 @@
 #import "AboutViewController.h"
 #import "AppDelegate.h"
 #import "HttpHelper.h"
-
-@interface SettingViewController : UIViewController
+#import "BaseViewController.h"
+@interface SettingViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

@@ -5,7 +5,7 @@
 //  Created by furui on 15/12/10.
 //  Copyright © 2015年 furui. All rights reserved.
 //
-
+#import "OrderRecordCell.h"
 #import "MyCollectViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
@@ -119,6 +119,7 @@
     collectTableView.dataSource                        = self;
     collectTableView.delegate                          = self;
     collectTableView.rowHeight                         = self.view.bounds.size.height/7;
+    collectTableView.separatorStyle=NO;
     [self.view addSubview:collectTableView];
     
 }
@@ -160,75 +161,66 @@
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSIndexPath是一个结构体，记录了组和行信息
-    CollectionTableCell *cell=[[CollectionTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    [cell setViewController:self];
-    if (cell ==nil) {
-        cell  = [[CollectionTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    static NSString *identy = @"CustomCell";
+    OrderRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
+    if(cell==nil){
+        cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
     }
+    OrderRecordCell *porjectCell=(OrderRecordCell *)cell;
     
     if ([dataArray count]>0) {
         NSDictionary *dic=[dataArray objectAtIndex:[indexPath row]];
         
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
-            [cell.projectName setText:[NSString stringWithFormat:@"%@",title]];
+            [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
         }
         if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
-            NSNumber *people=[dic objectForKey:@"people"];
-            NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-            [cell.haveSomeOneLabel setText:[NSString stringWithFormat:@"已报%@人",[formatter stringFromNumber:people]]];
-        }
-        
-        if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
-            NSString *logo=[dic objectForKey:@"logo"];
-            if (![logo isEqualToString:@""]) {
-                [cell.logoImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-            }
+            NSString *people=[dic objectForKey:@"people"];
+            NSString *str=[NSString stringWithFormat:@"已报%@人",people];
+            [porjectCell.orderNumbLabel setText:str];
             
         }
         
-        //        if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
-        //            [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
-        //            NSNumber *lng=[dic objectForKey:@"lng"];
-        //            NSNumber *lat=[dic objectForKey:@"lat"];
-        //            //NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-        //            [cell.listItem.typelabel3 setText:@"<500m"];
-        //        }
-        
-        if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
-            NSString *addr=[dic objectForKey:@"addr"];
-            [cell.addressLabel setText:[NSString stringWithFormat:@"%@",addr]];
+        if ([dic objectForKey:@"biglogo"] && ![[dic objectForKey:@"biglogo"] isEqual:[NSNull null]]) {
+            NSString *logo=[dic objectForKey:@"biglogo"];
+            if (![logo isEqualToString:@""]) {
+                [porjectCell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+                
+            }
+            
         }
-//        if ([dic objectForKey:@"pname"] && ![[dic objectForKey:@"pname"] isEqual:[NSNull null]]) {
-//            NSString *pname=[dic objectForKey:@"pname"];
-//            [cell.typelabel setText:[NSString stringWithFormat:@"%@",pname]];
-//        }
+        if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
+            NSNumber *range=[dic objectForKey:@"range"];
+            double distance=[range doubleValue];
+            if(distance>0.0){
+                if (distance/1000>1) {
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
+                }else if (distance/1000<1 && distance/1000>0.5){
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
+                    
+                }else if (distance/1000<0.5){
+                    [porjectCell.distanceLabel setText:@"<500m"];
+                }
+            }
+        }
         if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
             NSString *grade=[dic objectForKey:@"grade"];
-            [cell.typelabel1 setText:[NSString stringWithFormat:@"%@",grade]];
+            [porjectCell.ageLabel setText:[NSString stringWithFormat:@"适应年龄段:%@",grade]];
         }
-//        if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
-//            NSNumber *btime=[dic objectForKey:@"btime"];
-//            NSInteger myInteger = [btime integerValue];
-//            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-//            [formatter setDateStyle:NSDateFormatterMediumStyle];
-//            [formatter setTimeStyle:NSDateFormatterShortStyle];
-//            [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
-//            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
-//            [formatter setTimeZone:timeZone];
-//            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
-//            CGRect frame=cell.typelabel2.frame;
-//            NSString *str = [formatter stringFromDate:confromTimesp];
-//            frame.origin.x=frame.origin.x+frame.size.width-[str length]*frame.size.height;
-//            frame.size.width=[str length]*frame.size.height;
-//            [cell.typelabel2 setFrame:frame];
-//            [cell.typelabel2 setText:[NSString stringWithFormat:@"%@",str]];
-//        }
-    }else{
-        cell.textLabel.textAlignment=NSTextAlignmentCenter;
-        cell.textLabel.text=@"数据加载中";
-        
+        if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
+            NSNumber *btime=[dic objectForKey:@"btime"];
+            NSInteger myInteger = [btime integerValue];
+            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateStyle:NSDateFormatterMediumStyle];
+            [formatter setTimeStyle:NSDateFormatterShortStyle];
+            [formatter setDateFormat:@"MM月 dd HH:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+            [formatter setTimeZone:timeZone];
+            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+            [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+        }
     }
     return cell;
 }
@@ -311,10 +303,21 @@
     
 }
 -(void)getData{
-    AppDelegate *myDelegate=( AppDelegate *)[[UIApplication sharedApplication]delegate];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    AppDelegate *myDelegate=( AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+    NSNumber *ar=[stand objectForKey:@"lttt"];
+    NSNumber *ngg=[stand objectForKey:@"nggg"];
+    if (ar==NULL&&ngg==NULL) {
+        ar=[NSNumber numberWithDouble:myDelegate.latitude];
+        ngg=[NSNumber numberWithDouble:myDelegate.longitude];
+    }
+    if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        ar=[NSNumber numberWithDouble:29.5];
+        ngg=[NSNumber numberWithDouble:106.5];
+    }
     dispatch_async(queue, ^{
-    [HttpHelper getFavoriteProjectList:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
+    [HttpHelper getFavoriteProjectList:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:10]withLng:ngg withLat:ar  withModel:myDelegate.model success:^(HttpModel *model){
         NSLog(@"%@",model.message);
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([model.status isEqual:[NSNumber numberWithInt:1]]) {

@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "InvitaitionTabelCell.h"
 #import "HttpHelper.h"
-@interface InvitationDetailsViewController : UIViewController
+#import "BaseViewController.h"
+
+@interface InvitationDetailsViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

@@ -246,6 +246,7 @@
     mainTableView.delegate                          = self;
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
     mainTableView.tableHeaderView=tableHeaderView;
+    mainTableView.separatorStyle=NO;
     //[self.view addSubview:mainTableView];
     [slideMenu.centerView addSubview:mainTableView];
     

@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 #import "HttpHelper.h"
-@interface OrderViewController : UIViewController
+#import "BaseViewController.h"
+
+@interface OrderViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

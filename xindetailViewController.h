@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface xindetailViewController : UIViewController
+#import "BaseViewController.h"
+@interface xindetailViewController : BaseViewController
 @property NSNumber *aritcleId;
 @property NSDictionary *data;
 @property(strong,nonatomic)UIAlertView *alertView;

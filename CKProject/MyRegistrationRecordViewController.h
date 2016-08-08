@@ -13,7 +13,8 @@
 #import "AppDelegate.h"
 #import "AssessViewController.h"
 #import "ProjectDetailsViewController.h"
-@interface MyRegistrationRecordViewController : UITabBarController
+#import "BaseViewController.h"
+@interface MyRegistrationRecordViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

@@ -14,7 +14,9 @@
 #import "NSString+Extension.h"
 #import "Node.h"
 #import "TreeTableView.h"
-@interface ProjectListViewController : UIViewController
+#import "BaseViewController.h"
+//http://www.abcdll.cn/api/hotlesson
+@interface ProjectListViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

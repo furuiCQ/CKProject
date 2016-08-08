@@ -13,8 +13,9 @@
 #import "OrderViewController.h"
 #import "AppDelegate.h"
 #import "ProjectTimePicker.h"
+#import "BaseViewController.h"
 //http://www.abcdll.cn/api/hotlesson
-@interface ProjectDetailsViewController : UIViewController
+@interface ProjectDetailsViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

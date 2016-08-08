@@ -643,12 +643,22 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
+    NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+    NSNumber *ar=[stand objectForKey:@"lttt"];
+    NSNumber *ngg=[stand objectForKey:@"nggg"];
+    if (ar==NULL&&ngg==NULL) {
+        ar=[NSNumber numberWithDouble:myDelegate.latitude];
+        ngg=[NSNumber numberWithDouble:myDelegate.longitude];
+    }
+    if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        ar=[NSNumber numberWithDouble:29.5];
+        ngg=[NSNumber numberWithDouble:106.5];
+    }
     if (myDelegate.isLogin) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             
-            [HttpHelper getLessonInfo:projectId withModel:myDelegate.model success:^(HttpModel *model){
+            [HttpHelper getLessonInfo:projectId withLng:ngg withLat:ar  withModel:myDelegate.model success:^(HttpModel *model){
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
@@ -659,24 +669,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             data=dic;
                             advance_time=[dic objectForKey:@"advancetime"];
                             
-                            if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
-                                [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
-                                NSNumber *lng=[dic objectForKey:@"lng"];
-                                NSNumber *lat=[dic objectForKey:@"lat"];
-                                
-                                CLLocationCoordinate2D coordinate;
-                                coordinate.latitude=[lat floatValue];
-                                
-                                coordinate.longitude=[lng floatValue];
-                                
-                                CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-                                
-                                lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
-                                lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-                                NSString *longtitudeText=lg;
-                                NSString *latitudeText=lt;;
-                                
-                                double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
+                            if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
+                                NSNumber *range=[dic objectForKey:@"range"];
+                                double distance=[range doubleValue];
                                 if(distance>0.0){
                                     if (distance/1000>1) {
                                         [distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
@@ -687,7 +682,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                         [distanceLabel setText:@"<500m"];
                                     }
                                 }
-                                
                             }
                             
                             if (![[dic objectForKey:@"img"] isEqualToString:@""]) {
@@ -863,7 +857,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             
-            [HttpHelper getLessonInfo:projectId success:^(HttpModel *model){
+            [HttpHelper getLessonInfo:projectId withLng:ngg withLat:ar success:^(HttpModel *model){
                 
                 NSLog(@"%@",model.message);
                 
@@ -876,24 +870,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             data=dic;
                             bt=[dic objectForKey:@"btime"];
                             
-                            if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
-                                [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
-                                NSNumber *lng=[dic objectForKey:@"lng"];
-                                NSNumber *lat=[dic objectForKey:@"lat"];
-                                
-                                CLLocationCoordinate2D coordinate;
-                                coordinate.latitude=[lat floatValue];
-                                
-                                coordinate.longitude=[lng floatValue];
-                                
-                                CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-                                
-                                lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
-                                lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-                                NSString *longtitudeText=lg;
-                                NSString *latitudeText=lt;;
-                                
-                                double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
+                            if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
+                                NSNumber *range=[dic objectForKey:@"range"];
+                                double distance=[range doubleValue];
                                 if(distance>0.0){
                                     if (distance/1000>1) {
                                         [distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
@@ -904,11 +883,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                         [distanceLabel setText:@"<500m"];
                                     }
                                 }
-                                
                             }
-                            
-                            
-                            
                             if (![[dic objectForKey:@"img"] isEqualToString:@""]) {
                                 NSString *images=[dic objectForKey:@"img"];
                                 NSArray *array = [images componentsSeparatedByString:@","];

@@ -11,7 +11,9 @@
 #import "HttpHelper.h"
 #import "AppDelegate.h"
 #import "OrganDetailsViewController.h"
-@interface OrganismListViewController : UIViewController
+#import "BaseViewController.h"
+
+@interface OrganismListViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;
