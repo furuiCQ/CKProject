@@ -66,7 +66,15 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
     oldPass.clearButtonMode = UITextFieldViewModeAlways;
     [oldPass setValue:[UIColor blackColor] forKeyPath:DXPlaceholderColorKey];
     [self.view addSubview:oldPass];
-    
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(oldPass.frame.size.width-width/3.3-2, oldPass.frame.size.height/2-width/9.5/2, width/3.3, width/9.5)];
+    [label setText:@"获取验证码"];
+    [label setUserInteractionEnabled:YES];
+    [label.layer setMasksToBounds:YES];
+    [label.layer setCornerRadius:3];
+    [label setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:244.f/255.f blue:247.f/255.f alpha:1.0]];
+    UITapGestureRecognizer *uiTapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(getCode)];
+    [label addGestureRecognizer:uiTapGestureRecognizer];
+    [oldPass addSubview:label];
     
     UITextField *newPass=[[UITextField alloc]initWithFrame:CGRectMake(width/32, oldPass.frame.size.height+oldPass.frame.origin.y+width/31, width-width/16, width/8)];
     [newPass.layer setCornerRadius:3];
@@ -85,7 +93,9 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
     
     
 }
-
+-(void)getCode{
+    NSLog(@"getCode");
+}
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
