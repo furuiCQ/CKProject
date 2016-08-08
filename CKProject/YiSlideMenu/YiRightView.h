@@ -15,9 +15,14 @@
 @property id<YiRightViewDelegate> delegate;
 -(void)setUserPhone:(NSString *)_phone;
 -(void)setData:(NSDictionary *)dic;
+-(void)setImage:(UIImage *)imageUrl;
+-(void)setUserName:(NSString *)name;
+
 @end
 @protocol YiRightViewDelegate<NSObject>
 - (void)rightDidSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 -(void)switchBtn:(BOOL)isSelected;
+-(void)selectImage;
+-(void)selectUserName;
 @end
 

@@ -15,7 +15,11 @@
 #import "ChangePhoneViewController.h"
 #import "ChangeNickNameViewController.h"
 #import "ChangePassViewController.h"
-@interface MineViewController ()<UITableViewDelegate,UITableViewDataSource,YiSlideMenuDelegate>{
+#import "UILabel+JJKAlertActionFont.h"
+
+@interface MineViewController ()<UITableViewDelegate,UITableViewDataSource,
+UIImagePickerControllerDelegate,UIActionSheetDelegate,
+UINavigationControllerDelegate,YiSlideMenuDelegate>{
     NSMutableArray *projectTableArray;
     UITableView *mainTableView;
     UINib *nib;
@@ -25,6 +29,20 @@
     YiSlideMenu *slideMenu;
     UIAlertView *alertView;
     UIImageView *nodataImageView;
+    
+    UIAlertController *alertDialog;
+    UIActivityIndicatorView *dicatorView;
+    
+    
+    //local data
+    NSDictionary *pickerDic;
+    NSArray *provinceArray;
+    NSArray *cityArray;
+    NSArray *townArray;
+    NSArray *selectedArray;
+    NSNumber *selectProvId;
+    NSNumber *selectCityId;
+    NSString *localData;
 }
 
 @end
@@ -811,6 +829,12 @@
             break;
     }
 }
+-(void)selectImage{
+    [self addActionSheet];
+}
+-(void)selectUserName{
+    NSLog(@"selectUserName");
+}
 -(void)switchBtn:(BOOL)isSelected{
     NSString *str=@"";
     if(isSelected){
@@ -850,6 +874,251 @@
             }
         }];
     });
+}
+//打开相册
+-(void)addActionSheet{
+    
+    int width=self.view.frame.size.width;
+    NSString *okButtonTitle = @"取消";
+    NSString *neverButtonTitle = @"从相册选择";
+    NSString *laterButtonTitle = @"拍照";
+    // 会更改UIAlertController中所有字体的内容（此方法有个缺点，会修改所以字体的样式）
+    UILabel *appearanceLabel = [UILabel appearanceWhenContainedIn:UIAlertController.class, nil];
+    UIFont *font = [UIFont systemFontOfSize:width/15.2];
+    [appearanceLabel setAppearanceFont:font];
+    // 初始化
+    if (alertDialog==nil) {
+        alertDialog = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        // 分别3个创建操作
+        UIAlertAction *laterAction = [UIAlertAction actionWithTitle:laterButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"0");
+            [self takePhoto];
+        }];
+        [laterAction setValue:[UIColor colorWithRed:1 green:59.f/255.f blue:48.f/255.f alpha:1.0] forKey:@"_titleTextColor"];
+        
+        UIAlertAction *neverAction = [UIAlertAction actionWithTitle:neverButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"2");
+            [self openAlbum ];
+            
+        }];
+        [neverAction setValue:[UIColor colorWithRed:0 green:122.f/255.f blue:1 alpha:1.0] forKey:@"_titleTextColor"];
+        
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:okButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            // 取消按键
+            NSLog(@"3");
+            
+        }];
+        [okAction setValue:[UIColor colorWithRed:0 green:122.f/255.f blue:1 alpha:1.0]  forKey:@"_titleTextColor"];
+        
+        
+        // 添加操作（顺序就是呈现的上下顺序）
+        [alertDialog addAction:laterAction];
+        [alertDialog addAction:neverAction];
+        [alertDialog addAction:okAction];
+        
+        // 呈现警告视图
+    }
+    
+    [self presentViewController:alertDialog animated:YES completion:nil];
+    
+}
+//2
+-(void)openAlbum{
+    UIImagePickerController *pickerImage = [[UIImagePickerController alloc] init];
+    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+        pickerImage.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        pickerImage.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:pickerImage.sourceType];
+        
+    }
+    pickerImage.delegate = self;
+    pickerImage.allowsEditing = NO;
+    [self presentViewController:pickerImage animated:YES completion:nil];
+}
+//拍照
+-(void)takePhoto{
+    //资源类型为照相机
+    UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
+    //判断是否有相机
+    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]){
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        //设置拍照后的图片可被编辑
+        picker.allowsEditing = YES;
+        //资源类型为照相机
+        picker.sourceType = sourceType;
+        [self presentViewController:picker animated:YES completion:nil];
+        
+    }else {
+        NSLog(@"该设备无摄像头");
+    }
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo{
+    //当图片不为空时显示图片并保存图片
+    if (image != nil) {
+        //图片显示在界面上
+        //  [imageView setImage:image];
+        //保存
+        AppDelegate *myDelegate =(AppDelegate *) [[UIApplication sharedApplication] delegate];
+        NSString *timeDate=[HttpHelper getNowImageTime];
+        NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *docPath = [paths lastObject];
+        NSString *imageURl=[docPath stringByAppendingFormat:@"%@%@",@"/",timeDate];
+        saveImageToCacheDir(docPath, image, timeDate, @"png");
+        [self creatDicatorView];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // 耗时的操作
+            [HttpHelper upload:myDelegate.model withImageUrl:imageURl withImage:image success:^(HttpModel *model){
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    [slideMenu setImage:nil withImage:image];
+                    [dicatorView stopAnimating];
+                });
+                
+                
+            }failure:^(NSError *error){
+                
+                [dicatorView stopAnimating];
+                
+            }];
+            
+            
+            
+            
+        });
+        
+        
+    }
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    //    MainViewController *main=[[MainViewController alloc]init];
+    //    [self presentViewController:main animated:NO completion:nil]
+    //返回上一次层
+    
+    
+    
+    //    [self dismissViewControllerAnimated:YES completion:nil];
+    //    MainTabBarViewController *vo=[[MainTabBarViewController alloc]init];
+    //    [self presentViewController:vo animated:YES completion:nil];
+    
+    
+    
+}
+-(void)creatDicatorView{
+    if (dicatorView==nil) {
+        dicatorView=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [dicatorView setFrame:CGRectMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-50, 100, 100)];
+        [dicatorView setColor:[UIColor blackColor]];
+        [dicatorView startAnimating];
+        [self.view addSubview:dicatorView];
+    }
+    [dicatorView startAnimating];
+    
+}
+-(void)initPickView{
+    int width=self.view.frame.size.width;
+    int height=self.view.frame.size.height;
+    UIPickerView *pickerView=[[UIPickerView alloc]initWithFrame:CGRectMake(0, height-width/45.7-titleHeight-width*2/3, width, width*2/3)];
+    pickerView.delegate=self;
+    
+    [self.view addSubview:pickerView];
+}
+#pragma mark - get data
+- (void)getPickerData {
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Address" ofType:@"plist"];
+    pickerDic = [[NSDictionary alloc] initWithContentsOfFile:path];
+    provinceArray = [pickerDic allKeys];
+    selectedArray = [pickerDic objectForKey:[[pickerDic allKeys] objectAtIndex:0]];
+    
+    if (selectedArray.count > 0) {
+        cityArray = [[selectedArray objectAtIndex:0] allKeys];
+    }
+    
+    if (cityArray.count > 0) {
+        townArray = [[selectedArray objectAtIndex:0] objectForKey:[cityArray objectAtIndex:0]];
+    }
+    
+}
+#pragma mark - UIPicker Delegate
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 3;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    if (component == 0) {
+        return provinceArray.count;
+    } else if (component == 1) {
+        return cityArray.count;
+    } else {
+        return townArray.count;
+    }
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    if (component == 0) {
+        return [provinceArray objectAtIndex:row];
+    } else if (component == 1) {
+        return [cityArray objectAtIndex:row];
+    } else {
+        return [townArray objectAtIndex:row];
+    }
+    
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
+    if (component == 0) {
+        return 110;
+    } else if (component == 1) {
+        return 100;
+    } else {
+        return 110;
+    }
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    if (component == 0) {
+        selectedArray = [pickerDic objectForKey:[provinceArray objectAtIndex:row]];
+        if (selectedArray.count > 0) {
+            cityArray = [[selectedArray objectAtIndex:0] allKeys];
+        } else {
+            cityArray = nil;
+        }
+        if (cityArray.count > 0) {
+            townArray = [[selectedArray objectAtIndex:0] objectForKey:[cityArray objectAtIndex:0]];
+        } else {
+            townArray = nil;
+        }
+    }
+    [pickerView selectedRowInComponent:1];
+    [pickerView reloadComponent:1];
+    [pickerView selectedRowInComponent:2];
+    
+    if (component == 1) {
+        if (selectedArray.count > 0 && cityArray.count > 0) {
+            townArray = [[selectedArray objectAtIndex:0] objectForKey:[cityArray objectAtIndex:row]];
+        } else {
+            townArray = nil;
+        }
+        [pickerView selectRow:1 inComponent:2 animated:YES];
+    }
+    
+    [pickerView reloadComponent:2];
+    
+    NSString *provice=[provinceArray objectAtIndex:[pickerView selectedRowInComponent:0]];
+    NSString *city=[cityArray objectAtIndex:[pickerView selectedRowInComponent:1]];
+    NSString *town=@"";
+    if([townArray count]>0){
+        town=[townArray objectAtIndex:[pickerView selectedRowInComponent:2]];
+    }
+  //  [self setProviceID:provice andCityID:city andTown:town];
+    
+    
+  //  [cityTextFiled setText:[[provice stringByAppendingString:city]stringByAppendingString:town]];
+    
 }
 
 

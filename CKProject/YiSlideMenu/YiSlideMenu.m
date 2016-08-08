@@ -181,6 +181,43 @@
     }
  
 }
+-(void)setImage:(NSString *)imageUrl withImage:(UIImage *)image{
+    for(UIView *view in [rightBgView subviews]){
+        if([view isKindOfClass:[YiRightView class]]){
+            YiRightView *rightView=(YiRightView *)view;
+            if(imageUrl!=nil){
+                [rightView setImage:[UIImage imageNamed:imageUrl]];
+            }
+            if(image!=nil){
+                [rightView setImage:image];
+            }
+            
+        }
+    }
+}
+-(void)setUserName:(NSString *)name{
+    for(UIView *view in [rightBgView subviews]){
+        if([view isKindOfClass:[YiRightView class]]){
+            YiRightView *rightView=(YiRightView *)view;
+            [rightView setUserName:name];
+        }
+    }
+}
+-(void)selectUserName{
+    [_slideMenuDelegate selectUserName];
+}
+//-(void)setImage:(NSString *)imageUrl{
+//    for(UIView *view in [rightBgView subviews]){
+//        if([view isKindOfClass:[YiRightView class]]){
+//            YiRightView *rightView=(YiRightView *)view;
+//            [rightView setImage:imageUrl];
+//            
+//        }
+//    }
+//}
+-(void)selectImage{
+    [_slideMenuDelegate selectImage];
+}
 -(void)setData:(NSDictionary *)dic{
     for(UIView *view in [rightBgView subviews]){
         if([view isKindOfClass:[YiRightView class]]){

@@ -266,13 +266,6 @@
     int width=self.view.frame.size.width;
     
     NSArray *tableArray = [NSArray arrayWithObjects:@"头像",@"昵称",@"性别",@"修改密码",@"电话",@"地址", nil];
-//    UIControl *myRecord=[[UIControl alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5+width/6.5+0.5, width, width/6.5)];
-////    [myRecord setTag:0];
-////    [myRecord addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
-//    [myRecord setBackgroundColor:[UIColor whiteColor]];
-//
-//    
-//    
     for(int i=0;i<[tableArray count];i++){
         //我的报名记录
         NSLog(@"%d",i);

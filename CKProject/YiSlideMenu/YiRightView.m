@@ -41,11 +41,14 @@
         float viewWidth=frame.size.width;
         float viewHeight=frame.size.height;
         [self setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
-
+        
         UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, viewWidth, viewWidth/2)];
         
-       [headerView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
+        [headerView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
         userImageView=[[UIImageView alloc]initWithFrame:CGRectMake(viewWidth*3/8, 0, viewWidth/4,viewWidth/4)];
+        UITapGestureRecognizer *logoGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectImage)];
+        [userImageView setUserInteractionEnabled:YES];
+        [userImageView addGestureRecognizer:logoGesture];
         userImageView.layer.masksToBounds = YES;
         userImageView.layer.borderWidth=2;
         [userImageView.layer setBorderColor:[UIColor whiteColor].CGColor];
@@ -56,6 +59,9 @@
         
         userLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, userImageView.frame.size.height+userImageView.frame.origin.y+10, viewWidth, 20)];
         [userLabel setText:@"Amy"];
+        UITapGestureRecognizer *usernameGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectUserName)];
+        [userLabel setUserInteractionEnabled:YES];
+        [userLabel addGestureRecognizer:usernameGesture];
         [userLabel setTextAlignment:NSTextAlignmentCenter];
         [userLabel setTextColor:[UIColor whiteColor]];
         [userLabel setFont:[UIFont systemFontOfSize:15]];
@@ -73,10 +79,21 @@
         tableView.separatorStyle = NO;
         [tableView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
         [tableView setTableHeaderView:headerView];
-
-
+        
     }
     return self;
+}
+-(void)setUserName:(NSString *)name{
+    [userLabel setText:name];
+}
+-(void)selectUserName{
+    [_delegate selectUserName];
+}
+-(void)setImage:(UIImage *)image{
+    [userImageView setImage:image];
+}
+-(void)selectImage{
+    [_delegate selectImage];
 }
 -(void)setUserPhone:(NSString *)_phone{
     phone=_phone;
@@ -138,7 +155,7 @@
                 [girlImageView setHidden:NO];
             }
         }
-    
+        
         [cell.rightView addSubview:switchButton];
         
     }else if([indexPath row]==3){
@@ -148,14 +165,14 @@
         [label setTextColor:[UIColor whiteColor]];
         [label setTextAlignment:NSTextAlignmentRight];
         [cell.rightView addSubview:label];
-
+        
         
     }else{//Chevron_ic-2
         UIImageView *image=[[UIImageView alloc]initWithFrame:CGRectMake(cell.rightView.frame.size.width-9-10, cell.rightView.frame.size.height/2-17/2, 9, 17)];
         [image setImage:[UIImage imageNamed:@"Chevron_ic-2"]];
         [cell.rightView addSubview:image];
     }
-
+    
     // [cell.titleLabel setText:@"123"];
     return cell;
 }
@@ -168,7 +185,7 @@
     if (isButtonOn) {
         [boyImageView setHidden:YES];
         [girlImageView setHidden:NO];
-
+        
         NSLog(@"isButtonOn TRUE");
     }else {
         [girlImageView setHidden:YES];
@@ -187,11 +204,11 @@
     
 }
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 @end

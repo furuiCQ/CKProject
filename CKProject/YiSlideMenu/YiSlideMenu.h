@@ -27,6 +27,8 @@ typedef NS_ENUM(NSInteger, YiSlideDirection) {
 -(void)navRightBtAction;
 -(void)setUserPhone:(NSString *)_phone;
 -(void)setData:(NSDictionary *)dic;
+-(void)setImage:(NSString *)imageUrl withImage:(UIImage *)image;
+-(void)setUserName:(NSString *)name;
 @end
 
 
@@ -34,4 +36,7 @@ typedef NS_ENUM(NSInteger, YiSlideDirection) {
 @protocol YiSlideMenuDelegate<NSObject>
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath slide:(YiSlideDirection)slideDirection;
 -(void)switchBtn:(BOOL)isSelected;
+-(void)selectImage;
+-(void)selectUserName;
+
 @end
