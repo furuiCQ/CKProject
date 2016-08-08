@@ -54,31 +54,34 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-//初始化顶部菜单栏
 -(void)initTitle{
     //设置顶部栏
     titleHeight=44;
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
+    [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     //新建左上角Label
     cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
-    [cityLabel setTextAlignment:NSTextAlignmentCenter];
-    cityLabel.userInteractionEnabled=YES;//
     UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
     [imageView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/35/2, titleHeight/2-self.view.frame.size.width/20/2, self.view.frame.size.width/35, self.view.frame.size.width/20)];
     [cityLabel addSubview:imageView];
+    
+    [cityLabel setTextAlignment:NSTextAlignmentCenter];
+    cityLabel.userInteractionEnabled=YES;///
     UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMiss:)];
     [cityLabel addGestureRecognizer:gesture];
+    
     //新建查询视图
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
-    [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setText:@"消息"];
-    
+    [searchLabel setTextColor:[UIColor whiteColor]];
+    [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
+    [searchLabel setText:@"通知"];
     [titleView addSubview:cityLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
+    
 }
+
 
 -(void)initCotentView{
     
@@ -155,9 +158,7 @@
 
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
-    // NSLog(@"点点点");
     [self dismissViewControllerAnimated:YES completion:nil];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"test" object:nil];
 }
 
 

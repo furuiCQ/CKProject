@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "TopBar.h"
 #import "MsgViewController.h"
-@interface MyMsgViewController : UITabBarController
+#import "BaseViewController.h"
+@interface MyMsgViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

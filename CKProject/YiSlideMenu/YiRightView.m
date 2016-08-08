@@ -87,7 +87,13 @@
     [cell.logoImage setImage:[UIImage imageNamed:[imageArray objectAtIndex:[indexPath row]]]];
     [cell.rightView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     if([indexPath row]==1){
-        
+        UISwitch *switchButton = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, cell.rightView.frame.size.width-10, cell.rightView.frame.size.height)];
+        [switchButton setUserInteractionEnabled:YES];
+        [switchButton setOn:YES];
+        [switchButton setOnImage:[UIImage imageNamed:@"me_female_icon"]];
+        [switchButton setOffImage:[UIImage imageNamed:@"me_male_icon"]];
+        [switchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+        [cell.rightView addSubview:switchButton];
         
     }else if([indexPath row]==3){
         UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, cell.rightView.frame.size.width-10, cell.rightView.frame.size.height)];
@@ -107,7 +113,16 @@
     // [cell.titleLabel setText:@"123"];
     return cell;
 }
-
+-(void)switchAction:(id)sender
+{
+    UISwitch *switchButton = (UISwitch*)sender;
+    BOOL isButtonOn = [switchButton isOn];
+    if (isButtonOn) {
+        NSLog(@"isButtonOn TRUE");
+    }else {
+        NSLog(@"isButtonOn FALSE");
+    }
+}
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if ([_delegate respondsToSelector:@selector(rightDidSelectRowAtIndexPath:)]) {

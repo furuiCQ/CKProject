@@ -676,12 +676,32 @@
         switch ([indexPath row]) {
             case 0:
             {
-                
+                NSLog(@"优惠劵");
             }
                 break;
             case 1:
             {
-                
+                NSLog(@"性别");
+            }
+                break;
+            case 2:
+            {
+                NSLog(@"修改密码");
+            }
+                break;
+            case 3:
+            {
+                NSLog(@"修改电话");
+            }
+                break;
+            case 4:
+            {
+                NSLog(@"地址");
+            }
+                break;
+            case 5:
+            {
+                NSLog(@"联系我们");
             }
                 break;
             case 6:
