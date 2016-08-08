@@ -9,7 +9,7 @@
 #import "MyRegistrationRecordViewController.h"
 #import "HttpHelper.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-
+#import "OrderRecordCell.h"
 @interface MyRegistrationRecordViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray *dataArray;
@@ -20,6 +20,7 @@
     
     int flag;
     int select_number;
+    UIImageView *nodataImageView;
 }
 @end
 
@@ -34,7 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:244.f/255.f blue:247.f/255.f alpha:1.0]];
     select_number=-1;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getData) name:@"refresh" object:nil];
     [ProgressHUD show:@"加载中..."];
@@ -113,7 +114,7 @@
 -(void)initTopBar{
     int width=self.view.frame.size.width;
     UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
-    [topView setBackgroundColor:[UIColor whiteColor]];
+    [topView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:topView];
     
     
@@ -121,7 +122,7 @@
     tabArray=[[NSMutableArray alloc]init];
     for (int i=0; i<[array count]; i++) {
         TopBar *topBar=[[TopBar alloc]initWithFrame:CGRectMake(width/[array count]*i, 0, width/[array count], titleHeight)];
-        [topBar addTarget:self action:@selector(topBarOnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [topBar addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
         [topBar setTag:i];
         [topBar setText:[array objectAtIndex:i]];
         [topBar initView];
@@ -144,6 +145,10 @@
         [tabArray addObject:topBar];
     }
     flag=0;
+    
+    nodataImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/2-width/5.2, topView.frame.size.height+topView.frame.origin.y+width/2.9, width/2.2, width/2.5)];
+    [nodataImageView setImage:[UIImage imageNamed:@"mine_nodata"]];
+    [self.view addSubview:nodataImageView];
 }
 -(void)clickNumber:(int)number{
    // TopBar *topBar=[[TopBar alloc]init];
@@ -163,10 +168,12 @@
         TopBar *b=(TopBar *)object;
         if(b.tag!=topBar.tag){
             [b setChecked:NO];
-            [b setTextColor:[UIColor colorWithRed:146.f/255.f green:146.f/255.f blue:146.f/255.f alpha:1.0]];
+            [b setIconColor:[UIColor blackColor]];
+            [b setTextColor:[UIColor blackColor]];
         }else{
             [b setChecked:YES];
-            [b setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
+            [b setIconColor:[UIColor redColor]];
+            [b setTextColor:[UIColor redColor]];
             
         }
     }
@@ -243,12 +250,13 @@
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSIndexPath是一个结构体，记录了组和行信息
-    RegistrationRecordTableCell *cell=[[RegistrationRecordTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    [cell setViewController:self];
-    if (cell ==nil) {
-        cell  = [[RegistrationRecordTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    static NSString *identy = @"CustomCell";
+    OrderRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
+    if(cell==nil){
+        cell=[[[NSBundle mainBundle]loadNibNamed:@"OrderRecordCell"owner:self options:nil]lastObject];
     }
+    OrderRecordCell *porjectCell=(OrderRecordCell *)cell;
+
     
     if ([dataArray count]>0) {
         NSDictionary *dic;
@@ -263,60 +271,65 @@
         
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
-            [cell.tilteLabel setText:[NSString stringWithFormat:@"%@",title]];
+            [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
+        }
+        if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
+            NSString *people=[dic objectForKey:@"people"];
+            NSString *str=[NSString stringWithFormat:@"已报%@人",people];
+            [porjectCell.orderNumbLabel setText:str];
+            
         }
         
         if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
             NSString *logo=[dic objectForKey:@"logo"];
-            [cell.logoImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+            if (![logo isEqualToString:@""]) {
+                [porjectCell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+                
+            }
+            
         }
-        
-        if ([dic objectForKey:@"instsort"] && ![[dic objectForKey:@"instsort"] isEqual:[NSNull null]]) {
-            NSString *instname=[dic objectForKey:@"instsort"];
-            [cell.projectName setText:[NSString stringWithFormat:@"%@",instname]];
+        if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
+            NSNumber *range=[dic objectForKey:@"range"];
+            double distance=[range doubleValue];
+            if(distance>0.0){
+                if (distance/1000>1) {
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
+                }else if (distance/1000<1 && distance/1000>0.5){
+                    [porjectCell.distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
+                    
+                }else if (distance/1000<0.5){
+                    [porjectCell.distanceLabel setText:@"<500m"];
+                }
+            }
         }
-        
-        if ([dic objectForKey:@"orderday"] && ![[dic objectForKey:@"orderday"] isEqual:[NSNull null]]) {
-            NSNumber *btime=[dic objectForKey:@"orderday"];
+        if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
+            NSString *grade=[dic objectForKey:@"grade"];
+            [porjectCell.ageLabel setText:[NSString stringWithFormat:@"适应年龄段:%@",grade]];
+        }
+        if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
+            NSNumber *btime=[dic objectForKey:@"btime"];
             NSInteger myInteger = [btime integerValue];
             NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
             [formatter setDateStyle:NSDateFormatterMediumStyle];
             [formatter setTimeStyle:NSDateFormatterShortStyle];
-            [formatter setDateFormat:@"YYYY-MM-dd"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+            [formatter setDateFormat:@"MM月 dd HH:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
             NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
             [formatter setTimeZone:timeZone];
             NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
-            NSString *str = [formatter stringFromDate:confromTimesp];
-            // 修改
-            NSString *sdt=[NSString stringWithFormat:@"%@\t%@",str,[dic objectForKey:@"ordertime"]];
-            
-            
-            
-            [cell.timeLabel setText:[NSString stringWithFormat:@"%@",sdt]];
-            if ([dic objectForKey:@"ordertime"] && ![[dic objectForKey:@"ordertime"] isEqual:[NSNull null]]) {
-                NSNumber *etime=[dic objectForKey:@"ordertime"];
-                
-                NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
-                NSString *timeStamp2 =[formater stringFromNumber:btime];
-                long long int date1 = (long long int)[timeStamp2 intValue];
-                NSDate *aDate = [NSDate dateWithTimeIntervalSince1970:date1];
-                NSTimeInterval bTimer = [aDate timeIntervalSinceNow];
-                
-                NSString *timeStamp3 =[formater stringFromNumber:etime];
-                long long int date2 = (long long int)[timeStamp3 intValue];
-                NSDate *eDate = [NSDate dateWithTimeIntervalSince1970:date2];
-                NSTimeInterval eTimer = [eDate timeIntervalSinceNow];
-                
-            }
+            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+            [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
         }
+
         if ([dic objectForKey:@"status"] && ![[dic objectForKey:@"status"] isEqual:[NSNull null]]) {
             NSNumber *status=[dic objectForKey:@"status"];
            NSNumber *atime=[dic objectForKey:@"atime"];
            int at=[atime intValue];
            if ([status isEqualToNumber:[NSNumber numberWithInt:0]]&&at>0) {
-               [cell.statueLabel setText:@"受理失败"];
-               [cell.statueLabel setTextColor:[UIColor colorWithRed:245.f/255.f green:7.f/255.f blue:35.f/255.f alpha:1.0]];
-               cell.statueLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
+//               [cell.statueLabel setText:@"受理失败"];
+//               [cell.statueLabel setTextColor:[UIColor colorWithRed:245.f/255.f green:7.f/255.f blue:35.f/255.f alpha:1.0]];
+//               cell.statueLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
+               [cell.accpet_image setHidden:NO];
+               [cell.accpet_image setImage:[UIImage imageNamed:@"accepte_warn"]];
                if (flag==0) {
                    NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
                    BOOL toAdd=true;
@@ -338,9 +351,11 @@
                
            }
             if ([status isEqualToNumber:[NSNumber numberWithInt:0]]&&at==0) {
-                [cell.statueLabel setText:@"未受理"];
-                [cell.statueLabel setTextColor:[UIColor colorWithRed:245.f/255.f green:7.f/255.f blue:35.f/255.f alpha:1.0]];
-                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
+//                [cell.statueLabel setText:@"未受理"];
+//                [cell.statueLabel setTextColor:[UIColor colorWithRed:245.f/255.f green:7.f/255.f blue:35.f/255.f alpha:1.0]];
+//                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
+                [cell.accpet_image setHidden:NO];
+                [cell.accpet_image setImage:[UIImage imageNamed:@"accepting"]];
                 if (flag==0) {
                     NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
                     BOOL toAdd=true;
@@ -362,13 +377,13 @@
                 
             }
            else  if ([status isEqualToNumber:[NSNumber numberWithInt:1]]) {
-                [cell.statueLabel setText:@"评价"];
-                [cell.statueLabel setTag:[indexPath row]];
-                UITapGestureRecognizer *tapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goAssessViewController:)];
-                [cell.statueLabel setUserInteractionEnabled:YES];
-                [cell.statueLabel addGestureRecognizer:tapGestureRecognizer];
-                [cell.statueLabel setTextColor:[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0]];
-                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0].CGColor;
+//                [cell.statueLabel setText:@"评价"];
+//                [cell.statueLabel setTag:[indexPath row]];
+//                UITapGestureRecognizer *tapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goAssessViewController:)];
+//                [cell.statueLabel setUserInteractionEnabled:YES];
+//                [cell.statueLabel addGestureRecognizer:tapGestureRecognizer];
+//                [cell.statueLabel setTextColor:[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0]];
+//                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0].CGColor;
                 if (flag==0) {
                     NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
                     BOOL toAdd=true;
@@ -389,9 +404,9 @@
                 }
                 
             }else  if ([status isEqualToNumber:[NSNumber numberWithInt:2]]) {
-                [cell.statueLabel setText:@"已评价"];
-                [cell.statueLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0].CGColor;
+//                [cell.statueLabel setText:@"已评价"];
+//                [cell.statueLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
+//                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0].CGColor;
                 if (flag==0) {
                     NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
                     BOOL toAdd=true;
@@ -413,11 +428,6 @@
             }
             
         }
-        
-        
-        
-        
-        
     }else{
         cell.textLabel.textAlignment=NSTextAlignmentCenter;
         cell.textLabel.text=@"数据加载中";
@@ -541,6 +551,20 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
                         [recordTableView reloadData];
+                        for (NSObject *object in tabArray) {
+                            TopBar *b=(TopBar *)object;
+                            if(b.tag==0){
+                                [b.textLabel setText:[NSString stringWithFormat:@"全部%lu",(unsigned long)[allArray count]]];
+                            }
+                        }
+                        if([allArray count]>0){
+                            [nodataImageView setHidden:YES];
+                            [recordTableView setHidden:NO];
+                        }else{
+                            [recordTableView setHidden:YES];
+                            [nodataImageView setHidden:NO];
+                        }
+                        
                         if (select_number>-1) {
                             [self selectTopBar];
                         }

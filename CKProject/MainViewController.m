@@ -596,7 +596,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     mainTableView.dataSource                        = self;
     mainTableView.delegate                          = self;
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
-    
+    mainTableView.separatorStyle=NO;
     
     UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, sc.frame.size.height+2, width, width/8.8)];
     [headerView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
@@ -1115,6 +1115,7 @@ static NSString *identy = @"OrderRecordCell";
     }
     
 }
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -1230,22 +1231,30 @@ static NSString *identy = @"OrderRecordCell";
         [[CCLocationManager shareLocation]getCity:^(NSString *cityString) {
             NSLog(@"当前城市:%@",cityString);
             [cityLabel setText:cityString];
-            NSString *path = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"txt"];
-            NSError *error = [[NSError alloc]init];
-            NSString *_localData = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
-            NSRange rang  = [_localData rangeOfString:cityString];
-            NSLog(@"%@",NSStringFromRange(rang));
-            NSString *str=[_localData substringWithRange:NSMakeRange(rang.location-10, rang.length+18)];
-            NSLog(@"%@",str);
-            NSLog(@"%lu",(unsigned long)[str length]);
-            NSArray *dataArray=[str componentsSeparatedByString:NSLocalizedString(@",", nil)];
-            NSString *provStr=[dataArray objectAtIndex:2];
-            NSString *cityStr=[dataArray objectAtIndex:0];
-            cityStr=[cityStr substringWithRange:NSMakeRange(1, cityStr.length-2)];
-            NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
-            NSNumber *_selectCityId=[formater numberFromString:cityStr];
-            AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            myDelegate.localNumber=_selectCityId;
+            if(cityString!=nil){
+                NSString *path = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"txt"];
+                NSError *error = [[NSError alloc]init];
+                NSString *_localData = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+                NSRange rang  = [_localData rangeOfString:cityString];
+                NSLog(@"%@",NSStringFromRange(rang));
+                NSString *str=[_localData substringWithRange:NSMakeRange(rang.location-10, rang.length+18)];
+                NSLog(@"%@",str);
+                NSLog(@"%lu",(unsigned long)[str length]);
+                NSArray *dataArray=[str componentsSeparatedByString:NSLocalizedString(@",", nil)];
+                NSString *provStr=[dataArray objectAtIndex:2];
+                NSString *cityStr=[dataArray objectAtIndex:0];
+                cityStr=[cityStr substringWithRange:NSMakeRange(1, cityStr.length-2)];
+                NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
+                NSNumber *_selectCityId=[formater numberFromString:cityStr];
+                AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                myDelegate.localNumber=_selectCityId;
+
+            }else{
+                AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
+                myDelegate.localNumber=[formater numberFromString:DEFAULT_LOCAL_AID];
+                [cityLabel setText:@"重庆"];
+            }
             
         }];
         
