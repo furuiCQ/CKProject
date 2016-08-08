@@ -32,4 +32,5 @@ typedef NS_ENUM(NSInteger, YiSlideDirection) {
 
 @protocol YiSlideMenuDelegate<NSObject>
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath slide:(YiSlideDirection)slideDirection;
+-(void)switchBtn:(BOOL)isSelected;
 @end

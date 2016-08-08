@@ -17,5 +17,6 @@
 @end
 @protocol YiRightViewDelegate<NSObject>
 - (void)rightDidSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+-(void)switchBtn:(BOOL)isSelected;
 @end
 

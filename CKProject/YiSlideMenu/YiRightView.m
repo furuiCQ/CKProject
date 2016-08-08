@@ -13,6 +13,9 @@
     NSArray *dataArray;
     NSArray *imageArray;
     NSString *phone;
+    
+    UIImageView *girlImageView;
+    UIImageView *boyImageView;
 }
 
 @end
@@ -87,12 +90,21 @@
     [cell.logoImage setImage:[UIImage imageNamed:[imageArray objectAtIndex:[indexPath row]]]];
     [cell.rightView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     if([indexPath row]==1){
-        UISwitch *switchButton = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, cell.rightView.frame.size.width-10, cell.rightView.frame.size.height)];
+        UIButton *switchButton = [[UIButton alloc] initWithFrame:CGRectMake(cell.rightView.frame.size.width-10-38,  cell.rightView.frame.size.height/4, 38, 21)];
         [switchButton setUserInteractionEnabled:YES];
-        [switchButton setOn:YES];
-        [switchButton setOnImage:[UIImage imageNamed:@"me_female_icon"]];
-        [switchButton setOffImage:[UIImage imageNamed:@"me_male_icon"]];
-        [switchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+        [switchButton setBackgroundColor:[UIColor whiteColor]];
+        [switchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
+        [switchButton.layer setCornerRadius:11];
+        //19 × 19
+        girlImageView=[[UIImageView alloc]initWithFrame:CGRectMake(switchButton.frame.size.width-19, switchButton.frame.size.height/2-19/2, 19, 19)];
+        [girlImageView setImage:[UIImage imageNamed:@"me_female_icon"]];
+        [switchButton addSubview:girlImageView];
+        
+        boyImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, switchButton.frame.size.height/2-19/2, 19, 19)];
+        [boyImageView setImage:[UIImage imageNamed:@"me_male_icon"]];
+        [boyImageView setHidden:YES];
+        [switchButton addSubview:boyImageView];
+    
         [cell.rightView addSubview:switchButton];
         
     }else if([indexPath row]==3){
@@ -113,15 +125,23 @@
     // [cell.titleLabel setText:@"123"];
     return cell;
 }
+
 -(void)switchAction:(id)sender
 {
-    UISwitch *switchButton = (UISwitch*)sender;
-    BOOL isButtonOn = [switchButton isOn];
+    UIButton *switchButton = (UIButton*)sender;
+    BOOL isButtonOn = switchButton.selected;
+    [_delegate switchBtn:switchButton.selected];
     if (isButtonOn) {
+        [boyImageView setHidden:YES];
+        [girlImageView setHidden:NO];
+
         NSLog(@"isButtonOn TRUE");
     }else {
+        [girlImageView setHidden:YES];
+        [boyImageView setHidden:NO];
         NSLog(@"isButtonOn FALSE");
     }
+    switchButton.selected=!switchButton.selected;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     

@@ -191,7 +191,9 @@
         }
     }
 }
-
+-(void)switchBtn:(BOOL)isSelected{
+    [_slideMenuDelegate switchBtn:isSelected];
+}
 -(void)leftViewDidSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if ([_slideMenuDelegate respondsToSelector:@selector(didSelectRowAtIndexPath:slide:)]) {

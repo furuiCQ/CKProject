@@ -800,6 +800,8 @@
             break;
     }
 }
-
+-(void)switchBtn:(BOOL)isSelected{
+    NSLog(@"switchBtn====>",isSelected);
+}
 
 @end
