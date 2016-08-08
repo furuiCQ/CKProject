@@ -33,6 +33,17 @@
 		490B5E8B1D5827C800C37E85 /* me_female_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E851D5827C800C37E85 /* me_female_icon@2x.png */; };
 		490B5E8C1D5827C800C37E85 /* me_female_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E861D5827C800C37E85 /* me_female_icon.png */; };
 		490B5E8D1D5827C800C37E85 /* me_female_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E871D5827C800C37E85 /* me_female_icon@3x.png */; };
+		490B5EA21D585D0E00C37E85 /* system_msg@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E9C1D585D0E00C37E85 /* system_msg@3x.png */; };
+		490B5EA31D585D0E00C37E85 /* system_msg.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E9D1D585D0E00C37E85 /* system_msg.png */; };
+		490B5EA41D585D0E00C37E85 /* system_msg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E9E1D585D0E00C37E85 /* system_msg@2x.png */; };
+		490B5EA51D585D0E00C37E85 /* proj_msg@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5E9F1D585D0E00C37E85 /* proj_msg@3x.png */; };
+		490B5EA61D585D0E00C37E85 /* proj_msg.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5EA01D585D0E00C37E85 /* proj_msg.png */; };
+		490B5EA71D585D0E00C37E85 /* proj_msg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 490B5EA11D585D0E00C37E85 /* proj_msg@2x.png */; };
+		490B5EA91D585F0D00C37E85 /* MsgCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 490B5EA81D585F0D00C37E85 /* MsgCell.xib */; };
+		490B5EAC1D585F4200C37E85 /* MsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 490B5EAB1D585F4200C37E85 /* MsgCell.m */; };
+		490B5EB01D5865CE00C37E85 /* ChangePhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 490B5EAF1D5865CE00C37E85 /* ChangePhoneViewController.m */; };
+		490B5EB31D58668800C37E85 /* ChangeNickNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 490B5EB21D58668800C37E85 /* ChangeNickNameViewController.m */; };
+		490B5EB61D5866A400C37E85 /* ChangePassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 490B5EB51D5866A400C37E85 /* ChangePassViewController.m */; };
 		491EB6D71CC47034006A0AEC /* DayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 491EB6D61CC47034006A0AEC /* DayModel.m */; };
 		492881D71C2E35A00059A327 /* UILabel+JJKAlertActionFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 492881D61C2E35A00059A327 /* UILabel+JJKAlertActionFont.m */; };
 		492881DA1C2E500A0059A327 /* ImageCompress.m in Sources */ = {isa = PBXBuildFile; fileRef = 492881D91C2E500A0059A327 /* ImageCompress.m */; };
@@ -738,6 +749,21 @@
 		490B5E851D5827C800C37E85 /* me_female_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "me_female_icon@2x.png"; sourceTree = "<group>"; };
 		490B5E861D5827C800C37E85 /* me_female_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = me_female_icon.png; sourceTree = "<group>"; };
 		490B5E871D5827C800C37E85 /* me_female_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "me_female_icon@3x.png"; sourceTree = "<group>"; };
+		490B5E9C1D585D0E00C37E85 /* system_msg@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "system_msg@3x.png"; sourceTree = "<group>"; };
+		490B5E9D1D585D0E00C37E85 /* system_msg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = system_msg.png; sourceTree = "<group>"; };
+		490B5E9E1D585D0E00C37E85 /* system_msg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "system_msg@2x.png"; sourceTree = "<group>"; };
+		490B5E9F1D585D0E00C37E85 /* proj_msg@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "proj_msg@3x.png"; sourceTree = "<group>"; };
+		490B5EA01D585D0E00C37E85 /* proj_msg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = proj_msg.png; sourceTree = "<group>"; };
+		490B5EA11D585D0E00C37E85 /* proj_msg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "proj_msg@2x.png"; sourceTree = "<group>"; };
+		490B5EA81D585F0D00C37E85 /* MsgCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MsgCell.xib; sourceTree = "<group>"; };
+		490B5EAA1D585F4200C37E85 /* MsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MsgCell.h; sourceTree = SOURCE_ROOT; };
+		490B5EAB1D585F4200C37E85 /* MsgCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MsgCell.m; sourceTree = SOURCE_ROOT; };
+		490B5EAE1D5865C400C37E85 /* ChangePhoneViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangePhoneViewController.h; sourceTree = "<group>"; };
+		490B5EAF1D5865CE00C37E85 /* ChangePhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePhoneViewController.m; sourceTree = "<group>"; };
+		490B5EB11D58668800C37E85 /* ChangeNickNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeNickNameViewController.h; sourceTree = "<group>"; };
+		490B5EB21D58668800C37E85 /* ChangeNickNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeNickNameViewController.m; sourceTree = "<group>"; };
+		490B5EB41D5866A400C37E85 /* ChangePassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePassViewController.h; sourceTree = "<group>"; };
+		490B5EB51D5866A400C37E85 /* ChangePassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePassViewController.m; sourceTree = "<group>"; };
 		491EB6D51CC47022006A0AEC /* DayModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DayModel.h; sourceTree = "<group>"; };
 		491EB6D61CC47034006A0AEC /* DayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayModel.m; sourceTree = "<group>"; };
 		492881D51C2E35920059A327 /* UILabel+JJKAlertActionFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+JJKAlertActionFont.h"; sourceTree = "<group>"; };
@@ -1601,6 +1627,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		490B5EAD1D58657700C37E85 /* UserViewController */ = {
+			isa = PBXGroup;
+			children = (
+				490B5EB41D5866A400C37E85 /* ChangePassViewController.h */,
+				490B5EB51D5866A400C37E85 /* ChangePassViewController.m */,
+				490B5EB11D58668800C37E85 /* ChangeNickNameViewController.h */,
+				490B5EB21D58668800C37E85 /* ChangeNickNameViewController.m */,
+				49EBDB291C65C8DF0057A50D /* UserDealViewController.h */,
+				49EBDB2A1C65C8DF0057A50D /* UserDealViewController.m */,
+				490B5EAE1D5865C400C37E85 /* ChangePhoneViewController.h */,
+				490B5EAF1D5865CE00C37E85 /* ChangePhoneViewController.m */,
+			);
+			name = UserViewController;
+			sourceTree = "<group>";
+		};
 		493305801C183A76005B9EDC /* MineSubViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1658,6 +1699,9 @@
 				496453451C204F3500EA5F67 /* SortProjectListTableCell.m */,
 				49541B831C31712200CB023F /* InvitaitionTabelCell.h */,
 				49541B841C31712A00CB023F /* InvitaitionTabelCell.m */,
+				490B5EAA1D585F4200C37E85 /* MsgCell.h */,
+				490B5EAB1D585F4200C37E85 /* MsgCell.m */,
+				490B5EA81D585F0D00C37E85 /* MsgCell.xib */,
 			);
 			name = CustomListViewCell;
 			sourceTree = "<group>";
@@ -2063,6 +2107,7 @@
 				4977AF1C1C0DCDC2001F0D55 /* MainVieControllers */,
 				493305801C183A76005B9EDC /* MineSubViewController */,
 				49541B551C2E89D200CB023F /* MsgSubViewController */,
+				490B5EAD1D58657700C37E85 /* UserViewController */,
 				497E4E0C1C19AEC600B9C556 /* LoginRegisterViewController */,
 				4977AF1A1C0DCDAD001F0D55 /* CustomView */,
 				493305841C183E14005B9EDC /* CustomListViewCell */,
@@ -2214,8 +2259,6 @@
 				497E4E171C19C48800B9C556 /* RegisterViewController.m */,
 				497E4E191C1AB2C600B9C556 /* CompleDataViewController.h */,
 				497E4E1A1C1AB2CF00B9C556 /* CompleDataViewController.m */,
-				49EBDB291C65C8DF0057A50D /* UserDealViewController.h */,
-				49EBDB2A1C65C8DF0057A50D /* UserDealViewController.m */,
 			);
 			name = LoginRegisterViewController;
 			sourceTree = "<group>";
@@ -2234,6 +2277,12 @@
 		49B056141D50B9FD00F0C79B /* thrid */ = {
 			isa = PBXGroup;
 			children = (
+				490B5E9C1D585D0E00C37E85 /* system_msg@3x.png */,
+				490B5E9D1D585D0E00C37E85 /* system_msg.png */,
+				490B5E9E1D585D0E00C37E85 /* system_msg@2x.png */,
+				490B5E9F1D585D0E00C37E85 /* proj_msg@3x.png */,
+				490B5EA01D585D0E00C37E85 /* proj_msg.png */,
+				490B5EA11D585D0E00C37E85 /* proj_msg@2x.png */,
 				490B5E821D5827C800C37E85 /* me_male_icon.png */,
 				490B5E831D5827C800C37E85 /* me_male_icon@2x.png */,
 				490B5E841D5827C800C37E85 /* me_male_icon@3x.png */,
@@ -2727,6 +2776,7 @@
 				49CE5EB61D56BD9100B07AE5 /* sports_pressed_ic@2x.png in Resources */,
 				497120A21CC1F75E0032DED2 /* beikao_logo@3x.png in Resources */,
 				49D79E371C57A084009EE6B0 /* weixin@3x.png in Resources */,
+				490B5EA41D585D0E00C37E85 /* system_msg@2x.png in Resources */,
 				497120A11CC1F75E0032DED2 /* beikao_logo@2x.png in Resources */,
 				49D79E681C57B48C009EE6B0 /* icon-72@2x.png in Resources */,
 				490B5E8A1D5827C800C37E85 /* me_male_icon@3x.png in Resources */,
@@ -2830,6 +2880,7 @@
 				CEA721DD1D07C05A00035A86 /* 返回@2x.png in Resources */,
 				49EBDB241C65C8C80057A50D /* deal_check@2x.png in Resources */,
 				4943032F1C7194B10050F0E5 /* Default~iphone.png in Resources */,
+				490B5EA21D585D0E00C37E85 /* system_msg@3x.png in Resources */,
 				4943032D1C7194B10050F0E5 /* Default-736h.png in Resources */,
 				49CE5DAE1D5464E600B07AE5 /* show_pas@2x.png in Resources */,
 				49CE5DA41D5464E600B07AE5 /* life_image@2x.png in Resources */,
@@ -2971,6 +3022,7 @@
 				49C901A91C4E05B8001EC0A0 /* undemotion_logo@2x.png in Resources */,
 				49CE5D581D5464E600B07AE5 /* arrow_light@3x.png in Resources */,
 				49CE5D7A1D5464E600B07AE5 /* show_pas.png in Resources */,
+				490B5EA31D585D0E00C37E85 /* system_msg.png in Resources */,
 				49CE5D9D1D5464E600B07AE5 /* sort_unselect@2x.png in Resources */,
 				49CE5E1F1D55EC7A00B07AE5 /* Settings-.png in Resources */,
 				49CE5D5F1D5464E600B07AE5 /* red_up.png in Resources */,
@@ -2983,6 +3035,7 @@
 				49D79E361C57A084009EE6B0 /* weixin@2x.png in Resources */,
 				49CE5D8B1D5464E600B07AE5 /* star_normal@2x.png in Resources */,
 				49EBDB271C65C8C80057A50D /* deal_uncheck@2x.png in Resources */,
+				490B5EA61D585D0E00C37E85 /* proj_msg.png in Resources */,
 				CEA721E21D07C05A00035A86 /* 前进.png in Resources */,
 				4943032C1C7194B10050F0E5 /* Default-667h.png in Resources */,
 				D37425551C4616EB0081E794 /* unselect_big_star@3x.png in Resources */,
@@ -3049,6 +3102,7 @@
 				49FE3F401C58EB7400FBCA7F /* ProgressHUD.bundle in Resources */,
 				49CE5EC21D56BD9100B07AE5 /* Vocational-and-technical_pressed_ic@2x.png in Resources */,
 				49CE5E891D56BD9100B07AE5 /* classroom_pressed_ic@2x.png in Resources */,
+				490B5EA71D585D0E00C37E85 /* proj_msg@2x.png in Resources */,
 				4964540C1C2297B300EA5F67 /* parent_logo.png in Resources */,
 				49CE5E231D55EC7A00B07AE5 /* contact@3x.png in Resources */,
 				49CE5D7C1D5464E600B07AE5 /* hid_pas.png in Resources */,
@@ -3058,6 +3112,7 @@
 				4999054A1CC25E5300353C00 /* talk@3x.png in Resources */,
 				49D79E6C1C57B48C009EE6B0 /* icon-small@2x.png in Resources */,
 				496454231C229BE300EA5F67 /* screen_logo@3x.png in Resources */,
+				490B5EA91D585F0D00C37E85 /* MsgCell.xib in Resources */,
 				49DB84801C2A74A400C344B1 /* crow_logo@2x.png in Resources */,
 				499442EE1C4774AB00FC67C6 /* rightok@2X.png in Resources */,
 				49CE5E8C1D56BD9100B07AE5 /* dance_nor_ic@2x.png in Resources */,
@@ -3085,6 +3140,7 @@
 				496453DA1C21A69B00EA5F67 /* my_record@2x.png in Resources */,
 				496453A71C21420200EA5F67 /* sort_unselect@2x.png in Resources */,
 				49CE5D911D5464E600B07AE5 /* red_up@2x.png in Resources */,
+				490B5EA51D585D0E00C37E85 /* proj_msg@3x.png in Resources */,
 				49CE5EBF1D56BD9100B07AE5 /* Vocational-and-technical_nor_ic@2x.png in Resources */,
 				490B5E8B1D5827C800C37E85 /* me_female_icon@2x.png in Resources */,
 				499905261CC25E5300353C00 /* beikao@3x.png in Resources */,
@@ -3419,6 +3475,7 @@
 				4977AF291C0DD39D001F0D55 /* MineViewController.m in Sources */,
 				497E4E121C19BB2500B9C556 /* LoginViewController.m in Sources */,
 				4977AEE91C0DCC1A001F0D55 /* main.m in Sources */,
+				490B5EB61D5866A400C37E85 /* ChangePassViewController.m in Sources */,
 				493305831C183B3F005B9EDC /* MyRegistrationRecordViewController.m in Sources */,
 				49FE3F2D1C58541E00FBCA7F /* Node.m in Sources */,
 				49CE5CA01D52EB0700B07AE5 /* FDCalendarItem.m in Sources */,
@@ -3440,10 +3497,12 @@
 				10322D061C0EBBCE00945A89 /* CLLocation+YCLocation.m in Sources */,
 				49CE5ED71D56CFD900B07AE5 /* ProjectTimePicker.m in Sources */,
 				49CE5DFC1D55C64F00B07AE5 /* FavourableCell.m in Sources */,
+				490B5EB31D58668800C37E85 /* ChangeNickNameViewController.m in Sources */,
 				49CE5DF31D55833600B07AE5 /* YiSlideMenu.m in Sources */,
 				493305A21C19A307005B9EDC /* AboutViewController.m in Sources */,
 				4977AF3F1C117F8B001F0D55 /* ProjectTableCell.m in Sources */,
 				497120781CC1E21C0032DED2 /* CustomPopView.m in Sources */,
+				490B5EAC1D585F4200C37E85 /* MsgCell.m in Sources */,
 				4977AF2E1C0DD5E1001F0D55 /* BottomBtn.m in Sources */,
 				493305781C169452005B9EDC /* CircleCustomTableCell.m in Sources */,
 				497E4E1B1C1AB2CF00B9C556 /* CompleDataViewController.m in Sources */,
@@ -3454,6 +3513,7 @@
 				CE49C4301D34A15100699DB4 /* mCell.m in Sources */,
 				CE49EA231CE96B7B006ECB02 /* JZLocationConverter.m in Sources */,
 				CEE372301D12A28300F79876 /* MationViewController.m in Sources */,
+				490B5EB01D5865CE00C37E85 /* ChangePhoneViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

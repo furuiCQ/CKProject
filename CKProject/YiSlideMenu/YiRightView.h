@@ -14,6 +14,7 @@
 }
 @property id<YiRightViewDelegate> delegate;
 -(void)setUserPhone:(NSString *)_phone;
+-(void)setData:(NSDictionary *)dic;
 @end
 @protocol YiRightViewDelegate<NSObject>
 - (void)rightDidSelectRowAtIndexPath:(NSIndexPath *)indexPath;

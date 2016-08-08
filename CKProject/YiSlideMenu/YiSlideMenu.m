@@ -181,6 +181,16 @@
     }
  
 }
+-(void)setData:(NSDictionary *)dic{
+    for(UIView *view in [rightBgView subviews]){
+        if([view isKindOfClass:[YiRightView class]]){
+            YiRightView *rightView=(YiRightView *)view;
+            [rightView setData:dic];
+            
+        }
+    }
+
+}
 -(void)setUserPhone:(NSString *)_phone{
     //
     for(UIView *view in [rightBgView subviews]){

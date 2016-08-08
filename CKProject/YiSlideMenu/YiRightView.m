@@ -7,15 +7,25 @@
 //
 
 #import "YiRightView.h"
+#import "HttpHelper.h"
 #import "SettingCell.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+
 @interface YiRightView ()<UITableViewDelegate,UITableViewDataSource>{
     UITableView *tableView;
     NSArray *dataArray;
     NSArray *imageArray;
-    NSString *phone;
     
     UIImageView *girlImageView;
     UIImageView *boyImageView;
+    
+    NSString *phone;
+    NSString *username;
+    NSNumber *sex;
+    NSString *logo;
+    NSString *address;
+    
+    UILabel *userLabel;
 }
 
 @end
@@ -44,7 +54,7 @@
         
         [headerView addSubview:userImageView];
         
-        UILabel *userLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, userImageView.frame.size.height+userImageView.frame.origin.y+10, viewWidth, 20)];
+        userLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, userImageView.frame.size.height+userImageView.frame.origin.y+10, viewWidth, 20)];
         [userLabel setText:@"Amy"];
         [userLabel setTextAlignment:NSTextAlignmentCenter];
         [userLabel setTextColor:[UIColor whiteColor]];
@@ -72,6 +82,20 @@
     phone=_phone;
     [tableView reloadData];
 }
+-(void)setData:(NSDictionary *)dic{
+    phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
+    username=[NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]];
+    sex=[dic objectForKey:@"sex"];
+    address=[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]];
+    [userLabel setText:username];
+    if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
+        logo=[dic objectForKey:@"logo"];
+        if (![logo isEqualToString:@""]) {
+            [userImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+        }
+    }
+    [tableView reloadData];
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [dataArray count];
 }
@@ -81,6 +105,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identy = @"CustomCell";
+    NSLog(@"cellForRowAtIndexPath%ld",(long)[indexPath row]);
     SettingCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
     if(cell==nil){
         cell=[[[NSBundle mainBundle]loadNibNamed:@"SettingCell"owner:self options:nil]lastObject];
@@ -104,6 +129,15 @@
         [boyImageView setImage:[UIImage imageNamed:@"me_male_icon"]];
         [boyImageView setHidden:YES];
         [switchButton addSubview:boyImageView];
+        if(sex!=nil){
+            if([sex intValue]==1){
+                [boyImageView setHidden:NO];
+                [girlImageView setHidden:YES];
+            }else{
+                [boyImageView setHidden:YES];
+                [girlImageView setHidden:NO];
+            }
+        }
     
         [cell.rightView addSubview:switchButton];
         

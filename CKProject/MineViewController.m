@@ -78,9 +78,6 @@
         [ProgressHUD show:@"加载中..."];
         [self changeLoginStauets];
     }
-    
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -118,13 +115,13 @@
     
     [msgLabel setImage:[UIImage imageNamed:@"menu_logo"]];
     
-    pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
-    
-    [pointView setBackgroundColor:[UIColor redColor]];
-    pointView.layer.masksToBounds = YES;
-    pointView.layer.cornerRadius = (pointView.frame.size.width + 10) / 4;
-    [pointView setHidden:YES];
-    [msgLabel addSubview:pointView];
+//    pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
+//    
+//    [pointView setBackgroundColor:[UIColor redColor]];
+//    pointView.layer.masksToBounds = YES;
+//    pointView.layer.cornerRadius = (pointView.frame.size.width + 10) / 4;
+//    [pointView setHidden:YES];
+//    [msgLabel addSubview:pointView];
     
     
     [titleView addSubview:msgLabel];
@@ -353,6 +350,12 @@
     }
 }
 -(void)openRightMenu{
+    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (!myDelegate.isLogin) {
+        LoginViewController *loginViewController=[[LoginViewController alloc]init];
+        [self presentViewController:loginViewController animated:YES completion:nil];
+        return;
+    }
     slideMenu.navRightBtAction;
 }
 -(void)changeLoginStauets{
@@ -434,7 +437,7 @@
                         myDelegate.model=model;
                         myDelegate.isLogin=YES;
                         [self setData:model.result];
-                        
+                        [slideMenu setData:model.result];
                     }else{
                         
                     }
@@ -453,6 +456,8 @@
     });
     
 }
+/*
+ 
 -(void)controlClick:(UIControl *)control{
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
@@ -488,7 +493,7 @@
         default:
             break;
     }
-}
+}*/
 -(void)goMyRegViewController{
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
@@ -801,7 +806,45 @@
     }
 }
 -(void)switchBtn:(BOOL)isSelected{
-    NSLog(@"switchBtn====>",isSelected);
+    NSString *str=@"";
+    if(isSelected){
+        str=@"女";
+    }else{
+        str=@"男";
+    }
+    [self restSex:str];
 }
+-(void)restSex:(NSString *)context{
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [HttpHelper resetSex:context withModel:myDelegate.model success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    myDelegate.model=model;
+                    //[control.userNameLabel setText:context];
+                    
+                }else{
+                    
+                }
+               
+            });
+            
+            
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"error userInfo:===>%@",error.userInfo);
+                NSString *localizedDescription=[error.userInfo objectForKey:@"NSLocalizedDescription"];
+                if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
+                    
+                }
+            }
+        }];
+    });
+}
+
 
 @end

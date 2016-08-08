@@ -7,10 +7,12 @@
 //
 
 #import "MyMsgViewController.h"
-
-@interface MyMsgViewController ()<UITableViewDelegate>
+#import "MsgCell.h"
+@interface MyMsgViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
     NSArray *dataArray;
+    NSArray *imageArray;
+    UITableView *msgTableView;
     
 }
 @end
@@ -25,30 +27,19 @@
 @synthesize tableView;
 @synthesize hasMsg;
 - (void)viewDidLoad {
+    dataArray = [NSArray arrayWithObjects:@"1",@"2",
+                 nil];
+    imageArray=[NSArray arrayWithObjects:@"system_msg",@"proj_msg", nil];
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     
     [self initTitle];
-    [self visibleTabBar];
-    //[self initTopBar];
+    
     [self initCotentView];
     
-    dataArray = [NSArray arrayWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",
-                 nil];
+   
+
     
-    // Do any additional setup after loading the view, typically from a nib.
-}
-/**
- *  隐藏系统tabbar
- */
--(void)visibleTabBar
-{
-    for (UIView *view  in self.view.subviews) {
-        if([view isKindOfClass:[UITabBar class]]){
-            [view setHidden:YES];
-            break;
-        }
-    }
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -79,84 +70,84 @@
     [titleView addSubview:cityLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
+    // NSArray *imageArray=[NSArray arrayWithObjects:@"system_msg",@"proj_msg", nil];
     
 }
-
-
 -(void)initCotentView{
-    
-    int width=self.view.frame.size.width;
-    //  int height=self.view.frame.size.height;
-    
-    NSArray *tableArray = [NSArray arrayWithObjects:@"系统消息",@"课程提醒", nil];
-    
-    for(int i=0;i<[tableArray count];i++){
-        //我的报名记录
-        UIControl *myRecord=[[UIControl alloc]initWithFrame:CGRectMake(0, titleHeight+20+0.5+width/6.5*i+i*0.5, width, width/6.5)];
-        [myRecord setTag:i];
-        [myRecord addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
-        [myRecord setBackgroundColor:[UIColor whiteColor]];
-        
-        
-        UILabel *recordLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/40, (width/6.5-width/22)/2, width/4, width/22)];
-        [recordLabel setText:[tableArray objectAtIndex:i]];
-        [recordLabel setTextColor:[UIColor grayColor]];
-        [recordLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-        
-        [myRecord addSubview:recordLabel];
-        
-        UIImageView *recordRight=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/45.7-width/21, (width/6.5-width/29)/2, width/45.7, width/29)];
-        [recordRight setImage:[UIImage imageNamed:@"right_logo"]];
-        [myRecord addSubview:recordRight];
-        if (hasMsg && i==[tableArray count]-1) {
-            UIView *pointView=[[UIView alloc]initWithFrame:CGRectMake(width-width/45.7-width/21-width/42-8, (width/6.5-8)/2, 8, 8)];
-            
-            [pointView setBackgroundColor:[UIColor redColor]];
-            pointView.layer.masksToBounds = YES;
-            pointView.layer.cornerRadius = (pointView.frame.size.width + 10) / 4;
-            [myRecord addSubview:pointView];
-        }
-        
-        
-        [self.view addSubview:myRecord];
-    }
+    msgTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
+                                                              titleHeight+20,
+                                                              self.view.frame.size.width,
+                                                              self.view.frame.size.height-titleHeight-20)];
+    NSLog(@"%f",self.tabBarController.view.frame.size.height);
+    [msgTableView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:244.f/255.f blue:247.f/255.f alpha:1.0]];
+
+    msgTableView.dataSource                        = self;
+    msgTableView.delegate                          = self;
+    msgTableView.rowHeight                         = self.view.bounds.size.height/7;
+    [msgTableView setTag:0];
+    [self.view addSubview:msgTableView];
+    //    //添加刷新
+    //    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
+    //    [_refreshControl setTintColor:[UIColor grayColor]];
+    //
+    //    [_refreshControl addTarget:self
+    //                        action:@selector(refreshView:)
+    //              forControlEvents:UIControlEventValueChanged];
+    //    [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
+    //    [projectTableView addSubview:_refreshControl];
+    //
+    //    refreshFooter=[[YiRefreshFooter alloc] init];
+    //    refreshFooter.scrollView=projectTableView;
+    //    [refreshFooter footer];
+    //    refreshFooter.beginRefreshingBlock=^(){
+    //    };
 }
--(void)onClick:(id)sender{
-    UIControl *control=(UIControl*)sender;
-    NSLog(@"个人中心列表点击中.....%ld",(long)control.tag);
-    MsgViewController *msgViewControlle=[[MsgViewController alloc]init];
-    switch (control.tag)
-    {
-        
-        case 0:
-        {
-            [msgViewControlle setTopTitle:@"评论"];
-            [msgViewControlle setFlag:0];
-            
-        }
-            break;
-        case 1:
-        {
-            [msgViewControlle setTopTitle:@"收藏的帖子"];
-            [msgViewControlle setFlag:1];
+#pragma mark - 数据源方法
+#pragma mark 返回分组数
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
 
-
-        }
-            break;
-            
-        case 2:
-        {
-            [msgViewControlle setTopTitle:@"系统消息"];
-            [msgViewControlle setFlag:2];
-
-            
-        }
-            break;
-
+#pragma mark 返回每组行数
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    //  NSLog(@"计算每组(组%i)行数",section);
+    //  KCContactGroup *group1=_contacts[section];
+    return [dataArray count];
+}
+//@property (weak, nonatomic) IBOutlet UIImageView *logoImageView;
+//@property (weak, nonatomic) IBOutlet UILabel *pointView;
+//@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+//
+//@property (weak, nonatomic) IBOutlet UILabel *contentLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+#pragma mark返回每行的单元格
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    //NSIndexPath是一个结构体，记录了组和行信息
+    static NSString *identy = @"CustomCell";
+    MsgCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
+    if(cell==nil){
+        cell=[[[NSBundle mainBundle]loadNibNamed:@"MsgCell"owner:self options:nil]lastObject];
     }
-    [self presentViewController:msgViewControlle animated:YES completion:nil];
+    [cell.logoImageView setImage:[UIImage imageNamed:[imageArray objectAtIndex:[indexPath row]]]];
+    [cell.pointView.layer setCornerRadius:cell.pointView.layer.frame.size.width/2];
+    [cell.pointView.layer setMasksToBounds:YES];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%ld",(long)indexPath.row);
 
 }
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    UITableViewCell *cell = [self tableView:msgTableView cellForRowAtIndexPath:indexPath];
+    
+    return cell.frame.size.height;
+    
+}
+
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
