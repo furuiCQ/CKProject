@@ -1422,15 +1422,27 @@ static NSString *identy = @"OrderRecordCell";
 }
 -(void)getData{
     [ProgressHUD show:@"加载中..."];
-    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+    }
+    NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+    NSNumber *ar=[stand objectForKey:@"lttt"];
+    NSNumber *ngg=[stand objectForKey:@"nggg"];
+    if (ar==NULL&&ngg==NULL) {
+        ar=[NSNumber numberWithDouble:localLat];
+        ngg=[NSNumber numberWithDouble:localLng];
+    }
+    if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        ar=[NSNumber numberWithDouble:29.5];
+        ngg=[NSNumber numberWithDouble:106.5];
+    }
     if (projectID!=0 && projectID!=nil) {
-        NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
-        NSNumber *Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
-        
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            //            withlng:[NSNumber numberWithDouble:106.5] withlat:[NSNumber numberWithDouble:29.5] withnums:[NSNumber numberWithInt:2]
-            [HttpHelper getLessonList:projectID withPid:projectSubID withAID:Aid  success:^(HttpModel *model){
+            [HttpHelper getLessonList:projectID withPid:projectSubID withAID:Aid withlng:ngg withlat:ar withnums:[NSNumber numberWithInt:2]  success:^(HttpModel *model){
                 NSLog(@"%@",model.message);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
