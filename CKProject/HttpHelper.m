@@ -231,6 +231,18 @@
     }];
     
 }
++(void)zanNewsComments:(NSNumber*)commentsId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{@"name":@"id",@"value":commentsId},
+                            @{@"name":@"zan",@"value":zan},
+                            @{ @"name": @"tel", @"value": model.tel},
+                            @{ @"name": @"token", @"value": model.token},
+                            @{ @"name": @"uid", @"value": model.uid}];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_NEWSCOMMENTS_ZAN] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
 +(void)zanComments:(NSNumber*)commentsId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{@"name":@"id",@"value":commentsId},
                             @{@"name":@"zan",@"value":zan},
@@ -238,6 +250,18 @@
                             @{ @"name": @"token", @"value": model.token},
                             @{ @"name": @"uid", @"value": model.uid}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_COMMECTS_ZAN] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
++(void)zanNews:(NSNumber*)articleId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{@"name":@"id",@"value":articleId},
+                            @{@"name":@"zan",@"value":zan},
+                            @{ @"name": @"tel", @"value": model.tel},
+                            @{ @"name": @"token", @"value": model.token},
+                            @{ @"name": @"uid", @"value": model.uid}];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_NEWS_ZAN] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
         failture(error);

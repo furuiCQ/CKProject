@@ -175,7 +175,10 @@
     [sb addSubview:zanNumberLabel];
     
     zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/32*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
-    [zanImageView setImage:[UIImage imageNamed:@"dianzan_logo"] forState:UIControlStateNormal];
+    [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
+    [zanImageView setUserInteractionEnabled:YES];
+    UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews:)];
+    [zanImageView addGestureRecognizer:gesutre];
     [sb addSubview:zanImageView];
     
     lt=[[UILabel alloc]initWithFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y+swidth/40, swidth, 0.2)];
@@ -381,30 +384,21 @@
         if ([dic objectForKey:@"username"] && ![[dic objectForKey:@"username"] isEqual:[NSNull null]] ) {
             [cell.writers  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]]    ];
         }
-        //        if ([dic objectForKey:@"created"] && ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
-        //            NSNumber *number=[dic objectForKey:@"created"];
-        //            NSInteger myInteger = [number integerValue];
-        //            NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-        //            [formatter setDateStyle:NSDateFormatterMediumStyle];
-        //            [formatter setTimeStyle:NSDateFormatterShortStyle];
-        //            [formatter setDateFormat:@"YYYY-MM-dd"];
-        //            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
-        //            [formatter setTimeZone:timeZone];
-        //            NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
-        //            NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-        //            [cell. setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
-        //
-        //        }
-        
         
         if ([dic objectForKey:@"content"] && ![[dic objectForKey:@"content"] isEqual:[NSNull null]]) {
             [cell.titles  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"content"]]];
         }
-        
-        
         if([dic objectForKey:@"zan"] && ![[dic objectForKey:@"zan"] isEqual:[NSNull null]]){
-            NSNumber *zanStaues=[dic objectForKey:@"zan"];
-            if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
+            [cell.nums setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"zan"]]];
+
+        }
+        [cell.zanImage setUserInteractionEnabled:YES];
+        UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZan:)];
+        [cell.zanImage setTag:[indexPath row]];
+        [cell.zanImage addGestureRecognizer:gesutre];
+        if([dic objectForKey:@"iszan"] && ![[dic objectForKey:@"iszan"] isEqual:[NSNull null]]){
+            NSNumber *zanStaues=[dic objectForKey:@"iszan"];
+            if ([zanStaues intValue]==0) {
                 [cell.zanImage setImage:[UIImage imageNamed:@"zan_logo"]];
             }else{
                 [cell.zanImage setImage:[UIImage imageNamed:@"dianzan_logo"]];
@@ -415,6 +409,115 @@
         
     }
     return cell;
+}
+-(void)dianZan:(UITapGestureRecognizer *)gesutre{
+    int tag=gesutre.view.tag;
+    NSLog(@"dianZan%d",tag);
+    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (!myDelegate.isLogin) {
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
+        [self presentViewController:loginRegViewController animated:YES completion:nil];
+        return;
+    }
+    NSDictionary *dic=[tableArray objectAtIndex:tag];
+    NSNumber *commid=[dic objectForKey:@"id"];
+    NSNumber *iszan=[dic objectForKey:@"iszan"];
+    if([iszan intValue]==0){
+        iszan=[NSNumber numberWithInt:1];
+    }else{
+        iszan=[NSNumber numberWithInt:0];
+    }
+    [self zanNewsComments:iszan withCommentId:commid];
+}
+-(void)dianZanNews:(UITapGestureRecognizer *)gesutre{
+    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (!myDelegate.isLogin) {
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
+        [self presentViewController:loginRegViewController animated:YES completion:nil];
+        return;
+    }
+    NSNumber *iszan=[data objectForKey:@"iszan"];
+    if([iszan intValue]==0){
+        iszan=[NSNumber numberWithInt:1];
+    }else{
+        iszan=[NSNumber numberWithInt:0];
+    }
+    [self zanNews:iszan];
+}
+-(void)zanNews:(NSNumber *)zan {
+    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        
+        [HttpHelper zanNewsComments:[data objectForKey:@"id"] withZan:zan withModel:myDelegate.model
+                            success:^(HttpModel *model){
+                                
+                                NSLog(@"%@",model.message);
+                                
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    
+                                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                                        
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [self getArticleInfo];
+                                        });
+                                        
+                                    }else{
+                                        
+                                    }
+                                    [alertView setMessage:model.message];
+                                    [alertView show];
+                                    
+                                });
+                            }failure:^(NSError *error){
+                                if (error.userInfo!=nil) {
+                                    NSLog(@"%@",error.userInfo);
+                                }
+                            }];
+        
+        
+    });
+    
+}
+-(void)zanNewsComments:(NSNumber *)zan withCommentId:(NSNumber *)comId{
+    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        
+        [HttpHelper zanNewsComments:comId withZan:zan withModel:myDelegate.model
+                       success:^(HttpModel *model){
+                           
+                           NSLog(@"%@",model.message);
+                           
+                           dispatch_async(dispatch_get_main_queue(), ^{
+                               
+                               if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                                   
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       [self getCommectsList];
+                                       
+                                   });
+                                   
+                               }else{
+                                   
+                               }
+                               [alertView setMessage:model.message];
+                               [alertView show];
+                               
+                           });
+                       }failure:^(NSError *error){
+                           if (error.userInfo!=nil) {
+                               NSLog(@"%@",error.userInfo);
+                           }
+                       }];
+        
+        
+    });
+    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -497,7 +600,7 @@
     
     
 }
--(void)getArticleInfo{
+-(void)getArticleInfos{
     NSDictionary *dic=data;
     if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
         [lab setText:[dic objectForKey:@"title"]];
@@ -514,17 +617,16 @@
         NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
         NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
         [timers setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
-        
+
     }
-    
-    
+
+
     if([dic objectForKey:@"zan"]){
         NSString *number=[dic objectForKey:@"zan"];
         [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
     }
     if([dic objectForKey:@"read"]){
         NSNumber *number=[dic objectForKey:@"read"];
-        NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
         [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
     }
     if([dic objectForKey:@"content"]){
@@ -536,307 +638,236 @@
         CGRect rect4=commetTitleView.frame;
         rect4.origin.y=tv.frame.origin.y+tv.frame.size.height+8;
         [commetTitleView setFrame:rect4];
-        
+
         // CGRect rect5=lp.frame;
         // rect5.origin.y=lb.frame.origin.y+lb.frame.size.height+8;
         // [lp setFrame:rect5];
         //滚动的长度
         CGRect rect7=sb.frame;
-        
+
         rect7.size.height=commetTitleView.frame.origin.y+commetTitleView.frame.size.height+10;
-        
+
         [sb setFrame:rect7];
         tab.tableHeaderView=sb;
-        
+
     }
     if ([dic objectForKey:@"author"]) {
         writer.text=[dic objectForKey:@"author"];
     }
     if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
-        
+
         NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
         mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
+
+    }
+
+}
+
+//获取前方数据
+-(void)getArticleInfo{
+    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (myDelegate.isLogin) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            
+            [HttpHelper getXinwenInfo:aritcleId success:^(HttpModel *model){
+                
+                NSLog(@"%@",model.message);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSDictionary *dic=model.result;
+                            data=dic;
+                            if([dic objectForKey:@"iszan"] && ![[dic objectForKey:@"iszan"] isEqual:[NSNull null]]){
+                                NSNumber *zanStaues=[dic objectForKey:@"iszan"];
+                                if ([zanStaues intValue]==0) {
+                                    [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
+
+                                }else{
+                                    [zanImageView setImage:[UIImage imageNamed:@"dianzan_logo"] forState:UIControlStateNormal];
+                                }
+                            }
+                            
+                            if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
+                                [lab setText:[dic objectForKey:@"title"]];
+                            }
+                            if ([dic objectForKey:@"created"]&& ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
+                                NSNumber *number=[dic objectForKey:@"created"];
+                                NSInteger myInteger = [number integerValue];
+                                NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+                                [formatter setDateStyle:NSDateFormatterMediumStyle];
+                                [formatter setTimeStyle:NSDateFormatterShortStyle];
+                                [formatter setDateFormat:@"YYYY-MM-dd"];
+                                NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+                                [formatter setTimeZone:timeZone];
+                                NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+                                NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+                                [timers setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+                                
+                            }
+                            
+                            
+                            if([dic objectForKey:@"zan"]){
+                                NSString *number=[dic objectForKey:@"zan"];
+                                [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+                            }
+                            if([dic objectForKey:@"read"]){
+                                NSNumber *number=[dic objectForKey:@"read"];
+                                NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+                                [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+                            }
+                            if([dic objectForKey:@"content"]){
+                                [tv setText:[dic objectForKey:@"content"]];
+                                CGRect frame=tv.frame;
+                                frame.size.height=tv.contentSize.height;
+                                [tv setFrame:frame];
+                                //赞的数值
+                                CGRect rect4=commetTitleView.frame;
+                                rect4.origin.y=tv.frame.origin.y+tv.frame.size.height+8;
+                                [commetTitleView setFrame:rect4];
+                                
+                                // CGRect rect5=lp.frame;
+                                // rect5.origin.y=lb.frame.origin.y+lb.frame.size.height+8;
+                                // [lp setFrame:rect5];
+                                //滚动的长度
+                                CGRect rect7=sb.frame;
+                                
+                                rect7.size.height=commetTitleView.frame.origin.y+commetTitleView.frame.size.height+10;
+                                
+                                [sb setFrame:rect7];
+                                tab.tableHeaderView=sb;
+                                
+                            }
+                            if ([dic objectForKey:@"author"]) {
+                                writer.text=[dic objectForKey:@"author"];
+                            }
+                            if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
+                                
+                                NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
+                                mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
+                                
+                            }
+                            
+                        });
+                        
+                    }else{
+                        
+                    }
+                    [ProgressHUD dismiss];
+                    
+                });
+            }failure:^(NSError *error){
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
+                }
+                [ProgressHUD dismiss];
+                
+            }];
+            
+            
+        });
+        
+    }else{
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            
+            [HttpHelper getXinwenInfo:aritcleId success:^(HttpModel *model){
+                
+                NSLog(@"%@",model.message);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSDictionary *dic=model.result;
+                            if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
+                                [lab setText:[dic objectForKey:@"title"]];
+                            }
+                            if ([dic objectForKey:@"created"]&& ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
+                                NSNumber *number=[dic objectForKey:@"created"];
+                                NSInteger myInteger = [number integerValue];
+                                NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+                                [formatter setDateStyle:NSDateFormatterMediumStyle];
+                                [formatter setTimeStyle:NSDateFormatterShortStyle];
+                                [formatter setDateFormat:@"YYYY-MM-dd"];
+                                NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+                                [formatter setTimeZone:timeZone];
+                                NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
+                                NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+                                [timers setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
+                                
+                            }
+                            
+                            
+                            if([dic objectForKey:@"zan"]){
+                                NSString *number=[dic objectForKey:@"zan"];
+                                [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+                            }
+                            if([dic objectForKey:@"read"]){
+                                NSNumber *number=[dic objectForKey:@"read"];
+                                NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+                                [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+                            }
+                            if([dic objectForKey:@"content"]){
+                                [tv setText:[dic objectForKey:@"content"]];
+                                CGRect frame=tv.frame;
+                                frame.size.height=tv.contentSize.height;
+                                [tv setFrame:frame];
+                                //赞的数值
+                                CGRect rect4=commetTitleView.frame;
+                                rect4.origin.y=tv.frame.origin.y+tv.frame.size.height+8;
+                                [commetTitleView setFrame:rect4];
+                                
+                                // CGRect rect5=lp.frame;
+                                // rect5.origin.y=lb.frame.origin.y+lb.frame.size.height+8;
+                                // [lp setFrame:rect5];
+                                //滚动的长度
+                                CGRect rect7=sb.frame;
+                                
+                                rect7.size.height=commetTitleView.frame.origin.y+commetTitleView.frame.size.height+10;
+                                
+                                [sb setFrame:rect7];
+                                tab.tableHeaderView=sb;
+                                
+                            }
+                            if ([dic objectForKey:@"author"]) {
+                                writer.text=[dic objectForKey:@"author"];
+                            }
+                            if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
+                                
+                                NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
+                                mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
+                                
+                            }
+                            
+                        });
+                        
+                    }else{
+                        
+                    }
+                    [ProgressHUD dismiss];
+                    
+                });
+            }failure:^(NSError *error){
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
+                }
+                [ProgressHUD dismiss];
+                
+            }];
+            
+            
+        });
         
     }
     
 }
-/*
- //获取前方数据
- -(void)getArticleInfo{
- 
- AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
- 
- if (myDelegate.isLogin) {
- dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
- dispatch_async(queue, ^{
- 
- [HttpHelper getXinwenInfo:aritcleId success:^(HttpModel *model){
- 
- NSLog(@"%@",model.message);
- 
- dispatch_async(dispatch_get_main_queue(), ^{
- 
- if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
- 
- dispatch_async(dispatch_get_main_queue(), ^{
- //    NSDictionary *dic=model.result;
- NSDictionary *dic=data;
- if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
- [lab setText:[dic objectForKey:@"title"]];
- }
- if ([dic objectForKey:@"created"]&& ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
- NSNumber *number=[dic objectForKey:@"created"];
- NSInteger myInteger = [number integerValue];
- NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
- [formatter setDateStyle:NSDateFormatterMediumStyle];
- [formatter setTimeStyle:NSDateFormatterShortStyle];
- [formatter setDateFormat:@"YYYY-MM-dd"];
- NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
- [formatter setTimeZone:timeZone];
- NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
- NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
- [timers setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
- 
- }
- 
- 
- if([dic objectForKey:@"zan"]){
- NSString *number=[dic objectForKey:@"zan"];
- [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
- }
- if([dic objectForKey:@"read"]){
- NSNumber *number=[dic objectForKey:@"read"];
- NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
- [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
- }
- if([dic objectForKey:@"content"]){
- [tv setText:[dic objectForKey:@"content"]];
- CGRect frame=tv.frame;
- frame.size.height=tv.contentSize.height+30;
- [tv setFrame:frame];
- //赞的数值
- CGRect rect=zanImageView.frame;
- rect.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [zanImageView setFrame:rect];
- //
- //                                zanNumberLabel
- CGRect rect1=zanNumberLabel.frame;
- rect1.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [zanNumberLabel setFrame:rect1];
- //                                read
- CGRect rect2=read.frame;
- rect2.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [read setFrame:rect2];
- //                                阅读数
- 
- CGRect rect3=disNumberLabel.frame;
- rect3.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [disNumberLabel setFrame:rect3];
- //                                lb，lp
- CGRect rect4=lb.frame;
- rect4.origin.y=disNumberLabel.frame.origin.y+disNumberLabel.frame.size.height+8;
- [lb setFrame:rect4];
- //                                lppingjia
- 
- CGRect rect5=lp.frame;
- rect5.origin.y=lb.frame.origin.y+lb.frame.size.height+8;
- [lp setFrame:rect5];
- //
- CGRect rect6=tab.frame;
- rect6.origin.y=lp.frame.origin.y+lp.frame.size.height+4;
- [tab setFrame:rect6];
- //滚动的长度
- CGRect rect7=sb.frame;
- 
- rect7.size.height=tab.frame.origin.y+tab.frame.size.height;
- //                                [sb setFrame:rect7];
- [sb setContentSize:CGSizeMake(swidth, rect7.size.height-swidth/2)];
- }
- if ([dic objectForKey:@"author"]) {
- writer.text=[dic objectForKey:@"author"];
- }
- if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
- 
- NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
- mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
- 
- }
- //                              NSString *sb=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90", [dic objectForKey:@"img"]];
- //                            NSURL *url=[NSURL URLWithString:sb];
- //
- //
- //                            [imi setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:url]]];
- //
- 
- 
- });
- 
- }else{
- 
- }
- [ProgressHUD dismiss];
- 
- });
- }failure:^(NSError *error){
- if (error.userInfo!=nil) {
- NSLog(@"%@",error.userInfo);
- }
- [ProgressHUD dismiss];
- 
- }];
- 
- 
- });
- 
- }else{
- dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
- dispatch_async(queue, ^{
- 
- [HttpHelper getXinwenInfo:aritcleId success:^(HttpModel *model){
- 
- NSLog(@"%@",model.message);
- 
- dispatch_async(dispatch_get_main_queue(), ^{
- 
- if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
- 
- dispatch_async(dispatch_get_main_queue(), ^{
- NSDictionary *dic=model.result;
- //                            data=dic;
- 
- 
- 
- 
- if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
- 
- NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
- mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
- mg.contentMode=UIViewContentModeScaleToFill;
- CGRect rect=mg.frame;
- rect.origin.y=lt.frame.origin.y+lt.frame.size.height+2;
- rect.size.height=mg.intrinsicContentSize.height;
- ////                              rect.size.height=sb.frame.size.height/3;
- [mg setFrame:rect];
- //
- CGRect rect1=tv.frame;
- rect1.origin.y=mg.frame.origin.y+mg.frame.size.height;
- rect1.size.height=  tv.contentSize.height;
- [tv setFrame:rect1];
- 
- }
- 
- 
- //                            if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
- //                                [autherNameLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"title"]]];
- //                            }
- if ([dic objectForKey:@"created"]&& ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
- NSNumber *number=[dic objectForKey:@"created"];
- NSInteger myInteger = [number integerValue];
- NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
- [formatter setDateStyle:NSDateFormatterMediumStyle];
- [formatter setTimeStyle:NSDateFormatterShortStyle];
- [formatter setDateFormat:@"YYYY-MM-dd"];
- NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
- [formatter setTimeZone:timeZone];
- NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
- NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
- [timers setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
- 
- }
- if([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]){
- [lab setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"title"]]];
- }
- 
- if([dic objectForKey:@"zan"]){
- NSNumber *number=[dic objectForKey:@"zan"];
- [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number  ]];
- }
- if([dic objectForKey:@"read"]){
- NSNumber *number=[dic objectForKey:@"read"];
- [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
- }
- if ([dic objectForKey:@"author"]) {
- writer.text=[dic objectForKey:@"author"];
- }
- if([dic objectForKey:@"content"]){
- [tv setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"content"]]];
- CGRect frame=tv.frame;
- frame.size.height=tv.contentSize.height+30;
- [tv setFrame:frame];
- //赞的数值
- CGRect rect=zanImageView.frame;
- rect.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [zanImageView setFrame:rect];
- //
- CGRect rect1=zanNumberLabel.frame;
- rect1.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [zanNumberLabel setFrame:rect1];
- //                                read
- CGRect rect2=read.frame;
- rect2.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [read setFrame:rect2];
- //                                阅读数
- 
- CGRect rect3=disNumberLabel.frame;
- rect3.origin.y=tv.frame.origin.y+tv.frame.size.height+2;
- [disNumberLabel setFrame:rect3];
- 
- 
- //                                lb，lp
- CGRect rect4=lb.frame;
- rect4.origin.y=disNumberLabel.frame.origin.y+disNumberLabel.frame.size.height+8;
- [lb setFrame:rect4];
- //                                lppingjia
- 
- CGRect rect5=lp.frame;
- rect5.origin.y=lb.frame.origin.y+lb.frame.size.height+8;
- [lp setFrame:rect5];
- //
- CGRect rect6=tab.frame;
- rect6.origin.y=lp.frame.origin.y+lp.frame.size.height+4;
- [tab setFrame:rect6];
- //滚动的长度
- CGRect rect7=sb.frame;
- 
- rect7.size.height=tab.frame.origin.y+tab.frame.size.height;
- //                                [sb setFrame:rect7];
- [sb setContentSize:CGSizeMake(swidth, rect7.size.height-swidth/2)];
- 
- 
- }
- //                            if([dic objectForKey:@"zan"] && ![[dic objectForKey:@"zan"] isEqual:[NSNull null]]){
- //                                NSNumber *zanStaues=[dic objectForKey:@"zan"];
- //                                if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
- //                                    dianZanLabel.selected=false;
- //                                }else{
- //                                    dianZanLabel.selected=true;
- //                                }
- //                            }
- 
- 
- 
- });
- 
- }else{
- 
- }
- [ProgressHUD dismiss];
- 
- });
- }failure:^(NSError *error){
- if (error.userInfo!=nil) {
- NSLog(@"%@",error.userInfo);
- }
- [ProgressHUD dismiss];
- 
- }];
- 
- 
- });
- 
- }
- 
- }*/
 /*
  #pragma mark - Navigation
  

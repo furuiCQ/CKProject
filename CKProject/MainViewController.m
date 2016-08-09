@@ -1639,7 +1639,7 @@ static NSString *identy = @"OrderRecordCell";
 -(void)goMsgViewController{
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
