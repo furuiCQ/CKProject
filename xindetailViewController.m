@@ -451,7 +451,7 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
-        [HttpHelper zanNewsComments:[data objectForKey:@"id"] withZan:zan withModel:myDelegate.model
+        [HttpHelper zanNews:[data objectForKey:@"id"] withZan:zan withModel:myDelegate.model
                             success:^(HttpModel *model){
                                 
                                 NSLog(@"%@",model.message);
