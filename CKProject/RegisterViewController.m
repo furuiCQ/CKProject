@@ -71,15 +71,15 @@ int secondsCountDown; //倒计时总时长
     [searchLabel setText:@"注册"];
     
     //新建右上角的图形
-    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
-    msgLabel.userInteractionEnabled=YES;
-    UITapGestureRecognizer *registerRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goRegisterViewController)];
-    [msgLabel addGestureRecognizer:registerRecognizer];
-    [msgLabel setText:@"注册"];
-    [msgLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/22.8]];
-    [msgLabel setTextColor:[UIColor orangeColor]];
-    [msgLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleView addSubview:cityLabel];
+//    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
+//    msgLabel.userInteractionEnabled=YES;
+//    UITapGestureRecognizer *registerRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goRegisterViewController)];
+//    [msgLabel addGestureRecognizer:registerRecognizer];
+//    [msgLabel setText:@"注册"];
+//    [msgLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/22.8]];
+//    [msgLabel setTextColor:[UIColor orangeColor]];
+//    [msgLabel setTextAlignment:NSTextAlignmentCenter];
+//    [titleView addSubview:cityLabel];
     // [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
