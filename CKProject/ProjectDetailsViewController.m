@@ -1172,6 +1172,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
         [imageView setUserInteractionEnabled:YES];
         [imageView addGestureRecognizer:gesture];
+        [imageView setTag:i]; 
         [imageView setImage:[imageArray objectAtIndex:i]];
         [allShowView addSubview:imageView];
     }
@@ -1199,34 +1200,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     popJson=[NSDictionary  dictionaryWithObjectsAndKeys:title,@"title",
                             description,@"description",imageurl,@"imageurl",url,@"url",nil];
-    //        [RJShareView showGridMenuWithTitle:@"分享到..."
-    //                                itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
-    //                                    images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"]]
-    //                                 shareJson:jsonData
-    //                            selectedHandle:^(NSInteger index){
-    //                                switch (index) {
-    //                                    case 1:
-    //                                    case 2:
-    //                                        if (![WXApi isWXAppInstalled]) {
-    //                                            // [ProgressHUD showError:@"未安装微信！"];
-    //                                        }
-    //                                        break;
-    //
-    //                                    case 3:
-    //                                        if (![WeiboSDK isWeiboAppInstalled]) {
-    //                                            // [ProgressHUD showError:@"未安装微博！"];
-    //                                        }
-    //                                        break;
-    //
-    //                                    case 4:
-    //                                    case 5:
-    //                                        if (![TencentOAuth iphoneQQInstalled]) {
-    //                                            // [ProgressHUD showError:@"未安装QQ！"];
-    //                                        }
-    //                                        break;
-    //
-    //                                }
-    //                            }];
 }
 -(void)getTimeList:(NSNumber *)lid andBTime:(NSNumber *)btime{
     // AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1368,29 +1341,30 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)tapAction:(UITapGestureRecognizer *)sender
 {
     switch (sender.view.tag) {
-        case 0://微信好友
-            if ([WXApi isWXAppInstalled]) {
-                [self shareToWxFriend];
-            }
-            break;
-        case 1://微信朋友圈
-            if ([WXApi isWXAppInstalled]) {
-                [self shareToWxTimeLine];
-            }
-            break;
-        case 2://微博
-            if ([WeiboSDK isWeiboAppInstalled]) {
-                [self shareToWeiBo];
-            }
-            break;
-        case 3://qq好友
+        case 0://qq好友
             if ([TencentOAuth iphoneQQInstalled]) {
                 [self shareToQQFriend];
             }
             break;
-        case 4://qq空间
+        case 1://微信好友
+            if ([WXApi isWXAppInstalled]) {
+                [self shareToWxFriend];
+            }
+            
+            break;
+        case 2: //微信朋友圈
+            if ([WXApi isWXAppInstalled]) {
+                [self shareToWxTimeLine];
+            }
+            break;
+        case 3://qq空间
             if ([TencentOAuth iphoneQQInstalled]) {
                 [self shareToQQZone];
+            }
+            break;
+        case 4://微博
+            if ([WeiboSDK isWeiboAppInstalled]) {
+                [self shareToWeiBo];
             }
             break;
     }
