@@ -34,13 +34,15 @@
     [self visibleTabBar];
     [self initCustomTabBar];
     self.delegate=self;
-    AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if (appDelegate.selectIndex!=5) {
-        self.selectedIndex=appDelegate.selectIndex;
-    }else{
-        self.selectedIndex=0;
-        
-    }
+    [self setSelectedIndex:4];
+
+    //    AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    if (appDelegate.selectIndex!=5) {
+//        self.selectedIndex=appDelegate.selectIndex;
+//    }else{
+//        self.selectedIndex=0;
+//        
+//    }
     
 }
 

@@ -19,7 +19,7 @@
 
 @interface MineViewController ()<UITableViewDelegate,UITableViewDataSource,
 UIImagePickerControllerDelegate,UIActionSheetDelegate,
-UINavigationControllerDelegate,YiSlideMenuDelegate>{
+UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     NSMutableArray *projectTableArray;
     UITableView *mainTableView;
     UINib *nib;
@@ -43,6 +43,12 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
     NSNumber *selectProvId;
     NSNumber *selectCityId;
     NSString *localData;
+    
+    UIPickerView *citypickerView;
+    UIView *bgView;
+    UIView *pickerTopView;
+    NSString *selectCity;
+    
 }
 
 @end
@@ -93,6 +99,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
     [self initContentView];
     [self initTitle];
+    [self getPickerData];
+    [self initPickView];
+    
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     //-------------------------
     if(myDelegate.isLogin){
@@ -136,13 +145,13 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
     
     [msgLabel setImage:[UIImage imageNamed:@"menu_logo"]];
     
-//    pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
-//    
-//    [pointView setBackgroundColor:[UIColor redColor]];
-//    pointView.layer.masksToBounds = YES;
-//    pointView.layer.cornerRadius = (pointView.frame.size.width + 10) / 4;
-//    [pointView setHidden:YES];
-//    [msgLabel addSubview:pointView];
+    //    pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
+    //
+    //    [pointView setBackgroundColor:[UIColor redColor]];
+    //    pointView.layer.masksToBounds = YES;
+    //    pointView.layer.cornerRadius = (pointView.frame.size.width + 10) / 4;
+    //    [pointView setHidden:YES];
+    //    [msgLabel addSubview:pointView];
     
     
     [titleView addSubview:msgLabel];
@@ -265,7 +274,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
     mainTableView.tableHeaderView=tableHeaderView;
     mainTableView.separatorStyle=NO;
-    //[self.view addSubview:mainTableView];
     [slideMenu.centerView addSubview:mainTableView];
     
 }
@@ -479,42 +487,42 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
 }
 /*
  
--(void)controlClick:(UIControl *)control{
-    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
-    if (!myDelegate.isLogin) {
-        LoginViewController *loginViewController=[[LoginViewController alloc]init];
-        [self presentViewController:loginViewController animated:YES completion:nil];
-        return;
-    }
-    long tag=(long)control.tag;
-    switch (tag) {
-        case 0://预约
-        {
-            MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
-            [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
-            [myRegistrationRecordViewController clickNumber:1];
-            
-        }
-            break;
-        case 1://受理成功
-        {
-            MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
-            [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
-            [myRegistrationRecordViewController clickNumber:2];
-        }
-            break;
-        case 2://发帖
-        {
-            
-            MyCollectViewController *myCollectViewController=[[MyCollectViewController alloc]init];
-            [self presentViewController: myCollectViewController animated:YES completion:nil];
-        }
-            break;
-            
-        default:
-            break;
-    }
-}*/
+ -(void)controlClick:(UIControl *)control{
+ AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+ if (!myDelegate.isLogin) {
+ LoginViewController *loginViewController=[[LoginViewController alloc]init];
+ [self presentViewController:loginViewController animated:YES completion:nil];
+ return;
+ }
+ long tag=(long)control.tag;
+ switch (tag) {
+ case 0://预约
+ {
+ MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
+ [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
+ [myRegistrationRecordViewController clickNumber:1];
+ 
+ }
+ break;
+ case 1://受理成功
+ {
+ MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
+ [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
+ [myRegistrationRecordViewController clickNumber:2];
+ }
+ break;
+ case 2://发帖
+ {
+ 
+ MyCollectViewController *myCollectViewController=[[MyCollectViewController alloc]init];
+ [self presentViewController: myCollectViewController animated:YES completion:nil];
+ }
+ break;
+ 
+ default:
+ break;
+ }
+ }*/
 -(void)goMyRegViewController{
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
@@ -551,7 +559,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
     //  NSNumber *inter=[dic objectForKey:@"inter"];
     NSNumber *ismessage=[dic objectForKey:@"ismessage"];
     
-    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    // NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
     if (![bk isEqual:[NSNull null]]) {
         [numbLabel setText:[NSString stringWithFormat:@"%@",bk]];
     }
@@ -609,7 +617,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
         }
         if(i==1){
             [topBar.textLabel setText:[NSString stringWithFormat:@"受理成功%@",acce]];
-
+            
         }
     }
     [userInfoArray addObject:@""];
@@ -676,7 +684,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
         NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
         [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
     }
-
+    
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -726,6 +734,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
             case 4:
             {
                 NSLog(@"地址");
+                [self showMyPicker];
             }
                 break;
             case 5:
@@ -860,7 +869,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
                 }else{
                     
                 }
-               
+                
             });
             
             
@@ -1018,13 +1027,97 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
     [dicatorView startAnimating];
     
 }
+#define kScreen_Height      ([UIScreen mainScreen].bounds.size.height)
+#define kScreen_Width       ([UIScreen mainScreen].bounds.size.width)
+#define kScreen_Frame       (CGRectMake(0, 0 ,kScreen_Width,kScreen_Height))
 -(void)initPickView{
     int width=self.view.frame.size.width;
     int height=self.view.frame.size.height;
-    UIPickerView *pickerView=[[UIPickerView alloc]initWithFrame:CGRectMake(0, height-width/45.7-titleHeight-width*2/3, width, width*2/3)];
-    pickerView.delegate=self;
+    bgView=	[[UIView alloc] initWithFrame:kScreen_Frame];
+    bgView.backgroundColor = [UIColor blackColor];
+    bgView.alpha = 0;
+    [bgView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMyPicker)]];
     
-    [self.view addSubview:pickerView];
+    
+    
+    citypickerView=[[UIPickerView alloc]initWithFrame:CGRectMake(0, height-width/45.7-titleHeight-width*2/3, width, width*2/3)];
+    citypickerView.delegate=self;
+    [citypickerView setUserInteractionEnabled:YES];
+    [citypickerView setBackgroundColor:[UIColor colorWithRed:236.f/255.f green:237.f/255.f blue:238.f/255.f alpha:1]];
+    
+    pickerTopView=[[UIView alloc]initWithFrame:CGRectMake(0, height-width/45.7-titleHeight-width*2/3, width, titleHeight)];
+    [pickerTopView setBackgroundColor:[UIColor whiteColor]];
+    
+    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/35.6, 0, width/4, titleHeight)];
+    [cancelLabel setText:@"取消"];
+    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideMyPicker)];
+    [cancelLabel setUserInteractionEnabled:YES];
+    [cancelLabel addGestureRecognizer:cancelGesture];
+    [cancelLabel setTextColor:[UIColor colorWithRed:37.f/255.f green:110.f/255.f blue:1 alpha:1]];
+    [cancelLabel setTextAlignment:NSTextAlignmentLeft];
+    [pickerTopView addSubview:cancelLabel];
+    
+    UILabel *saveLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-width
+                                                                /35.6, 0, width/4, titleHeight)];
+    [saveLabel setText:@"完成"];
+    UITapGestureRecognizer *saveGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeAddres)];
+    [saveLabel setUserInteractionEnabled:YES];
+    [saveLabel addGestureRecognizer:saveGesture];
+    [saveLabel setTextColor:[UIColor colorWithRed:37.f/255.f green:110.f/255.f blue:1 alpha:1]];
+    [saveLabel setTextAlignment:NSTextAlignmentRight];
+    [pickerTopView addSubview:saveLabel];
+    
+    //[self.view addSubview:citypickerView];	
+}
+-(void)changeAddres{
+    [self hideMyPicker];
+    if(selectCity==nil){
+        selectCity=@"湖南省湘潭市雨湖区";
+    }
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        
+        AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [HttpHelper resetAddress:selectCity withModel:myDelegate.model success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    [alertView setMessage:@"地址修改成功"];
+                    [alertView show];
+                }else{
+                    [alertView setMessage:model.message];
+                    [alertView show];
+                    
+                }
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+            }
+        }];
+    });
+}
+#pragma mark - private method
+- (void)showMyPicker {
+    [self.view addSubview:bgView];
+    [self.view addSubview:citypickerView];
+    [self.view addSubview:pickerTopView];
+    bgView.alpha = 0;
+    [UIView animateWithDuration:0.3 animations:^{
+        bgView.alpha = 0.3;
+    }];
+}
+
+- (void)hideMyPicker {
+    [UIView animateWithDuration:0.3 animations:^{
+        bgView.alpha = 0;
+        // citypickerView.top = self.view.height;
+    } completion:^(BOOL finished) {
+        [bgView removeFromSuperview];
+        [citypickerView removeFromSuperview];
+        [pickerTopView removeFromSuperview];
+    }];
 }
 #pragma mark - get data
 - (void)getPickerData {
@@ -1078,7 +1171,24 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
         return 110;
     }
 }
+-(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+    UILabel *myView = nil;
+    myView = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 150, 30)];
+    myView.textAlignment = NSTextAlignmentCenter;
+    myView.font = [UIFont systemFontOfSize:14];         //用label来设置字体大小
+    myView.backgroundColor = [UIColor clearColor];
+    if (component == 0) {
+        myView.text = [provinceArray objectAtIndex:row];
 
+    } else if (component == 1) {
+        myView.text = [cityArray objectAtIndex:row];
+
+    } else {
+        myView.text = [townArray objectAtIndex:row];
+    }
+    return myView;
+}
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if (component == 0) {
         selectedArray = [pickerDic objectForKey:[provinceArray objectAtIndex:row]];
@@ -1114,12 +1224,31 @@ UINavigationControllerDelegate,YiSlideMenuDelegate>{
     if([townArray count]>0){
         town=[townArray objectAtIndex:[pickerView selectedRowInComponent:2]];
     }
-  //  [self setProviceID:provice andCityID:city andTown:town];
+      [self setProviceID:provice andCityID:city andTown:town];
     
     
-  //  [cityTextFiled setText:[[provice stringByAppendingString:city]stringByAppendingString:town]];
+    selectCity=[[provice stringByAppendingString:city]stringByAppendingString:town];
     
 }
-
+-(void)setProviceID:(NSString *)prvoice andCityID:(NSString *)city andTown:(NSString *)town{
+    NSLog(@"prvoice%@",prvoice);
+    NSLog(@"city%@",city);
+    NSLog(@"town%@",town);
+    
+    NSRange rang  = [localData rangeOfString:city];
+    NSLog(@"%@",NSStringFromRange(rang));
+    NSString *str=[localData substringWithRange:NSMakeRange(rang.location-10, rang.length+18)];
+    NSLog(@"%@",str);
+    NSLog(@"%lu",(unsigned long)[str length]);
+    NSArray *thisdataArray=[str componentsSeparatedByString:NSLocalizedString(@",", nil)];
+    NSString *provStr=[thisdataArray objectAtIndex:2];
+    NSString *cityStr=[thisdataArray objectAtIndex:0];
+    cityStr=[cityStr substringWithRange:NSMakeRange(1, cityStr.length-2)];
+    NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
+    selectCityId=[formater numberFromString:cityStr];
+    selectProvId=[formater numberFromString:provStr];
+    
+    
+}
 
 @end
