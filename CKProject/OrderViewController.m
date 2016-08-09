@@ -121,7 +121,7 @@
                             description,@"description",imageurl,@"imageurl",url,@"url",nil];
     [RJShareView showGridMenuWithTitle:@"分享到..."
                             itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
-                                images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"]]
+                                images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone"]]
                              shareJson:jsonData
                         selectedHandle:^(NSInteger index){
                             switch (index) {

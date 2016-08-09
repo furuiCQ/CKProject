@@ -31,6 +31,12 @@
 #import "DayModel.h"
 #import "JZLocationConverter.h"
 #import "RJUtil.h"
+
+#import <QuartzCore/QuartzCore.h>
+#import <TencentOpenAPI/TencentOAuth.h>
+#import "TencentOpenAPI/QQApiInterface.h"
+#import "WeiboSDK.h"
+#import "ShareTools.h"
 @interface ProjectDetailsViewController ()<UIScrollViewDelegate,PickerDelegate>{
     NSString *phone;
     UILabel *registerLabel;
@@ -93,6 +99,10 @@
     UIImageView *collectImageView;
     UILabel *collectNorLabel;
     BOOL selected;
+    
+    //share
+    NSDictionary* popJson;
+
 }
 @end
 
@@ -804,7 +814,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
                                 NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
                                 if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
-                                   selected=false;
+                                    selected=false;
                                     [collectNorLabel setText:@"收藏课程"];
                                 }else{
                                     selected=true;
@@ -1007,14 +1017,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
                                 [projectAddLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]]];
                             }
-//                            if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
-//                                NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
-//                                if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
-//                                   selected=false;
-//                                }else{
-//                                    collectLabel.selected=true;
-//                                }
-//                            }
+                            //                            if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
+                            //                                NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
+                            //                                if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
+                            //                                   selected=false;
+                            //                                }else{
+                            //                                    collectLabel.selected=true;
+                            //                                }
+                            //                            }
                             if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
                                 phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
                                 [phoneLabel setText:[NSString stringWithFormat:@"联系电话:%@",phone]];
@@ -1154,11 +1164,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     int width=self.view.frame.size.width;
     allShowView=[[UIView alloc]initWithFrame:CGRectMake(width-width/9.1-width/64+width/160, titleHeight+20, width/9.1, width)];
     
-    NSArray *imageArray=[[NSArray alloc]initWithObjects:[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"], nil];
+    NSArray *imageArray=[[NSArray alloc]initWithObjects:[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"qzone"],[UIImage imageNamed:@"weibo"], nil];
     int y=0;
     int paddingHeight=width/35.6;
     for (int i=0; i<[imageArray count]; i++) {
         UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, (y+paddingHeight+width/9.1)*i, width/9.1, width/9.1)];
+        UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+        [imageView setUserInteractionEnabled:YES];
+        [imageView addGestureRecognizer:gesture];
         [imageView setImage:[imageArray objectAtIndex:i]];
         [allShowView addSubview:imageView];
     }
@@ -1172,54 +1185,53 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [allShowView setHidden:YES];
         
     }
-    //[ShareTools shareToQQ];
-    //    NSString *title=[@"这里有免费的"stringByAppendingString:searchLabel.text];
-    //    NSString *txt;
-    //    if ([detailContentLabel.text length]>30) {
-    //        txt=[detailContentLabel.text substringToIndex:30];
-    //    }else{
-    //        txt=detailContentLabel.text;
-    //    }
-    //    NSString *description=txt;
-    //    NSString *imageurl=[[NSString alloc]init];
-    //    NSString *url=@"http://211.149.190.90/m/20160126/index.html";
+    NSString *title=[@"这里有免费的"stringByAppendingString:searchLabel.text];
+    NSString *txt;
+    if ([detailContentLabel.text length]>30) {
+        txt=[detailContentLabel.text substringToIndex:30];
+    }else{
+        txt=detailContentLabel.text;
+    }
+    NSString *description=txt;
+    NSString *imageurl=[[NSString alloc]init];
+    NSString *url=@"http://211.149.190.90/m/20160126/index.html";
+    
+    
+    popJson=[NSDictionary  dictionaryWithObjectsAndKeys:title,@"title",
+                            description,@"description",imageurl,@"imageurl",url,@"url",nil];
+    //        [RJShareView showGridMenuWithTitle:@"分享到..."
+    //                                itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
+    //                                    images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"]]
+    //                                 shareJson:jsonData
+    //                            selectedHandle:^(NSInteger index){
+    //                                switch (index) {
+    //                                    case 1:
+    //                                    case 2:
+    //                                        if (![WXApi isWXAppInstalled]) {
+    //                                            // [ProgressHUD showError:@"未安装微信！"];
+    //                                        }
+    //                                        break;
     //
+    //                                    case 3:
+    //                                        if (![WeiboSDK isWeiboAppInstalled]) {
+    //                                            // [ProgressHUD showError:@"未安装微博！"];
+    //                                        }
+    //                                        break;
     //
-    //    NSDictionary *jsonData=[NSDictionary  dictionaryWithObjectsAndKeys:title,@"title",
-    //                            description,@"description",imageurl,@"imageurl",url,@"url",nil];
-    //    [RJShareView showGridMenuWithTitle:@"分享到..."
-    //                            itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
-    //                                images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone.jpg"]]
-    //                             shareJson:jsonData
-    //                        selectedHandle:^(NSInteger index){
-    //                            switch (index) {
-    //                                case 1:
-    //                                case 2:
-    //                                    if (![WXApi isWXAppInstalled]) {
-    //                                        // [ProgressHUD showError:@"未安装微信！"];
-    //                                    }
-    //                                    break;
+    //                                    case 4:
+    //                                    case 5:
+    //                                        if (![TencentOAuth iphoneQQInstalled]) {
+    //                                            // [ProgressHUD showError:@"未安装QQ！"];
+    //                                        }
+    //                                        break;
     //
-    //                                case 3:
-    //                                    if (![WeiboSDK isWeiboAppInstalled]) {
-    //                                        // [ProgressHUD showError:@"未安装微博！"];
-    //                                    }
-    //                                    break;
-    //
-    //                                case 4:
-    //                                case 5:
-    //                                    if (![TencentOAuth iphoneQQInstalled]) {
-    //                                        // [ProgressHUD showError:@"未安装QQ！"];
-    //                                    }
-    //                                    break;
-    //
-    //                            }
-    //                        }];
+    //                                }
+    //                            }];
 }
 -(void)getTimeList:(NSNumber *)lid andBTime:(NSNumber *)btime{
-   // AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    HttpModel *model=myDelegate.model;
-//    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+    // AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //    HttpModel *model=myDelegate.model;
+    //    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -1294,6 +1306,285 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+#pragma mark -分享
+//通过网络地址获取图片
+-(UIImage *) getImageFromURL:(NSString *)fileURL {
+    UIImage * result;
+    NSData * data = [NSData dataWithContentsOfURL:[NSURL URLWithString:fileURL]];
+    result = [UIImage imageWithData:data];
+    return result;
+}
+//通过
+- (UIImage*)imageByScalingAndCroppingForSize:(UIImage *)image toSize:(CGSize)targetSize
+{
+    UIImage *sourceImage = image;
+    UIImage *newImage = nil;
+    CGSize imageSize = sourceImage.size;
+    CGFloat width = imageSize.width;
+    CGFloat height = imageSize.height;
+    CGFloat targetWidth = targetSize.width;
+    CGFloat targetHeight = targetSize.height;
+    CGFloat scaleFactor = 0.0;
+    CGFloat scaledWidth = targetWidth;
+    CGFloat scaledHeight = targetHeight;
+    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
+    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
+    {
+        CGFloat widthFactor = targetWidth / width;
+        CGFloat heightFactor = targetHeight / height;
+        if (widthFactor > heightFactor)
+            scaleFactor = widthFactor; // scale to fit height
+        else
+            scaleFactor = heightFactor; // scale to fit width
+        scaledWidth= width * scaleFactor;
+        scaledHeight = height * scaleFactor;
+        // center the image
+        if (widthFactor > heightFactor)
+        {
+            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+        }
+        else if (widthFactor < heightFactor)
+        {
+            thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+        }
+    }
+    UIGraphicsBeginImageContext(targetSize); // this will crop
+    CGRect thumbnailRect = CGRectZero;
+    thumbnailRect.origin = thumbnailPoint;
+    thumbnailRect.size.width= scaledWidth;
+    NSLog(@"%f",scaledWidth);
+    NSLog(@"%f",scaledHeight);
+    
+    thumbnailRect.size.height = scaledHeight;
+    [sourceImage drawInRect:thumbnailRect];
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    if(newImage == nil)
+        NSLog(@"could not scale image");
+    //pop the context to get back to the default
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+- (void)tapAction:(UITapGestureRecognizer *)sender
+{
+    switch (sender.view.tag) {
+        case 0://微信好友
+            if ([WXApi isWXAppInstalled]) {
+                [self shareToWxFriend];
+            }
+            break;
+        case 1://微信朋友圈
+            if ([WXApi isWXAppInstalled]) {
+                [self shareToWxTimeLine];
+            }
+            break;
+        case 2://微博
+            if ([WeiboSDK isWeiboAppInstalled]) {
+                [self shareToWeiBo];
+            }
+            break;
+        case 3://qq好友
+            if ([TencentOAuth iphoneQQInstalled]) {
+                [self shareToQQFriend];
+            }
+            break;
+        case 4://qq空间
+            if ([TencentOAuth iphoneQQInstalled]) {
+                [self shareToQQZone];
+            }
+            break;
+    }
+    
+}
+
+
+//分享给好友
+-(void)shareToWxFriend
+{
+    WXMediaMessage *message = [WXMediaMessage message];
+    message.title = [popJson valueForKey:@"title"];  //@"Web_title";
+    message.description = [popJson valueForKey:@"description"];
+    //UIImage * result;
+    // NSString *str=@"http://img.my.csdn.net/uploads/201402/24/1393242467_3999.jpg";
+    //  NSString *imageurl=[popJson valueForKey:@"imageurl"];
+    // result = [self getImageFromURL:imageurl];
+    
+    // UIImage *image=[self imageByScalingAndCroppingForSize:result toSize:CGSizeMake(80, 80)];//压缩到指定大小80*80
+    
+    // if(image==nil || [image isEqual:0]){
+    [message setThumbImage:[UIImage imageNamed:@"icon.png"]];
+    
+    // }else{
+    //    [message setThumbImage:image];
+    //  }
+    WXWebpageObject *ext = [WXWebpageObject object];
+    ext.webpageUrl = [popJson valueForKey:@"url"];
+    
+    message.mediaObject = ext;
+    
+    SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = WXSceneSession;
+    
+    [WXApi sendReq:req];
+}
+-(void)shareToWxTimeLine
+{
+    WXMediaMessage *message = [WXMediaMessage message];
+    message.title = [popJson valueForKey:@"title"];  //@"Web_title";
+    message.description =[popJson valueForKey:@"description"];
+    
+    //UIImage * result;
+    // NSString *str=@"http://img.my.csdn.net/uploads/201402/24/1393242467_3999.jpg";
+    //    NSString *imageurl=[popJson valueForKey:@"imageurl"];
+    //    result = [self getImageFromURL:imageurl];
+    
+    // UIImage *image=[self imageByScalingAndCroppingForSize:result toSize:CGSizeMake(80, 80)];//压缩到指定大小80*80
+    
+    // if(image==nil || [image isEqual:0]){
+    [message setThumbImage:[UIImage imageNamed:@"icon.png"]];
+    
+    //  }else{
+    //  [message setThumbImage:image];
+    //}
+    WXWebpageObject *ext = [WXWebpageObject object];
+    ext.webpageUrl = [popJson valueForKey:@"url"];
+    
+    message.mediaObject = ext;
+    
+    SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = WXSceneTimeline;
+    
+    [WXApi sendReq:req];
+    
+}
+static NSString * const WeiboKey=@"2850266283";
+static NSString * const WeiboRedirectURI =@"http://www.sina.com";
+-(void)shareToWeiBo{
+    AppDelegate *myDelegate =(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    WBAuthorizeRequest *authRequest = [WBAuthorizeRequest request];
+    authRequest.redirectURI = WeiboRedirectURI;
+    authRequest.scope = @"all";
+    
+    WBSendMessageToWeiboRequest *request = [WBSendMessageToWeiboRequest requestWithMessage:[self messageToShare] authInfo:authRequest access_token:myDelegate.wbtoken];
+    request.userInfo = @{@"ShareMessageFrom": @"SendMessageToWeiboViewController",
+                         @"Other_Info_1": [NSNumber numberWithInt:123],
+                         @"Other_Info_2": @[@"obj1", @"obj2"],
+                         @"Other_Info_3": @{@"key1": @"obj1", @"key2": @"obj2"}};
+    [WeiboSDK sendRequest:request];
+}
+-(WBMessageObject *)messageToShare
+{
+    WBMessageObject *message = [WBMessageObject message];
+    
+    
+    message.text = [[popJson valueForKey:@"title"]stringByAppendingString:[popJson valueForKey:@"url"]];
+    
+    
+    UIImage *image=[UIImage imageNamed:@"icon.png"];
+    
+    WBImageObject *imageObject = [WBImageObject object];
+    imageObject.imageData = UIImagePNGRepresentation(image);
+    message.imageObject = imageObject;
+    
+    
+    //    WBWebpageObject *webpage = [WBWebpageObject object];
+    //
+    //    webpage.objectID = @"identifier1";
+    //    webpage.title =[popJson valueForKey:@"title"];
+    //    webpage.description = [popJson valueForKey:@"description"];
+    //    webpage.thumbnailData = UIImagePNGRepresentation(image);
+    //    webpage.webpageUrl = @"http://www.baidu.com";
+    //    message.mediaObject = webpage;
+    //
+    return message;
+}
+
+-(void)shareToQQZone{
+    UIImage *image=[UIImage imageNamed:@"icon.png"];
+    
+    NSString *title=[popJson valueForKey:@"title"];
+    NSString *description=[popJson valueForKey:@"description"];
+    NSString *url=[popJson valueForKey:@"url"];
+    
+    QQApiNewsObject* imgObj = [QQApiNewsObject objectWithURL:[NSURL URLWithString:url]  title:title description:description previewImageData:UIImagePNGRepresentation(image)];
+    
+    [imgObj setCflag:kQQAPICtrlFlagQZoneShareOnStart];
+    
+    SendMessageToQQReq* req = [SendMessageToQQReq reqWithContent:imgObj];
+    
+    QQApiSendResultCode sent = [QQApiInterface SendReqToQZone:req];
+    if ([TencentOAuth iphoneQQInstalled]) {
+        [self handleSendResult:sent];
+    }
+}
+-(void)shareToQQFriend{
+    UIImage *image=[UIImage imageNamed:@"icon.png"];
+    
+    NSString *title=[popJson valueForKey:@"title"];
+    NSString *description=[popJson valueForKey:@"description"];
+    NSString *url=[popJson valueForKey:@"url"];
+    
+    QQApiURLObject *imObj=[[QQApiURLObject alloc]initWithURL:[NSURL URLWithString:url] title:title description:description previewImageData:UIImagePNGRepresentation(image) targetContentType:QQApiURLTargetTypeNews];
+    
+    SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:imObj];
+    //将内容分享到qq
+    QQApiSendResultCode sent = [QQApiInterface sendReq:req];
+    
+    if ([TencentOAuth iphoneQQInstalled]) {
+        [self handleSendResult:sent];
+    }
+}
+-(void)handleSendResult:(QQApiSendResultCode)sendResult
+{
+    switch (sendResult)
+    {
+        case EQQAPIAPPNOTREGISTED:
+        {
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"App未注册" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            [msgbox show];
+            
+            break;
+        }
+        case EQQAPIMESSAGECONTENTINVALID:
+        case EQQAPIMESSAGECONTENTNULL:
+        case EQQAPIMESSAGETYPEINVALID:
+        {
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"发送参数错误" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            [msgbox show];
+            
+            break;
+        }
+        case EQQAPIQQNOTINSTALLED:
+        {
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"未安装手Q" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            [msgbox show];
+            
+            break;
+        }
+        case EQQAPIQQNOTSUPPORTAPI:
+        {
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"API接口不支持" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            [msgbox show];
+            
+            break;
+        }
+        case EQQAPISENDFAILD:
+        {
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"发送失败" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            [msgbox show];
+            
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 }
 
 @end
