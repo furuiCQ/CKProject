@@ -199,7 +199,10 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     
     userImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/2-width/5.2, imageView.frame.size.height+imageView.frame.origin.y-width/5.2, width/2.6, width/2.6)];
     [userImageView setImage:[UIImage imageNamed:@"logo"]];
-    
+    userImageView.layer.masksToBounds = YES;
+    userImageView.layer.borderWidth=2;
+    [userImageView.layer setBorderColor:[UIColor whiteColor].CGColor];
+    userImageView.layer.cornerRadius = (userImageView.frame.size.width) / 2;
     [tableHeaderView addSubview:userImageView];
     
     //登陆后显示控件
@@ -975,23 +978,22 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         NSString *docPath = [paths lastObject];
         NSString *imageURl=[docPath stringByAppendingFormat:@"%@%@",@"/",timeDate];
         saveImageToCacheDir(docPath, image, timeDate, @"png");
-        [self creatDicatorView];
-        
+        [picker dismissViewControllerAnimated:YES completion:nil];
+        [ProgressHUD show:@"上传图片中..."];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             // 耗时的操作
             [HttpHelper upload:myDelegate.model withImageUrl:imageURl withImage:image success:^(HttpModel *model){
-                
-                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
+                    [ProgressHUD dismiss];
                     [slideMenu setImage:nil withImage:image];
-                    [dicatorView stopAnimating];
+                    [userImageView setImage:image];
+                    //[dicatorView stopAnimating];
                 });
                 
                 
             }failure:^(NSError *error){
                 
-                [dicatorView stopAnimating];
                 
             }];
             
@@ -1002,31 +1004,20 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         
         
     }
-    [picker dismissViewControllerAnimated:YES completion:nil];
-    //    MainViewController *main=[[MainViewController alloc]init];
-    //    [self presentViewController:main animated:NO completion:nil]
-    //返回上一次层
-    
-    
-    
-    //    [self dismissViewControllerAnimated:YES completion:nil];
-    //    MainTabBarViewController *vo=[[MainTabBarViewController alloc]init];
-    //    [self presentViewController:vo animated:YES completion:nil];
-    
     
     
 }
--(void)creatDicatorView{
-    if (dicatorView==nil) {
-        dicatorView=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        [dicatorView setFrame:CGRectMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-50, 100, 100)];
-        [dicatorView setColor:[UIColor blackColor]];
-        [dicatorView startAnimating];
-        [self.view addSubview:dicatorView];
-    }
-    [dicatorView startAnimating];
-    
-}
+//-(void)creatDicatorView{
+//    if (dicatorView==nil) {
+//        dicatorView=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//        [dicatorView setFrame:CGRectMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-50, 100, 100)];
+//        [dicatorView setColor:[UIColor redColor]];
+//        [dicatorView startAnimating];
+//        [self.view addSubview:dicatorView];
+//    }
+//    [dicatorView startAnimating];
+//    
+//}
 #define kScreen_Height      ([UIScreen mainScreen].bounds.size.height)
 #define kScreen_Width       ([UIScreen mainScreen].bounds.size.width)
 #define kScreen_Frame       (CGRectMake(0, 0 ,kScreen_Width,kScreen_Height))
