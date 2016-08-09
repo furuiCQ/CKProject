@@ -94,6 +94,7 @@ static NSString *const API_NEWS_ZAN=@"newszan";
 @interface HttpHelper : NSObject
 +(NSString *)getNowImageTime;
 //二期接口
++(void)getXinwenInfo:(NSNumber *)articleId  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)zanNews:(NSNumber*)articleId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)deleteMyLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBeginTime:(NSString *) begintime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)orderLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBtime:(NSString *)begintime withadvancetime:(NSNumber *) advancetime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

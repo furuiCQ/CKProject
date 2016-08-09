@@ -397,7 +397,18 @@
         failture(error);
     }];
 }
-
++(void)getXinwenInfo:(NSNumber *)articleId  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
+                            @{ @"name": @"token", @"value": model.token},
+                            @{ @"name": @"uid", @"value": model.uid},
+                            @{@"name":@"id",@"value":articleId},
+                            ];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_XINWEN_AIRTICLE_INFO] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
 
 
 //新闻列表页
@@ -1272,9 +1283,9 @@
     NSError *error = nil;
     NSData* resultData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponese error:&error];
     
-  //  NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
+    NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] >=200&&[urlResponese statusCode]<300){
-       // NSLog(@"返回结果=====%@",result);
+        NSLog(@"返回结果=====%@",result);
         if (resultData!=nil) {
             NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:resultData options:kNilOptions error:&error];
             if (error) {
