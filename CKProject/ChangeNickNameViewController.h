@@ -13,4 +13,5 @@
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;
 @property(strong,nonatomic)UILabel *msgLabel;
+-(void)setNickName:(NSString *)nickname;
 @end

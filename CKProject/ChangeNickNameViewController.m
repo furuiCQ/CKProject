@@ -10,7 +10,8 @@
 #import "HttpHelper.h"
 #import "AppDelegate.h"
 @interface ChangeNickNameViewController (){
-
+    UITextField *oldPass;
+    UIAlertView *alertView;
 }
 
 @end
@@ -53,14 +54,15 @@
     [searchLabel setText:@"修改昵称"];
     
     //新建右上角的图形
-    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/19-2, titleHeight/2-7,4, 15)];
+    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0,self.view.frame.size.width/6, titleHeight)];
     [msgLabel setUserInteractionEnabled:YES];
     
     UITapGestureRecognizer *menuapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(save)];
     [msgLabel addGestureRecognizer:menuapGestureRecognizer];
     [msgLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [msgLabel setText:@"保存"];
-    
+    [msgLabel setTextColor:[UIColor whiteColor]];
+
     [topView addSubview:cityLabel];
     [topView addSubview:msgLabel];
     [topView addSubview:searchLabel];
@@ -71,7 +73,7 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
 -(void)initContentView{
     int width=self.view.frame.size.width;
     int hegiht=self.view.frame.size.height;
-    UITextField *oldPass=[[UITextField alloc]initWithFrame:CGRectMake(width/32, titleHeight+20+width/31, width-width/16, width/8)];
+    oldPass=[[UITextField alloc]initWithFrame:CGRectMake(width/32, titleHeight+20+width/31, width-width/16, width/8)];
     [oldPass.layer setCornerRadius:3];
     [oldPass setBackgroundColor:[UIColor whiteColor]];
     [oldPass setPlaceholder:@" 请输入昵称"];
@@ -80,8 +82,40 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
     [self.view addSubview:oldPass];
     
 }
+-(void)setNickName:(NSString *)nickname{
+    [oldPass setText:nickname];
+}
 -(void)save{
     NSLog(@"save");
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        
+        AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [HttpHelper resetName:oldPass.text withModel:myDelegate.model success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    [self dismissViewControllerAnimated:YES completion:^{
+                        NSNotification *notification =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
+                        [[NSNotificationCenter defaultCenter] postNotification:notification];
+                    }];
+                }else{
+                    [alertView setMessage:model.message];
+                    [alertView show];
+                    
+                }
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+            }
+        }];
+    });
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
     [self dismissViewControllerAnimated:YES completion:nil];

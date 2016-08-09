@@ -845,7 +845,10 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [self addActionSheet];
 }
 -(void)selectUserName{
+    ChangeNickNameViewController *changePassViewController=[[ChangeNickNameViewController alloc]init];
+    [self presentViewController: changePassViewController animated:YES completion:nil];
     NSLog(@"selectUserName");
+    [changePassViewController setNickName:userNameLabel.text];
 }
 -(void)switchBtn:(BOOL)isSelected{
     NSString *str=@"";
@@ -1028,8 +1031,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     bgView.backgroundColor = [UIColor blackColor];
     bgView.alpha = 0;
     [bgView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMyPicker)]];
-    
-    
     
     citypickerView=[[UIPickerView alloc]initWithFrame:CGRectMake(0, height-width/45.7-titleHeight-width*2/3, width, width*2/3)];
     citypickerView.delegate=self;
