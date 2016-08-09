@@ -12,7 +12,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 
 @interface YiRightView ()<UITableViewDelegate,UITableViewDataSource>{
-    UITableView *tableView;
+    UITableView *_tableView;
     NSArray *dataArray;
     NSArray *imageArray;
     
@@ -30,13 +30,15 @@
 
 @end
 @implementation YiRightView
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame
 {
+    
+    self = [super initWithFrame:frame];
     phone=@"";
     dataArray=[[NSArray alloc]initWithObjects:@"我的优惠券",@"性别",@"修改密码",@"电话",@"地址",@"联系我们",@"设置",@"退出登录", nil];
     imageArray=[[NSArray alloc]initWithObjects:@"ticket-",@"gender",@"password",@"phone",@"Location",@"contact",@"Settings-",@"LogOut", nil];
-    self = [super initWithFrame:frame];
     if (self) {
         float viewWidth=frame.size.width;
         float viewHeight=frame.size.height;
@@ -68,17 +70,17 @@
         [headerView addSubview:userLabel];
         [headerView setFrame:CGRectMake(0, 0, viewWidth, userLabel.frame.size.height+userLabel.frame.origin.y+15)];
         
-        tableView=[[UITableView alloc] initWithFrame:CGRectMake(0,20, viewWidth, viewHeight-64) style:UITableViewStylePlain];
-        [self addSubview:tableView];
-        tableView.dataSource=self;
-        tableView.delegate=self;
+        _tableView=[[UITableView alloc] initWithFrame:CGRectMake(0,20, viewWidth, viewHeight-64) style:UITableViewStylePlain];
+        [self addSubview:_tableView];
+        _tableView.dataSource=self;
+        _tableView.delegate=self;
         if ([[[UIDevice currentDevice]systemVersion] floatValue] >= 7.0) {
-            [tableView setSeparatorInset:UIEdgeInsetsZero];
+            [_tableView setSeparatorInset:UIEdgeInsetsZero];
         }
-        tableView.showsVerticalScrollIndicator=NO;
-        tableView.separatorStyle = NO;
-        [tableView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
-        [tableView setTableHeaderView:headerView];
+        _tableView.showsVerticalScrollIndicator=NO;
+        _tableView.separatorStyle = NO;
+        [_tableView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
+        [_tableView setTableHeaderView:headerView];
         
     }
     return self;
@@ -87,17 +89,17 @@
     [userLabel setText:name];
 }
 -(void)selectUserName{
-    [_delegate selectUserName];
+    [delegate selectUserName];
 }
 -(void)setImage:(UIImage *)image{
     [userImageView setImage:image];
 }
 -(void)selectImage{
-    [_delegate selectImage];
+    [delegate selectImage];
 }
 -(void)setUserPhone:(NSString *)_phone{
     phone=_phone;
-    [tableView reloadData];
+    [_tableView reloadData];
 }
 -(void)setData:(NSDictionary *)dic{
     phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
@@ -111,7 +113,7 @@
             [userImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
         }
     }
-    [tableView reloadData];
+    [_tableView reloadData];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [dataArray count];
@@ -181,7 +183,7 @@
 {
     UIButton *switchButton = (UIButton*)sender;
     BOOL isButtonOn = switchButton.selected;
-    [_delegate switchBtn:switchButton.selected];
+    [delegate switchBtn:switchButton.selected];
     if (isButtonOn) {
         [boyImageView setHidden:YES];
         [girlImageView setHidden:NO];
@@ -196,8 +198,8 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if ([_delegate respondsToSelector:@selector(rightDidSelectRowAtIndexPath:)]) {
-        [_delegate rightDidSelectRowAtIndexPath:indexPath];
+    if ([delegate respondsToSelector:@selector(rightDidSelectRowAtIndexPath:)]) {
+        [delegate rightDidSelectRowAtIndexPath:indexPath];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

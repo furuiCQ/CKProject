@@ -311,7 +311,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
     WXMediaMessage *message = [WXMediaMessage message];
     message.title = [popJson valueForKey:@"title"];  //@"Web_title";
     message.description = [popJson valueForKey:@"description"];
-    UIImage * result;
+    //UIImage * result;
     // NSString *str=@"http://img.my.csdn.net/uploads/201402/24/1393242467_3999.jpg";
   //  NSString *imageurl=[popJson valueForKey:@"imageurl"];
    // result = [self getImageFromURL:imageurl];
@@ -342,7 +342,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
     message.title = [popJson valueForKey:@"title"];  //@"Web_title";
     message.description =[popJson valueForKey:@"description"];
     
-    UIImage * result;
+    //UIImage * result;
     // NSString *str=@"http://img.my.csdn.net/uploads/201402/24/1393242467_3999.jpg";
 //    NSString *imageurl=[popJson valueForKey:@"imageurl"];
 //    result = [self getImageFromURL:imageurl];

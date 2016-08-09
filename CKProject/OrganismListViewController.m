@@ -1051,19 +1051,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             //得到当前坐标
             
             //转化为坐标
-            
-            //            NSLog(@"纬度:%f",neloct.coordinate.latitude);
-            //            NSLog(@"经度:%f",neloct.coordinate.longitude);
-            //            + (CLLocationCoordinate2D)bd09ToGcj02:(CLLocationCoordinate2D)location;
+           
             CLLocationCoordinate2D coordinate;
             coordinate.latitude=[lat floatValue];
             
             coordinate.longitude=[lng floatValue];
-            
-            CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-            //               CLLocationCoordinate2D wgsPt = newLocation.coordinate;
-            //
-            //               CLLocationCoordinate2D bdPt = [JZLocationConverter bd09ToGcj02:wgsPt];
             //1.获得输入的经纬度
             lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
             lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
@@ -1149,7 +1141,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         }
         if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
             NSNumber *orders=[dic objectForKey:@"people"];
-            NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
             [porjectCell.listItem.numberLabel setText:[NSString stringWithFormat:@"%@",orders]];
         }
         
@@ -1263,7 +1254,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [self endAddress:addressString];
     }else if(tableView.tag==3){
         NSDictionary *dic=[local3Array objectAtIndex:[indexPath row]];
-        select3Id=[indexPath row];
+        select3Id=(int)[indexPath row];
         aid=[dic objectForKey:@"id"];
         NSString *str=[dic objectForKey:@"title"];
         selectCity3String=str;
@@ -1553,16 +1544,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
     // NSLog(@"点点点");
     [self dismissViewControllerAnimated:YES completion:nil];
-}
--(void)viewWillDisappear:(BOOL)animated
-{
-//    tableArray=nil;
-//    local1Array=nil;
-//    local2Array=nil;
-//    local3Array=nil;
-//    typeArray=nil;
-
-
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

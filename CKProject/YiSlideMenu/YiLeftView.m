@@ -8,12 +8,13 @@
 
 #import "YiLeftView.h"
 @interface YiLeftView ()<UITableViewDelegate,UITableViewDataSource>{
-    UITableView *tableView;
+    UITableView *_tableView;
     
 }
 
 @end
 @implementation YiLeftView
+@synthesize delegate;
 - (id)initWithFrame:(CGRect)frame
 {
 
@@ -25,14 +26,14 @@
         
         self.backgroundColor=[UIColor whiteColor];
         
-        tableView=[[UITableView alloc] initWithFrame:CGRectMake(0, 64 , viewWidth, viewHeight-64) style:UITableViewStylePlain];
-        [self addSubview:tableView];
-        tableView.dataSource=self;
-        tableView.delegate=self;
+        _tableView=[[UITableView alloc] initWithFrame:CGRectMake(0, 64 , viewWidth, viewHeight-64) style:UITableViewStylePlain];
+        [self addSubview:_tableView];
+        _tableView.dataSource=self;
+        _tableView.delegate=self;
         if ([[[UIDevice currentDevice]systemVersion] floatValue] >= 7.0) {
-            [tableView setSeparatorInset:UIEdgeInsetsZero];
+            [_tableView setSeparatorInset:UIEdgeInsetsZero];
         }
-        tableView.showsVerticalScrollIndicator=NO;
+        _tableView.showsVerticalScrollIndicator=NO;
         
         UIView *line=[[UIView alloc] initWithFrame:CGRectMake(viewWidth-1, 64, 1, viewHeight-64)];
         [self addSubview:line];
@@ -80,15 +81,15 @@
        
         
     }
-    cell.textLabel.text=[NSString stringWithFormat:@"Menu%d",indexPath.row];
+    cell.textLabel.text=[NSString stringWithFormat:@"Menu%ld",(long)indexPath.row];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
   
-    if ([_delegate respondsToSelector:@selector(leftViewDidSelectRowAtIndexPath:)]) {
-        [_delegate leftViewDidSelectRowAtIndexPath:indexPath];
+    if ([delegate respondsToSelector:@selector(leftViewDidSelectRowAtIndexPath:)]) {
+        [delegate leftViewDidSelectRowAtIndexPath:indexPath];
     }
     
     

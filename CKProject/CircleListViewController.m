@@ -410,7 +410,7 @@
     });
 }
 -(void)openChorme:(UITapGestureRecognizer *)gesutre{
-    int index=(int)gesutre.view.tag;
+  //  int index=(int)gesutre.view.tag;
 //   NSDictionary *dic=[list objectAtIndex:index];
 //    NSString *url=[dic objectForKey:@"url"];
 //   if (![url isEqual:@""] && url!=nil && ![url isEqual:[NSNull null]]) {

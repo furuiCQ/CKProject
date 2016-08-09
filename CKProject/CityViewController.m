@@ -10,7 +10,7 @@
 #import "CityViewController.h"
 #import "AppDelegate.h"
 #import "ProjectTimePicker.h"
-@interface CityViewController(){
+@interface CityViewController()<UITableViewDataSource,UITableViewDelegate>{
     NSArray *dataArray;
 }
 @end
@@ -18,7 +18,7 @@
 @synthesize titleHeight;
 @synthesize searchLabel;
 @synthesize cityLabel;
-@synthesize tableView;
+@synthesize _tableView;
 - (id)init
 {
     self = [super init];
@@ -111,14 +111,14 @@
     int height=self.view.frame.size.height;
     
     
-    tableView=[[UITableView alloc] initWithFrame:CGRectMake(0,20+titleHeight, width, height-(20+titleHeight)) style:UITableViewStylePlain];
-    [self.view addSubview:tableView];
-    tableView.dataSource=self;
-    tableView.delegate=self;
+    _tableView=[[UITableView alloc] initWithFrame:CGRectMake(0,20+titleHeight, width, height-(20+titleHeight)) style:UITableViewStylePlain];
+    [self.view addSubview:_tableView];
+    _tableView.dataSource=self;
+    _tableView.delegate=self;
     if ([[[UIDevice currentDevice]systemVersion] floatValue] >= 7.0) {
-        [tableView setSeparatorInset:UIEdgeInsetsZero];
+        [_tableView setSeparatorInset:UIEdgeInsetsZero];
     }
-    tableView.showsVerticalScrollIndicator=NO;
+    _tableView.showsVerticalScrollIndicator=NO;
 }
 
 #pragma mark - tableView

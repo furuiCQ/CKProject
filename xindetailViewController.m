@@ -411,7 +411,7 @@
     return cell;
 }
 -(void)dianZan:(UITapGestureRecognizer *)gesutre{
-    int tag=gesutre.view.tag;
+    int tag=(int)gesutre.view.tag;
     NSLog(@"dianZan%d",tag);
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
@@ -718,7 +718,6 @@
                             }
                             if([dic objectForKey:@"read"]){
                                 NSNumber *number=[dic objectForKey:@"read"];
-                                NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
                                 [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                             }
                             if([dic objectForKey:@"content"]){
@@ -811,7 +810,6 @@
                             }
                             if([dic objectForKey:@"read"]){
                                 NSNumber *number=[dic objectForKey:@"read"];
-                                NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
                                 [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                             }
                             if([dic objectForKey:@"content"]){

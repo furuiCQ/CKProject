@@ -72,7 +72,6 @@
 static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
 -(void)initContentView{
     int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
     oldPass=[[UITextField alloc]initWithFrame:CGRectMake(width/32, titleHeight+20+width/31, width-width/16, width/8)];
     [oldPass.layer setCornerRadius:3];
     [oldPass setBackgroundColor:[UIColor whiteColor]];

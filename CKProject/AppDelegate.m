@@ -83,14 +83,13 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
     if (name!=nil&&password!=nil) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            [HttpHelper loginAcount:name with:password success:^(HttpModel *model)
+            [HttpHelper loginAcount:name with:password success:^(HttpModel *_model)
              {
-                 NSLog(@"%@",model.message);
+                 NSLog(@"%@",_model.message);
                  dispatch_async(dispatch_get_main_queue(), ^{
                      
-                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                         AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                         myDelegate.model=model;
+                     if ([_model.status isEqual:[NSNumber numberWithInt:1]]) {
+                         model=_model;
                          
                      }else{
                          
@@ -114,26 +113,6 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
         
         isLogin=YES;
     }
-    //    //获取storyboard
-    //
-    //    //        self.window.rootViewController=mtvc;
-    //
-    //    //    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    //    //如果用户未登陆则把根视图控制器改变成登陆视图控制器
-    //    if (name == nil)
-    //    {
-    //        NSLog(@"%@",name);
-    //        LoginViewController *vi=[[LoginViewController alloc]init];
-    //        //        id view = [storyboard instantiateViewControllerWithIdentifier:@"LoginView"];
-    //        self.window.rootViewController = vi;
-    //    }
-    //    else
-    //    {
-    //        self.window.rootViewController=mtvc;
-    //
-    //    }
-    //
-    
     return YES;
 }
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window

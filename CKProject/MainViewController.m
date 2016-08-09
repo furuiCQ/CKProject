@@ -29,8 +29,7 @@
 #import "MationViewController.h"
 #import "ViewController.h"
 #import "ProjectTimePicker.h"
-#import "OrderRecordCell.h";
-//HttpHelper.m
+#import "OrderRecordCell.h"
 @interface MainViewController ()<CLLocationManagerDelegate,UITextFieldDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>{
     CLLocationManager *locationmanager;
     NSArray *tableArray;
@@ -540,9 +539,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                     if([subview isKindOfClass:[UIImageView class]]){
                                         if(subview.tag>=201){
                                             NSLog(@"subview.tag%ld",(long)subview.tag);
-                                            NSDictionary *dic=[chasetResult objectAtIndex:(subview.tag-201)];
-                                            UIImageView *imageview=(UIImageView *)subview;
-                                            NSString *logoUrl=[dic objectForKey:@"logo"];
+                                          //  NSDictionary *dic=[chasetResult objectAtIndex:(subview.tag-201)];
+                                          //  UIImageView *imageview=(UIImageView *)subview;
+                                          //  NSString *logoUrl=[dic objectForKey:@"logo"];
                                             // [imageview sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logoUrl]]];
                                         }
                                     }
@@ -583,7 +582,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self presentViewController:projectListViewController animated:YES completion:nil];
     [projectListViewController setHotModel:sqlString];
 }
--(void)initHotProjectTableView:(UIControl *)view{
+-(void)initHotProjectTableView:(UIView *)view{
     bottomHeight=49;
     
     int width=self.view.frame.size.width;
@@ -1161,43 +1160,6 @@ static NSString *identy = @"OrderRecordCell";
     return  result;
 }
 
--(void)createButton{
-    textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, 320, 60)];
-    textLabel.backgroundColor = [UIColor clearColor];
-    textLabel.font = [UIFont systemFontOfSize:self.view.frame.size.width/21.3];
-    textLabel.textColor = [UIColor redColor];
-    textLabel.textAlignment = NSTextAlignmentCenter;
-    textLabel.numberOfLines = 0;
-    textLabel.text = @"测试位置";
-    [self.view addSubview:textLabel];
-    
-    UIButton *latBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    latBtn.frame = CGRectMake(100,130 , 150, 30);
-    [latBtn setTitle:@"点击获取坐标" forState:UIControlStateNormal];
-    [latBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [latBtn addTarget:self action:@selector(getLat) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:latBtn];
-    
-    UIButton *cityBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    cityBtn.frame = CGRectMake(100,180, 150, 30);
-    [cityBtn setTitle:@"点击获取城市" forState:UIControlStateNormal];
-    [cityBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [cityBtn addTarget:self action:@selector(getCity) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:cityBtn];
-    
-    
-    UIButton *allBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    allBtn.frame = CGRectMake(100,230, 150, 30);
-    [allBtn setTitle:@"点击获取所有信息" forState:UIControlStateNormal];
-    [allBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [allBtn addTarget:self action:@selector(getAllInfo) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:allBtn];
-    
-    [self showBorder:latBtn];
-    [self showBorder:cityBtn];
-    [self showBorder:allBtn];
-}
-
 -(void)showBorder:(UIButton *)sender{
     sender.layer.borderColor=[UIColor redColor].CGColor;
     sender.layer.borderWidth=0.5;
@@ -1207,7 +1169,7 @@ static NSString *identy = @"OrderRecordCell";
 
 -(void)getLat
 {
-    __block __weak MainViewController *wself = self;
+   // __block __weak MainViewController *wself = self;
     
     if (IS_IOS8) {
         
@@ -1241,7 +1203,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",str);
                 NSLog(@"%lu",(unsigned long)[str length]);
                 NSArray *dataArray=[str componentsSeparatedByString:NSLocalizedString(@",", nil)];
-                NSString *provStr=[dataArray objectAtIndex:2];
+               // NSString *provStr=[dataArray objectAtIndex:2];
                 NSString *cityStr=[dataArray objectAtIndex:0];
                 cityStr=[cityStr substringWithRange:NSMakeRange(1, cityStr.length-2)];
                 NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
@@ -1527,7 +1489,8 @@ static NSString *identy = @"OrderRecordCell";
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     myDelegate.model=model;
-                    customServiceNumber=model.custom_tel;
+                    NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
+                    customServiceNumber=[formater stringFromNumber: model.custom_tel ];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         connectCount=3;
                         list=(NSArray *)model.result;

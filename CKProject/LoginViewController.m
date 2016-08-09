@@ -426,7 +426,7 @@ static NSString *kAuthState = @"xxx";
 - (void)getWBUserInfo:(NSNotification*)notification{
     WBBaseResponse  *jsonResponse=(WBBaseResponse  *)notification.object;
     NSLog(@"jsonResponse%@",jsonResponse.userInfo);
-    NSNumberFormatter *fomatter=[[NSNumberFormatter alloc]init];
+   // NSNumberFormatter *fomatter=[[NSNumberFormatter alloc]init];
     
    // NSNumber *ID=[jsonResponse.userInfo objectForKey:@"uid"];
     NSString *uid=[jsonResponse.userInfo objectForKey:@"uid"];

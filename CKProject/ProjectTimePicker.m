@@ -51,6 +51,8 @@
 }
 - (instancetype)initWithFrame:(CGRect)frame
 {
+    
+    self = [super initWithFrame:frame];
     dataArray=[[NSArray alloc]initWithObjects:@"S",@"M",@"T",@"W",@"T",@"F",@"S", nil];
     weekDayArray=[[NSArray alloc]initWithObjects:@"周日",@"周一",@"周二",@"周三",@"周四",@"周五",@"周六",nil];
     dayLabelArray=[[NSArray alloc]initWithObjects:@"上午",@"下午",@"晚上",nil];
@@ -63,7 +65,6 @@
     normalColor=[UIColor blackColor];
     lightColor=[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0];
     noColor=[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0];
-    self = [super initWithFrame:frame];
     if (self) {
         
         
@@ -138,13 +139,12 @@
     [timeDictionary setObject:multArray5 forKey:@"5"];
     [timeDictionary setObject:multArray6 forKey:@"6"];
     
-    NSLog(@"setData",nowdata);
+    NSLog(@"setData%@",nowdata);
 }
 -(void)initView:(CGRect *)frame
 {
     CGRect rx = [ UIScreen mainScreen ].bounds;
     int screenWidth=rx.size.width;
-    int screenHeight=rx.size.height;
     nextWeekSelectView=[[UIView alloc]initWithFrame:CGRectMake(screenWidth/14.8, 4, screenWidth-screenWidth/14.8*2, screenWidth/8)];
     [nextWeekSelectView setBackgroundColor:[UIColor colorWithRed:133.f/255.f green:52.f/255.f blue:52.f/255.f alpha:1]];
     [nextWeekSelectView.layer setCornerRadius:5];
@@ -319,7 +319,7 @@
     NSLog(@"setNextMonthDate");
 }
 -(void)timeGesture:(UITapGestureRecognizer *)getsure{
-    NSInteger *selectId=getsure.view.tag;
+    NSInteger *selectId=(NSInteger *)getsure.view.tag;
     for(UILabel *label in timeLabelArray){
         if(label.tag==selectId){
             beginTime=label.text;
@@ -331,7 +331,7 @@
     
 }
 -(void)weekGesture:(UITapGestureRecognizer *)getsure{
-    NSInteger *selectId=getsure.view.tag;
+    NSInteger *selectId=(NSInteger *)getsure.view.tag;
     for(UILabel *label in weekDayBtnArray){
         if(label.tag==selectId){
             [label.layer setMasksToBounds:YES];
@@ -341,7 +341,7 @@
             for(UILabel *label in timeLabelArray){
                 [label removeFromSuperview];
             }
-            int num=getsure.view.tag;
+            int num=(int)getsure.view.tag;
             weekNum=[NSNumber numberWithInt:num];
             [self initTimeView:[NSString stringWithFormat:@"%d",num ]];
             

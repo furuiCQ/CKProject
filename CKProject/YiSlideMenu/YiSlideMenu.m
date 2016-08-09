@@ -29,6 +29,7 @@
 @end
 
 @implementation YiSlideMenu
+@synthesize slideMenuDelegate;
 @synthesize centerView,navLeftBt,navRightBt,navTitleLabel;
 - (id)initWithFrame:(CGRect)frame
 {
@@ -94,7 +95,7 @@
         navTitleLabel=[[UILabel alloc] initWithFrame:CGRectMake((viewWidth-120)/2, 20, 120, 44)];
         [navBar addSubview:navTitleLabel];
         navTitleLabel.font=[UIFont boldSystemFontOfSize:19];
-        navTitleLabel.textAlignment=UITextAlignmentCenter;
+        navTitleLabel.textAlignment=NSTextAlignmentCenter;
         navTitleLabel.textColor=[UIColor whiteColor];
         
         
@@ -204,7 +205,7 @@
     }
 }
 -(void)selectUserName{
-    [_slideMenuDelegate selectUserName];
+    [slideMenuDelegate selectUserName];
 }
 //-(void)setImage:(NSString *)imageUrl{
 //    for(UIView *view in [rightBgView subviews]){
@@ -216,7 +217,7 @@
 //    }
 //}
 -(void)selectImage{
-    [_slideMenuDelegate selectImage];
+    [slideMenuDelegate selectImage];
 }
 -(void)setData:(NSDictionary *)dic{
     for(UIView *view in [rightBgView subviews]){
@@ -239,19 +240,19 @@
     }
 }
 -(void)switchBtn:(BOOL)isSelected{
-    [_slideMenuDelegate switchBtn:isSelected];
+    [slideMenuDelegate switchBtn:isSelected];
 }
 -(void)leftViewDidSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if ([_slideMenuDelegate respondsToSelector:@selector(didSelectRowAtIndexPath:slide:)]) {
-        [_slideMenuDelegate didSelectRowAtIndexPath:indexPath slide:YiLeftDirection];
+    if ([slideMenuDelegate respondsToSelector:@selector(didSelectRowAtIndexPath:slide:)]) {
+        [slideMenuDelegate didSelectRowAtIndexPath:indexPath slide:YiLeftDirection];
     }
 
 }
 -(void)rightDidSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if ([_slideMenuDelegate respondsToSelector:@selector(didSelectRowAtIndexPath:slide:)]) {
-        [_slideMenuDelegate didSelectRowAtIndexPath:indexPath slide:YiRightDirection];
+    if ([slideMenuDelegate respondsToSelector:@selector(didSelectRowAtIndexPath:slide:)]) {
+        [slideMenuDelegate didSelectRowAtIndexPath:indexPath slide:YiRightDirection];
     }
     
 }

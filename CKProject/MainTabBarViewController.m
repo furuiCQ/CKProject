@@ -130,8 +130,6 @@
     CGFloat btnhegiht=size.height;
     
     UIFont *font=[UIFont fontWithName:@"iconfont" size:23];
-    UIColor *textColor=[UIColor blackColor];
-    
     for (int i=0; i<numb; i++) {
         BottomBtn *btnView=[[BottomBtn alloc]initWithFrame:CGRectMake(btnwidth*i/numb+1, 1, btnwidth/numb, btnhegiht-2)];
         [btnView addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];

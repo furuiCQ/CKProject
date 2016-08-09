@@ -81,34 +81,35 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"login" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLogoutStauets) name:@"logout" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
-    // [self initTitle];
-    // [self initContentView];
-    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if(myDelegate.isLogin){
-        [ProgressHUD show:@"加载中..."];
-        [self changeLoginStauets];
-    }
-    
-    // Do any additional setup after loading the view, typically from a nib.
-}
--(void)viewWillAppear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"refresh_userInfo" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"login" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLogoutStauets) name:@"logout" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
     [self initContentView];
     [self initTitle];
     [self getPickerData];
     [self initPickView];
     
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //-------------------------
     if(myDelegate.isLogin){
         [ProgressHUD show:@"加载中..."];
         [self changeLoginStauets];
     }
+    // Do any additional setup after loading the view, typically from a nib.
 }
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"refresh_userInfo" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"login" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLogoutStauets) name:@"logout" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
+//    [self initContentView];
+//    [self initTitle];
+//    [self getPickerData];
+//    [self initPickView];
+//    
+//    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    if(myDelegate.isLogin){
+//        [ProgressHUD show:@"加载中..."];
+//        [self changeLoginStauets];
+//    }
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -363,7 +364,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     }
     MyMsgViewController *myMsgViewController=[MyMsgViewController alloc];
     [myMsgViewController setHasMsg:hasMsg];
-    [myMsgViewController init];
+    myMsgViewController=[myMsgViewController init];
     [self presentViewController: myMsgViewController animated:YES completion:nil];
     
 }
@@ -388,7 +389,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         [self presentViewController:loginViewController animated:YES completion:nil];
         return;
     }
-    slideMenu.navRightBtAction;
+    [slideMenu navRightBtAction];
 }
 -(void)changeLoginStauets{
     [loginedControl setHidden:NO];

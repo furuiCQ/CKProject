@@ -1272,7 +1272,7 @@
     NSError *error = nil;
     NSData* resultData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponese error:&error];
     
-    NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
+  //  NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] >=200&&[urlResponese statusCode]<300){
        // NSLog(@"返回结果=====%@",result);
         if (resultData!=nil) {

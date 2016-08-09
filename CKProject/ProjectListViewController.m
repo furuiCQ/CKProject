@@ -309,7 +309,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
                 NSSortDescriptor* sorter=[[NSSortDescriptor alloc]initWithKey:@"people" ascending:NO];
                 NSMutableArray *sortDescriptors=[[NSMutableArray alloc]initWithObjects:&sorter count:1];
                 NSArray *sortArray=[timeSortArray sortedArrayUsingDescriptors:sortDescriptors];
-                tableArray=sortArray;
+                tableArray=[sortArray copy];
                 
                 [projectTableView reloadData];
                 
@@ -1099,7 +1099,7 @@ static NSString *identy = @"OrderRecordCell";
         [self endAddress:addressString];
     }else if(tableView.tag==3){
         NSDictionary *dic=[local3Array objectAtIndex:[indexPath row]];
-        select3Id=[indexPath row];
+        select3Id=(int)[indexPath row];
         aid=[dic objectForKey:@"id"];
         NSString *str=[dic objectForKey:@"title"];
         selectCity3String=str;
@@ -1448,7 +1448,7 @@ static NSString *identy = @"OrderRecordCell";
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                         NSDictionary *result=model.result;
                         
-                        tableArray=(NSArray *)[result objectForKey:@"lesson"];
+                        tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [projectTableView reloadData];
@@ -1555,7 +1555,7 @@ static NSString *identy = @"OrderRecordCell";
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     NSDictionary *result=model.result;
                     
-                    tableArray=(NSArray *)[result objectForKey:@"lesson"];
+                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [projectTableView reloadData];
@@ -1600,7 +1600,7 @@ static NSString *identy = @"OrderRecordCell";
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     NSDictionary *result=model.result;
                     
-                    tableArray=(NSArray *)[result objectForKey:@"lesson"];
+                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1639,7 +1639,7 @@ static NSString *identy = @"OrderRecordCell";
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     NSDictionary *result=model.result;
                     
-                    tableArray=(NSArray *)[result objectForKey:@"lesson"];
+                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1682,15 +1682,15 @@ static NSString *identy = @"OrderRecordCell";
         
     }
 }
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    local1Array=nil;
-    local2Array=nil;
-    local3Array=nil;
-    
-    
-}
+//
+//-(void)viewWillDisappear:(BOOL)animated
+//{
+//    local1Array=nil;
+//    local2Array=nil;
+//    local3Array=nil;
+//    
+//    
+//}
 #pragma mark
 //返回分区个数
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{

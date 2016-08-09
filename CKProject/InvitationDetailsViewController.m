@@ -647,7 +647,7 @@
                             }
                             if([dic objectForKey:@"people"]){
                                 NSNumber *number=[dic objectForKey:@"people"];
-                                NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+                              //  NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
                                 [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                             }
                             if([dic objectForKey:@"content"]){

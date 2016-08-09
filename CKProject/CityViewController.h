@@ -11,7 +11,7 @@
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *searchLabel;
 @property(strong,nonatomic)UILabel *cityLabel;
-@property(strong,nonatomic)UITableView *tableView;
+@property(strong,nonatomic)UITableView *_tableView;
 
 @property (nonatomic, strong) NSMutableDictionary *cities;
 

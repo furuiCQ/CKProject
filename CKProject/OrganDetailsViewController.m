@@ -72,9 +72,9 @@
     
     [ProgressHUD show:@"加载中..."];
     
-    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //  localLat=myDelegate.latitude;
-    //  localLng=myDelegate.longitude;
+//    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    localLat=myDelegate.latitude;
+//    localLng=myDelegate.longitude;
     
     
     locationManager = [[CLLocationManager alloc] init];
@@ -554,13 +554,11 @@
             
             lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
             lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-            NSString *longtitudeText=lg;
-            NSString *latitudeText=lt;;
+//            NSString *longtitudeText=lg;
+//            NSString *latitudeText=lt;;
             
-            CLLocationDegrees latitude=[latitudeText doubleValue];
-            CLLocationDegrees longitude=[longtitudeText doubleValue];
-            
-            CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
+//            CLLocationDegrees latitude=[latitudeText doubleValue];
+//            CLLocationDegrees longitude=[longtitudeText doubleValue];
             
             double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
             if(distance>0.0){
@@ -578,7 +576,7 @@
         
         
         if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
-            NSString *addr=[dic objectForKey:@"addr"];
+           // NSString *addr=[dic objectForKey:@"addr"];
             //            CGRect frame=cell.listItem.addressLabel.frame;
             //            CGSize strSize=[addr sizeWithFont:cell.listItem.addressLabel.font maxSize:CGSizeMake(width, 0)];
             //            frame.origin.x=cell.listItem.joinLabel.frame.size.width+cell.listItem.joinLabel.frame.origin.x+width/40;
@@ -596,12 +594,6 @@
         //        }
         if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
             NSString *grade=[dic objectForKey:@"grade"];
-            //width/40
-            //            CGRect frame=cell.listItem.typelabel1.frame;
-            //            CGSize strSize=[grade sizeWithFont:cell.listItem.typelabel1.font maxSize:CGSizeMake(width, 0)];
-            //            frame.origin.x=cell.listItem.typelabel.frame.size.width+cell.listItem.typelabel.frame.origin.x+width/40;
-            //            frame.size.width=strSize.width+frame.size.height/2;
-            //            [cell.listItem.typelabel1 setFrame:frame];
             [cell.ageLabel setText:[NSString stringWithFormat:@"%@",grade]];
         }
         if ([dic objectForKey:@"btime"] && ![[dic objectForKey:@"btime"] isEqual:[NSNull null]]) {
@@ -835,13 +827,13 @@
                                 
                                 lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
                                 lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-                                NSString *longtitudeText=lg;
-                                NSString *latitudeText=lt;;
+//                                NSString *longtitudeText=lg;
+//                                NSString *latitudeText=lt;;
                                 
-                                CLLocationDegrees latitude=[latitudeText doubleValue];
-                                CLLocationDegrees longitude=[longtitudeText doubleValue];
+//                                CLLocationDegrees latitude=[latitudeText doubleValue];
+//                                CLLocationDegrees longitude=[longtitudeText doubleValue];
                                 
-                                CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
+                              //  CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
                                 
                                 double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
                                 if(distance>0.0){

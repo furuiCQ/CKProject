@@ -24,7 +24,6 @@
 @synthesize msgLabel;
 @synthesize bottomHeight;
 @synthesize tabArray;
-@synthesize tableView;
 @synthesize hasMsg;
 - (void)viewDidLoad {
     dataArray = [NSArray arrayWithObjects:@"1",@"2",

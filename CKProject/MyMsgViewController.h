@@ -17,7 +17,6 @@
 @property(strong,nonatomic)UILabel *msgLabel;
 @property int bottomHeight;
 @property(strong,nonatomic) NSMutableArray *tabArray;
-@property(strong,nonatomic)UITableView *tableView;
 
 @property BOOL hasMsg;
 

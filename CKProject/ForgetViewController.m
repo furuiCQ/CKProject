@@ -158,7 +158,7 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
 {
     CGRect frame = textField.frame;
     frame.size.width = leftWidth;
-    sendLabel = [[UILabel alloc] initWithFrame:frame];
+    sendLabel = [[UIButton alloc] initWithFrame:frame];
     [sendLabel setTitle:@"发送短信" forState: UIControlStateNormal];
     [sendLabel setTintColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     UITapGestureRecognizer *loginRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sendMsg)];
@@ -188,22 +188,17 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [HttpHelper getMsgCode:phone success:^(HttpModel *model){
-            NSLog(@"111111111111-%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     myDelegate.model=model;
                     //[alertView setTag:1];
-                    NSNumber *code=(NSNumber *)model.message;
                     [codeTextFiled setText:[NSString stringWithFormat:@""]];
-//                    [self releaseTImer];
                 }else{
                     
                 }
             });
-            // [alertView setMessage:model.message];
-            // [alertView show];
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);

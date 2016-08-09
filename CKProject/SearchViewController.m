@@ -201,7 +201,7 @@
 -(void)searchProjectList{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];//设置输出的格式
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSString *data=keyTextField.text;
+  //  NSString *data=keyTextField.text;
     NSDate *selected = selectDate;
     NSString *date=[dateFormatter stringFromDate:selected];
     NSUserDefaults *src=[NSUserDefaults standardUserDefaults];

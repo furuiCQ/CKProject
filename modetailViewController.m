@@ -79,11 +79,6 @@
     
     editTextView.text=nil;
 }
--(void)viewWillAppear:(BOOL)animated
-{
-    NSLog(@"----------------------------------------\n\n草草草");
-
-}
 //初始化顶部菜单栏
 -(void)initTitle{
     //设置顶部栏
@@ -653,27 +648,11 @@
                             }
                             if([dic objectForKey:@"read"]){
                                 NSNumber *number=[dic objectForKey:@"read"];
-                                NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
                                 [disNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                             }
                             if([dic objectForKey:@"content"]){
                                 [detailContent setText:[dic objectForKey:@"content"]];
                             }
-                            //                              NSString *sb=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90", [dic objectForKey:@"img"]];
-                            //                            NSURL *url=[NSURL URLWithString:sb];
-                            //
-                            //
-                            //                            [imi setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:url]]];
-                            //
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
                             if([dic objectForKey:@"iszan"] && ![[dic objectForKey:@"iszan"] isEqual:[NSNull null]]){
                                 NSNumber *zanStaues=[dic objectForKey:@"iszan"];
                                 if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {

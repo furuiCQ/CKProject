@@ -750,7 +750,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                     [scrollView addSubview:pageControl];
                                 }
                             }
-                            NSString *st=[dic objectForKey:@"logo"];
+                            //NSString *st=[dic objectForKey:@"logo"];
                             if ([dic objectForKey:@"logo"]&& ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
                                 NSString *logo=[NSString stringWithFormat:@"%@",[dic objectForKey:@"logo"]];
                                 [logoImageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
@@ -962,7 +962,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 frame.size.height=detailContentLabel.contentSize.height;
                                 
                                 [detailContentLabel setFrame:frame];
-                                frame=timeSelectView.frame;
                                 int width=self.view.frame.size.width;
                                 
                                 frame=contentControl.frame;
@@ -1218,9 +1217,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     //                        }];
 }
 -(void)getTimeList:(NSNumber *)lid andBTime:(NSNumber *)btime{
-    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    HttpModel *model=myDelegate.model;
-    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+   // AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    HttpModel *model=myDelegate.model;
+//    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -1257,16 +1256,16 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[@"tel:%@" stringByAppendingString:phone]]];
     }
 }
--(void)orderClick:(NSNumber *)weekId withWeekNum:(NSNumber *)weekNum withBegintime:(NSString *)beginTime{
+-(void)orderClick:(NSNumber *)_weekId withWeekNum:(NSNumber *)_weekNum withBegintime:(NSString *)_beginTime{
     NSLog(@"orderClick");
     [CustomPopView disMiss:picker];
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (myDelegate.isLogin) {
         OrderViewController *orderViewController=[[OrderViewController alloc]init];
         [orderViewController setProjectId:[data objectForKey:@"id"]];
-        [orderViewController setWeekId:weekId];
-        [orderViewController setWeekNum:weekNum];
-        [orderViewController setBeginTime:beginTime];
+        [orderViewController setWeekId:_weekId];
+        [orderViewController setWeekNum:_weekNum];
+        [orderViewController setBeginTime:_beginTime];
         if (advance_time==nil) {
             [orderViewController setAdvancetime: [NSNumber numberWithInteger:1]];
         }
