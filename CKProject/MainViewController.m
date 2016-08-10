@@ -1199,6 +1199,9 @@ static NSString *identy = @"OrderRecordCell";
                 NSString *_localData = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
                 NSRange rang  = [_localData rangeOfString:cityString];
                 NSLog(@"%@",NSStringFromRange(rang));
+                if(rang.location>_localData.length){
+                    return;
+                }
                 NSString *str=[_localData substringWithRange:NSMakeRange(rang.location-10, rang.length+18)];
                 NSLog(@"%@",str);
                 NSLog(@"%lu",(unsigned long)[str length]);

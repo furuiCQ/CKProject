@@ -379,6 +379,7 @@
     if ([tableArray count]>0) {
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
         if ([dic objectForKey:@"uimg"] && ![[dic objectForKey:@"uimg"] isEqual:[NSNull null]]) {
+            [cell.im.layer setCornerRadius:cell.im.frame.size.width/2];
             [cell.im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[dic objectForKey:@"uimg"]]]];
         }
         if ([dic objectForKey:@"username"] && ![[dic objectForKey:@"username"] isEqual:[NSNull null]] ) {
