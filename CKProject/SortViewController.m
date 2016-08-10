@@ -293,7 +293,7 @@
         if([selcedIdArray count]>0){
             for (int i=0; i<[selcedIdArray count]; i++) {
                 NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
-                if(selectId ==indexPath){
+                if([selectId row] ==[indexPath row]){
                     isSelected=true;
                 }
             }
@@ -518,7 +518,7 @@
         if([selcedIdArray count]>0){
             for (int i=0; i<[selcedIdArray count]; i++) {
                 NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
-                if(selectId ==indexPath){
+                if([selectId row] ==[indexPath row]){
                     [selcedIdArray removeObjectAtIndex:i];
                     hasNumb=true;
                 }
@@ -527,7 +527,9 @@
         if(hasNumb==false){
             [selcedIdArray addObject:indexPath];
         }
-        [tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tableView reloadData];
+        });
         //        int indexrow=(int)indexPath.row;
         //        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
         //        NSDictionary *str=[httpProjectArray objectAtIndex:indexrow];
