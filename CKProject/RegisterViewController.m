@@ -79,7 +79,7 @@ int secondsCountDown; //倒计时总时长
 //    [msgLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/22.8]];
 //    [msgLabel setTextColor:[UIColor orangeColor]];
 //    [msgLabel setTextAlignment:NSTextAlignmentCenter];
-//    [titleView addSubview:cityLabel];
+    [titleView addSubview:cityLabel];
     // [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
@@ -141,60 +141,11 @@ int secondsCountDown; //倒计时总时长
     UITapGestureRecognizer *loginRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goLoginViewController)];
     loginLabel.userInteractionEnabled=YES;
     [loginLabel addGestureRecognizer:loginRecognizer];
-    [loginLabel setText:@"登录"];
+    [loginLabel setText:@"注册"];
     [loginLabel setTextAlignment:NSTextAlignmentCenter];
     [loginLabel setTextColor:[UIColor whiteColor]];
     [loginLabel setBackgroundColor:[UIColor colorWithRed:252.f/255.f green:100.f/255.f blue:103.f/255.f alpha:1.0]];
     [self.view addSubview:loginLabel];
-    
-    //    checkBtn=[[UIButton alloc]initWithFrame:CGRectMake(width/5-width/80, titleHeight+20+width/40+titleHeight+0.5+titleHeight+titleHeight+0.5+width/20+width/9+width/40, width/22.8, width/22.8)];
-    //    [checkBtn setImage:[UIImage imageNamed:@"deal_uncheck"] forState:UIControlStateNormal];
-    //    [checkBtn setImage:[UIImage imageNamed:@"deal_check"] forState:UIControlStateSelected];
-    //     checkBtn.selected=YES;
-    //    [checkBtn addTarget:self action:@selector(checkOnclick:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.view addSubview:checkBtn];
-    //
-    //    UILabel *forgetLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/2-width/3-width/80, titleHeight+20+width/40+titleHeight+0.5+titleHeight+titleHeight+0.5+width/20+width/9+width/40, width/3, width/20)];
-    //    [forgetLabel setFont:[UIFont systemFontOfSize:width/29]];
-    //    [forgetLabel setTextAlignment:NSTextAlignmentRight];
-    //    [forgetLabel setText:@"我已阅读并同意"];
-    //    [forgetLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    //    [self.view addSubview:forgetLabel];
-    //
-    //    UILabel *clauseLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/2-width/80, titleHeight+20+width/40+titleHeight+0.5+titleHeight+titleHeight+0.5+width/20+width/9+width/40, width/4 , width/20)];
-    //    UITapGestureRecognizer *forgetRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showClause)];
-    //    clauseLabel.userInteractionEnabled=YES;
-    //    [clauseLabel addGestureRecognizer:forgetRecognizer];
-    //    [clauseLabel setFont:[UIFont systemFontOfSize:width/29]];
-    //    [clauseLabel setTextAlignment:NSTextAlignmentLeft];
-    //    [clauseLabel setText:@"蹭课服务条款"];
-    //    [clauseLabel setTextColor:[UIColor orangeColor]];
-    //    [self.view addSubview:clauseLabel];
-    //
-}
-
--(void)setTextFieldLeftPadding:(UITextField *)textField forWidth:(CGFloat)leftWidth
-{
-    CGRect frame = textField.frame;
-    frame.size.width = leftWidth;
-    UIView *leftview = [[UIView alloc] initWithFrame:frame];
-    textField.leftViewMode = UITextFieldViewModeAlways;
-    textField.leftView = leftview;
-}
--(void)checkOnclick:(UIButton *)btn{
-    btn.selected=!btn.selected;//每次点击都改变按钮的状态
-    
-    if(btn.selected){
-        //[self collectionProject];
-    }else{
-        // [self deleteProject];
-    }
-}
--(void)showClause{
-    //展示协议
-    UserDealViewController *userDealViewController=[[UserDealViewController alloc]init];
-    [self presentViewController: userDealViewController animated:YES completion:nil];
-    
 }
 -(void)sendMsg{
     NSLog(@"发送短信中....");
@@ -277,10 +228,6 @@ int secondsCountDown; //倒计时总时长
     }
 }
 -(void)goLoginViewController{
-    if (!checkBtn.selected) {
-        [ProgressHUD showError:@"请阅读并同意蹭课服务条款"];
-        return;
-    }
     NSString *phone=userTextFiled.text;
     NSString *code=codeTextFiled.text;
     NSString *password=passTextFiled.text;
@@ -294,22 +241,15 @@ int secondsCountDown; //倒计时总时长
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     AppDelegate *myDelegate =(AppDelegate *) [[UIApplication sharedApplication] delegate];
                     myDelegate.model=model;
-                    CompleDataViewController *compleDataViewController=[[CompleDataViewController alloc]init];
-                    [compleDataViewController setPhone:phone];
-                    [compleDataViewController setPassword:password];
-                    
-                    
-                    
-                    
-                    
-                    
-                    [self presentViewController: compleDataViewController animated:YES completion:nil];
-                    
+                    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                        NSNotification *notification =[NSNotification notificationWithName:@"autologin" object:self userInfo:@{@"tel":phone,@"pas":password}];
+                        [[NSNotificationCenter defaultCenter] postNotification:notification];}];
                 }else{
                     [alertView setMessage:model.message];
                     [alertView show];
                     
                 }
+                
             });
             
             
@@ -372,28 +312,28 @@ int secondsCountDown; //倒计时总时长
         [label setText:[otherArray objectAtIndex:i]];
         [label setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
         [label setFont:[UIFont systemFontOfSize:width/32]];
-        //  [control addSubview:label];
+        [control addSubview:label];
         
         if (![WXApi isWXAppInstalled] && i==1) {
-            //[control setHidden:YES];
+           [control setHidden:YES];
             
         }
         if (![WeiboSDK isWeiboAppInstalled] && i==0) {
-           // [control setHidden:YES];
+           [control setHidden:YES];
             
         }
         if (![TencentOAuth iphoneQQInstalled] && i==2) {
-          //  [control setHidden:YES];
+          [control setHidden:YES];
         }
         
         
         [view addSubview:control];
     }
     if(![WXApi isWXAppInstalled] && ![WeiboSDK isWeiboAppInstalled] && ![TencentOAuth iphoneQQInstalled]){
-//        [line1View setHidden:YES];
-//        [titleLabel setHidden:YES];
-//        [line2View setHidden:YES];
-//        [view setHidden:YES];
+        [line1View setHidden:YES];
+        [titleLabel setHidden:YES];
+        [line2View setHidden:YES];
+        [view setHidden:YES];
         
         
     }
