@@ -41,9 +41,55 @@
         self.selectedIndex=0;
         
     }
+    UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tappedRightButton:)];
     
+    [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+    [self.view addGestureRecognizer:swipeLeft];
+    
+    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tappedLeftButton:)];
+    
+    [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
+    [self.view addGestureRecognizer:swipeRight];
+}
+- (IBAction) tappedRightButton:(id)sender
+{
+    NSUInteger selectedIndex = [self selectedIndex];
+    
+    NSArray *aryViewController = self.viewControllers;
+    
+    if (selectedIndex < aryViewController.count - 1) {
+        
+        UIView *fromView = [self.selectedViewController view];
+        UIView *toView = [[self.viewControllers objectAtIndex:selectedIndex + 1] view];
+        
+        [UIView transitionFromView:fromView toView:toView duration:0.5f options:UIViewAnimationOptionTransitionFlipFromRight completion:^(BOOL finished) {
+            if (finished) {
+                [self setSelectedIndex:selectedIndex + 1];
+                [self setBarCheck:(int)(selectedIndex+1) ];
+
+            }
+        }];
+    }
 }
 
+- (IBAction) tappedLeftButton:(id)sender
+{
+    
+    NSUInteger selectedIndex = [self selectedIndex];
+    
+    if (selectedIndex > 0) {
+        UIView *fromView = [self.selectedViewController view];
+        
+        UIView *toView = [[self.viewControllers objectAtIndex:selectedIndex - 1] view];
+        
+        [UIView transitionFromView:fromView toView:toView duration:0.5f options:UIViewAnimationOptionTransitionFlipFromLeft completion:^(BOOL finished) {
+            if (finished) {
+                [self setSelectedIndex:selectedIndex - 1];
+                [self setBarCheck:(int)(selectedIndex-1)];
+            }
+        }];
+    }
+}
 /**
  *  隐藏系统tabbar
  */
@@ -84,7 +130,16 @@
     appDelegate.selectIndex = tabIndex;
     
 }
-
+-(void)setBarCheck:(int)tag{
+    for (NSObject *object in viewControllArray) {
+        BottomBtn *b=(BottomBtn *)object;
+        if(b.tag!=tag){
+            [b unCheck];
+        }else{
+            [b isCheck];
+        }
+    }
+}
 -(void)onClick:(id)sender
 {
     BottomBtn *btn=(BottomBtn *)sender;

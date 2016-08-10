@@ -198,25 +198,25 @@ TencentOAuth *tencentOAuth;
       //  [control addSubview:label];
         
         if (![WXApi isWXAppInstalled] && i==1) {
-            [control setHidden:YES];
+           // [control setHidden:YES];
 
         }
         if (![WeiboSDK isWeiboAppInstalled] && i==0) {
-            [control setHidden:YES];
+           // [control setHidden:YES];
 
         }
         if (![TencentOAuth iphoneQQInstalled] && i==2) {
-            [control setHidden:YES];
+         //   [control setHidden:YES];
         }
 
         
         [view addSubview:control];
     }
     if(![WXApi isWXAppInstalled] && ![WeiboSDK isWeiboAppInstalled] && ![TencentOAuth iphoneQQInstalled]){
-            [line1View setHidden:YES];
-            [titleLabel setHidden:YES];
-            [line2View setHidden:YES];
-        [view setHidden:YES];
+           // [line1View setHidden:YES];
+         //   [titleLabel setHidden:YES];
+       //     [line2View setHidden:YES];
+     //   [view setHidden:YES];
 
 
     }

@@ -31,7 +31,7 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="APW-E1-O6j" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="9X7-Nv-Tcl"/>
+                    <constraint firstItem="APW-E1-O6j" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="-10" id="D8P-aV-AAv"/>
                     <constraint firstItem="APW-E1-O6j" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.33" id="t5k-Yc-Efg"/>
                 </constraints>
             </tableViewCellContentView>

@@ -61,7 +61,7 @@
     [self addSubview:_mainCollectionView];
     
     
-    UIView *bgLineView=[[UIView alloc]initWithFrame:CGRectMake(_cellWidth*_selectRow, self.frame.size.height-self.lineHeight, self.frame.size.width, self.lineHeight)];
+    UIView *bgLineView=[[UIView alloc]initWithFrame:CGRectMake(_cellWidth*_selectRow, self.frame.size.height-self.lineHeight, self.frame.size.width*2, self.lineHeight)];
     [bgLineView setBackgroundColor:[UIColor grayColor]];
     [_mainCollectionView addSubview:bgLineView];
     
