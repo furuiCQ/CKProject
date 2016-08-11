@@ -82,6 +82,9 @@
     BOOL _isLoading;
     YiRefreshHeader *refreshHeader;
     YiRefreshFooter *refreshFooter;
+    
+    NSArray *selectImageArray;
+    NSArray *normalImageArray;
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
 @end
@@ -139,6 +142,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     selectCity1String=@"";
     selectCity2String=@"";
     selectCity3String=@"";
+    selectImageArray=[NSArray arrayWithObjects:@"dance_pressed_ic",@"Language_pressed_ic",@"sports_pressed_ic",@"music_pressed_ic",@"Vocational-and-technical_pressed_ic",@"Wushu_pressed_ic" ,@"paint_pressed_ic" ,@"open-book_pressed_ic" ,@"Health-and-beauty_pressed_ic" ,@"classroom_pressed_ic" ,@"Study-abroad_pressed_ic",nil];
+    normalImageArray=[NSArray arrayWithObjects:@"dance_nor_ic",@"Language_nor_ic",@"sports_nor_ic",@"music_nor_ic",@"Vocational-and-technical_nor_ic",@"Wushu_nor_ic" ,@"paint_nor_ic",@"open-book_nor_ic" ,@"Health-and-beauty_nor_ic" ,@"classroom_nor_ic" ,@"Study-abroad_nor_ic",nil];
     
     [self initTitle];
     [self initSelectView];
@@ -152,6 +157,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     }else{
         [self getData];
     }
+    [self inPopView];
+
 }
 
 -(void)tit
@@ -325,7 +332,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
             break;
         case 1:
         {
-            [self inPopView];
+            [firstLayout openDrawer];
+
             
         }
             break;
@@ -431,6 +439,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     //注册item类型 这里使用系统的类型
     [cityCollectView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellid"];
     [cityCollectView setHidden:YES];
+    [cityCollectView setBackgroundColor:[UIColor clearColor]];
     [view addSubview:cityCollectView];
     
     //创建一个layout布局类
@@ -450,6 +459,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     //注册item类型 这里使用系统的类型
     [gradCollectView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellid2"];
     [gradCollectView setHidden:YES];
+    [gradCollectView setBackgroundColor:[UIColor clearColor]];
     [view addSubview:gradCollectView];
     
     
@@ -488,7 +498,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [self.view addSubview:firstLayout];
     
     firstLayout.openFromRight = YES;
-    [firstLayout openDrawer];
     
     
 }
@@ -853,14 +862,11 @@ static NSString *identy = @"OrderRecordCell";
             [porjectCell.orderNumbLabel setText:str];
           
         }
-        
         if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
             NSString *logo=[dic objectForKey:@"logo"];
             if (![logo isEqualToString:@""]) {
                 [porjectCell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-                
             }
-            
         }
         if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]]) {
             NSNumber *range=[dic objectForKey:@"range"];
@@ -1037,12 +1043,15 @@ static NSString *identy = @"OrderRecordCell";
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:255.f/255.f green:82.f/255.f blue:82.f/255.f alpha:1.0]];
                 [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow_light"]];
+                [dataCell.logoImage setImage:[UIImage imageNamed:[selectImageArray objectAtIndex:[indexPath row]]]];
+
                 
             }else{
                 [cell setBackgroundColor:[UIColor colorWithRed:248.f/255.f green:248.f/255.f blue:248.f/255.f alpha:1.0]];
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow"]];
-                
+                [dataCell.logoImage setImage:[UIImage imageNamed:[normalImageArray objectAtIndex:[indexPath row]]]];
+
             }
         }
         

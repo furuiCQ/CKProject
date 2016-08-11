@@ -152,8 +152,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [cityLabel setEnabled:NO];
     [cityLabel setTextAlignment:NSTextAlignmentCenter];
     //17 × 10
-    UIImageView *downView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"local_down"]];
-    [downView setFrame:CGRectMake(0, 0, 17, 10)];
+    UIImageView *downView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"city_down"]];
+    [downView setFrame:CGRectMake(0, 0, 7, 3)];
     [cityLabel setRightView:downView];
     [cityLabel setRightViewMode:UITextFieldViewModeAlways];
     //新建右上角的图形
@@ -172,9 +172,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [searchField setPlaceholder:@"搜索你想蹭的课程"];
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 30,titleHeight*3/4)];
     UIImageView *searchImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"search_logo"]];
-    [searchImageView setFrame:CGRectMake(10, 10, 12, 12)];
+    [searchImageView setFrame:CGRectMake(10, searchField.frame.size.height/2-17/2, 17, 17)];
     [view addSubview:searchImageView];
-    [searchField setLeftView:view];
+    [searchField setLeftView:view]; 
     [searchField setLeftViewMode:UITextFieldViewModeAlways];
     
     [titleView addSubview:cityLabel];
