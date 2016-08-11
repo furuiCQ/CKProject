@@ -1562,9 +1562,8 @@ static NSString *identy = @"OrderRecordCell";
                             CGRect bounds = scrollview.frame;  //获取界面区域
                             
                             
-                            pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, bounds.size.height*4/3, bounds.size.width, 30)];
+                            pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, scrollview.frame.origin.y+scrollview.frame.size.height-30, bounds.size.width, 30)];
                             pageControl.numberOfPages = totalCount;//总的图片页数
-                            
                             [sc addSubview:pageControl];
                         }
                         

@@ -52,6 +52,11 @@
 @synthesize aritcleId;
 @synthesize data;
 @synthesize alertView;
+
+@synthesize imageScrollview;
+@synthesize pageControl;
+@synthesize timer;
+@synthesize totalCount;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -157,41 +162,43 @@
     lab.numberOfLines=0;
     lab.text=@"";
     lab.textColor=[UIColor colorWithRed:22.f/255.f green:22.f/255.f blue:22.f/255.f alpha:1.0];
-    lab.font=[UIFont systemFontOfSize:swidth/21];
+    lab.font=[UIFont systemFontOfSize:swidth/20];
     lab.textAlignment=NSTextAlignmentLeft;
     
-    writer=[[UILabel alloc]initWithFrame:CGRectMake(swidth/32, lab.frame.size.height+lab.frame.origin.y+swidth/26.7, swidth/27.8*5, swidth/27.8)];
+    writer=[[UILabel alloc]initWithFrame:CGRectMake(swidth/32, lab.frame.size.height+lab.frame.origin.y+swidth/26.7, swidth/24.6*5, swidth/24.6)];
     writer.text=@"新闻作者";
-    writer.font=[UIFont systemFontOfSize:swidth/27.8];
-    timers=[[UILabel alloc]initWithFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/20,writer.frame.origin.y, swidth/4, swidth/27.8)];
-    timers.font=[UIFont systemFontOfSize:swidth/25];
+    writer.font=[UIFont systemFontOfSize:swidth/24.6];
+    timers=[[UILabel alloc]initWithFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/20,writer.frame.origin.y, swidth/4, swidth/24.6)];
+    timers.font=[UIFont systemFontOfSize:swidth/24.6];
     timers.text=@"07-22";
     timers.textColor=[UIColor grayColor];
     
-    zanNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(swidth-swidth/32*4-swidth/40, writer.frame.origin.y, swidth/32*4, swidth/32)];
+    zanNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40, writer.frame.origin.y, swidth/26.7*4, swidth/26.7)];
     [zanNumberLabel setText:@"50"];
-    [zanNumberLabel setFont:[UIFont systemFontOfSize:swidth/32]];
+    [zanNumberLabel setFont:[UIFont systemFontOfSize:swidth/26.7]];
     [zanNumberLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     [sb addSubview:zanNumberLabel];
     
-    zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/32*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
+    zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
     [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
     [zanImageView setUserInteractionEnabled:YES];
     UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews:)];
     [zanImageView addGestureRecognizer:gesutre];
     [sb addSubview:zanImageView];
     
-    lt=[[UILabel alloc]initWithFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y+swidth/40, swidth, 0.2)];
+    lt=[[UILabel alloc]initWithFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y+swidth/40, swidth, 0)];
     lt.backgroundColor=[UIColor grayColor];
     
     //图片
-    mg=[[UIImageView alloc]initWithFrame:CGRectMake(0, lt.frame.size.height+lt.frame.origin.y+4, swidth, sb.frame.size.height/4)];
-    [mg setImage:[UIImage imageNamed:@""]];
+    // mg=[[UIImageView alloc]initWithFrame:CGRectMake(0, lt.frame.size.height+lt.frame.origin.y+4, swidth, swidth/1.3)];
+    // [mg setImage:[UIImage imageNamed:@""]];
+    [self initImageScrollView:lt];
     
     //新闻内容
-    tv=[[UITextView alloc]initWithFrame:CGRectMake(0, mg.frame.origin.y+mg.frame.size.height+5 , swidth , sheight)];
+    tv=[[UITextView alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.origin.y+imageScrollview.frame.size.height+5 , swidth , sheight)];
     tv.text=@"新闻内容";
     tv.editable=NO;
+    tv.scrollEnabled=NO;
     tv.backgroundColor=[UIColor whiteColor];
     tv.textAlignment=NSTextAlignmentLeft;
     tv.font=[UIFont systemFontOfSize:swidth/25];
@@ -271,7 +278,48 @@
     [tab reloadData];
     [refresh endRefreshing];
 }
-
+//轮播图片
+-(void)initImageScrollView:(UIView *)topView{
+    //    图片中数
+    int width=self.view.frame.size.width;
+    
+    totalCount = 1;
+    imageScrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, topView.frame.size.height+topView.frame.origin.y+4, width, width/1.3)];
+    //    图片的宽
+    CGFloat imageW = imageScrollview.frame.size.width;
+    //    CGFloat imageW = 300;
+    //    图片高
+    CGFloat imageH = imageScrollview.frame.size.height;
+    //    图片的Y
+    CGFloat imageY = 0;
+    
+    //   1.添加5张图片
+    for (int i = 0; i < totalCount; i++) {
+        UIImageView *imageView = [[UIImageView alloc] init];
+        //        图片X
+        CGFloat imageX = i * imageW;
+        //        设置frame
+        imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
+        //        设置图片
+        NSString *name = @"banner_default";
+        imageView.image = [UIImage imageNamed:name];
+        //        隐藏指示条
+        imageScrollview.showsHorizontalScrollIndicator = NO;
+        [imageScrollview addSubview:imageView];
+    }
+    //    2.设置scrollview的滚动范围
+    CGFloat contentW = totalCount *imageW;
+    //不允许在垂直方向上进行滚动
+    imageScrollview.contentSize = CGSizeMake(contentW, 0);
+    //    3.设置分页
+    imageScrollview.pagingEnabled = YES;
+    [imageScrollview setTag:2];
+    //    4.监听scrollview的滚动
+    imageScrollview.delegate = self;
+    [sb addSubview:imageScrollview];
+    
+    
+}
 //底部视图
 -(void)initBottomView{
     
@@ -380,7 +428,10 @@
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
         if ([dic objectForKey:@"uimg"] && ![[dic objectForKey:@"uimg"] isEqual:[NSNull null]]) {
             [cell.im.layer setCornerRadius:cell.im.frame.size.width/2];
-            [cell.im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[dic objectForKey:@"uimg"]]]];
+            NSString *logo=[dic objectForKey:@"uimg"];
+            if([logo length]>0){
+                [cell.im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+            }
         }
         if ([dic objectForKey:@"username"] && ![[dic objectForKey:@"username"] isEqual:[NSNull null]] ) {
             [cell.writers  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]]    ];
@@ -391,7 +442,7 @@
         }
         if([dic objectForKey:@"zan"] && ![[dic objectForKey:@"zan"] isEqual:[NSNull null]]){
             [cell.nums setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"zan"]]];
-
+            
         }
         [cell.zanImage setUserInteractionEnabled:YES];
         UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZan:)];
@@ -453,6 +504,43 @@
     dispatch_async(queue, ^{
         
         [HttpHelper zanNews:[data objectForKey:@"id"] withZan:zan withModel:myDelegate.model
+                    success:^(HttpModel *model){
+                        
+                        NSLog(@"%@",model.message);
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            
+                            if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                                
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [self getArticleInfo];
+                                });
+                                
+                            }else{
+                                
+                            }
+                            [alertView setMessage:model.message];
+                            [alertView show];
+                            
+                        });
+                    }failure:^(NSError *error){
+                        if (error.userInfo!=nil) {
+                            NSLog(@"%@",error.userInfo);
+                        }
+                    }];
+        
+        
+    });
+    
+}
+-(void)zanNewsComments:(NSNumber *)zan withCommentId:(NSNumber *)comId{
+    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        
+        [HttpHelper zanNewsComments:comId withZan:zan withModel:myDelegate.model
                             success:^(HttpModel *model){
                                 
                                 NSLog(@"%@",model.message);
@@ -462,7 +550,8 @@
                                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                            [self getArticleInfo];
+                                            [self getCommectsList];
+                                            
                                         });
                                         
                                     }else{
@@ -477,44 +566,6 @@
                                     NSLog(@"%@",error.userInfo);
                                 }
                             }];
-        
-        
-    });
-    
-}
--(void)zanNewsComments:(NSNumber *)zan withCommentId:(NSNumber *)comId{
-    
-    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        
-        [HttpHelper zanNewsComments:comId withZan:zan withModel:myDelegate.model
-                       success:^(HttpModel *model){
-                           
-                           NSLog(@"%@",model.message);
-                           
-                           dispatch_async(dispatch_get_main_queue(), ^{
-                               
-                               if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                                   
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       [self getCommectsList];
-                                       
-                                   });
-                                   
-                               }else{
-                                   
-                               }
-                               [alertView setMessage:model.message];
-                               [alertView show];
-                               
-                           });
-                       }failure:^(NSError *error){
-                           if (error.userInfo!=nil) {
-                               NSLog(@"%@",error.userInfo);
-                           }
-                       }];
         
         
     });
@@ -618,10 +669,10 @@
         NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
         NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
         [timers setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
-
+        
     }
-
-
+    
+    
     if([dic objectForKey:@"zan"]){
         NSString *number=[dic objectForKey:@"zan"];
         [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
@@ -639,29 +690,29 @@
         CGRect rect4=commetTitleView.frame;
         rect4.origin.y=tv.frame.origin.y+tv.frame.size.height+8;
         [commetTitleView setFrame:rect4];
-
+        
         // CGRect rect5=lp.frame;
         // rect5.origin.y=lb.frame.origin.y+lb.frame.size.height+8;
         // [lp setFrame:rect5];
         //滚动的长度
         CGRect rect7=sb.frame;
-
+        
         rect7.size.height=commetTitleView.frame.origin.y+commetTitleView.frame.size.height+10;
-
+        
         [sb setFrame:rect7];
         tab.tableHeaderView=sb;
-
+        
     }
     if ([dic objectForKey:@"author"]) {
         writer.text=[dic objectForKey:@"author"];
     }
     if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
-
+        
         NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
         mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
-
+        
     }
-
+    
 }
 
 //获取前方数据
@@ -688,7 +739,7 @@
                                 NSNumber *zanStaues=[dic objectForKey:@"iszan"];
                                 if ([zanStaues intValue]==0) {
                                     [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
-
+                                    
                                 }else{
                                     [zanImageView setImage:[UIImage imageNamed:@"dianzan_logo"] forState:UIControlStateNormal];
                                 }
@@ -716,6 +767,8 @@
                             if([dic objectForKey:@"zan"]){
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+                                [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6, lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
+                                [zanImageView setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6-swidth/53.3-swidth/16, writer.frame.origin.y-5, swidth/16, swidth/16)];
                             }
                             if([dic objectForKey:@"read"]){
                                 NSNumber *number=[dic objectForKey:@"read"];
@@ -745,12 +798,14 @@
                             }
                             if ([dic objectForKey:@"author"]) {
                                 writer.text=[dic objectForKey:@"author"];
+                                [writer setFrame:CGRectMake(swidth/32, lab.frame.size.height+lab.frame.origin.y+swidth/20, swidth/24.6*(int)[writer.text length], swidth/24.6)];
+                                [timers setFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/20,writer.frame.origin.y, swidth/6, swidth/24.6)];
                             }
                             if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
                                 
-                                NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
-                                mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
-                                
+                                //                                NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
+                                //                                mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
+                                [self loadImages:dic];
                             }
                             
                         });
@@ -795,7 +850,7 @@
                                 NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
                                 [formatter setDateStyle:NSDateFormatterMediumStyle];
                                 [formatter setTimeStyle:NSDateFormatterShortStyle];
-                                [formatter setDateFormat:@"YYYY-MM-dd"];
+                                [formatter setDateFormat:@"MM-dd"];
                                 NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
                                 [formatter setTimeZone:timeZone];
                                 NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
@@ -808,6 +863,8 @@
                             if([dic objectForKey:@"zan"]){
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
+                                [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
+                                [zanImageView setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6-swidth/53.3-swidth/16, writer.frame.origin.y-5, swidth/16, swidth/16)];
                             }
                             if([dic objectForKey:@"read"]){
                                 NSNumber *number=[dic objectForKey:@"read"];
@@ -837,12 +894,12 @@
                             }
                             if ([dic objectForKey:@"author"]) {
                                 writer.text=[dic objectForKey:@"author"];
+                                [writer setFrame:CGRectMake(swidth/32, lab.frame.size.height+lab.frame.origin.y+swidth/26.7, swidth/24.6*(int)[writer.text length], swidth/24.6)];
+                                
+                                [timers setFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/20,writer.frame.origin.y, swidth/6, swidth/24.6)];
                             }
                             if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
-                                
-                                NSString *str=[NSString stringWithFormat:@"%@%@",@"http://211.149.190.90",[dic objectForKey:@"img"]];
-                                mg.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
-                                
+                                [self loadImages:dic];
                             }
                             
                         });
@@ -866,6 +923,70 @@
         
     }
     
+}
+-(void)loadImages:(NSDictionary *)dic{
+    NSString *images=[dic objectForKey:@"img"];
+    NSArray *array = [images componentsSeparatedByString:@","];
+    //  NSUserDefaults *de=[NSUserDefaults standardUserDefaults];
+    //  [de setObject:array forKey:@"pictures"];
+    if ([array count]>0) {
+        totalCount=[array count];
+        pageControl.numberOfPages=totalCount;
+        NSArray *views = [imageScrollview subviews];
+        for(UIView *view in views)
+        {
+            [view removeFromSuperview];
+        }
+        
+        //    图片的宽
+        CGFloat imageW = imageScrollview.frame.size.width;
+        //    CGFloat imageW = 300;
+        //    图片高
+        CGFloat imageH = imageScrollview.frame.size.height;
+        //    图片的Y
+        CGFloat imageY = 0;
+        
+        //   1.添加5张图片
+        for (int i = 0; i < [array count]; i++) {
+            UIImageView *imageView = [[UIImageView alloc] init];
+            [imageView setUserInteractionEnabled:YES];
+            //        图片X
+            CGFloat imageX = i * imageW;
+            //        设置frame
+            imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
+            //        设置图片
+            NSString *logo=[array objectAtIndex:i];
+            
+            [imageView setImage:[UIImage imageNamed:@"banner_default"]];
+            [imageView setTag:i];
+            //  UITapGestureRecognizer *openChorme=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageGesture:)];
+            //  [imageView addGestureRecognizer:openChorme];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+            
+            
+            //        隐藏指示条
+            imageScrollview.showsHorizontalScrollIndicator = NO;
+            [imageScrollview addSubview:imageView];
+            CGFloat contentW = totalCount *imageW;
+            //不允许在垂直方向上进行滚动
+            imageScrollview.contentSize = CGSizeMake(contentW, 0);
+            
+            //    3.设置分页
+            imageScrollview.pagingEnabled = YES;
+            
+            //    4.监听scrollview的滚动
+            imageScrollview.delegate = self;
+        }
+        
+        CGRect bounds = imageScrollview.frame;  //获取界面区域
+        
+        
+        pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-30, bounds.size.width, 30)];
+        pageControl.numberOfPages = totalCount;//总的图片页数
+        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+        pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f  alpha:1.0];
+        [sb addSubview:pageControl];
+    }
 }
 /*
  #pragma mark - Navigation

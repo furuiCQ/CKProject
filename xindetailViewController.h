@@ -12,4 +12,9 @@
 @property NSNumber *aritcleId;
 @property NSDictionary *data;
 @property(strong,nonatomic)UIAlertView *alertView;
+
+@property(strong,nonatomic)UIScrollView *imageScrollview;
+@property(strong,nonatomic)UIPageControl *pageControl;
+@property(strong,nonatomic)NSTimer *timer;
+@property(nonatomic)NSInteger totalCount;
 @end
