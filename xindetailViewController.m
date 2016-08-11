@@ -10,7 +10,7 @@
 #import "InvitaitionTabelCell.h"
 #import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "LoginRegViewController.h"
+#import "LoginViewController.h"
 #import "RJShareView.h"
 #import "ScaleImgViewController.h"
 #import "ProgressHUD.h"
@@ -68,13 +68,13 @@
 
 
 -(void)sendeCommects{
-    [ProgressHUD show:@"评论提交中..."];
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
+    [ProgressHUD show:@"评论提交中..."];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         

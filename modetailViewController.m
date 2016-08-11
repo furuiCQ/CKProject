@@ -9,7 +9,7 @@
 #import "modetailViewController.h"
 #import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "LoginRegViewController.h"
+#import "LoginViewController.h"
 #import "RJShareView.h"
 #import "ScaleImgViewController.h"
 @interface modetailViewController ()<UITableViewDataSource,UITableViewDelegate,UITextViewDelegate>
@@ -366,7 +366,7 @@
     UIButton *btn=(UIButton *)sender;
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
@@ -386,7 +386,7 @@
     UIButton *btn=(UIButton *)sender;
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
@@ -404,7 +404,7 @@
     
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
@@ -508,7 +508,7 @@
     [ProgressHUD show:@"评论提交中..."];
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
@@ -1020,7 +1020,7 @@
 -(void)collectionAritcle{
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }

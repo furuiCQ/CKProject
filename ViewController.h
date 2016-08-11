@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "XMTopScrollView.h"
-
-@interface ViewController : UIViewController <XMTopScrollViewDelegate> {
+#import "BaseViewController.h"
+@interface ViewController : BaseViewController <XMTopScrollViewDelegate> {
     XMTopScrollView                     *_topView;
     
     NSMutableArray                      *_titleArray;
 }
 
-
+-(void)showBack;
 @end
 

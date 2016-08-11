@@ -141,7 +141,7 @@
     
     NSString *key = [_keys objectAtIndex:section];
     if ([key rangeOfString:@"热"].location != NSNotFound) {
-        titleLabel.text = @"热门城市";
+        titleLabel.text = @"已开通城市";
     }else if ([key rangeOfString:@"当"].location != NSNotFound) {
         titleLabel.text = @"当前城市";
     }

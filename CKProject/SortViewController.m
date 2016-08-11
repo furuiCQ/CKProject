@@ -511,7 +511,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%ld",(long)indexPath.row);
-    //[tableView deselectRowAtIndexPath:indexPath animated:NO];
     if (tableView.tag==0) {
         NSIndexPath *indexPath = [tableView indexPathForSelectedRow];
         bool hasNumb=false;
@@ -530,21 +529,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [tableView reloadData];
         });
-        //        int indexrow=(int)indexPath.row;
-        //        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-        //        NSDictionary *str=[httpProjectArray objectAtIndex:indexrow];
-        //        if ([str objectForKey:@"id"]) {
-        //            NSNumber *number=[str objectForKey:@"id"];
-        //            [projectListViewController setProjectID:number];
-        //            [projectListViewController setProjectSubID:[NSNumber numberWithInt:0]];
-        //
-        //        }
-        //        if ([str objectForKey:@"title"]) {
-        //            [projectListViewController setTitleName:[str objectForKey:@"title"]];
-        //
-        //        }
-        //        [self presentViewController: projectListViewController animated:YES completion:nil];
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+
     
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

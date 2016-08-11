@@ -488,6 +488,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     ViewController *ma=[[ViewController alloc]init];
     [self presentViewController:ma animated:YES completion:nil];
+    [ma showBack];
 }
 
 -(void)nextxinwen
@@ -540,10 +541,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                     if([subview isKindOfClass:[UIImageView class]]){
                                         if(subview.tag>=201){
                                             NSLog(@"subview.tag%ld",(long)subview.tag);
-                                          //  NSDictionary *dic=[chasetResult objectAtIndex:(subview.tag-201)];
-                                          //  UIImageView *imageview=(UIImageView *)subview;
-                                          //  NSString *logoUrl=[dic objectForKey:@"logo"];
-                                            // [imageview sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logoUrl]]];
+                                          
                                         }
                                     }
                                 }
@@ -771,9 +769,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         
         if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
             
-            // 调用上拉刷新方法
             NSLog(@"上拉加载");
-            //[refreshFooter beginRefreshing];
             
         }
         
@@ -877,6 +873,10 @@ static NSString *identy = @"OrderRecordCell";
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
             [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
+        }
+        if ([dic objectForKey:@"insttitle"] && ![[dic objectForKey:@"insttitle"] isEqual:[NSNull null]]) {
+            NSString *title=[dic objectForKey:@"insttitle"];
+            [porjectCell.authorLabel setText:[NSString stringWithFormat:@"%@",title]];
         }
         if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
             NSString *people=[dic objectForKey:@"people"];
@@ -1093,6 +1093,9 @@ static NSString *identy = @"OrderRecordCell";
             ProjectDetailsViewController *projectDetailsViewController=[[ProjectDetailsViewController alloc]init];
             [projectDetailsViewController setProjectId:projectId];
             [self presentViewController:projectDetailsViewController animated:YES completion:nil];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
+
+
         }
             break;
         case 1:
@@ -1213,10 +1216,7 @@ static NSString *identy = @"OrderRecordCell";
                     return;
                 }
                 NSString *str=[_localData substringWithRange:NSMakeRange(rang.location-10, rang.length+18)];
-                NSLog(@"%@",str);
-                NSLog(@"%lu",(unsigned long)[str length]);
                 NSArray *dataArray=[str componentsSeparatedByString:NSLocalizedString(@",", nil)];
-               // NSString *provStr=[dataArray objectAtIndex:2];
                 NSString *cityStr=[dataArray objectAtIndex:0];
                 cityStr=[cityStr substringWithRange:NSMakeRange(1, cityStr.length-2)];
                 NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];

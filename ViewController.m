@@ -32,7 +32,8 @@
     //    UIButton *btn;
     
     NSMutableDictionary *duc;
-    
+    UINib *nib;
+
     
 }
 @end
@@ -61,6 +62,7 @@
     vi=[[UITableView alloc]initWithFrame:CGRectMake(0, _topView.frame.size.height+_topView.frame.origin.y+5, swidth, sheight/1.2)];
     vi.delegate=self;
     vi.dataSource=self;
+    vi.separatorStyle=UITableViewCellSeparatorStyleNone;
     [vi registerNib:[UINib nibWithNibName:@"okCell" bundle:nil] forCellReuseIdentifier:@"cell"];
     [self.view addSubview:vi];
     
@@ -70,6 +72,7 @@
     [goTopView setUserInteractionEnabled:YES];
     [goTopView addGestureRecognizer:goTopGestureRecognizer];
     [self.view addSubview:goTopView];
+    [self hidBack];
 }
 -(void)goTop{
     [vi setContentOffset:CGPointMake(0,0) animated:YES];
@@ -111,8 +114,8 @@
                            dispatch_async(dispatch_get_main_queue(), ^{
                                
                                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                                   duc=model.result ;
-                                   NSLog(@"model.result----->%@",duc);
+                                   duc=[model.result copy] ;
+                                   ary=[duc objectForKey:@"1"];
                                    [vi reloadData];
                                }else{
                                    
@@ -155,9 +158,15 @@
     
     
     
-   // [titleView addSubview:cityLabel];
+    [titleView addSubview:cityLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
+}
+-(void)hidBack{
+    [cityLabel setHidden:YES];
+}
+-(void)showBack{
+    [cityLabel setHidden:NO];
 }
 -(void)disMiss
 {
@@ -195,11 +204,14 @@
     
     
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    okCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    NSLog(@"ary-------%@",ary);
+    static NSString *identy = @"okCell";
+    okCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
+    if(cell==nil){
+        cell=[[[NSBundle mainBundle]loadNibNamed:@"okCell"owner:self options:nil]lastObject];
+    }
     NSDictionary *bic=[ary objectAtIndex:indexPath.row];
-    NSLog(@"bic---------%@",bic);
     NSUserDefaults *kp=[NSUserDefaults standardUserDefaults];
     [kp setObject:[bic objectForKey:@"content"] forKey:@"cpn"];
     cell.titles.text=[bic objectForKey:@"title"];
@@ -213,7 +225,7 @@
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"YYYY-MM-dd"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    [formatter setDateFormat:@"MM-dd hh:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
     NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
     [formatter setTimeZone:timeZone];
     NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:myInteger];
@@ -229,8 +241,8 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return  self.view.frame.size.width/2.9;
-    
+    UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
+    return cell.frame.size.height;
     
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -247,6 +259,7 @@
     [bt setAritcleId:aritcleId];
     [bt setData:dic];
     [self presentViewController:bt animated:YES completion:nil];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
     
 }
 - (void)didReceiveMemoryWarning {

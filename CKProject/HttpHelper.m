@@ -425,17 +425,6 @@
 
 
 }
-
-
-
-
-
-
-
-//－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
-
-
-
 +(void)getArticleInfo:(NSNumber *)articleId withModel:(HttpModel *)model success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture
 {
     NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
