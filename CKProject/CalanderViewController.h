@@ -7,16 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CustomTextField.h"
 #import "ProjectListViewController.h"
 #import "BaseViewController.h"
-@interface SearchViewController : UIViewController
+@interface CalanderViewController : BaseViewController
 @property int titleHeight;
-@property(strong,nonatomic)CustomTextField *cityLabel;
-@property(strong,nonatomic)CustomTextField *searchField;
+@property(strong,nonatomic)UILabel *cityLabel;
+@property(strong,nonatomic)UILabel *searchLabel;
 @property(strong,nonatomic)UILabel *msgLabel;
 @property int bottomHeight;
 @property UIImageView *chooseImageView;
+@property UITextField *titleView;
 @property UITextView *contentView;
 @property NSNumber *aid;
 @end

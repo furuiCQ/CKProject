@@ -30,6 +30,7 @@
 #import "ViewController.h"
 #import "ProjectTimePicker.h"
 #import "OrderRecordCell.h"
+#import "CalanderViewController.h"
 @interface MainViewController ()<CLLocationManagerDelegate,UITextFieldDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>{
     CLLocationManager *locationmanager;
     NSArray *tableArray;
@@ -1123,7 +1124,16 @@ static NSString *identy = @"OrderRecordCell";
 }
 //监听输入框焦点
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
-    [self showAlertView];
+   // [self showAlertView];
+    SearchViewController *searchViewController=[[SearchViewController alloc]init];
+    if (localNumber!=nil && ![localNumber isEqual:[NSNull null]]) {
+        [searchViewController setAid:localNumber];
+        
+    }else{
+        [searchViewController setAid:[NSNumber numberWithInt:500000]];
+    }
+    [self presentViewController: searchViewController animated:YES completion:nil];
+
 }
 
 -(NSString *) compareCurrentTime:(NSDate*) date{
@@ -1473,7 +1483,7 @@ static NSString *identy = @"OrderRecordCell";
 
 -(void)showAlertView{
     
-    SearchViewController *searchViewController=[[SearchViewController alloc]init];
+    CalanderViewController *searchViewController=[[CalanderViewController alloc]init];
     if (localNumber!=nil && ![localNumber isEqual:[NSNull null]]) {
         [searchViewController setAid:localNumber];
         

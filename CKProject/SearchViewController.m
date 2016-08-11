@@ -10,7 +10,7 @@
 #import "HttpHelper.h"
 #import "FDCalendar.h"
 #import "AppDelegate.h"
-@interface SearchViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,EveryFrameDelegate>{
+@interface SearchViewController ()<UITextFieldDelegate>{
     NSArray *tableArray;
     UILabel *titleLabel;
     UILabel *timeLabel;
@@ -20,6 +20,11 @@
     //
     NSArray *ary;
     NSDate *selectDate;
+    //
+    UIView *bgView;
+    BOOL isShow;
+    BOOL isSearch;
+    NSNumber *searchType;
 }
 
 @end
@@ -27,247 +32,204 @@
 @implementation SearchViewController
 @synthesize titleHeight;
 @synthesize cityLabel;
-@synthesize searchLabel;
+@synthesize searchField;
 @synthesize msgLabel;
 @synthesize bottomHeight;
 @synthesize chooseImageView;
-@synthesize titleView;
 @synthesize contentView;
 @synthesize aid;
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //[self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [imageView setImage:[UIImage imageNamed:@"login_bg"]];
     [self.view addSubview:imageView];
     selectDate=[NSDate date];
-    [ProgressHUD show:@"加载中..."];
+    searchType=[[NSNumber alloc]init];
     [self initTitle];
-    [self initContentView];
-    [self getLessonCount];
+    //这里的object传如的是对应的textField对象,方便在事件处理函数中获取该对象进行操作。
+
     // Do any additional setup after loading the view, typically from a nib.
 }
 //初始化顶部菜单栏
 -(void)initTitle{
     //设置顶部栏
     titleHeight=44;
-    UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    //新建左上角Label
-    cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/4.5, titleHeight)];
-    [cityLabel setTextAlignment:NSTextAlignmentRight];
-    cityLabel.userInteractionEnabled=YES;//
-    [cityLabel setText:@"返回"];
-    UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"black_back"]];
-    [imageView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/35/2, titleHeight/2-self.view.frame.size.width/20/2, self.view.frame.size.width/35, self.view.frame.size.width/20)];
-    [cityLabel addSubview:imageView];
-    UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMiss:)];
-    [cityLabel addGestureRecognizer:gesture];
-    //新建查询视图
-    searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
-    [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [searchLabel setText:@"日期列表"];
-    
-    [topView addSubview:cityLabel];
-    [topView addSubview:searchLabel];
-    [self.view addSubview:topView];
-}
--(void)initContentView{
     int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
-    UIScrollView *bgView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20+titleHeight+0.5, width, hegiht-(20+titleHeight+0.5))];
-    [self.view addSubview:bgView];
-    keyTextField=[[UILabel alloc]initWithFrame:CGRectMake(width/11, width/16, width*5/6, width/10.7)];
-    keyTextField.text=@"今日开设课程";
-    [keyTextField setTextAlignment:NSTextAlignmentCenter];
-    [keyTextField setTextColor:[UIColor colorWithRed:102.f/255.f green:102.f/255.f blue:102.f/255.f alpha:1.0]];
-    [keyTextField setFont:[UIFont systemFontOfSize:width/26.7]];
-    [bgView addSubview:keyTextField];
     
-    FDCalendar *calendar = [[FDCalendar alloc] initWithCurrentDate:[NSDate date]];
-    CGRect frame = calendar.frame;
-    frame.origin.y = keyTextField.frame.size.height+keyTextField.frame.origin.y+width/10;
-    frame.origin.x=width/16;
-    frame.size.width=width-width/8;
-    calendar.delegate=self;
-    calendar.frame = frame;
-    [bgView addSubview:calendar];
-    
-    
-    sendAssessLabel=[[UILabel alloc]initWithFrame:CGRectMake((width-width/1.3)/2, calendar.frame.size.height+calendar.frame.origin.y+width/8.4, width/1.3, width/8)];
-    UITapGestureRecognizer *loginRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchProjectList)];
-    sendAssessLabel.userInteractionEnabled=YES;
-    [sendAssessLabel addGestureRecognizer:loginRecognizer];
-    [sendAssessLabel setText:@"查看选定时间课程"];
-    [sendAssessLabel setFont:[UIFont systemFontOfSize:width/20]];
-    [sendAssessLabel setTextAlignment:NSTextAlignmentCenter];
-    [sendAssessLabel setTextColor:[UIColor whiteColor]];
-    [sendAssessLabel setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:99.f/255.f blue:99.f/255.f alpha:1.0]];
-    [bgView addSubview:sendAssessLabel];
-    
-}
-- (void)getSelectData:(NSDate *)date{
-    selectDate=date;
-    [self tzshuj:date];
-}
-//值发生改变时
--(void)tzshuj:(NSDate *)selected1
-{
-    //当前时间
-    NSDate *  senddate=[NSDate date];
-    
-    NSDateFormatter  *dateformatter2=[[NSDateFormatter alloc] init];
-    
-    [dateformatter2 setDateFormat:@"YYYYMMdd"];
-    
-    NSString *  locationString=[dateformatter2 stringFromDate:senddate];
-    NSLog(@"当前时间：%@",locationString);
-    
-    //
-    
-    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];//设置输出的格式
-    [dateFormatter1 setDateFormat:@"yyyyMMdd"];
-    // NSDate *selected1 = [uiPatePicker date];
-    NSString *date2=[dateFormatter1 stringFromDate:selected1];
-    
-    if (locationString.doubleValue>date2.doubleValue) {
-        [keyTextField setText:@"时间已过期"];
-        keyTextField.textColor=[UIColor grayColor];
-        sendAssessLabel.userInteractionEnabled=NO;
-       // sendAssessLabel.textColor=[UIColor grayColor];
-    }
-    else
-    {
-        sendAssessLabel.textColor=[UIColor whiteColor];
-        sendAssessLabel.userInteractionEnabled=YES;
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];//设置输出的格式
-        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-        NSDate *selected = selected1;
-        NSString *date1=[dateFormatter stringFromDate:selected];
-        
-        
-        NSLog(@"选择的时间：%@",date1);
-        
-        
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(queue, ^{
-            [HttpHelper getLessonCount:[NSNumber numberWithInt:500000] andstrd:date1 success:^(HttpModel *model){
-                NSLog(@"%@",model.message);
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            NSNumber *number=(NSNumber *)model.result;
-                            
-                            NSString *data=@"今日开设课程";
-                            //   ww b *foramte=[[NSNumberFormatter alloc]init];
-                            
-                            data=[data stringByAppendingFormat:@"%@门",number];
-                            
-                            NSMutableAttributedString *str=[[NSMutableAttributedString alloc] initWithString:data];
-                            
-                            [str addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:255.f/255.f green:99.f/255.f blue:99.f/255.f alpha:1.0] range:NSMakeRange(6,[[NSString stringWithFormat:@"%@",number] length])];
-                            [str addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:self.view.frame.size.width/19] range:NSMakeRange(6,[[NSString stringWithFormat:@"%@",number] length])];
-                            
-                            [keyTextField setAttributedText:str];
-                            
-                            
-                        });
-                        
-                    }else{
-                        
-                    }
-                    [ProgressHUD dismiss];
-                });
-            }failure:^(NSError *error){
-                if (error.userInfo!=nil) {
-                    NSLog(@"%@",error.userInfo);
-                }
-                [ProgressHUD dismiss];
-                
-            }];
-            
-            
-        });
-        
-    }
-    
-    
-}
-
--(void)searchProjectList{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];//设置输出的格式
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-  //  NSString *data=keyTextField.text;
-    NSDate *selected = selectDate;
-    NSString *date=[dateFormatter stringFromDate:selected];
-    NSUserDefaults *src=[NSUserDefaults standardUserDefaults];
-    [src setObject:date forKey:@"kp"];
+    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
    
-    ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-    [projectListViewController setstd:2];
-    [projectListViewController setTitleName:[NSString stringWithFormat:@"%@课程",date]];
-    [self presentViewController:projectListViewController animated:YES completion:nil];
-  //  [projectListViewController searchData:data withTime:date withAid:aid];
+    
+    cityLabel=[[CustomTextField alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
+    [cityLabel setText:@"机构"];
+    [cityLabel setFont:[UIFont systemFontOfSize:15]];
+    [cityLabel setTextColor:[UIColor colorWithRed:95.f/255.f green:98.f/255.f blue:107.f/255.f alpha:1.0]];
+    [cityLabel setEnabled:false];
+    [cityLabel setTextAlignment:NSTextAlignmentCenter];
+    //17 × 10
+    UIImageView *downView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"city_down"]];
+    [downView setFrame:CGRectMake(0, 0, 7, 3)];
+    [cityLabel setRightView:downView];
+    [cityLabel setRightViewMode:UITextFieldViewModeAlways];
+       //新建查询视图
+    searchField=[[CustomTextField alloc]initWithFrame:(CGRectMake(width/35.6, titleHeight*2/16, width/1.2, titleHeight*3/4))];
+    searchField.delegate=self;
+    [searchField setBackgroundColor:[UIColor colorWithRed:228.f/255.f green:229.f/255.f blue:230.f/255.f alpha:1.0]];
+    [searchField.layer setCornerRadius:2.0f];
+    [searchField setFont:[UIFont systemFontOfSize:15]];
+    [searchField setLeftView:cityLabel];
+    [searchField setLeftViewMode:UITextFieldViewModeAlways];
+    //新建右上角的图形
+    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/32-self.view.frame.size.width/11.8, (titleHeight-self.view.frame.size.width/11.8)/2, self.view.frame.size.width/11.8, self.view.frame.size.width/11.8)];
+    UITapGestureRecognizer *uITapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchData)];
+    [msgLabel addGestureRecognizer:uITapGestureRecognizer];
+    [msgLabel setUserInteractionEnabled:YES];
+    [msgLabel setText:@"取消"];
+    [msgLabel setFont:[UIFont systemFontOfSize:width/24.6]];
+
+    UILabel *contextLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/5, titleHeight)];
+    UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showView)];
+    [contextLabel addGestureRecognizer:gesture];
+    [contextLabel setUserInteractionEnabled:YES];
     
     
-}
+    [titleView addSubview:cityLabel];
+    [titleView addSubview:msgLabel];
+    [titleView addSubview:searchField];
+    [titleView addSubview:contextLabel];
 
--(void)getLessonCount{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];//设置输出的格式
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSDate *selected = [NSDate date];
-    NSString *date1=[dateFormatter stringFromDate:selected];
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper getLessonCount:[NSNumber numberWithInt:500000] andstrd:date1 success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSNumber *number=(NSNumber *)model.result;
-                        
-                        NSString *data=@"今日开设课程";
-                        //   ww b *foramte=[[NSNumberFormatter alloc]init];
-                        
-                        data=[data stringByAppendingFormat:@"%@门",number];
-                        
-                        NSMutableAttributedString *str=[[NSMutableAttributedString alloc] initWithString:data];
-                        
-                        [str addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:1.0 green:99.f/255.f blue:99.f/255.f alpha:1.0] range:NSMakeRange(6,[[NSString stringWithFormat:@"%@",number] length])];
-                        [str addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:self.view.frame.size.width/19] range:NSMakeRange(6,[[NSString stringWithFormat:@"%@",number] length])];
-                        
-                        [keyTextField setAttributedText:str];
-                        
-                        
-                    });
-                    
-                }else{
-                    
-                }
-                [ProgressHUD dismiss];
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-            }
-            [ProgressHUD dismiss];
-            
-        }];
+    [self.view addSubview:titleView];
+    [self initPopView:titleView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(textFieldDidChangeValue:)
+                                                 name:UITextFieldTextDidChangeNotification
+                                               object:searchField];
+
+}
+-(void)showView{
+    if(isShow){
+        [self hideView];
+        isShow=NO;
+    }else{
+        [self.view addSubview:bgView];
+        isShow=YES;
+
+    }
+}
+-(void)hideView{
+    [bgView removeFromSuperview];
+}
+-(void)initPopView:(UIView *)view{
+    int width=self.view.frame.size.width;
+    bgView=[[UIView alloc]initWithFrame:CGRectMake(width/80, view.frame.size.height+view.frame.origin.y, width/2.1, width/2.1)];
+    
+    UIImageView *imageBgView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width/2.1, width/2.1)];
+    [imageBgView setImage:[UIImage imageNamed:@"-drop-down_bg"]];
+    [imageBgView setContentMode:UIViewContentModeScaleAspectFit];
+    [imageBgView setUserInteractionEnabled:YES];
+    [bgView addSubview:imageBgView];
+    
+    
+    //14.5  //6.7
+    UIControl *orginControl=[[UIControl alloc]initWithFrame:CGRectMake(0, width/32, imageBgView.frame.size.width, width/6.7)];
+    [orginControl setBackgroundColor:[UIColor clearColor]];
+    [orginControl setTag:1];
+    [orginControl setUserInteractionEnabled:YES];
+    [orginControl addTarget:self action:@selector(controlOnclick:) forControlEvents:UIControlEventTouchUpInside];
+    UIImageView *orginImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, width/29, width/13.9, width/13.9)];
+    [orginImageView setImage:[UIImage imageNamed:@"institutions_icon"]];
+    [orginControl addSubview:orginImageView];
+    UILabel *orginLabel=[[UILabel alloc]initWithFrame:CGRectMake(orginImageView.frame.size.width+orginImageView.frame.origin.x+width/14.2, width/19.4, orginControl.frame.size.width/2, width/22.8)];
+    [orginLabel setText:@"机构"];
+    [orginLabel setTextColor:[UIColor whiteColor]];
+    [orginLabel setTextAlignment:NSTextAlignmentLeft];
+    [orginLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+    [orginControl addSubview:orginLabel];
+    [imageBgView addSubview:orginControl];
+
+    
+    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(3, orginControl.frame.size.height+orginControl.frame.origin.y, imageBgView.frame.size.width-6, 1)];
+    [lineView setBackgroundColor:[UIColor grayColor]];
+    [imageBgView addSubview:lineView];
+    
+    //14.5  //6.7
+    UIControl *projectControl=[[UIControl alloc]initWithFrame:CGRectMake(0, lineView.frame.size.height+lineView.frame.origin.y, imageBgView.frame.size.width, width/6.7)];
+    [projectControl setBackgroundColor:[UIColor clearColor]];
+    [projectControl setTag:2];
+    [projectControl setUserInteractionEnabled:YES];
+    [projectControl addTarget:self action:@selector(controlOnclick:) forControlEvents:UIControlEventTouchUpInside];
+
+    UIImageView *projectImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, width/29, width/13.9, width/13.9)];
+    [projectImageView setImage:[UIImage imageNamed:@"course_icon"]];
+    [projectImageView setContentMode:UIViewContentModeScaleAspectFit];
+    [projectControl addSubview:projectImageView];
+
+    UILabel *projectLabel=[[UILabel alloc]initWithFrame:CGRectMake(projectImageView.frame.size.width+projectImageView.frame.origin.x+width/13.3, width/19.4, projectControl.frame.size.width/2, width/22.8)];
+    [projectLabel setText:@"课程"];
+    [projectLabel setTextColor:[UIColor whiteColor]];
+    [projectLabel setTextAlignment:NSTextAlignmentLeft];
+    [projectLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+    [projectControl addSubview:projectLabel];
+    [imageBgView addSubview:projectControl];
+    
+    
+    UIView *line2View=[[UIView alloc]initWithFrame:CGRectMake(3, projectControl.frame.size.height+projectControl.frame.origin.y  , imageBgView.frame.size.width-6, 1)];
+    [line2View setBackgroundColor:[UIColor grayColor]];
+    [imageBgView addSubview:line2View];
+    //14.5  //6.7
+    UIControl *rebateControl=[[UIControl alloc]initWithFrame:CGRectMake(0, line2View.frame.size.height+line2View.frame.origin.y, imageBgView.frame.size.width, width/6.7)];
+    [rebateControl setBackgroundColor:[UIColor clearColor]];
+    [rebateControl setTag:3];
+    [rebateControl setUserInteractionEnabled:YES];
+    [rebateControl addTarget:self action:@selector(controlOnclick:) forControlEvents:UIControlEventTouchUpInside];
+
+    UIImageView *rebateImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, width/29, width/13.9, width/13.9)];
+    [rebateImageView setImage:[UIImage imageNamed:@"privilege_icon"]];
+    [rebateImageView setContentMode:UIViewContentModeScaleAspectFit];
+    [rebateControl addSubview:rebateImageView];
+    UILabel *rebateLabel=[[UILabel alloc]initWithFrame:CGRectMake(rebateImageView.frame.size.width+rebateImageView.frame.origin.x+width/13.3, width/19.4, rebateControl.frame.size.width/2, width/22.8)];
+    [rebateLabel setText:@"优惠"];
+    [rebateLabel setTextColor:[UIColor whiteColor]];
+    [rebateLabel setTextAlignment:NSTextAlignmentLeft];
+    [rebateLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+    [rebateControl addSubview:rebateLabel];
+    [imageBgView addSubview:rebateControl];
+}
+-(void)controlOnclick:(id)sender{
+    UIControl *control=(UIControl *)sender;
+    searchType=[NSNumber numberWithInt:(int)control.tag];
+    for(UIView *view in control.subviews){
+        if([view isKindOfClass:[UILabel class]]){
+            UILabel *label=(UILabel *)view;
+            [cityLabel setText:label.text];
+ 
+        }
+    }
+    [self hideView];
+}
+//这里可以通过发送object消息获取注册时指定的UITextField对象
+- (void)textFieldDidChangeValue:(NSNotification *)notification
+{
+    UITextField *textField = (UITextField *)[notification object];
+    if([textField.text length]>0){
+        [msgLabel setText:@"确定"];
+        isSearch=YES;
+    }else{
+        [msgLabel setText:@"取消"];
+        isSearch=NO;
+        
+    }
+}
+-(void)searchData{
+    if(isSearch){
+        NSString *str=searchField.text;
         
         
-    });
+    }else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
--(void)disMiss:(UITapGestureRecognizer *)recognizer{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
