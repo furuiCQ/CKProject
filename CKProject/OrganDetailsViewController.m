@@ -441,65 +441,14 @@
             NSString *str=[NSString stringWithFormat:@"%@",people];
             [cell.orderNumbLabel setText:str];
         }
-        if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
-            NSString *logo=[dic objectForKey:@"logo"];
+        if ([dic objectForKey:@"biglogo"] && ![[dic objectForKey:@"biglogo"] isEqual:[NSNull null]]) {
+            NSString *logo=[dic objectForKey:@"biglogo"];
             if (![logo isEqualToString:@""]) {
                 [cell.logoImage sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
                 
             }
         }
-        if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
-            [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
-            NSNumber *lng=[dic objectForKey:@"lng"];
-            NSNumber *lat=[dic objectForKey:@"lat"];
-            
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude=[lat floatValue];
-            
-            coordinate.longitude=[lng floatValue];
-            
-            CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-            
-            lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
-            lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-//            NSString *longtitudeText=lg;
-//            NSString *latitudeText=lt;;
-            
-//            CLLocationDegrees latitude=[latitudeText doubleValue];
-//            CLLocationDegrees longitude=[longtitudeText doubleValue];
-            
-            double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
-            if(distance>0.0){
-                if (distance/1000>1) {
-                    [cell.distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
-                }else if (distance/1000<1 && distance/1000>0.5){
-                    [cell.distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
-                    
-                }else if (distance/1000<0.5){
-                    [cell.distanceLabel setText:@"<500m"];
-                }
-            }
-            
-        }
-        
-        
-        if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
-           // NSString *addr=[dic objectForKey:@"addr"];
-            //            CGRect frame=cell.listItem.addressLabel.frame;
-            //            CGSize strSize=[addr sizeWithFont:cell.listItem.addressLabel.font maxSize:CGSizeMake(width, 0)];
-            //            frame.origin.x=cell.listItem.joinLabel.frame.size.width+cell.listItem.joinLabel.frame.origin.x+width/40;
-            //            frame.size.width=width/3;
-            //            [cell.listItem.addressLabel setFrame:frame];
-            // [cell.listItem.addressLabel setText:[NSString stringWithFormat:@"%@",addr]];
-        }
-        //        if ([dic objectForKey:@"pname"] && ![[dic objectForKey:@"pname"] isEqual:[NSNull null]]) {
-        //            NSString *pname=[dic objectForKey:@"pname"];
-        //            CGRect frame=cell.listItem.typelabel.frame;
-        //            CGSize strSize=[pname sizeWithFont:cell.listItem.typelabel.font maxSize:CGSizeMake(width, 0)];
-        //            frame.size.width= strSize.width+frame.size.height/2;
-        //            [cell.listItem.typelabel setFrame:frame];
-        ////            [cell.listItem.typelabel setText:[NSString stringWithFormat:@"%@",pname]];
-        //        }
+        [cell.distanceLabel setText:distanceLabel.text];
         if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
             NSString *grade=[dic objectForKey:@"grade"];
             [cell.ageLabel setText:[NSString stringWithFormat:@"%@",grade]];
@@ -723,32 +672,12 @@
                                 [tableHeaderView addSubview:pageControl];
                             }
                             
-                            if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
-                                [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
-                                NSNumber *lng=[dic objectForKey:@"lng"];
-                                NSNumber *lat=[dic objectForKey:@"lat"];
-                                
-                                CLLocationCoordinate2D coordinate;
-                                coordinate.latitude=[lat floatValue];
-                                
-                                coordinate.longitude=[lng floatValue];
-                                
-                                CLLocationCoordinate2D coords3=[JZLocationConverter bd09ToWgs84:coordinate];
-                                
-                                lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
-                                lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-//                                NSString *longtitudeText=lg;
-//                                NSString *latitudeText=lt;;
-                                
-//                                CLLocationDegrees latitude=[latitudeText doubleValue];
-//                                CLLocationDegrees longitude=[longtitudeText doubleValue];
-                                
-                              //  CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
-                                
-                                double distance=[RJUtil LantitudeLongitudeDist:coords3.longitude other_Lat:coords3.latitude self_Lon:neloct.coordinate.longitude self_Lat:neloct.coordinate.latitude];
+                            if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]] ) {
+                                NSNumber *range=[dic objectForKey:@"range"];
+                                double distance=[range doubleValue];
                                 if(distance>0.0){
                                     if (distance/1000>1) {
-                                        [distanceLabel setText:[NSString stringWithFormat:@"%.2fkm",(float)distance/1000]];
+                                        [distanceLabel setText:[NSString stringWithFormat:@"%.fkm",(float)distance/1000]];
                                     }else if (distance/1000<1 && distance/1000>0.5){
                                         [distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
                                         
