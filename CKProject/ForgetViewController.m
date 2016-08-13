@@ -64,7 +64,7 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
     [searchLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [searchLabel setText:@"注册"];
+    [searchLabel setText:@"重置密码"];
     
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
@@ -253,15 +253,9 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
                 
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     
-                    [self.presentingViewController.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                    [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
                         NSNotification *notification =[NSNotification notificationWithName:@"autologin" object:self userInfo:@{@"tel":phone,@"pas":pasword}];
                         [[NSNotificationCenter defaultCenter] postNotification:notification];
-                
-                        
-//                        UIAlertView *alt=[[UIAlertView alloc]initWithTitle:@"提示" message:model.message delegate:@selector(goforlogin) cancelButtonTitle:@"确定" otherButtonTitles: nil];
-//                  
-//                       alt show
-                        
                     }];
                     [self releaseTImer];
                     [alertView setMessage:model.message];

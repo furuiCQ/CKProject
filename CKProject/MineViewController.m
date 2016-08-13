@@ -128,10 +128,10 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
   //  [leftImage addGestureRecognizer:uITapGestureRecognizer];
     [leftImage setUserInteractionEnabled:YES];
     [leftImage setImage:[UIImage imageNamed:@"msg_logo"]];
-    [titleView addSubview:leftImage];
+   // [titleView addSubview:leftImage];
     UIControl *leftControl=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/5.3, titleHeight)];
     [leftControl addTarget:self action:@selector(goMsgViewController) forControlEvents:UIControlEventTouchUpInside];
-    [titleView addSubview:leftControl];
+ //   [titleView addSubview:leftControl];
     
     //新建查询视图
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
@@ -722,14 +722,14 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                 break;
             case 2:
             {
-                ChangePassViewController *changePassViewController=[[ChangePassViewController alloc]init];
+                ForgetViewController *changePassViewController=[[ForgetViewController alloc]init];
                 [self presentViewController: changePassViewController animated:YES completion:nil];
             }
                 break;
             case 3:
             {
-                ChangePhoneViewController *changePhoneViewController=[[ChangePhoneViewController alloc]init];
-                [self presentViewController: changePhoneViewController animated:YES completion:nil];
+              //  ChangePhoneViewController *changePhoneViewController=[[ChangePhoneViewController alloc]init];
+              //  [self presentViewController: changePhoneViewController animated:YES completion:nil];
                 
             }
                 break;

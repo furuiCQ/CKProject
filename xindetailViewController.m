@@ -251,7 +251,7 @@
     tab.delegate=self;
     tab.dataSource=self;
     tab.rowHeight= self.view.bounds.size.height/5;
-    tab.separatorStyle = UITableViewCellSelectionStyleNone;
+    tab.separatorStyle = NO;
     
     //下拉刷新
     UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
@@ -400,8 +400,7 @@
     return 1;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 100;
-    
+    return 65;
 }
 #pragma mark 返回每组行数
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

@@ -204,7 +204,7 @@
             frame.size.width=self.view.frame.size.width/5.6;
             frame.size.height=frame.size.width;
             frame.origin.x=btnView.frame.size.width/2-frame.size.width/2;
-            frame.origin.y=-20;
+            frame.origin.y=-self.view.frame.size.width/16;
             [btnView.iconLabel setFrame:frame];
         }
         if(i==_lastSelectedIndex){
