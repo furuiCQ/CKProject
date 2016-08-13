@@ -13,28 +13,35 @@
 #import "xindetailViewController.h"
 #import "HttpHelper.h"
 #import "HttpModel.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import "YiRefreshFooter.h"
+#import "YiRefreshHeader.h"
 #define swidth self.view.frame.size.width
 #define sheight self.view.frame.size.height
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
     UITableView *vi;
-    NSMutableArray *ary;
-    NSMutableArray *ary1;
     CGFloat titleHeight;
     UILabel *cityLabel;
     UILabel *searchLabel;
     UILabel *msgLabel;
     UIScrollView *sc;
     UIView *titleView;
-    UITableView *tab;
-    NSArray *selectArray;
-    //    UIButton *btn;
     
-    NSMutableDictionary *duc;
-    UINib *nib;
+    NSMutableArray *selectArray;
+   
 
     
+    UINib *nib;
+    
+    NSNumber *newsType;
+    NSNumber *pn;
+    NSNumber *pc;
+
+    YiRefreshFooter *refreshFooter;
+    YiRefreshHeader *refreshHeader;
+    BOOL _isLoading;
 }
 @end
 
@@ -42,9 +49,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ProgressHUD show:@"加载中..."];
+    newsType=[NSNumber numberWithInt:2];
+    pn=[NSNumber numberWithInt:1];
+    pc=[NSNumber numberWithInt:10];
+    _isLoading=NO;
     [self initTitle];
-    [self getsj];
+    [self getsj:0
+     ];
     // Do any additional setup after loading the view, typically from a nib.
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -59,12 +70,43 @@
     [_topView reloadViewWith:_titleArray];
     [self.view addSubview:_topView];
     
-    vi=[[UITableView alloc]initWithFrame:CGRectMake(0, _topView.frame.size.height+_topView.frame.origin.y+5, swidth, sheight/1.2)];
+    vi=[[UITableView alloc]initWithFrame:CGRectMake(0, _topView.frame.size.height+_topView.frame.origin.y+5, swidth, sheight-(_topView.frame.size.height+_topView.frame.origin.y+5)-titleHeight)];
     vi.delegate=self;
     vi.dataSource=self;
     vi.separatorStyle=UITableViewCellSeparatorStyleNone;
     [vi registerNib:[UINib nibWithNibName:@"okCell" bundle:nil] forCellReuseIdentifier:@"cell"];
     [self.view addSubview:vi];
+    
+    //添加刷新
+//    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
+//    [_refreshControl setTintColor:[UIColor grayColor]];
+//    
+//    [_refreshControl addTarget:self
+//                        action:@selector(refreshView:)
+//              forControlEvents:UIControlEventValueChanged];
+//    [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
+//    [vi addSubview:_refreshControl];
+    
+    refreshFooter=[[YiRefreshFooter alloc] init];
+    refreshFooter.scrollView=vi;
+    [refreshFooter footer];
+    refreshFooter.beginRefreshingBlock=^(){
+        NSLog(@"上拉加载");
+        _isLoading=true;
+        int numb=[pn intValue];
+        numb++;
+        pn=[NSNumber numberWithInt:numb];
+        [self getsj:1];
+    };
+    
+    refreshHeader=[[YiRefreshHeader alloc] init];
+    refreshHeader.scrollView=vi;
+    [refreshHeader header];
+    refreshHeader.beginRefreshingBlock=^(){
+        _isLoading=true;
+        [self getsj:0];
+    };
+    
     
     UIImageView *goTopView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-swidth/8.5-swidth/40, sheight*3/4, swidth/8.5, swidth/8.5)];
     [goTopView setImage:[UIImage imageNamed:@"totop_image"]];
@@ -80,46 +122,64 @@
 - (void)selectClickAction:(NSInteger)index {
     switch (index) {
         case 0:
-            ary=[duc objectForKey:@"1"];
+            newsType=[NSNumber numberWithInt:2];
             break;
         case 1:
-            ary=[duc objectForKey:@"2"];
+            newsType=[NSNumber numberWithInt:3];
             break;
         case 2:
-            ary=[duc objectForKey:@"3"];
+            newsType=[NSNumber numberWithInt:4];
             break;
         case 3:
-            ary=[duc objectForKey:@"4"];
+            newsType=[NSNumber numberWithInt:5];
             break;
         case 4:
-            ary=[duc objectForKey:@"5"];
+            newsType=[NSNumber numberWithInt:6];
             break;
-        default:
-            ary=[duc objectForKey:@"6"];
+        case 5:
+            newsType=[NSNumber numberWithInt:7];
             break;
     }
-    [vi reloadData];
-    
-    
+    pn=[NSNumber numberWithInt:1];
+    [self getsj:0];
 }
--(void)getsj{
+-(void)getsj:(int)add{
+    [ProgressHUD show:@"加载中..."];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
-        [HttpHelper getliebiao:self
-                       success:^(HttpModel *model){
+        [HttpHelper getNewsList:newsType andPn:pn andPc:pc success:^(HttpModel *model){
                            
                            NSLog(@"%@",model.result);
                            
                            dispatch_async(dispatch_get_main_queue(), ^{
-                               
+                               _isLoading=NO;
                                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                                   duc=[model.result copy] ;
-                                   ary=[duc objectForKey:@"1"];
+                                   if(add==0){
+                                       selectArray=[model.result mutableCopy];
+                                       [refreshHeader endRefreshing];
+
+                                    }else{
+                                        NSMutableArray *data=[model.result mutableCopy];
+                                        [refreshFooter endRefreshing];
+                                        if([data count]>0){
+                                            [selectArray addObjectsFromArray:data];
+                                        }else{
+                                            //初始化提示框；
+                                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"没有更多的数据了..." preferredStyle:  UIAlertControllerStyleAlert];
+                                            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                                                //点击按钮的响应事件；
+                                            }]];
+                                            //弹出提示框；
+                                            [self presentViewController:alert animated:true completion:nil];
+                                        }
+                                    }
                                    [vi reloadData];
+
                                }else{
                                    
                                }
+                               
                            });
                        }failure:^(NSError *error){
                            if (error.userInfo!=nil) {
@@ -156,8 +216,6 @@
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setText:@"新闻头条"];
     
-    
-    
     [titleView addSubview:cityLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
@@ -180,29 +238,8 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch (vi.tag) {
-        case 0:
-            ary=[duc objectForKey:@"1"];
-            break;
-        case 1:
-            ary=[duc objectForKey:@"2"];
-            break;
-        case 2:
-            ary=[duc objectForKey:@"3"];
-            break;
-        case 3:
-            ary=[duc objectForKey:@"4"];
-            break;
-        case 4:
-            ary=[duc objectForKey:@"5"];
-            break;
-        default:
-            ary=[duc objectForKey:@"6"];
-            break;
-    }
-    return ary.count;
     
-    
+    return selectArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -211,16 +248,15 @@
     if(cell==nil){
         cell=[[[NSBundle mainBundle]loadNibNamed:@"okCell"owner:self options:nil]lastObject];
     }
-    NSDictionary *bic=[ary objectAtIndex:indexPath.row];
+    NSDictionary *bic=[selectArray objectAtIndex:indexPath.row];
     NSUserDefaults *kp=[NSUserDefaults standardUserDefaults];
     [kp setObject:[bic objectForKey:@"content"] forKey:@"cpn"];
     cell.titles.text=[bic objectForKey:@"title"];
-    //    cell.details.text=[bic objectForKey:@"stitle"];
     cell.writers.text=[bic objectForKey:@"author"];
     cell.nums.text=[NSString stringWithFormat:@"%i",[[bic objectForKey:@"read"]intValue]]  ;
     NSNumber *btime=[bic objectForKey:@"created"];
     NSString *str1=[NSString stringWithFormat:@"http://211.149.190.90%@",[bic objectForKey:@"img"]];
-    cell.im.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str1]]];
+    [cell.im sd_setImageWithURL:[NSURL URLWithString:str1]];
     NSInteger myInteger = [btime integerValue];
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
@@ -239,6 +275,26 @@
     return cell;
     
 }
+// scrollview滚动的时候调用
+- (void)scrollViewDidScroll:(UIScrollView *)uiScrollView
+{
+    if (!_isLoading && uiScrollView.tag==0) { // 判断是否处于刷新状态，刷新中就不执行
+        float height = uiScrollView.contentSize.height > vi.frame.size.height ? vi.frame.size.height : uiScrollView.contentSize.height;
+        if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
+            // 调用上拉刷新方法
+            [refreshFooter beginRefreshing];
+        }
+        if (- uiScrollView.contentOffset.y / vi.frame.size.height > 0.2) {
+            // 调用下拉刷新方法
+            NSLog(@"刷新");
+            [refreshHeader beginRefreshing];
+        }
+        
+    }
+    
+    
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -247,14 +303,8 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //
-    //    modetailViewController *detailsViewController=[[modetailViewController alloc]init];
-    //    NSDictionary *dic=[ary objectAtIndex:indexPath.row];
-    //    NSNumber *aritcleId=[dic objectForKey:@"id"];
-    //    [detailsViewController setAritcleId:aritcleId];
-    //    [self presentViewController:detailsViewController animated:YES completion:nil];
     xindetailViewController  *bt=[[xindetailViewController alloc]init];
-    NSDictionary *dic=[ary objectAtIndex:indexPath.row];
+    NSDictionary *dic=[selectArray objectAtIndex:indexPath.row];
     NSNumber *aritcleId=[dic objectForKey:@"id"];
     [bt setAritcleId:aritcleId];
     [bt setData:dic];

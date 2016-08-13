@@ -109,6 +109,7 @@ static NSString *const API_NEWS_ZAN=@"newszan";
 +(void)getLessonInfo:(NSNumber *)projectId withLng:(NSNumber *)lng withLat:(NSNumber *)lat  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getLessonInfo:(NSNumber *)projectId withLng:(NSNumber *)lng withLat:(NSNumber *)lat success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)zanNewsComments:(NSNumber*)commentsId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)getNewsList:(NSNumber *)lam andPn:(NSNumber *)pn andPc:(NSNumber *)pc success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 //一期接口
 +(void)getMsgInfo:(NSNumber *)msgId withModel:(HttpModel *)model success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)accessLogin:(NSString *)uid withUserName:(NSString *)userName withToken:(NSString *)token withType:(NSString *)type  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

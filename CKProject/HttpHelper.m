@@ -412,10 +412,12 @@
 
 
 //新闻列表页
-+(void)getliebiao:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture
++(void)getNewsList:(NSNumber *)lam andPn:(NSNumber *)pn andPc:(NSNumber *)pc success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture
 {
 
-    NSArray *parameters = @[
+    NSArray *parameters = @[@{ @"name": @"pn", @"value": pn},
+                            @{ @"name": @"pc", @"value": pc},
+                            @{ @"name": @"lam", @"value": lam}
                             ];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_liebiao] success:^(HttpModel *model){
         success(model);
