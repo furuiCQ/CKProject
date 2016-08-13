@@ -122,7 +122,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [locationManager startUpdatingLocation];
 
     [self initTitle];
-    [self initSelectView];
+  //  [self initSelectView];
     [self initTableView];
     [self getData];
     
@@ -971,9 +971,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     bottomHeight=49;
     
     projectTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                                  titleHeight+20+0.5+titleHeight,
+                                                                  titleHeight+20,
                                                                   self.view.frame.size.width,
-                                                                  self.view.frame.size.height-titleHeight-20-0.5-titleHeight)];
+                                                                  self.view.frame.size.height-titleHeight-20)];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
     [projectTableView setBackgroundColor:[UIColor whiteColor]];
     projectTableView.dataSource                        = self;

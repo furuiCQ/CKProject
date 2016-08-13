@@ -206,7 +206,7 @@
     [organNamelabel setTextColor:[UIColor blackColor]];
     [instituteControl addSubview:organNamelabel];
     //18px
-    UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"Location"]];
+    UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_gray"]];
     [localImageView setFrame:CGRectMake(organNamelabel.frame.origin.x, organNamelabel.frame.size.height+organNamelabel.frame.origin.y+width/35.6, width/35.6, width/23.7)];
     UITapGestureRecognizer *addresGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openAddress)];
     [localImageView addGestureRecognizer:addresGesture];
@@ -218,6 +218,7 @@
     [projectAddLabel setText:@"渝中区太平洋大厦3楼"];
     [projectAddLabel addGestureRecognizer:addresGesture];
     [projectAddLabel setUserInteractionEnabled:YES];
+    [projectAddLabel setNumberOfLines:0];
     [projectAddLabel setTextColor:[UIColor colorWithRed:85.f/255.f green:85.f/255.f blue:85.f/255.f alpha:1.0]];
     [projectAddLabel setFont:[UIFont systemFontOfSize:width/22.8]];//28px
     [instituteControl addSubview:projectAddLabel];
@@ -385,6 +386,7 @@
     projectTableView.delegate                          = self;
     projectTableView.rowHeight                         = self.view.bounds.size.height/7;
     projectTableView.tableHeaderView=tableHeaderView;
+    projectTableView.separatorStyle=NO;
     [self.view addSubview:projectTableView];
 }
 -(void)goAllPorjectList{
@@ -417,13 +419,6 @@
 
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    //NSIndexPath是一个结构体，记录了组和行信息
-    //    ProjectSimpleTableCell *cell=[[ProjectSimpleTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    //    //[cell setSelectionStyle:UITableViewCellStyleDefault];
-    //    [cell setViewController:self];
-    //    if (cell ==nil) {
-    //        cell  = [[ProjectSimpleTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    //    }
     static NSString *identy = @"CustomCell";
     OrderRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:identy];
     if(cell==nil){
@@ -579,8 +574,8 @@
                         if ([dic objectForKey:@"img"]&& ![[dic objectForKey:@"img"] isEqual:[NSNull null]]) {
                             [logoImage  sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[dic objectForKey:@"img"]]]];
                         }
-                        if ([dic objectForKey:@"stitle"]&& ![[dic objectForKey:@"stitle"] isEqual:[NSNull null]]) {
-                            [organNamelabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"stitle"]]];
+                        if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
+                            [organNamelabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"title"]]];
                         }
                         NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
                         
@@ -770,9 +765,7 @@
         [[UIApplication sharedApplication] openURL:aURL];
         
     }
-    
     else
-        
         // 直接调用ios自己带的apple map
         
     {

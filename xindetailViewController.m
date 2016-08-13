@@ -59,7 +59,8 @@
 @synthesize totalCount;
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     tableArray=[[NSArray alloc]init];
     [self initTitle];
     [self mainview];
@@ -368,23 +369,21 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
--(void)textViewDidBeginEditing:(UITextView *)textView
-{
-    CGRect rect8=bottomView.frame;
-    rect8.origin.y=sheight-300;
-    [bottomView setFrame:rect8];
-    editTextView.text=nil;
-    NSLog(@"textViewDidBeginEditing");
-}
--(void)textViewDidEndEditing:(UITextView *)textView
-{
-    [editTextView resignFirstResponder];
-    CGRect rect8=bottomView.frame;
-    rect8.origin.y=self.view.frame.size.height-swidth/6.5;
-    [bottomView setFrame:rect8];
-    
-    
-}
+//-(void)textViewDidBeginEditing:(UITextView *)textView
+//{
+//    CGRect rect8=bottomView.frame;
+//    rect8.origin.y=sheight-300;
+//    [bottomView setFrame:rect8];
+//    editTextView.text=nil;
+//    NSLog(@"textViewDidBeginEditing");
+//}
+//-(void)textViewDidEndEditing:(UITextView *)textView
+//{
+//    [editTextView resignFirstResponder];
+//    CGRect rect8=bottomView.frame;
+//    rect8.origin.y=self.view.frame.size.height-swidth/6.5;
+//    [bottomView setFrame:rect8];
+//}
 #pragma mark - 数据源方法
 #pragma mark 返回分组数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -988,6 +987,43 @@
         [sb addSubview:pageControl];
     }
 }
+//动画时间
+#define kAnimationDuration 0.2
+//view高度
+#define kViewHeight 56
+- (void)keyboardWillShow:(NSNotification *)notification {
+    CGFloat curkeyBoardHeight = [[[notification userInfo] objectForKey:@"UIKeyboardBoundsUserInfoKey"] CGRectValue].size.height;
+    NSLog(@"curkeyBoardHeight=======%f",curkeyBoardHeight);
+    //获取键盘高度
+  //  NSValue *keyboardObject = [[aNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey];
+    
+  //  CGRect keyboardRect;
+    
+  //  [keyboardObject getValue:&keyboardRect];
+    
+    //调整放置有textView的view的位置
+    
+    //设置动画
+    [UIView beginAnimations:nil context:nil];
+    
+    //定义动画时间
+ //   [UIView setAnimationDuration:kAnimationDuration];
+    
+    //设置view的frame，往上平移
+    [(UIView *)[self.view viewWithTag:1000] setFrame:CGRectMake(0, self.view.frame.size.height-curkeyBoardHeight-kViewHeight, self.view.frame.size.width, kViewHeight)];
+    
+    [UIView commitAnimations];
+}
+- (void)keyboardWillHide:(NSNotification *)aNotification
+{
+    //定义动画
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:kAnimationDuration];
+    //设置view的frame，往下平移
+    [(UIView *)[self.view viewWithTag:1000] setFrame:CGRectMake(0, self.view.frame.size.height-kViewHeight, self.view.frame.size.width, kViewHeight)];
+    [UIView commitAnimations];
+}
+
 /*
  #pragma mark - Navigation
  

@@ -243,7 +243,7 @@
     [self initTimeView:@"0"];
     //34px  54px    宽度：492px高度：80px
     UILabel *orderProject=[[UILabel alloc]initWithFrame:CGRectMake(screenWidth/11.8, nowWeekView.frame.size.height-screenWidth/18.8-screenWidth/8, screenWidth/1.3, screenWidth/8)];
-    [orderProject setText:@"查看选定时间课程"];//大小：32px
+    [orderProject setText:@"预约课程"];//大小：32px
     [orderProject setTextColor:[UIColor whiteColor]];
     [orderProject setTextAlignment:NSTextAlignmentCenter];
     [orderProject setBackgroundColor:[UIColor colorWithRed:1 green:99.f/255.f blue:99.f/255.f alpha:1.0]];

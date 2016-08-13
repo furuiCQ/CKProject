@@ -124,11 +124,14 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     //新建左上角Label
     //22 × 34
     leftImage=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/19, titleHeight/2-8, 11, 17)];
-    UITapGestureRecognizer *uITapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goMsgViewController)];
-    [leftImage addGestureRecognizer:uITapGestureRecognizer];
+    // UITapGestureRecognizer *uITapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goMsgViewController)];
+  //  [leftImage addGestureRecognizer:uITapGestureRecognizer];
     [leftImage setUserInteractionEnabled:YES];
     [leftImage setImage:[UIImage imageNamed:@"msg_logo"]];
     [titleView addSubview:leftImage];
+    UIControl *leftControl=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/5.3, titleHeight)];
+    [leftControl addTarget:self action:@selector(goMsgViewController) forControlEvents:UIControlEventTouchUpInside];
+    [titleView addSubview:leftControl];
     
     //新建查询视图
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
@@ -141,19 +144,13 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     msgLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/19-2, titleHeight/2-7,4, 15)];
     [msgLabel setUserInteractionEnabled:YES];
     
-    UITapGestureRecognizer *menuapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openRightMenu)];
-    [msgLabel addGestureRecognizer:menuapGestureRecognizer];
+   // UITapGestureRecognizer *menuapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openRightMenu)];
+    //[msgLabel addGestureRecognizer:menuapGestureRecognizer];
     
     [msgLabel setImage:[UIImage imageNamed:@"menu_logo"]];
-    
-    //    pointView=[[UIView alloc]initWithFrame:CGRectMake(8, 0, 8, 8)];
-    //
-    //    [pointView setBackgroundColor:[UIColor redColor]];
-    //    pointView.layer.masksToBounds = YES;
-    //    pointView.layer.cornerRadius = (pointView.frame.size.width + 10) / 4;
-    //    [pointView setHidden:YES];
-    //    [msgLabel addSubview:pointView];
-    
+    UIControl *rightControl=[[UIControl alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/5.3, 0, self.view.frame.size.width/5.3, titleHeight)];
+    [rightControl addTarget:self action:@selector(openRightMenu) forControlEvents:UIControlEventTouchUpInside];
+    [titleView addSubview:rightControl];
     
     [titleView addSubview:msgLabel];
     [titleView addSubview:searchLabel];
@@ -471,6 +468,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                         myDelegate.isLogin=YES;
                         [self setData:model.result];
                         [slideMenu setData:model.result];
+                        [slideMenu setScrollEnabled:YES];
                     }else{
                         
                     }
@@ -755,11 +753,13 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
             case 7:
             {
                 [self logout];
+
             }
                 break;
             default:
                 break;
         }
+        [slideMenu navRightBtAction];
     }
 }
 //预约列表
@@ -813,6 +813,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                         [alertView setTag:1];
                         [alertView setMessage:model.message];
                         [alertView show];
+                        [slideMenu setScrollEnabled:NO];
                     }else{
                         
                     }

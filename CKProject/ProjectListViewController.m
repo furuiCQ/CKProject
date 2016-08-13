@@ -260,7 +260,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     UILabel *localLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/3, width/7)];
     [localLabel setText:@"正在定位.."];
     [localLabel setBackgroundColor:[UIColor whiteColor]];
-    [localLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [localLabel setFont:[UIFont systemFontOfSize:width/24.6]];
     [localLabel setTextAlignment:NSTextAlignmentCenter];
     [marginview addSubview:localLabel];
     //筛选按钮
@@ -274,9 +274,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     UIImageView *hot2ImageView=[[UIImageView alloc]initWithFrame:CGRectMake(hotControl.frame.size.width-width/11.6-width/29, width/7/2+1, width/29, width/45.7)];
     [hot2ImageView setImage:[UIImage imageNamed:@"red_down"]];
     
-    UILabel *hotLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/8.7, 0, width/26.7*2, width/7)];
+    UILabel *hotLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/8.7, 0, width/24.6*2, width/7)];
     [hotLabel setText:@"热门"];
-    [hotLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [hotLabel setFont:[UIFont systemFontOfSize:width/24.6]];
     [hotLabel setTextAlignment:NSTextAlignmentCenter];
     [hotControl addSubview:hotLabel];
     [hotControl addSubview:hotImageView];
@@ -292,9 +292,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     UIImageView *siftImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, (width/7-width/17.8)/2, width/19.3, width/17.8)];
     [siftCotrol setBackgroundColor:[UIColor whiteColor]];
     [siftImageView setImage:[UIImage imageNamed:@"sift_logo"]];
-    UILabel *siftLabel=[[UILabel alloc]initWithFrame:CGRectMake(siftImageView.frame.size.width+siftImageView.frame.origin.x+width/64, 0, width/26.7*2, width/7)];
+    UILabel *siftLabel=[[UILabel alloc]initWithFrame:CGRectMake(siftImageView.frame.size.width+siftImageView.frame.origin.x+width/64, 0, width/24.6*2, width/7)];
     [siftLabel setText:@"筛选"];
-    [siftLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [siftLabel setFont:[UIFont systemFontOfSize:width/24.6]];
     [siftLabel setTextAlignment:NSTextAlignmentCenter];
     [siftCotrol addSubview:siftLabel];
     [siftCotrol addSubview:siftImageView];
@@ -856,6 +856,10 @@ static NSString *identy = @"OrderRecordCell";
             NSString *title=[dic objectForKey:@"title"];
             [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
         }
+        if ([dic objectForKey:@"instsort"] && ![[dic objectForKey:@"instsort"] isEqual:[NSNull null]]) {
+            NSString *title=[dic objectForKey:@"instsort"];
+            [porjectCell.authorLabel setText:[NSString stringWithFormat:@"%@",title]];
+        }
         if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
             NSString *people=[dic objectForKey:@"people"];
             NSString *str=[NSString stringWithFormat:@"已报%@人",people];
@@ -1087,7 +1091,8 @@ static NSString *identy = @"OrderRecordCell";
         NSNumber *projectId=[dic objectForKey:@"id"];
         [projectDetailsViewController setProjectId:projectId];
         [self presentViewController:projectDetailsViewController animated:YES completion:nil];
-        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
+
     }else if(tableView.tag==1){
         NSDictionary *dic=[local1Array objectAtIndex:[indexPath row]];
         select1Id=(int)[indexPath row];

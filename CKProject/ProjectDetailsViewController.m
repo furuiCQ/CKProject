@@ -212,7 +212,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [instituteNameLabel setTextColor:[UIColor blackColor]];
     [instituteControl addSubview:instituteNameLabel];
     //18px
-    UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_logo"]];
+    UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_gray"]];
     [localImageView setFrame:CGRectMake(instituteNameLabel.frame.origin.x, instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/35.6, width/35.6, width/23.7)];
     UITapGestureRecognizer *addresGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openAddress)];
     [localImageView addGestureRecognizer:addresGesture];
@@ -220,12 +220,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [instituteControl addSubview:localImageView];
     
     
-    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(localImageView.frame.size.width+localImageView.frame.origin.x+width/49,  instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/37.6, width-(localImageView.frame.size.width+localImageView.frame.origin.x+width/49)-width/40, width/22.8)];
+    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(localImageView.frame.size.width+localImageView.frame.origin.x+width/49,  instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/37.6, width-(localImageView.frame.size.width+localImageView.frame.origin.x+width/49)-width/40, width/22.8*2)];
     [projectAddLabel setText:@"渝中区太平洋大厦3楼"];
     [projectAddLabel addGestureRecognizer:addresGesture];
     [projectAddLabel setUserInteractionEnabled:YES];
     [projectAddLabel setTextColor:[UIColor colorWithRed:85.f/255.f green:85.f/255.f blue:85.f/255.f alpha:1.0]];
     [projectAddLabel setFont:[UIFont systemFontOfSize:width/22.8]];//28px
+    projectAddLabel.numberOfLines=0;
     [instituteControl addSubview:projectAddLabel];
     
     ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(instituteNameLabel.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/35.6, width/29*6, width/20)];
@@ -557,7 +558,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 -(void)collectOnClick{
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
@@ -775,7 +776,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 frame=contentControl.frame;
                                 frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y+width/23.7;
                                 [contentControl setFrame:frame];
-                                
+                                [detailContentLabel setScrollEnabled:NO];
+
                                 [scrollView setContentSize:CGSizeMake(width, contentControl.frame.size.height+contentControl.frame.origin.y+width/6.2)];
                                 
                                 
@@ -809,6 +811,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             }
                             if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
                                 [projectAddLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]]];
+                                [projectAddLabel sizeToFit];
+
                             }
                             
                             if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
@@ -977,6 +981,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 frame=contentControl.frame;
                                 frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y+width/23.7;
                                 [contentControl setFrame:frame];
+                                [detailContentLabel setScrollEnabled:NO];
                                 
                                 [scrollView setContentSize:CGSizeMake(width, contentControl.frame.size.height+contentControl.frame.origin.y+width/6.2)];
                                 
@@ -1016,6 +1021,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             
                             if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
                                 [projectAddLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]]];
+                                [projectAddLabel sizeToFit];
                             }
                             //                            if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
                             //                                NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
@@ -1270,7 +1276,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         }];
         
     }else{
-        LoginRegViewController *loginRegViewController=[[LoginRegViewController alloc]init];
+        LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
     }
 }

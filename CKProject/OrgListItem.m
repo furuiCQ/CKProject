@@ -41,10 +41,12 @@
         logoView.layer.masksToBounds = YES;
         logoView.layer.cornerRadius = 3.0f;
         [logoView setImage:[UIImage imageNamed:@"instdetails_defalut"]];
-        logoTitle=[[UILabel alloc]initWithFrame:CGRectMake(0, width/3.8-width/15, logoView.frame.size.width+30, width/15)];
+        logoTitle=[[UILabel alloc]initWithFrame:CGRectMake(0, width/3.8-width/15, logoView.frame.size.width, width/15)];
         [logoTitle setBackgroundColor:[UIColor colorWithRed:0.f/255.f green:0.f/255.f blue:0.f/255.f alpha:0.5]];
         [logoTitle setText:@"汉昌培训"];
         [logoTitle setTextAlignment:NSTextAlignmentCenter];
+        //自动折行设置
+       
         [logoTitle setFont:[UIFont systemFontOfSize:width/26.7]];
         [logoTitle setTextColor:[UIColor whiteColor]];
         [logoView addSubview:logoTitle];
@@ -52,10 +54,12 @@
         [self addSubview:logoView];
 
         orgName=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6
-                                                                  , width/2, width/22)];
+                                                                  , width/2, width/11)];
         [orgName setText:@"二胡十段兴趣班"];
         [orgName setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
         [orgName setFont:[UIFont systemFontOfSize:width/22]];
+        orgName.lineBreakMode = UILineBreakModeWordWrap;
+        orgName.numberOfLines = 0;
         [self addSubview:orgName];
         
         
@@ -73,18 +77,22 @@
         
         ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/32*2+width/45.7+width/32*4+width/35.6, width/24.6+width/22+width/35.6, width/29*6, width/20)];
         ratingBar.isIndicator=YES;
-        [ratingBar setImageDeselected:@"star_unselect" halfSelected:nil fullSelected:@"star_select" andDelegate:nil];
+        [ratingBar setImageDeselected:@"star_normal" halfSelected:nil fullSelected:@"star_light" andDelegate:nil];
         [ratingBar displayRating:4.0f];
         [self addSubview:ratingBar];
        
-        UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_logo"]];
+        UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_gray"]];
         [localImageView setFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6+width/22+width/35.6+width/32+width/11.4+width/160, width/35.5, width/29)];
         [self addSubview:localImageView];
         
-        addLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/35.5+width/45.7, width/24.6+width/22+width/35.6+width/32+width/11.4, width/29*18, width/26.7)];
+        addLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/35.5+width/45.7, width/24.6+width/22+width/35.6+width/32+width/11.4, width/29*18, width/13)];
         [addLabel setText:@"渝中区牛角沱太平洋广场3楼"];
+        //自动折行设置
+        addLabel.lineBreakMode = UILineBreakModeWordWrap;
+        addLabel.numberOfLines = 0;
         [addLabel setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
         [addLabel setFont:[UIFont systemFontOfSize:width/29]];
+        [addLabel setTextAlignment:NSTextAlignmentLeft];
         [self addSubview:addLabel];
         
         fram.size.height=width/45.7+width/45.7+width/3.8;

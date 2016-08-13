@@ -21,6 +21,7 @@
     
     NSMutableArray *selcedIdArray;
     NSArray *selectImageArray;
+    NSIndexPath *selectIndex;
     NSArray *normalImageArray;
     
 }
@@ -47,9 +48,9 @@
     [self initTitle];
     [self initSwitchBtn];
     tableArray = [NSArray arrayWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",nil];
+    selcedIdArray=[[NSMutableArray alloc]init];
     selectImageArray=[NSArray arrayWithObjects:@"dance_pressed_ic",@"Language_pressed_ic",@"sports_pressed_ic",@"music_pressed_ic",@"Vocational-and-technical_pressed_ic",@"Wushu_pressed_ic" ,@"paint_pressed_ic" ,@"open-book_pressed_ic" ,@"Health-and-beauty_pressed_ic" ,@"classroom_pressed_ic" ,@"Study-abroad_pressed_ic",nil];
     normalImageArray=[NSArray arrayWithObjects:@"dance_nor_ic",@"Language_nor_ic",@"sports_nor_ic",@"music_nor_ic",@"Vocational-and-technical_nor_ic",@"Wushu_nor_ic" ,@"paint_nor_ic",@"open-book_nor_ic" ,@"Health-and-beauty_nor_ic" ,@"classroom_nor_ic" ,@"Study-abroad_nor_ic",nil];
-    selcedIdArray=[[NSMutableArray alloc]init];
     [self initProjectTableView];
     [self initOrgTableView];
     [projectTableView setHidden:NO];
@@ -290,15 +291,11 @@
             number=[[orgDictionary objectAtIndex:[indexPath row]] count];
         }
         bool isSelected=false;
-        if([selcedIdArray count]>0){
-            for (int i=0; i<[selcedIdArray count]; i++) {
-                NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
-                if([selectId row] ==[indexPath row]){
-                    isSelected=true;
-                }
+        if([selectIndex row] ==[indexPath row]){
+            if([selcedIdArray count]>0){
+                isSelected=true;
             }
         }
-        
         for (int i=0; i<number; i++) {
             int paddingheight=width/45.7;//每组的高度
             int offset=width/4.2;
@@ -513,18 +510,16 @@
     NSLog(@"%ld",(long)indexPath.row);
     if (tableView.tag==0) {
         NSIndexPath *indexPath = [tableView indexPathForSelectedRow];
-        bool hasNumb=false;
+        selectIndex=indexPath;
         if([selcedIdArray count]>0){
-            for (int i=0; i<[selcedIdArray count]; i++) {
-                NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
-                if([selectId row] ==[indexPath row]){
-                    [selcedIdArray removeObjectAtIndex:i];
-                    hasNumb=true;
-                }
+            NSIndexPath *lastPath=[selcedIdArray objectAtIndex:0];
+            if(lastPath==indexPath){
+                [selcedIdArray removeAllObjects];
+            }else{
+                [selcedIdArray insertObject:selectIndex atIndex:0];
             }
-        }
-        if(hasNumb==false){
-            [selcedIdArray addObject:indexPath];
+        }else{
+            [selcedIdArray insertObject:selectIndex atIndex:0];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [tableView reloadData];
