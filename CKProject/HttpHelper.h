@@ -90,10 +90,12 @@ static NSString *const API_CHARSECTION=@"charsection";
 static NSString *const API_TIMELIST=@"weeklist";
 static NSString *const API_NEWSCOMMENTS_ZAN=@"newscommentszan";
 static NSString *const API_NEWS_ZAN=@"newszan";
-
+static NSString *const API_COUPON=@"coupon";
 @interface HttpHelper : NSObject
 +(NSString *)getNowImageTime;
 //二期接口
++(void)getCouponList:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)getCouponListSerch:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getXinwenInfo:(NSNumber *)articleId  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)zanNews:(NSNumber*)articleId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)deleteMyLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBeginTime:(NSString *) begintime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

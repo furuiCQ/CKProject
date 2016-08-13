@@ -10,5 +10,5 @@
 @interface FavourableViewController : UIViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *searchLabel;
-@property(strong,nonatomic)UITableView *tableView;
+@property(strong,nonatomic)UITableView *favourTableView;
 @end

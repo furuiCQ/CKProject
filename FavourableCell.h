@@ -9,14 +9,20 @@
 #import <UIKit/UIKit.h>
 
 @interface FavourableCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *logoImage;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *authorLabel;
-@property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *smallImage;
-@property (weak, nonatomic) IBOutlet UIView *detailView;
+@property (weak, nonatomic) IBOutlet UIImageView *bgView;
+@property (weak, nonatomic) IBOutlet UIImageView *typeView;
+@property (weak, nonatomic) IBOutlet UIImageView *logoView;
+@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *orgName;
+
 @property (weak, nonatomic) IBOutlet UILabel *nowPrice;
-@property (weak, nonatomic) IBOutlet UILabel *passPrice;
-@property (weak, nonatomic) IBOutlet UILabel *numbLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lastPrice;
+@property (weak, nonatomic) IBOutlet UIView *lineView;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+@property (weak, nonatomic) IBOutlet UILabel *time1Label;
+
+@property (weak, nonatomic) IBOutlet UILabel *time2Label;
+@property (weak, nonatomic) IBOutlet UILabel *progressLabel;
+
 
 @end

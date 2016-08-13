@@ -397,6 +397,23 @@
         failture(error);
     }];
 }
++(void)getCouponList:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_COUPON] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
++(void)getCouponListSerch:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{ @"name": @"searchs", @"value": searchs}];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_COUPON] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
+
 +(void)getXinwenInfo:(NSNumber *)articleId  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
                             @{ @"name": @"token", @"value": model.token},
