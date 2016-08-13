@@ -235,6 +235,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     scrollview.delegate = self;
     
     [sc addSubview:scrollview];
+    [self addTimer];
     
 }
 -(void)initMainView{

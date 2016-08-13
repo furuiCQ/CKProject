@@ -264,10 +264,8 @@
     if (tableView.tag==0) {
         cell  = [[SortProjectListTableCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        //    if ([projectDictionary count]>0 ) {
         int width=self.view.frame.size.width;
         SortProjectListTableCell *dataCell=(SortProjectListTableCell *)cell;
-        //[dataCell.logoImage ];加载后台logo
         NSDictionary *projectDic=[httpProjectArray objectAtIndex:[indexPath row]];
         if ([projectDic objectForKey:@"logo"] && ![[projectDic objectForKey:@"logo"] isEqual:[NSNull null]]) {
             NSString *logo=[projectDic objectForKey:@"logo"];
@@ -290,6 +288,9 @@
         }else{
             number=[[orgDictionary objectAtIndex:[indexPath row]] count];
         }
+        UITapGestureRecognizer *allGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goAllPorjectListViewController:)];
+        [dataCell.moreLabel addGestureRecognizer:allGesture];
+        [dataCell.moreLabel setTag:[indexPath row]];
         bool isSelected=false;
         if([selectIndex row] ==[indexPath row]){
             if([selcedIdArray count]>0){
@@ -340,12 +341,14 @@
                 frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
                 cell.frame=frame;
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:255.f/255.f green:82.f/255.f blue:82.f/255.f alpha:1.0]];
+                [dataCell.moreLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
                 [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow_light"]];
                 [dataCell.logoImage setImage:[UIImage imageNamed:[selectImageArray objectAtIndex:[indexPath row]]]];
             }else{
                 [cell setBackgroundColor:[UIColor whiteColor]];
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
+                [dataCell.moreLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow"]];
                 [dataCell.logoImage setImage:[UIImage imageNamed:[normalImageArray objectAtIndex:[indexPath row]]]];
             }
@@ -475,20 +478,18 @@
     
     
 }
--(void)goAllPorjectListViewController{
+-(void)goAllPorjectListViewController:(UITapGestureRecognizer *)gestrue{
     NSLog(@"goAllPorjectListViewController");
-    
-    //UIView *view=gestrue.v
-    //    ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
-    //    NSDictionary *dic=[httpProjectArray objectAtIndex:label.superID] ;
-    //    NSNumber *orgId=[dic objectForKey:@"id"];
-    //
-    //    NSArray *lesson=[dic objectForKey:@"lesson_group"];
-    //    NSDictionary *data=[lesson objectAtIndex:label.subID];
-    //    NSNumber *subId=[data objectForKey:@"id"];
-    //    [projectListViewController setProjectID:orgId];
-    //    [projectListViewController setProjectSubID:subId];
-    //    [self presentViewController:projectListViewController animated:YES completion:nil];
+        UIView *view=gestrue.view;
+        int tag=(int)view.tag;
+        ProjectListViewController *projectListViewController=[[ProjectListViewController alloc]init];
+        NSDictionary *dic=[httpProjectArray objectAtIndex:tag] ;
+        NSNumber *orgId=[dic objectForKey:@"id"];
+        NSString *title=[dic objectForKey:@"title"];
+        [projectListViewController setProjectID:orgId];
+        [projectListViewController setProjectSubID:[NSNumber numberWithInt:0]];
+        [projectListViewController setTitleName:title];
+        [self presentViewController:projectListViewController animated:YES completion:nil];
 }
 -(void)goProjectListViewController:(UITapGestureRecognizer *)gestrue{
     CustomLabel *label=(CustomLabel *)gestrue.view;

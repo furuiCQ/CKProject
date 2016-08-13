@@ -35,6 +35,8 @@
     NSString *beginTime;
     UILabel *nextTitleLabel;
     UILabel *titleLabel;
+    
+    BOOL isNowWeek;
 }
 @end
 
@@ -53,6 +55,7 @@
 {
     
     self = [super initWithFrame:frame];
+    isNowWeek=YES;
     dataArray=[[NSArray alloc]initWithObjects:@"S",@"M",@"T",@"W",@"T",@"F",@"S", nil];
     weekDayArray=[[NSArray alloc]initWithObjects:@"周日",@"周一",@"周二",@"周三",@"周四",@"周五",@"周六",nil];
     dayLabelArray=[[NSArray alloc]initWithObjects:@"上午",@"下午",@"晚上",nil];
@@ -72,12 +75,8 @@
     }
     return self;
 }
--(void)setData:(NSDictionary *)data{
-    nowdata=data;
-    weekId=[NSNumber numberWithInt:0];
-    weekNum=[NSNumber numberWithInt:0];
-    beginTime=@"";
-    NSArray *dic=[nowdata objectForKey:@"now_week"];
+-(void)changeDataRes:(NSString *)key{
+    NSArray *dic=[nowdata objectForKey:key];
     NSMutableArray *multArray0=[[NSMutableArray alloc]init];
     NSMutableArray *multArray1=[[NSMutableArray alloc]init];
     NSMutableArray *multArray2=[[NSMutableArray alloc]init];
@@ -131,6 +130,7 @@
                 break;
         }
     }
+    [timeDictionary removeAllObjects];
     [timeDictionary setObject:multArray0 forKey:@"0"];
     [timeDictionary setObject:multArray1 forKey:@"1"];
     [timeDictionary setObject:multArray2 forKey:@"2"];
@@ -140,6 +140,15 @@
     [timeDictionary setObject:multArray6 forKey:@"6"];
     
     NSLog(@"setData%@",nowdata);
+
+}
+-(void)setData:(NSDictionary *)data{
+    nowdata=data;
+    weekId=[NSNumber numberWithInt:0];
+    weekNum=[NSNumber numberWithInt:0];
+    beginTime=@"";
+    [self changeDataRes:@"now_week"];
+    
 }
 -(void)initView:(CGRect *)frame
 {
@@ -157,13 +166,13 @@
     [nextTitleLabel setTextAlignment:NSTextAlignmentCenter];
     [nextWeekSelectView addSubview:nextTitleLabel];
     
-    UIButton *nextLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 10, 32, 24)];
+    UIButton *nextLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(screenWidth/7.2,  nextWeekSelectView.frame.size.height/2-4, 5, 8)];
     [nextLeftButton setImage:[UIImage imageNamed:@"icon_previous"] forState:UIControlStateNormal];
     [nextLeftButton setAlpha:0.7];
     [nextLeftButton addTarget:self action:@selector(setPreviousMonthDate) forControlEvents:UIControlEventTouchUpInside];
     [nextWeekSelectView addSubview:nextLeftButton];
     
-    UIButton *nextRightButton = [[UIButton alloc] initWithFrame:CGRectMake(nextWeekSelectView.frame.size.width - 37, 10, 32, 24)];
+    UIButton *nextRightButton = [[UIButton alloc] initWithFrame:CGRectMake(nextWeekSelectView.frame.size.width - screenWidth/7.2-10, nextWeekSelectView.frame.size.height/2-4, 5, 8)];
     [nextRightButton setImage:[UIImage imageNamed:@"icon_next"] forState:UIControlStateNormal];
     [nextRightButton setAlpha:0.7];
     [nextRightButton addTarget:self action:@selector(setNextMonthDate) forControlEvents:UIControlEventTouchUpInside];
@@ -186,12 +195,12 @@
     [titleLabel setTextAlignment:NSTextAlignmentCenter];
     [weekSelectView addSubview:titleLabel];
     
-    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 10, 32, 24)];
+    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(screenWidth/7.2, weekSelectView.frame.size.height/2-4, 5, 8)];
     [leftButton setImage:[UIImage imageNamed:@"icon_previous"] forState:UIControlStateNormal];
     [leftButton addTarget:self action:@selector(setPreviousMonthDate) forControlEvents:UIControlEventTouchUpInside];
     [weekSelectView addSubview:leftButton];
     
-    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(weekSelectView.frame.size.width - 37, 10, 32, 24)];
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(weekSelectView.frame.size.width - screenWidth/7.2-10, weekSelectView.frame.size.height/2-4, 5, 8)];
     [rightButton setImage:[UIImage imageNamed:@"icon_next"] forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(setNextMonthDate) forControlEvents:UIControlEventTouchUpInside];
     [weekSelectView addSubview:rightButton];
@@ -262,6 +271,7 @@
         NSDictionary *dic=[array objectAtIndex:i];
         NSLog(@"dic====>%@",[dic objectForKey:@"man"]);
         int man=[(NSNumber *)[dic objectForKey:@"man"] intValue];
+        int status=[(NSNumber *)[dic objectForKey:@"status"] intValue];
         int paddingwidth=screenWidth/12.8;
         int offset=screenWidth/22;
         int x=offset+(screenWidth/9.5+paddingwidth)*i;
@@ -296,6 +306,9 @@
         UITapGestureRecognizer *getsure=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(timeGesture:)];
         [timeLabel addGestureRecognizer:getsure];
         [timeLabel setUserInteractionEnabled:YES];
+        if(status!=1){
+            [timeLabel setTextColor:[UIColor grayColor]];
+        }
         [nowWeekView addSubview:timeLabel];
         [timeLabelArray addObject:timeLabel];
     }
@@ -313,10 +326,48 @@
     [self setHidden:NO];
 }
 -(void)setPreviousMonthDate{
-    NSLog(@"setPreviousMonthDate");
+    for(UILabel *label in timeLabelArray){
+        [label removeFromSuperview];
+    }
+    if(isNowWeek){
+        isNowWeek=NO;
+        [self changeDataRes:@"next_week"];
+        [nextTitleLabel setText:@"本周"];
+        [titleLabel setText:@"下周"];
+        
+        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
+        
+    }else{
+        isNowWeek=YES;
+        [nextTitleLabel setText:@"下周"];
+        [titleLabel setText:@"本周"];
+        
+        [self changeDataRes:@"now_week"];
+        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
+    }
 }
 -(void)setNextMonthDate{
     NSLog(@"setNextMonthDate");
+    for(UILabel *label in timeLabelArray){
+        [label removeFromSuperview];
+    }
+    if(isNowWeek){
+        isNowWeek=NO;
+        [self changeDataRes:@"next_week"];
+        [nextTitleLabel setText:@"本周"];
+        [titleLabel setText:@"下周"];
+
+        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
+
+    }else{
+        isNowWeek=YES;
+        [nextTitleLabel setText:@"下周"];
+        [titleLabel setText:@"本周"];
+
+        [self changeDataRes:@"now_week"];
+        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
+    }
+
 }
 -(void)timeGesture:(UITapGestureRecognizer *)getsure{
     NSInteger *selectId=(NSInteger *)getsure.view.tag;

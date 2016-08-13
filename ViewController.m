@@ -148,7 +148,7 @@
                                    if(add==0){
                                        selectArray=[model.result mutableCopy];
                                        [refreshHeader endRefreshing];
-
+                                      
                                     }else{
                                         NSMutableArray *data=[model.result mutableCopy];
                                         [refreshFooter endRefreshing];
@@ -212,9 +212,11 @@
 }
 -(void)hidBack{
     [cityLabel setHidden:YES];
+    [vi setFrame:CGRectMake(0, _topView.frame.size.height+_topView.frame.origin.y+5, swidth, sheight-(_topView.frame.size.height+_topView.frame.origin.y+5)-titleHeight)];
 }
 -(void)showBack{
     [cityLabel setHidden:NO];
+    [vi setFrame:CGRectMake(0, _topView.frame.size.height+_topView.frame.origin.y+5, swidth, sheight-(_topView.frame.size.height+_topView.frame.origin.y+5))];
 }
 -(void)disMiss
 {

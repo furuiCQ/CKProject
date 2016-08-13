@@ -50,12 +50,12 @@
         [goImage setUserInteractionEnabled:YES];
          [self addSubview:goImage];
         
-        moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(goImage.frame.origin.x-goImage.frame.size.width-width/26.7*2, width/21, width/26.7*2, width/26.7)];
+        moreLabel=[[UILabel alloc]initWithFrame:CGRectMake(goImage.frame.origin.x-goImage.frame.size.width-width/26.7*2, width/21, width/30*2, width/22.8)];
         [moreLabel setText:@"全部"];
         [moreLabel setUserInteractionEnabled:YES];
-        [moreLabel setFont:[UIFont systemFontOfSize:width/26.7]];
-        [moreLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
-       // [self addSubview:moreLabel];
+        [moreLabel setFont:[UIFont systemFontOfSize:width/30]];
+        [moreLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
+        [self addSubview:moreLabel];
         
        // frame.size.height=width*3/4;
         self.frame=frame;

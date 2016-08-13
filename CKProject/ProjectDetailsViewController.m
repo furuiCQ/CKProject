@@ -102,6 +102,7 @@
     
     //share
     NSDictionary* popJson;
+    
 
 }
 @end
@@ -381,7 +382,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
 }
 -(void)openTimeSelectPicker{
-    
     [self initTimePicker];
     [CustomPopView addViewAndShow:picker];
 }
@@ -392,12 +392,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 -(void)initImageScrollView:(UIView *)topView{
     //    图片中数
     int width=self.view.frame.size.width;
-    
     // totalCount = 1;
-    
     imageScrollview=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, width, width/1.6)];
     //  CGRect bounds = scrollview.frame;  //获取界面区域
-    
     // pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, bounds.size.height, bounds.size.width, 30)];
     // pageControl.numberOfPages = totalCount;//总的图片页数
     //    图片的宽
@@ -426,15 +423,15 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     CGFloat contentW = totalCount *imageW;
     //不允许在垂直方向上进行滚动
     imageScrollview.contentSize = CGSizeMake(contentW, 0);
-    
     //    3.设置分页
     imageScrollview.pagingEnabled = YES;
     [imageScrollview setTag:2];
     
     //    4.监听scrollview的滚动
     imageScrollview.delegate = self;
-    [scrollView addSubview:imageScrollview];
+    [self addTimer];
     
+    [scrollView addSubview:imageScrollview];
     
 }
 // scrollview滚动的时候调用
@@ -452,14 +449,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     //    关闭定时器(注意点; 定时器一旦被关闭,无法再开启)
-    //    [self.timer invalidate];
+   // [self.timer invalidate];
     [self removeTimer];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     //    开启定时器
-    //  [self addTimer];
+     [self addTimer];
 }
 
 /**
@@ -486,8 +483,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     {
         page++;
     }
-    
-    
     //  滚动scrollview
     CGFloat x = page * imageScrollview.frame.size.width;
     imageScrollview.contentOffset = CGPointMake(x, 0);
@@ -495,65 +490,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 -(void)setSelect{
     selected=true;
-}
-
--(void)goOrderViewController{
-    if ([timeShowLabel.text isEqualToString:@""]) {
-        [self openTimeSelectPicker];
-    }
-    
-    if ([timeShowLabel.text isEqualToString:@"本周日"]||[timeShowLabel.text isEqualToString:@"本周六"]||[timeShowLabel.text isEqualToString:@"本周五"]||[timeShowLabel.text isEqualToString:@"本周四"]||[timeShowLabel.text isEqualToString:@"本周三"]||[timeShowLabel.text isEqualToString:@"本周二"]||[timeShowLabel.text isEqualToString:@"本周一"]||[timeShowLabel.text isEqualToString:@"下周一"]||[timeShowLabel.text isEqualToString:@"下周二"]||[timeShowLabel.text isEqualToString:@"下周三"]||[timeShowLabel.text isEqualToString:@"下周四"]||[timeShowLabel.text isEqualToString:@"下周五"]||[timeShowLabel.text isEqualToString:@"下周六"]||[timeShowLabel.text isEqualToString:@"下周日"]) {
-        UIAlertView * vi=[[UIAlertView alloc]initWithTitle:@"提示" message:@"请选择具体时间" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
-        [vi show];
-    }else{
-        AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
-        if (isCancel) {
-            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-            dispatch_async(queue, ^{
-                //
-                //            +(void)deleteMyLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBeginTime:(NSString *) begintime withadvancetime:(NSNumber *)advancetime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture
-                //        [HttpHelper deleteMyLesson:L_ID withWeekId:WEEK_ID withWeekNum:WEEK_NUM withBeginTime:ORDER_TIME withadvancetime:(NSNumber *) withModel:myDelegate.model success:^(HttpModel *model) {
-                //
-                //        } failure:^(NSError *error) {
-                //
-                //        }];
-                [HttpHelper deleteMyLesson:L_ID withWeekId:WEEK_ID withWeekNum:WEEK_NUM withBeginTime:ORDER_TIME withModel:myDelegate.model success:^(HttpModel *model){
-                    NSLog(@"%@",model.message);
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                            //dataArray=[(NSMutableArray *)model.result mutableCopy];
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                
-                                
-                            });
-                            
-                            
-                        }else{
-                            
-                        }
-                        [self dismissViewControllerAnimated:YES completion:^{
-                            NSNotification *notification =[NSNotification notificationWithName:@"refresh" object:nil];
-                            [[NSNotificationCenter defaultCenter] postNotification:notification];
-                            NSNotification *notification2 =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
-                            [[NSNotificationCenter defaultCenter] postNotification:notification2];
-                        }];
-                        
-                        
-                        
-                    });
-                }failure:^(NSError *error){
-                    if (error.userInfo!=nil) {
-                        NSLog(@"%@",error.userInfo);
-                    }
-                }];
-            });
-        }else{
-            
-        }
-    }
-}
--(void)cancelProject{
-    
 }
 -(void)collectOnClick{
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
