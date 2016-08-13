@@ -77,16 +77,6 @@
     [vi registerNib:[UINib nibWithNibName:@"okCell" bundle:nil] forCellReuseIdentifier:@"cell"];
     [self.view addSubview:vi];
     
-    //添加刷新
-//    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
-//    [_refreshControl setTintColor:[UIColor grayColor]];
-//    
-//    [_refreshControl addTarget:self
-//                        action:@selector(refreshView:)
-//              forControlEvents:UIControlEventValueChanged];
-//    [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
-//    [vi addSubview:_refreshControl];
-    
     refreshFooter=[[YiRefreshFooter alloc] init];
     refreshFooter.scrollView=vi;
     [refreshFooter footer];
