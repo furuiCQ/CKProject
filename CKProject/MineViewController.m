@@ -48,7 +48,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     UIView *bgView;
     UIView *pickerTopView;
     NSString *selectCity;
-    
 }
 
 @end
@@ -78,6 +77,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"refresh_userInfo" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeSliding) name:@"closeSliding" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"login" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLogoutStauets) name:@"logout" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
@@ -92,6 +92,12 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         [self changeLoginStauets];
     }
     // Do any additional setup after loading the view, typically from a nib.
+}
+#define RightWidth ([[UIScreen mainScreen] bounds].size.width*6/7)
+-(void)closeSliding{
+    if(slideMenu.scrollEnabled && slideMenu.contentOffset.x>(self.view.frame.size.width+RightWidth)){
+        [slideMenu navRightBtAction];
+    }
 }
 //-(void)viewWillAppear:(BOOL)animated
 //{

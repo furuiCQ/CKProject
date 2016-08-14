@@ -157,9 +157,12 @@
         [btn isCheck];
         [self setSelectedIndex:btn.tag];
         _lastSelectedIndex=btn.tag;
-
     }
-    
+
+    if(btn.tag!=4){
+        NSNotification *notification =[NSNotification notificationWithName:@"closeSliding" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }
 }
 -(void)initCustomTabBar
 {
