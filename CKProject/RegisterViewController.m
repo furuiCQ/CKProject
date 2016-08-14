@@ -419,7 +419,7 @@ int secondsCountDown; //倒计时总时长
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.frame.size.height+titleLabel.frame.origin.y+width/6.4, width, width/3)];
     [self.view addSubview:view];
     
-    NSArray *otherArray= [NSArray arrayWithObjects:@"微博",@"微信",@"QQ", nil];
+    NSArray *otherArray= [NSArray arrayWithObjects:@"微信",@"QQ",@"微博", nil];
     NSArray *imageArray= [NSArray arrayWithObjects:@"wx_logo",@"qq_logo",@"weibo_logo", nil];
     
     
@@ -440,15 +440,15 @@ int secondsCountDown; //倒计时总时长
         [label setFont:[UIFont systemFontOfSize:width/32]];
         [control addSubview:label];
         
-        if (![WXApi isWXAppInstalled] && i==1) {
+        if (![WXApi isWXAppInstalled] && i==0) {
            [control setHidden:YES];
             
         }
-        if (![WeiboSDK isWeiboAppInstalled] && i==0) {
+        if (![WeiboSDK isWeiboAppInstalled] && i==2) {
            [control setHidden:YES];
             
         }
-        if (![TencentOAuth iphoneQQInstalled] && i==2) {
+        if (![TencentOAuth iphoneQQInstalled] && i==1) {
           [control setHidden:YES];
         }
         

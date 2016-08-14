@@ -181,10 +181,10 @@ TencentOAuth *tencentOAuth;
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.frame.size.height+titleLabel.frame.origin.y+width/6.4, width, width/3)];
     [self.view addSubview:view];
     
-    NSArray *otherArray= [NSArray arrayWithObjects:@"微博",@"微信",@"QQ", nil];
+    NSArray *otherArray= [NSArray arrayWithObjects:@"微信",@"QQ",@"微博", nil];
     NSArray *imageArray= [NSArray arrayWithObjects:@"wx_logo",@"qq_logo",@"weibo_logo", nil];
     
-    
+
     
     for (int i=0; i<[otherArray count]; i++) {
         UIControl *control=[[UIControl alloc]initWithFrame:CGRectMake(width/3*i, 0, width/3, width/3)];
@@ -200,28 +200,28 @@ TencentOAuth *tencentOAuth;
         [label setText:[otherArray objectAtIndex:i]];
         [label setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
         [label setFont:[UIFont systemFontOfSize:width/32]];
-        //  [control addSubview:label];
+        [control addSubview:label];
         
-        if (![WXApi isWXAppInstalled] && i==1) {
-            // [control setHidden:YES];
-            
-        }
-        if (![WeiboSDK isWeiboAppInstalled] && i==0) {
+        if (![WXApi isWXAppInstalled] && i==0) {
             [control setHidden:YES];
             
         }
-        if (![TencentOAuth iphoneQQInstalled] && i==2) {
-            //   [control setHidden:YES];
+        if (![WeiboSDK isWeiboAppInstalled] && i==2) {
+            [control setHidden:YES];
+            
+        }
+        if (![TencentOAuth iphoneQQInstalled] && i==1) {
+            [control setHidden:YES];
         }
         
         
         [view addSubview:control];
     }
     if(![WXApi isWXAppInstalled] && ![WeiboSDK isWeiboAppInstalled] && ![TencentOAuth iphoneQQInstalled]){
-        // [line1View setHidden:YES];
-        //   [titleLabel setHidden:YES];
-        //     [line2View setHidden:YES];
-        //   [view setHidden:YES];
+        [line1View setHidden:YES];
+        [titleLabel setHidden:YES];
+        [line2View setHidden:YES];
+        [view setHidden:YES];
         
         
     }
@@ -395,7 +395,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
             break;
         case 2:
             [self goRegisterViewController];
-
+            
             break;
             
         default:
@@ -499,7 +499,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
                     Othernickname=nickname;
                     Othertoken=token;
                     Othertype=type;
-
+                    
                 }
             }
             [ProgressHUD dismiss];
