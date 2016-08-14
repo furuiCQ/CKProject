@@ -28,6 +28,8 @@
 @property double latitude;//纬度
 @property double longitude;//经度
 @property NSNumber *localNumber;//当前aid
+@property NSString *cityName;//省市名称
+@property NSString *areaName; //区县名
 @property BOOL isLogin;
 @property TencentOAuth *QQauth; 
 

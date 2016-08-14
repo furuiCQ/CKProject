@@ -1224,6 +1224,11 @@ static NSString *identy = @"OrderRecordCell";
                 NSNumber *_selectCityId=[formater numberFromString:cityStr];
                 AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 myDelegate.localNumber=_selectCityId;
+                myDelegate.cityName=cityString;
+                [[CCLocationManager shareLocation]getAddress:^(NSString *address) {
+                    NSLog(@"地区:%@",address);
+                    myDelegate.areaName=address;
+                }];
 
             }else{
                 AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];

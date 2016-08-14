@@ -892,6 +892,22 @@
         failture(error);
     }];
 }
++(void)searchData:(NSNumber *)aid  withCid:(NSNumber *)cid withPid:(NSNumber *)pid withGid:(NSNumber *)gid withPc:(NSNumber *)pc withPn:(NSNumber *)pn withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{ @"name": @"aid", @"value": aid},
+                            @{ @"name": @"cid", @"value": cid},
+                            @{ @"name": @"pid", @"value": pid},
+                            @{ @"name": @"gid", @"value": gid},
+                            @{ @"name": @"pn", @"value": pn},
+                            @{ @"name": @"pc", @"value": pc},
+                            @{ @"name": @"lng", @"value": lng},
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": status},];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
 +(void)searchData:(NSNumber *)aid withData:(NSString *)data withDate:(NSString *)date withCid:(NSNumber *)cid withPid:(NSNumber *)pid withGid:(NSNumber *)gid withPc:(NSNumber *)pc withPn:(NSNumber *)pn success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{ @"name": @"aid", @"value": aid},
                             @{ @"name": @"datas", @"value": date},
@@ -1302,7 +1318,7 @@
 
 +(void)postParems:(NSArray *)parameters withUrl:(NSString *)url success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture
 {
-    NSLog(@"请求地址:%@",url);
+  //  NSLog(@"请求地址:%@",url);
     
     //根据url初始化request
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];
@@ -1350,7 +1366,7 @@
     
     NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] >=200&&[urlResponese statusCode]<300){
-        NSLog(@"返回结果=====%@",result);
+       // NSLog(@"返回结果=====%@",result);
         if (resultData!=nil) {
             NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:resultData options:kNilOptions error:&error];
             if (error) {

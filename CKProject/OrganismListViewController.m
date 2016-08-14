@@ -208,46 +208,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 
 
--(void)initSelectView{
-    int width= self.view.frame.size.width;
-    UIView *marginview=[[UIView alloc] initWithFrame:CGRectMake(0, titleHeight+20+0.5, width, titleHeight*3/4)];
-    [marginview setUserInteractionEnabled:YES];
-    [marginview setBackgroundColor:[UIColor whiteColor]];
-    
-    UIView *view=[[UIView alloc] initWithFrame:CGRectMake(width/40,0,width-width/20, titleHeight*3/4)];
-    [view setBackgroundColor:[UIColor whiteColor]];
-    
-    place1=[[UILabel alloc]initWithFrame:CGRectMake(width/11, 0,view.frame.size.width/4, marginview.frame.size.height)];
-    place1.text=@"";
-    place1.textColor=[UIColor redColor];
-    place1.font=[UIFont systemFontOfSize:width/29];
-    [view addSubview:place1];
-    
-    
-    
-//    NSArray *titleArray= [NSArray arrayWithObjects:@"区域",@"距离",@"热门",@"筛选", nil];
-//    NSArray *imgArray=[NSArray arrayWithObjects:@"demotion_logo",@"demotion_logo",@"demotion_logo",@"screen_logo", nil];
-//    NSArray *unimgArray=[NSArray arrayWithObjects:@"undemotion_logo",@"undemotion_logo",@"undemotion_logo",@"screen_logo", nil];
-//    修改后的
-    NSArray *titleArray= [NSArray arrayWithObjects:@"星级",@"热门",@"筛选", nil];
-    NSArray *imgArray=[NSArray arrayWithObjects:@"demotion_logo",@"demotion_logo",@"screen_logo", nil];
-    NSArray *unimgArray=[NSArray arrayWithObjects:@"undemotion_logo",@"undemotion_logo",@"screen_logo", nil];
-    for(int i=0;i<3;i++){
-        DemotionControl *subView=[[DemotionControl alloc]initWithFrame:CGRectMake(view.frame.size.width/4*i+width/4, 0,view.frame.size.width/4, marginview.frame.size.height)];
-        [subView setUserInteractionEnabled:YES];
-        [subView setTag:i];
-        [subView addTarget:self action:@selector(topOnClick:) forControlEvents:UIControlEventTouchUpInside];
-        CGRect frame=self.view.frame;
-        [subView initView:&frame withTag:i];
-        [subView.textLabel setText:[titleArray objectAtIndex:i]];
-        [subView.userLogo setImage:[UIImage imageNamed:[unimgArray objectAtIndex:i]] forState:UIControlStateNormal];
-        [subView.userLogo setImage:[UIImage imageNamed:[imgArray objectAtIndex:i]] forState:UIControlStateSelected];
-        [view addSubview:subView];
-    }
-    [marginview addSubview:view];
-    [self.view addSubview:marginview];
-}
-
 -(void)topOnClick:(id)sender{
     DemotionControl *btn=(DemotionControl *)sender;
     
@@ -269,8 +229,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 NSArray *sortArray=[timeSortArray sortedArrayUsingDescriptors:sortDescriptors];
                 tableArray=sortArray;
                 [projectTableView reloadData];
-                
-                
             }else{
                 //  [self deleteProject];
                 
@@ -303,7 +261,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             break;
         case 2:
         {
-            [self inPopView];
+        //    [self inPopView];
             
         }
             break;
@@ -312,141 +270,141 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
 }
 
--(void)inPopView{
-    int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:titleView];
-    
-    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-    [cancelLabel setText:@"取消"];
-    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-    [cancelLabel setUserInteractionEnabled:YES];
-    [cancelLabel setTag:0];
-    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-    [cancelLabel addGestureRecognizer:cancelGesture];
-    [titleView addSubview:cancelLabel];
-    
-    
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-    [titleLabel setText:@"筛选"];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-    [titleView addSubview:titleLabel];
-    
-    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
-    [confirmLabel setText:@"确定"];
-    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
-    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
-    [confirmLabel setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout:)];
-    [confirmLabel addGestureRecognizer:confrimGesture];
-    [titleView addSubview:confirmLabel];
-    
-    UIView *localBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46, view.frame.size.width, width/10)];
-    [localBgView setBackgroundColor:[UIColor whiteColor]];
-    UITapGestureRecognizer *addressGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allAddress)];
-    [localBgView addGestureRecognizer:addressGestrue];
-    [localBgView setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:localBgView];
-    
-    
-    UILabel *localLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (localBgView.frame.size.height-width/26)/2, width/4, width/26)];
-    [localLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    [localLabel setText:place1.text];
-    [localLabel setFont:[UIFont systemFontOfSize:width/26]];
-    [localBgView addSubview:localLabel];
-    
-    localNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (localBgView.frame.size.height-width/29)/2, localBgView.frame.size.width*2/3, width/29)];
-    [localNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    [localNowLabel setText:addressString];
-    [localNowLabel setTextAlignment:NSTextAlignmentRight];
-    [localNowLabel setFont:[UIFont systemFontOfSize:width/29]];
-    [localBgView addSubview:localNowLabel];
-    
-    UIImageView *rightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+localBgView.frame.size.width*3/4, (localBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
-    
-    [rightLabel setImage:[UIImage imageNamed:@"right_logo"]];
-    [localBgView addSubview:rightLabel];
-    
-    
-    UIView *allSortBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46+width/10+width/40, view.frame.size.width, width/10)];
-    [allSortBgView setBackgroundColor:[UIColor whiteColor]];
-    [allSortBgView setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *allTypeGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allType)];
-    [allSortBgView addGestureRecognizer:allTypeGestrue];
-    [view addSubview:allSortBgView];
-    
-    
-    allSortLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (allSortBgView.frame.size.height-width/26)/2, width/2, width/26)];
-    [allSortLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    [allSortLabel setText:@"全部分类"];
-    [allSortLabel setFont:[UIFont systemFontOfSize:width/26]];
-    [allSortBgView addSubview:allSortLabel];
-    
-    typeNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (allSortBgView.frame.size.height-width/29)/2, allSortBgView.frame.size.width*2/3, width/29)];
-    [typeNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    [typeNowLabel setText:typeString];
-    [typeNowLabel setTextAlignment:NSTextAlignmentRight];
-    [typeNowLabel setFont:[UIFont systemFontOfSize:width/29]];
-    [allSortBgView addSubview:typeNowLabel];
-    
-    UIImageView *allrightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+allSortBgView.frame.size.width*3/4, (allSortBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
-    [allrightLabel setImage:[UIImage imageNamed:@"right_logo"]];
-    [allrightLabel setUserInteractionEnabled:NO];
-    [allSortBgView addSubview:allrightLabel];
-    
-    
-    
-    UIView *starBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46+width/10+width/40+width/10, view.frame.size.width, width/10)];
-    [starBgView setBackgroundColor:[UIColor whiteColor]];
-    UITapGestureRecognizer *starGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showStar)];
-    [starBgView addGestureRecognizer:starGestrue];
-    [view addSubview:starBgView];
-    
-    
-    UILabel *starLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (starBgView.frame.size.height-width/26)/2, width/26*2, width/26)];
-    [starLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
-    [starLabel setText:@"星级"];
-    [starLabel setFont:[UIFont systemFontOfSize:width/26]];
-    [starBgView addSubview:starLabel];
-    
-    
-    
-    UIImageView *starrightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+starBgView.frame.size.width*3/4, (starBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
-    [starrightLabel setImage:[UIImage imageNamed:@"right_logo"]];
-    [starrightLabel setUserInteractionEnabled:NO];
-    [starBgView addSubview:starrightLabel];
-    
-   starNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (starBgView.frame.size.height-width/29)/2, starBgView.frame.size.width*2/3, width/29)];
-    [starNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
-    [starNowLabel setText:starString];
-    [starNowLabel setTextAlignment:NSTextAlignmentRight];
-    [starNowLabel setFont:[UIFont systemFontOfSize:width/29]];
-    [starBgView addSubview:starNowLabel];
-    
-    
-    
-    
-    firstLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-    firstLayout.width=view.frame.size.width;
-    firstLayout.contentView=view;
-    firstLayout.delegate=self;
-    [firstLayout setTag:0];
-    [self.view addSubview:firstLayout];
-    
-    firstLayout.openFromRight = YES;
-    [firstLayout openDrawer];
-    
-    
-}
+//-(void)inPopView{
+//    int width=self.view.frame.size.width;
+//    int hegiht=self.view.frame.size.height;
+//    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
+//    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+//    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
+//    [titleView setBackgroundColor:[UIColor whiteColor]];
+//    [view addSubview:titleView];
+//    
+//    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
+//    [cancelLabel setText:@"取消"];
+//    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
+//    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
+//    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
+//    [cancelLabel setUserInteractionEnabled:YES];
+//    [cancelLabel setTag:0];
+//    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
+//    [cancelLabel addGestureRecognizer:cancelGesture];
+//    [titleView addSubview:cancelLabel];
+//    
+//    
+//    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
+//    [titleLabel setText:@"筛选"];
+//    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+//    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
+//    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
+//    [titleView addSubview:titleLabel];
+//    
+//    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/10-width/40, width/20+1, width/22*2, width/23)];
+//    [confirmLabel setText:@"确定"];
+//    [confirmLabel setTextAlignment:NSTextAlignmentCenter];
+//    [confirmLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
+//    [confirmLabel setFont:[UIFont systemFontOfSize:width/23]];
+//    [confirmLabel setUserInteractionEnabled:YES];
+//    UITapGestureRecognizer *confrimGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(confirmDrawLayout:)];
+//    [confirmLabel addGestureRecognizer:confrimGesture];
+//    [titleView addSubview:confirmLabel];
+//    
+//    UIView *localBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46, view.frame.size.width, width/10)];
+//    [localBgView setBackgroundColor:[UIColor whiteColor]];
+//    UITapGestureRecognizer *addressGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allAddress)];
+//    [localBgView addGestureRecognizer:addressGestrue];
+//    [localBgView setBackgroundColor:[UIColor whiteColor]];
+//    [view addSubview:localBgView];
+//    
+//    
+//    UILabel *localLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (localBgView.frame.size.height-width/26)/2, width/4, width/26)];
+//    [localLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+//    [localLabel setText:place1.text];
+//    [localLabel setFont:[UIFont systemFontOfSize:width/26]];
+//    [localBgView addSubview:localLabel];
+//    
+//    localNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (localBgView.frame.size.height-width/29)/2, localBgView.frame.size.width*2/3, width/29)];
+//    [localNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
+//    [localNowLabel setText:addressString];
+//    [localNowLabel setTextAlignment:NSTextAlignmentRight];
+//    [localNowLabel setFont:[UIFont systemFontOfSize:width/29]];
+//    [localBgView addSubview:localNowLabel];
+//    
+//    UIImageView *rightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+localBgView.frame.size.width*3/4, (localBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
+//    
+//    [rightLabel setImage:[UIImage imageNamed:@"right_logo"]];
+//    [localBgView addSubview:rightLabel];
+//    
+//    
+//    UIView *allSortBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46+width/10+width/40, view.frame.size.width, width/10)];
+//    [allSortBgView setBackgroundColor:[UIColor whiteColor]];
+//    [allSortBgView setUserInteractionEnabled:YES];
+//    UITapGestureRecognizer *allTypeGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(allType)];
+//    [allSortBgView addGestureRecognizer:allTypeGestrue];
+//    [view addSubview:allSortBgView];
+//    
+//    
+//    allSortLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (allSortBgView.frame.size.height-width/26)/2, width/2, width/26)];
+//    [allSortLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+//    [allSortLabel setText:@"全部分类"];
+//    [allSortLabel setFont:[UIFont systemFontOfSize:width/26]];
+//    [allSortBgView addSubview:allSortLabel];
+//    
+//    typeNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (allSortBgView.frame.size.height-width/29)/2, allSortBgView.frame.size.width*2/3, width/29)];
+//    [typeNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
+//    [typeNowLabel setText:typeString];
+//    [typeNowLabel setTextAlignment:NSTextAlignmentRight];
+//    [typeNowLabel setFont:[UIFont systemFontOfSize:width/29]];
+//    [allSortBgView addSubview:typeNowLabel];
+//    
+//    UIImageView *allrightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+allSortBgView.frame.size.width*3/4, (allSortBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
+//    [allrightLabel setImage:[UIImage imageNamed:@"right_logo"]];
+//    [allrightLabel setUserInteractionEnabled:NO];
+//    [allSortBgView addSubview:allrightLabel];
+//    
+//    
+//    
+//    UIView *starBgView=[[UIView alloc]initWithFrame:CGRectMake(0, width/10+2+width/40+width/46+width/10+width/40+width/10, view.frame.size.width, width/10)];
+//    [starBgView setBackgroundColor:[UIColor whiteColor]];
+//    UITapGestureRecognizer *starGestrue=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showStar)];
+//    [starBgView addGestureRecognizer:starGestrue];
+//    [view addSubview:starBgView];
+//    
+//    
+//    UILabel *starLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, (starBgView.frame.size.height-width/26)/2, width/26*2, width/26)];
+//    [starLabel setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+//    [starLabel setText:@"星级"];
+//    [starLabel setFont:[UIFont systemFontOfSize:width/26]];
+//    [starBgView addSubview:starLabel];
+//    
+//    
+//    
+//    UIImageView *starrightLabel=[[UIImageView alloc]initWithFrame:CGRectMake(width/20+width/26*2+starBgView.frame.size.width*3/4, (starBgView.frame.size.height-width/29)/2, width/45.7, width/29)];
+//    [starrightLabel setImage:[UIImage imageNamed:@"right_logo"]];
+//    [starrightLabel setUserInteractionEnabled:NO];
+//    [starBgView addSubview:starrightLabel];
+//    
+//   starNowLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20+width/26*2, (starBgView.frame.size.height-width/29)/2, starBgView.frame.size.width*2/3, width/29)];
+//    [starNowLabel setTextColor:[UIColor colorWithRed:250.f/255.f green:113.f/255.f blue:34.f/255.f alpha:1.0]];
+//    [starNowLabel setText:starString];
+//    [starNowLabel setTextAlignment:NSTextAlignmentRight];
+//    [starNowLabel setFont:[UIFont systemFontOfSize:width/29]];
+//    [starBgView addSubview:starNowLabel];
+//    
+//    
+//    
+//    
+//    firstLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
+//    firstLayout.width=view.frame.size.width;
+//    firstLayout.contentView=view;
+//    firstLayout.delegate=self;
+//    [firstLayout setTag:0];
+//    [self.view addSubview:firstLayout];
+//    
+//    firstLayout.openFromRight = YES;
+//    [firstLayout openDrawer];
+//    
+//    
+//}
 -(void)showStar{
     int width=self.view.frame.size.width;
     int hegiht=self.view.frame.size.height;

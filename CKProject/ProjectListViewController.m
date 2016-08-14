@@ -27,7 +27,7 @@
 #import "YiRefreshHeader.h"
 #import "YiRefreshFooter.h"
 
-@interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,TreeTableCellDelegate,CLLocationManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
+@interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,CLLocationManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
     NSArray *local1Array;
     NSArray *local2Array;
     NSArray *local3Array;
@@ -51,7 +51,7 @@
     NSNumber *pid;
     NSNumber *gid;
     
-    NSNumber *selectSuperId;
+    //   NSNumber *selectSuperId;
     
     double localLat;
     double localLng;
@@ -85,6 +85,24 @@
     
     NSArray *selectImageArray;
     NSArray *normalImageArray;
+    //
+    UIImageView *hotImageView;
+    UIImageView *hot2ImageView;
+    //定位
+    UILabel *localLabel;
+    NSMutableArray *typeAllArray;
+    NSMutableArray *cityAllArray;
+    NSMutableArray *gradeAllArray;
+    
+    NSNumber *selectCid;
+    NSNumber *selectPid;
+    NSNumber *selectGid;
+    NSNumber *selectAid;
+    UIAlertView *alertView;
+    
+    
+    BOOL isSift;
+    BOOL isHot;
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
 @end
@@ -130,6 +148,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     imageViewArray=[[NSMutableArray alloc]init];
     timeSortArray=[[NSMutableArray alloc]init];
     selcedIdArray=[[NSMutableArray alloc]init];
+    typeAllArray=[[NSMutableArray alloc]init];
+    cityAllArray=[[NSMutableArray alloc]init];
+    gradeAllArray=[[NSMutableArray alloc]init];
+    
     aid=[[NSNumber alloc]init];
     cid=[NSNumber numberWithInt:0];
     gid=[NSNumber numberWithInt:0];
@@ -159,7 +181,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         [self getData];
     }
     [self inPopView];
-
+    
 }
 
 -(void)tit
@@ -191,9 +213,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     NSUserDefaults *src=[NSUserDefaults standardUserDefaults];
     NSString *bt1=[src objectForKey:@"kp"];
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?date=%@&lng=%f&lat=%f&status=2&pn=%d&pc=10",bt1,
-                   myDelegate.longitude,myDelegate.latitude,pageNumb];
-   // http://211.149.190.90/api/searchs?date=2016-08-07&lng=106.674072&lat=29.510639&status=2&pn=1&pc=10
+    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?date=%@&lng=%f&lat=%f&status=2&pn=%d&pc=10",bt1,myDelegate.longitude,myDelegate.latitude,pageNumb];
     NSURL *url=[NSURL URLWithString:str];
     NSURLRequest *request=[NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
@@ -257,9 +277,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [marginview setUserInteractionEnabled:YES];
     [marginview setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self.view addSubview:marginview];
-    
-    UILabel *localLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/3, width/7)];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    localLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/3, width/7)];
     [localLabel setText:@"正在定位.."];
+    if(myDelegate.areaName){
+        [localLabel setText:myDelegate.areaName];
+    }else if(myDelegate.cityName){
+        [localLabel setText:myDelegate.cityName];
+    }
     [localLabel setBackgroundColor:[UIColor whiteColor]];
     [localLabel setFont:[UIFont systemFontOfSize:width/24.6]];
     [localLabel setTextAlignment:NSTextAlignmentCenter];
@@ -268,11 +293,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     UIControl *hotControl=[[UIControl alloc]initWithFrame:CGRectMake(localLabel.frame.size.width+0.3, 0, width/3-0.2, width/7)];
     [hotControl setTag:0];
     [hotControl setUserInteractionEnabled:YES];
-    [hotControl addTarget:self action:@selector(topOnClick:) forControlEvents:UIControlEventTouchUpInside];
-    UIImageView *hotImageView=[[UIImageView alloc]initWithFrame:CGRectMake(hotControl.frame.size.width-width/11.6-width/29, width/7/2-width/45.7-1, width/29, width/45.7)];
+    [hotControl addTarget:self action:@selector(sortData) forControlEvents:UIControlEventTouchUpInside];
+    hotImageView=[[UIImageView alloc]initWithFrame:CGRectMake(hotControl.frame.size.width-width/11.6-width/29, width/7/2-width/45.7-1, width/29, width/45.7)];
     [hotControl setBackgroundColor:[UIColor whiteColor]];
     [hotImageView setImage:[UIImage imageNamed:@"red_up"]];
-    UIImageView *hot2ImageView=[[UIImageView alloc]initWithFrame:CGRectMake(hotControl.frame.size.width-width/11.6-width/29, width/7/2+1, width/29, width/45.7)];
+    hot2ImageView=[[UIImageView alloc]initWithFrame:CGRectMake(hotControl.frame.size.width-width/11.6-width/29, width/7/2+1, width/29, width/45.7)];
     [hot2ImageView setImage:[UIImage imageNamed:@"red_down"]];
     
     UILabel *hotLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/8.7, 0, width/24.6*2, width/7)];
@@ -301,50 +326,89 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [siftCotrol addSubview:siftImageView];
     [marginview addSubview:siftCotrol];
 }
--(void)topOnClick:(id)sender{
-    DemotionControl *btn=(DemotionControl *)sender;
-    
-    switch (btn.tag) {
-            
-        case 0:
-            
-        {
-            
-            btn.userLogo.selected=!btn.userLogo.selected;//每次点击都改变按钮的状态
-            
-            if(btn.userLogo.selected){
-                timeSortArray=[tableArray mutableCopy];
-                NSSortDescriptor* sorter=[[NSSortDescriptor alloc]initWithKey:@"people" ascending:NO];
-                NSMutableArray *sortDescriptors=[[NSMutableArray alloc]initWithObjects:&sorter count:1];
-                NSArray *sortArray=[timeSortArray sortedArrayUsingDescriptors:sortDescriptors];
-                tableArray=[sortArray copy];
-                
-                [projectTableView reloadData];
-                
-                
-            }else{
-                //  [self deleteProject];
-                
-                
-            }
-            
-        }
-            
-            break;
-        case 1:
-        {
-            [firstLayout openDrawer];
+-(void)sortData{
+    if(isHot){
+        isHot=NO;
+        [hotImageView setImage:[UIImage imageNamed:@"red_up"]];
+        [hot2ImageView setImage:[UIImage imageNamed:@"red_down"]];
+        timeSortArray=[tableArray mutableCopy];
+        NSSortDescriptor* sorter=[[NSSortDescriptor alloc]initWithKey:@"people" ascending:NO];
+        NSMutableArray *sortDescriptors=[[NSMutableArray alloc]initWithObjects:&sorter count:1];
+        NSArray *sortArray=[timeSortArray sortedArrayUsingDescriptors:sortDescriptors];
+        tableArray=[sortArray copy];
+        [projectTableView reloadData];
 
-            
-        }
+        
+
+    }else{
+        isHot=YES;
+        [hotImageView setImage:[self image:[UIImage imageNamed:@"red_down"]rotation:UIImageOrientationDown]];
+        [hot2ImageView setImage:[self image:[UIImage imageNamed:@"red_up"]rotation:UIImageOrientationDown]];
+        timeSortArray=[tableArray mutableCopy];
+        NSSortDescriptor* sorter=[[NSSortDescriptor alloc]initWithKey:@"people" ascending:YES];
+        NSMutableArray *sortDescriptors=[[NSMutableArray alloc]initWithObjects:&sorter count:1];
+        NSArray *sortArray=[timeSortArray sortedArrayUsingDescriptors:sortDescriptors];
+        tableArray=[sortArray copy];
+        [projectTableView reloadData];
+    }
+  
+}
+- (UIImage *)image:(UIImage *)image rotation:(UIImageOrientation)orientation
+{
+    long double rotate = 0.0;
+    CGRect rect;
+    float translateX = 0;
+    float translateY = 0;
+    float scaleX = 1.0;
+    float scaleY = 1.0;
+    
+    switch (orientation) {
+        case UIImageOrientationLeft:
+            rotate = M_PI_2;
+            rect = CGRectMake(0, 0, image.size.height, image.size.width);
+            translateX = 0;
+            translateY = -rect.size.width;
+            scaleY = rect.size.width/rect.size.height;
+            scaleX = rect.size.height/rect.size.width;
+            break;
+        case UIImageOrientationRight:
+            rotate = 3 * M_PI_2;
+            rect = CGRectMake(0, 0, image.size.height, image.size.width);
+            translateX = -rect.size.height;
+            translateY = 0;
+            scaleY = rect.size.width/rect.size.height;
+            scaleX = rect.size.height/rect.size.width;
+            break;
+        case UIImageOrientationDown:
+            rotate = M_PI;
+            rect = CGRectMake(0, 0, image.size.width, image.size.height);
+            translateX = -rect.size.width;
+            translateY = -rect.size.height;
             break;
         default:
+            rotate = 0.0;
+            rect = CGRectMake(0, 0, image.size.width, image.size.height);
+            translateX = 0;
+            translateY = 0;
             break;
     }
+    
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //做CTM变换
+    CGContextTranslateCTM(context, 0.0, rect.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    CGContextRotateCTM(context, rotate);
+    CGContextTranslateCTM(context, translateX, translateY);
+    
+    CGContextScaleCTM(context, scaleX, scaleY);
+    //绘制图片
+    CGContextDrawImage(context, CGRectMake(0, 0, rect.size.width, rect.size.height), image.CGImage);
+    
+    UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
+    
+    return newPic;
 }
-
-
-
 -(void)inPopView{
     int width=self.view.frame.size.width;
     int hegiht=self.view.frame.size.height;
@@ -471,7 +535,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [cancelLabel setFont:[UIFont systemFontOfSize:width/20]];
     [cancelLabel setUserInteractionEnabled:YES];
     [cancelLabel setBackgroundColor:[UIColor colorWithRed:1 green:138.f/255.f blue:128.f/255.f alpha:1.0]];
-    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
+    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(restSlidingMenu)];
     [cancelLabel addGestureRecognizer:cancelGesture];
     [view addSubview:cancelLabel];
     
@@ -528,211 +592,26 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [allGradeLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
     [allSortLabel setBackgroundColor:[UIColor colorWithRed:41.f/255.f green:53.f/255.f blue:58.f/255.f alpha:1.0]];
 }
--(void)subAddress:(NSString *)selectString{
-    int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:titleView];
-    
-    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-    [cancelLabel setText:@"取消"];
-    [cancelLabel setTag:2];
-    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-    [cancelLabel setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-    [cancelLabel addGestureRecognizer:cancelGesture];
-    [titleView addSubview:cancelLabel];
-    
-    
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-    [titleLabel setText:@"区域"];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-    [titleView addSubview:titleLabel];
-    
-    subAddTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                                 width/10+2+width/40+width/46,
-                                                                 view.frame.size.width,
-                                                                 view.frame.size.height-(width/10+2+width/40+width/46))];
-    [subAddTableView setBackgroundColor:[UIColor whiteColor]];
-    subAddTableView.dataSource                        = self;
-    subAddTableView.delegate                          = self;
-    [subAddTableView setTag:2];
-    [view addSubview:subAddTableView];
-    
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, subAddTableView.frame.size.width, width/29*3)];//创建一个视图（v_headerView）
-    UILabel *textlabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21, width/29, subAddTableView.frame.size.width, width/29)];
-    [textlabel setText:selectString];
-    [textlabel setFont:[UIFont systemFontOfSize:width/29]];
-    [textlabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [headerView addSubview:textlabel];
-    subAddTableView.tableHeaderView=headerView;
-    
-   	threeLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-    threeLayout.width=view.frame.size.width;
-    threeLayout.contentView=view;
-    threeLayout.delegate=self;
-    [self.view addSubview:threeLayout];
-    
-    threeLayout.openFromRight = YES;
-    [threeLayout openDrawer];
-    if ([local2Array count]>0) {
-        [subAddTableView reloadData];
-        NSIndexPath *idxPath = [NSIndexPath indexPathForRow:select2Id inSection:0];//定位到第8行
-        [subAddTableView scrollToRowAtIndexPath:idxPath
-                               atScrollPosition:UITableViewScrollPositionTop
-                                       animated:NO];
-        
+-(void)restSlidingMenu{
+    pageNumb=1;
+    for(CustomLabel *label in typeAllArray){
+        [label setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
     }
-    
-}
-
--(void)endAddress:(NSString *)selectString{
-    
-    
-    
-    int width=self.view.frame.size.width;
-    int hegiht=self.view.frame.size.height;
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, hegiht)];
-    [view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width*6/7, width/10+2+width/40)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
-    [view addSubview:titleView];
-    
-    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, width/20+1, width/22*2, width/23)];
-    [cancelLabel setText:@"取消"];
-    [cancelLabel setTag:3];
-    [cancelLabel setTextAlignment:NSTextAlignmentCenter];
-    [cancelLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [cancelLabel setFont:[UIFont systemFontOfSize:width/23]];
-    [cancelLabel setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *cancelGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeDrawLayout:)];
-    [cancelLabel addGestureRecognizer:cancelGesture];
-    [titleView addSubview:cancelLabel];
-    
-    
-    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake((view.frame.size.width-width/10)/2, width/20-1, width/20*2, width/20)];
-    [titleLabel setText:@"区域"];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
-    [titleLabel setFont:[UIFont systemFontOfSize:width/20]];
-    [titleView addSubview:titleLabel];
-    
-    
-    
-    
-    endAddTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
-                                                                 width/10+2+width/40+width/46,
-                                                                 view.frame.size.width,
-                                                                 view.frame.size.height-(width/10+2+width/40+width/46))];
-    [endAddTableView setBackgroundColor:[UIColor whiteColor]];
-    endAddTableView.dataSource                        = self;
-    endAddTableView.delegate                          = self;
-    [endAddTableView setTag:3];
-    [view addSubview:endAddTableView];
-    
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, endAddTableView.frame.size.width, width/29*3)];//创建一个视图（v_headerView）
-    UILabel *textlabel=[[UILabel alloc]initWithFrame:CGRectMake(width/21, width/29, endAddTableView.frame.size.width, width/29)];
-    [textlabel setText:selectString];
-    [textlabel setFont:[UIFont systemFontOfSize:width/29]];
-    [textlabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
-    [headerView addSubview:textlabel];
-    endAddTableView.tableHeaderView=headerView;
-    
-    fourLayout=[[ECDrawerLayout alloc]initWithParentView:self.view];
-    fourLayout.width=view.frame.size.width;
-    fourLayout.contentView=view;
-    fourLayout.delegate=self;
-    [self.view addSubview:fourLayout];
-    
-    fourLayout.openFromRight = YES;
-    [fourLayout openDrawer];
-    if ([local3Array count]>0) {
-        [endAddTableView reloadData];
-        NSIndexPath *idxPath = [NSIndexPath indexPathForRow:select3Id inSection:0];//定位到第8行
-        [endAddTableView scrollToRowAtIndexPath:idxPath
-                               atScrollPosition:UITableViewScrollPositionTop
-                                       animated:NO];
+    for (UILabel *label in gradeAllArray) {
+        [label setTextColor:[UIColor blackColor]];
     }
-    
-    
-}
-
-#pragma mark - ECDrawerLayoutDelegate
-- (void) drawerLayoutDidOpen:(id)sender
-{
-    
-    NSLog(@"drawerLayout open");
-}
-- (void) drawerLayoutDidClose:(id)sender
-{
-    NSLog(@"drawerLayout close");
-}
--(void)closeDrawLayout:(id)sender{
-    UITapGestureRecognizer *gesutre=(UITapGestureRecognizer *)sender;
-    switch (gesutre.view.tag) {
-        case 0:
-        {
-            [firstLayout closeDrawer];
-            addressString=@"";
-        }
-            
-            break;
-        case 1:
-        {
-            [twoLayout closeDrawer];
-            
-        }
-            
-            break;
-        case 2:
-        {
-            [threeLayout closeDrawer];
-            
-        }
-            
-            break;
-        case 3:
-        {
-            [fourLayout closeDrawer];
-            
-        }
-            
-            break;
-        case 4:
-        {
-            [typeLayout closeDrawer];
-            
-        }
-            
-            break;
-        case 5:
-        {
-            [gradeLayout closeDrawer];
-            
-        }
-            
-            break;
-            
-        default:
-            break;
+    for (UILabel *label in cityAllArray) {
+        [label setTextColor:[UIColor blackColor]];
     }
-    NSLog(@"closeDrawLayout close");
+    selectCid=NULL;
+    selectPid=NULL;
+    selectGid=NULL;
+    selectAid=NULL;
 }
 -(void)confirmDrawLayout{
-    NSLog(@"confirmDrawLayout close");
-    NSString *str=typeNowLabel.text;
-    [searchLabel setText:[str stringByAppendingString:@"课程"]];
+    [self getLessonSift];
     [firstLayout closeDrawer];
-    [self setData];
-    
-    
+    isSift=YES;
 }
 
 -(void)initTableView{
@@ -865,7 +744,7 @@ static NSString *identy = @"OrderRecordCell";
             NSString *people=[dic objectForKey:@"people"];
             NSString *str=[NSString stringWithFormat:@"已报%@人",people];
             [porjectCell.orderNumbLabel setText:str];
-          
+            
         }
         if ([dic objectForKey:@"logo"] && ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
             NSString *logo=[dic objectForKey:@"logo"];
@@ -1039,6 +918,7 @@ static NSString *identy = @"OrderRecordCell";
             itemLabel.layer.borderWidth=1;
             [itemLabel setFrame:CGRectMake((control.frame.size.width-itemLabel.frame.size.width)/2, 0, itemLabel.frame.size.width, itemLabel.frame.size.height)];
             [itemLabel setBackgroundColor:[UIColor colorWithRed:248.f/255.f green:248.f/255.f blue:248.f/255.f alpha:1.0]];
+            [typeAllArray addObject:itemLabel];
             if(isSelected==true){
                 [control addSubview:itemLabel];
                 [dataCell addSubview:control];
@@ -1049,14 +929,14 @@ static NSString *identy = @"OrderRecordCell";
                 [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow_light"]];
                 [dataCell.logoImage setImage:[UIImage imageNamed:[selectImageArray objectAtIndex:[indexPath row]]]];
-
+                
                 
             }else{
                 [cell setBackgroundColor:[UIColor colorWithRed:248.f/255.f green:248.f/255.f blue:248.f/255.f alpha:1.0]];
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
                 [dataCell.goImage setImage:[UIImage imageNamed:@"arrow"]];
                 [dataCell.logoImage setImage:[UIImage imageNamed:[normalImageArray objectAtIndex:[indexPath row]]]];
-
+                
             }
         }
         
@@ -1093,46 +973,9 @@ static NSString *identy = @"OrderRecordCell";
         [projectDetailsViewController setProjectId:projectId];
         [self presentViewController:projectDetailsViewController animated:YES completion:nil];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
-
-    }else if(tableView.tag==1){
-        NSDictionary *dic=[local1Array objectAtIndex:[indexPath row]];
-        select1Id=(int)[indexPath row];
-        aid=[dic objectForKey:@"id"];
-        NSString *str=[dic objectForKey:@"title"];
-        selectCity1String=str;
-        addressString=[addressString stringByAppendingString:str];
-        [self getSubCity:aid];
-        [self subAddress:addressString];
-    }else if(tableView.tag==2){
-        NSDictionary *dic=[local2Array objectAtIndex:[indexPath row]];
-        select2Id=(int)[indexPath row];
-        aid=[dic objectForKey:@"id"];
-        NSString *str=[dic objectForKey:@"title"];
-        selectCity2String=str;
-        addressString=[addressString stringByAppendingString:str];
-        [self getEndCity:aid];
-        [self endAddress:addressString];
-    }else if(tableView.tag==3){
-        NSDictionary *dic=[local3Array objectAtIndex:[indexPath row]];
-        select3Id=(int)[indexPath row];
-        aid=[dic objectForKey:@"id"];
-        NSString *str=[dic objectForKey:@"title"];
-        selectCity3String=str;
-        addressString=[addressString stringByAppendingString:str];
-        [localNowLabel setText:addressString];
-        [twoLayout closeDrawer];
-        [threeLayout closeDrawer];
-        [fourLayout closeDrawer];
-        addressString=@"";
         
     }else if(tableView.tag==4){
-        //        NSDictionary *dic=[typeArray objectAtIndex:[indexPath row]];
-        //        cid=[dic objectForKey:@"id"];
-        //        NSString *str=[dic objectForKey:@"title"];
-        //        [typeNowLabel setText:[NSString stringWithFormat:@"%@",str]];
-        //        typeString=str;
-        //        [typeLayout closeDrawer];
-        //        [typeTableView.tableHeaderView setHidden:YES];
+        pageNumb=1;
         NSIndexPath *indexPath = [tableView indexPathForSelectedRow];
         bool hasNumb=false;
         if([selcedIdArray count]>0){
@@ -1148,16 +991,6 @@ static NSString *identy = @"OrderRecordCell";
             [selcedIdArray addObject:indexPath];
         }
         [dataTableView reloadData];
-        
-        
-    }else if(tableView.tag==5){
-        NSDictionary *dic=[gradeArray objectAtIndex:[indexPath row]];
-        gid=[dic objectForKey:@"id"];
-        NSString *str=[dic objectForKey:@"title"];
-        [gradeNowLabel setText:[NSString stringWithFormat:@"%@",str]];
-        gradeString=str;
-        [gradeLayout closeDrawer];
-        [gradeTableView.tableHeaderView setHidden:YES];
     }
     
     
@@ -1392,8 +1225,12 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getAllCity{
-    NSNumber *Aid=[NSNumber numberWithInt:0];
-    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [HttpHelper getCity:Aid success:^(HttpModel *model){
@@ -1433,6 +1270,21 @@ static NSString *identy = @"OrderRecordCell";
 -(void)selectTypeText:(UITapGestureRecognizer *)gesture{
     CustomLabel *itemLabel=(CustomLabel *)gesture.view;
     NSLog(@"selectTypeText%@",itemLabel.text);
+    NSDictionary *dic=[typeArray objectAtIndex:itemLabel.superID] ;
+    NSNumber *superId=[dic objectForKey:@"id"];
+    NSArray *lesson=[dic objectForKey:@"lesson_group"];
+    NSDictionary *data=[lesson objectAtIndex:itemLabel.subID];
+    NSNumber *subId=[data objectForKey:@"id"];
+    selectPid=subId;
+    selectCid=superId;
+    for(CustomLabel *label in typeAllArray){
+        if(label.superID == itemLabel.superID && label.subID  == itemLabel.subID){
+            [label setTextColor:[UIColor redColor]];
+        }else{
+            [label setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+        }
+    }
+    
     
 }
 -(void)getData{
@@ -1526,7 +1378,7 @@ static NSString *identy = @"OrderRecordCell";
             
             
         });
-
+        
         
         
         
@@ -1637,11 +1489,6 @@ static NSString *identy = @"OrderRecordCell";
     });
 }
 -(void)searchData:(NSString *)data withTime:(NSString *)date withAid:(NSNumber *)Aid{
-    //    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-    //    NSNumber *aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
-    //    NSString *data=keyText.text;
-    //    NSString *date=@"2015-03-05";
-    
     
     NSNumber *pc=[NSNumber numberWithInt:10];
     NSNumber *pn=[NSNumber numberWithInt:1];
@@ -1722,29 +1569,76 @@ static NSString *identy = @"OrderRecordCell";
     });
     
 }
-#pragma mark - TreeTableCellDelegate
--(void)cellClick:(Node *)node{
-    if (node.parentId!=-1) {
-        NSLog(@"%@",node.name);
-        [typeLayout closeDrawer];
-        pid=[NSNumber numberWithInt:node.subId];
-        cid=[NSNumber numberWithInt:node.superId];
-        selectSuperId=[NSNumber numberWithInt:node.superId];
-        typeString=node.name;
-        [typeNowLabel setText:typeString];
-        
-        
+-(void)getLessonSift{
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumber *lat=[NSNumber numberWithDouble:myDelegate.latitude];
+    NSNumber *lng=[NSNumber numberWithDouble:myDelegate.longitude];
+    if ([lat isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        lat=[NSNumber numberWithDouble:29.5];
+        lng=[NSNumber numberWithDouble:106.5];
     }
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+    
+    if(selectCid==NULL || selectPid==NULL){
+        [alertView setMessage:@"请选择课程种类!"];
+        [alertView show];
+        return;
+    }
+    if(selectGid==NULL){
+        [alertView setMessage:@"请选择年龄段!"];
+        [alertView show];
+        
+        return;
+
+    }
+    if(selectAid==NULL){
+        [alertView setMessage:@"请选择地区!"];
+        [alertView show];
+        return;
+    }
+
+    
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [HttpHelper searchData:selectAid withCid:selectCid withPid:selectPid withGid:selectGid withPc:[NSNumber numberWithInt:10] withPn:[NSNumber numberWithInt:pageNumb] withlgn:lat withlat:lng withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    NSDictionary *result=model.result;
+                    
+                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [projectTableView reloadData];
+                    });
+                    
+                    
+                }else{
+                    
+                }
+                
+                [ProgressHUD dismiss];
+                
+                
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                
+            }
+            [ProgressHUD dismiss];
+            
+        }];
+        
+        
+    });
+    
 }
-//
-//-(void)viewWillDisappear:(BOOL)animated
-//{
-//    local1Array=nil;
-//    local2Array=nil;
-//    local3Array=nil;
-//    
-//    
-//}
 #pragma mark
 //返回分区个数
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -1780,10 +1674,59 @@ static NSString *identy = @"OrderRecordCell";
     frame.origin.y=0;
     UILabel *label=[[UILabel alloc]initWithFrame:frame];
     [label setText:[dic objectForKey:@"title"]];
+    [label setTag:[indexPath row]];
     [label setTextAlignment:NSTextAlignmentCenter];
     [label setFont:[UIFont systemFontOfSize:self.view.frame.size.width/35.5]];
+    if (collectionView.tag==0) {
+        [cityAllArray addObject:label];
+    }else if(collectionView.tag==1){
+        [gradeAllArray addObject:label];
+    }
     [cell addSubview:label];
     return cell;
+}
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
+    switch (collectionView.tag) {
+        case 0:
+        {
+            NSDictionary *dic=[local1Array objectAtIndex:[indexPath row]];
+            NSNumber *selectId=[dic objectForKey:@"id"];
+            NSLog(@"[dic objectForKey:title%@", [dic objectForKey:@"title"]);
+            selectAid=selectId;
+            pageNumb=1;
+            [localLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"title"]]];
+            for (UILabel *label in cityAllArray) {
+                if(label.tag==[indexPath row]){
+                    [label setTextColor:[UIColor redColor]];
+                }else{
+                    [label setTextColor:[UIColor blackColor]];
+                    
+                }
+            }
+        }
+            break;
+        case 1:
+        {
+            NSDictionary *dic=[gradeArray objectAtIndex:[indexPath row]];
+            NSNumber *selectId=[dic objectForKey:@"id"];
+            selectGid=selectId;
+            pageNumb=1;
+            for (UILabel *label in gradeAllArray) {
+                if(label.tag==[indexPath row]){
+                    [label setTextColor:[UIColor redColor]];
+                }else{
+                    [label setTextColor:[UIColor blackColor]];
+                    
+                }
+            }
+            
+        }
+            break;
+        default:
+            break;
+    }
 }
 //这个是两行cell之间的间距（上下行cell的间距）
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
@@ -1810,7 +1753,12 @@ static NSString *identy = @"OrderRecordCell";
             pageNumb++;
             _isLoading=true;
             if(std==2){
-                [self searchData];
+                if(isSift)
+                {
+                    [self getLessonSift];
+                }else{
+                    [self searchData];
+                }
             }
             
         }
