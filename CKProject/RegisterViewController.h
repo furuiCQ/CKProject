@@ -24,4 +24,6 @@
 
 @property UIButton *codeLabel;
 @property(strong,nonatomic)UIAlertView *alertView;
+-(void)setOtherData: (NSString *)data1   withData1:(NSString *)data2   withData2:(NSString *)data3 withData3:(NSString *)data4;
+-(void)setOtherReg;
 @end

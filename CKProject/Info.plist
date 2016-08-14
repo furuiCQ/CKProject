@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleExecutable</key>
@@ -54,6 +52,26 @@
 				<string>wx53d8bade842345b7</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>tencent</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tencent1105170232</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.weibo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wb2850266283</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.2.8</string>
@@ -63,22 +81,21 @@
 		<string>sinaweibo</string>
 		<string>weibosdk</string>
 		<string>weibosdk2.5</string>
-        <string>mqqOpensdkSSoLogin</string>
-        <string>mqzone</string>
-        <string>sinaweibo</string>
-        <string>alipayauth</string>
-        <string>alipay</string>
-        <string>safepay</string>
-        <string>mqq</string>
-        <string>mqqapi</string>
-        <string>mqqopensdkapiV3</string>
-        <string>mqqopensdkapiV2</string>
-        <string>mqqapiwallet</string>
-        <string>mqqwpa</string>
-        <string>mqqbrowser</string>
-        <string>wtloginmqq2</string>
-        <string>weixin</string>
-        <string>wechat</string>
+		<string>mqqOpensdkSSoLogin</string>
+		<string>mqzone</string>
+		<string>alipayauth</string>
+		<string>alipay</string>
+		<string>safepay</string>
+		<string>mqq</string>
+		<string>mqqapi</string>
+		<string>mqqopensdkapiV3</string>
+		<string>mqqopensdkapiV2</string>
+		<string>mqqapiwallet</string>
+		<string>mqqwpa</string>
+		<string>mqqbrowser</string>
+		<string>wtloginmqq2</string>
+		<string>weixin</string>
+		<string>wechat</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -257,5 +274,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

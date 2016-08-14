@@ -190,12 +190,12 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    return [WXApi handleOpenURL:url delegate:self];
+    return [self handleURL:url];
     
 }
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    return [WXApi handleOpenURL:url delegate:self];
+    return [self handleURL:url];
 }
 //-----
 - (BOOL)handleURL:(NSURL *)url
@@ -225,26 +225,26 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
      */
     SendAuthResp *aresp = (SendAuthResp *)resp;
     if (aresp.errCode== 0) {
-        //        NSString *code = aresp.code;
-        //        [self getAccess_token:code];
+        NSString *code = aresp.code;
+        [self getAccess_token:code];
     }
 }
-//-(void)getAccess_token:(NSString *)code
-//{
-//    NSString *url =[NSString stringWithFormat:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&secret=%@&code=%@&grant_type=authorization_code",WXKey,WXSECRET,code];
-//
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        NSURL *zoneUrl = [NSURL URLWithString:url];
-//        NSString *zoneStr = [NSString stringWithContentsOfURL:zoneUrl encoding:NSUTF8StringEncoding error:nil];
-//        NSData *data = [zoneStr dataUsingEncoding:NSUTF8StringEncoding];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            if (data) {
-//
-//                NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-//                [[NSNotificationCenter defaultCenter] postNotificationName:@"getWXUserInfo" object:dic];
-//                
-//            }
-//        });
-//    });
-//}
+-(void)getAccess_token:(NSString *)code
+{
+    NSString *url =[NSString stringWithFormat:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&secret=%@&code=%@&grant_type=authorization_code",WXKey,WXSECRET,code];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *zoneUrl = [NSURL URLWithString:url];
+        NSString *zoneStr = [NSString stringWithContentsOfURL:zoneUrl encoding:NSUTF8StringEncoding error:nil];
+        NSData *data = [zoneStr dataUsingEncoding:NSUTF8StringEncoding];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (data) {
+                
+                NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"getWXUserInfo" object:dic];
+                
+            }
+        });
+    });
+}
 @end

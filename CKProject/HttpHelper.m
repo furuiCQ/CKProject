@@ -82,7 +82,17 @@
         failture(error);
     }];
 }
-
++(void)verifyTel:(NSString *)tel withCode:(NSString *)code success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture
+{
+    NSArray *parameters = @[@{ @"name": @"tel", @"value": tel},
+                            @{ @"name": @"verify", @"value": code}
+                            ];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_VERIFY_CODE] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
 +(void)getMsgInfo:(NSNumber *)msgId withModel:(HttpModel *)model success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture
 {
     NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
@@ -96,7 +106,22 @@
         failture(error);
     }];
 }
-
++(void)accessLogin:(NSString *)uid withUserName:(NSString *)userName withToken:(NSString *)token withType:(NSString *)type withTel:(NSString *)tel withPassword:(NSString *)password success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[ @{@"name":@"userid",@"value":uid},
+                             @{@"name":@"username",@"value":userName},
+                             @{@"name":@"accesstoken",@"value":token},
+                             @{@"name":@"accesstype",@"value":type},
+                              @{@"name":@"tel",@"value":tel},
+                              @{@"name":@"password",@"value":password}
+                             ];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_ACESS_LOGIN] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+    
+    
+}
 +(void)accessLogin:(NSString *)uid withUserName:(NSString *)userName withToken:(NSString *)token withType:(NSString *)type  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[ @{@"name":@"userid",@"value":uid},
                              @{@"name":@"username",@"value":userName},

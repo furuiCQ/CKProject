@@ -535,8 +535,6 @@
 		CE4DA8D41D24C9AB00AE52AA /* XMTopScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4DA8D11D24C9AB00AE52AA /* XMTopScrollView.m */; };
 		CE4DA8D71D24C9B700AE52AA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4DA8D61D24C9B700AE52AA /* ViewController.m */; };
 		CE9E00F01CFDE18000EEE21B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9E00EF1CFDE18000EEE21B /* UserInfoViewController.m */; };
-		CEA6DAC11D3DD74200B66D70 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA6DABC1D3DD74200B66D70 /* libWeChatSDK.a */; };
-		CEA6DAC21D3DD74200B66D70 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = CEA6DABD1D3DD74200B66D70 /* README.txt */; };
 		CEA6DAC41D3DD79900B66D70 /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA6DAC31D3DD79900B66D70 /* libz.1.2.5.tbd */; };
 		CEAA8CBF1D17C0BD00847A27 /* teseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAA8CBD1D17C0BD00847A27 /* teseCell.m */; };
 		CEAA8CC01D17C0BD00847A27 /* teseCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEAA8CBE1D17C0BD00847A27 /* teseCell.xib */; };
@@ -1209,11 +1207,6 @@
 		CE4DA8D61D24C9B700AE52AA /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		CE9E00EE1CFDE18000EEE21B /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
 		CE9E00EF1CFDE18000EEE21B /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
-		CEA6DABC1D3DD74200B66D70 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
-		CEA6DABD1D3DD74200B66D70 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		CEA6DABE1D3DD74200B66D70 /* WechatAuthSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WechatAuthSDK.h; sourceTree = "<group>"; };
-		CEA6DABF1D3DD74200B66D70 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
-		CEA6DAC01D3DD74200B66D70 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		CEA6DAC31D3DD79900B66D70 /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
 		CEAA8CBC1D17C0BD00847A27 /* teseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = teseCell.h; sourceTree = "<group>"; };
 		CEAA8CBD1D17C0BD00847A27 /* teseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = teseCell.m; sourceTree = "<group>"; };
@@ -1248,7 +1241,6 @@
 				C1063797F1B0BA9E6435D42D /* libPods.a in Frameworks */,
 				49BD2A171C551F0D002BF44B /* TencentOpenAPI.framework in Frameworks */,
 				49BD2A131C551546002BF44B /* libWeChatSDK.a in Frameworks */,
-				CEA6DAC11D3DD74200B66D70 /* libWeChatSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1741,7 +1733,6 @@
 		4977AEDB1C0DCC1A001F0D55 = {
 			isa = PBXGroup;
 			children = (
-				CEA6DABB1D3DD72500B66D70 /* disanfang */,
 				CE4DA8CC1D24C99B00AE52AA /* 新闻头条 */,
 				CEE3722D1D12A23D00F79876 /* 新闻头条 */,
 				CE103E5E1CEAF3F2007545A6 /* 5.jpg */,
@@ -2126,18 +2117,6 @@
 				CE4DA8D11D24C9AB00AE52AA /* XMTopScrollView.m */,
 			);
 			name = "新闻头条";
-			sourceTree = "<group>";
-		};
-		CEA6DABB1D3DD72500B66D70 /* disanfang */ = {
-			isa = PBXGroup;
-			children = (
-				CEA6DABC1D3DD74200B66D70 /* libWeChatSDK.a */,
-				CEA6DABD1D3DD74200B66D70 /* README.txt */,
-				CEA6DABE1D3DD74200B66D70 /* WechatAuthSDK.h */,
-				CEA6DABF1D3DD74200B66D70 /* WXApi.h */,
-				CEA6DAC01D3DD74200B66D70 /* WXApiObject.h */,
-			);
-			name = disanfang;
 			sourceTree = "<group>";
 		};
 		CEE3722D1D12A23D00F79876 /* 新闻头条 */ = {
@@ -2657,7 +2636,6 @@
 				49DB070E1D59C43600AE6C78 /* gray_up_logo@3x.png in Resources */,
 				49DB08001D59C43600AE6C78 /* star_normal.png in Resources */,
 				49DB06D41D59C43600AE6C78 /* arrow@3x.png in Resources */,
-				CEA6DAC21D3DD74200B66D70 /* README.txt in Resources */,
 				49DB07C61D59C43600AE6C78 /* more@3x.png in Resources */,
 				49DB07191D59C43600AE6C78 /* icon-40@2x.png in Resources */,
 				49DB07FE1D59C43600AE6C78 /* star_light@2x.png in Resources */,

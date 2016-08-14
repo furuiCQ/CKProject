@@ -94,6 +94,7 @@ static NSString *const API_COUPON=@"coupon";
 @interface HttpHelper : NSObject
 +(NSString *)getNowImageTime;
 //二期接口
++(void)verifyTel:(NSString *)tel withCode:(NSString *)code  success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)getCouponList:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getCouponListSerch:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getXinwenInfo:(NSNumber *)articleId  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
@@ -112,6 +113,7 @@ static NSString *const API_COUPON=@"coupon";
 +(void)getLessonInfo:(NSNumber *)projectId withLng:(NSNumber *)lng withLat:(NSNumber *)lat success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)zanNewsComments:(NSNumber*)commentsId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getNewsList:(NSNumber *)lam andPn:(NSNumber *)pn andPc:(NSNumber *)pc success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)accessLogin:(NSString *)uid withUserName:(NSString *)userName withToken:(NSString *)token withType:(NSString *)type withTel:(NSString *)tel withPassword:(NSString *)password success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 //一期接口
 +(void)getMsgInfo:(NSNumber *)msgId withModel:(HttpModel *)model success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)accessLogin:(NSString *)uid withUserName:(NSString *)userName withToken:(NSString *)token withType:(NSString *)type  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

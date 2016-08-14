@@ -99,24 +99,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         [slideMenu navRightBtAction];
     }
 }
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"refresh_userInfo" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"login" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLogoutStauets) name:@"logout" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoLoginAccount:) name:@"autologin" object:nil];
-//    [self initContentView];
-//    [self initTitle];
-//    [self getPickerData];
-//    [self initPickView];
-//    
-//    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    if(myDelegate.isLogin){
-//        [ProgressHUD show:@"加载中..."];
-//        [self changeLoginStauets];
-//    }
-//}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

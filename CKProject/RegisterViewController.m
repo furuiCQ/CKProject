@@ -11,6 +11,12 @@
 @interface RegisterViewController (){
     UIButton *checkBtn;
     UILabel *loginLabel;
+    BOOL isOtherReg;
+    //第三方
+    NSString *Otheruid;
+    NSString *Othernickname;
+    NSString *Othertoken;
+    NSString *Othertype;
 }
 
 @end
@@ -44,7 +50,15 @@ int secondsCountDown; //倒计时总时长
     
     // Do any additional setup after loading the view, typically from a nib.
 }
-
+-(void)setOtherReg{
+    isOtherReg=YES;
+}
+-(void)setOtherData: (NSString *)data1   withData1:(NSString *)data2   withData2:(NSString *)data3 withData3:(NSString *)data4{
+    Otheruid=data1;
+    Othernickname=data2;
+    Othertoken=data3;
+    Othertype=data4;
+ }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -228,41 +242,152 @@ int secondsCountDown; //倒计时总时长
     }
 }
 -(void)goLoginViewController{
-    NSString *phone=userTextFiled.text;
-    NSString *code=codeTextFiled.text;
-    NSString *password=passTextFiled.text;
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper registerAcount:phone withCode:code withPassword:password success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // 更UI
-                [self releaseTImer];
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate =(AppDelegate *) [[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
-                    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
-                        NSNotification *notification =[NSNotification notificationWithName:@"autologin" object:self userInfo:@{@"tel":phone,@"pas":password}];
-                        [[NSNotificationCenter defaultCenter] postNotification:notification];}];
-                }else{
-                    [alertView setMessage:model.message];
-                    [alertView show];
+    if(!isOtherReg){
+        NSString *phone=userTextFiled.text;
+        NSString *code=codeTextFiled.text;
+        NSString *password=passTextFiled.text;
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [HttpHelper registerAcount:phone withCode:code withPassword:password success:^(HttpModel *model){
+                NSLog(@"%@",model.message);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // 更UI
+                    [self releaseTImer];
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                        AppDelegate *myDelegate =(AppDelegate *) [[UIApplication sharedApplication] delegate];
+                        myDelegate.model=model;
+                        [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                            NSNotification *notification =[NSNotification notificationWithName:@"autologin" object:self userInfo:@{@"tel":phone,@"pas":password}];
+                            [[NSNotificationCenter defaultCenter] postNotification:notification];}];
+                    }else{
+                        [alertView setMessage:model.message];
+                        [alertView show];
+                        
+                    }
                     
-                }
+                });
                 
-            });
+                
+            }failure:^(NSError *error){
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
+                }
+            }];
             
             
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
+        });
+    }else{
+        NSString *phone=userTextFiled.text;
+        NSString *code=codeTextFiled.text;
+        [self verfiyCode:phone withCode:code];
+        
+        
+    }
+    
+    
+    
+}
+-(void)verfiyCode:(NSString *)tel withCode:(NSString *)code{
+    [ProgressHUD show:@"登陆中..."];
+    
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+    
+    [HttpHelper verifyTel:tel withCode:code success:^(HttpModel *model){
+        NSLog(@"%@",model.message);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                myDelegate.model=model;
+                NSString *password=passTextFiled.text;
+                [self accessLogin:Otheruid withUserName:Othernickname withToken:Othertoken withType:Othertype withTel:tel withPassword:password];
+
+            }else{
+                
             }
-        }];
+            [ProgressHUD dismiss];
+            [alertView setMessage:model.message];
+            [alertView show];
+        });
         
+    }failure:^(NSError *error){
+        if (error.userInfo!=nil) {
+            NSLog(@"error userInfo:===>%@",error.userInfo);
+            NSString *localizedDescription=[error.userInfo objectForKey:@"NSLocalizedDescription"];
+            if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
+                
+                [alertView setMessage:localizedDescription];
+                [alertView show];
+            }
+            [ProgressHUD dismiss];
+            
+        }
+    }];
+}
+-(void)accessLogin:(NSString *)uid withUserName:(NSString *)nickname withToken:(NSString *)token withType:(NSString *)type withTel:(NSString *)tel withPassword:(NSString *)password {
+    [ProgressHUD show:@"登陆中..."];
+    
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+    
+    [HttpHelper accessLogin:uid withUserName:nickname withToken:token withType:type withTel:tel withPassword:password success:^(HttpModel *model){
+        NSLog(@"%@",model.message);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                myDelegate.model=model;
+                
+                [alertView setTag:1];
+                
+            }else{
+               
+            }
+            [ProgressHUD dismiss];
+            [alertView setMessage:model.message];
+            [alertView show];
+        });
         
-    });
-    
-    
+    }failure:^(NSError *error){
+        if (error.userInfo!=nil) {
+            NSLog(@"error userInfo:===>%@",error.userInfo);
+            NSString *localizedDescription=[error.userInfo objectForKey:@"NSLocalizedDescription"];
+            if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
+                
+                [alertView setMessage:localizedDescription];
+                [alertView show];
+            }
+            [ProgressHUD dismiss];
+            
+        }
+    }];
+}
+//AlertView已经消失时执行的事件
+-(void)alertView:(UIAlertView *)uiAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"didDismissWithButtonIndex");
+    switch (uiAlertView.tag) {
+        case 1:
+        {
+            AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            myDelegate.isLogin=YES;
+            [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                NSNotification *notification =[NSNotification notificationWithName:@"login" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotification:notification];
+            }];
+        }
+            break;
+        case 2:
+            //[self goRegisterViewController];
+            
+            break;
+            
+        default:
+            break;
+    }
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
     // NSLog(@"点点点");
