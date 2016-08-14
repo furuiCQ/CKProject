@@ -33,5 +33,6 @@
 @property(strong,nonatomic)ECDrawerLayout *typeLayout;
 @property NSNumber* projectID;
 @property NSString *titleName;
+@property NSString *searchs;
  
 @end

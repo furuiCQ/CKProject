@@ -94,6 +94,9 @@ static NSString *const API_COUPON=@"coupon";
 @interface HttpHelper : NSObject
 +(NSString *)getNowImageTime;
 //二期接口
++(void)searchCoupon:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)searchProject:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)searchInst:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)verifyTel:(NSString *)tel withCode:(NSString *)code  success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)getCouponList:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getCouponListSerch:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

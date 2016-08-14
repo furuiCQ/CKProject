@@ -19,7 +19,10 @@
 @implementation FavourableViewController
 @synthesize titleHeight;
 @synthesize searchLabel;
+@synthesize cityLabel;
 @synthesize favourTableView;
+@synthesize searchs;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [ProgressHUD show:@"数据加载中..."];
@@ -36,7 +39,17 @@
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
     [titleView  setUserInteractionEnabled:YES];
     [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
-  
+    //新建左上角Label
+    cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
+    UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
+    [imageView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/35/2, titleHeight/2-self.view.frame.size.width/20/2, self.view.frame.size.width/35, self.view.frame.size.width/20)];
+    [cityLabel addSubview:imageView];
+    
+    [cityLabel setTextAlignment:NSTextAlignmentCenter];
+    cityLabel.userInteractionEnabled=YES;///
+    UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMiss:)];
+    [cityLabel addGestureRecognizer:gesture];
+    
     //新建查询视图
     searchField=[[CustomTextField alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/6.8, titleHeight*2/16, self.view.frame.size.width-self.view.frame.size.width/6.8*2, titleHeight*3/4))];
     searchField.delegate=self;
@@ -52,7 +65,8 @@
     [searchField setLeftViewMode:UITextFieldViewModeAlways];
     
     [titleView addSubview:searchField];
-    
+    [titleView addSubview:cityLabel];
+
     [self.view addSubview:titleView];
     
 }
@@ -187,36 +201,72 @@
 }
 //获得优惠数据
 -(void)getData{
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper getCouponList:nil success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
-                    dataArray=(NSArray *)model.result;
-                    dispatch_async(dispatch_get_main_queue(), ^{
+    if(searchs){
+        [searchLabel setText:[NSString stringWithFormat:@"搜索%@结果",searchs]];
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [HttpHelper searchCoupon:searchs success:^(HttpModel *model){
+                NSLog(@"%@",model.message);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                       
+                        dataArray=(NSArray *)model.result;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            
+                            [favourTableView reloadData];
+                        });
+                    }else{
                         
-                        [favourTableView reloadData];
-                        
-                    });
+                    }
+                    [ProgressHUD dismiss];
+                });
+            }failure:^(NSError *error){
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
                 }
                 [ProgressHUD dismiss];
                 
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-                
-            }
-            [ProgressHUD dismiss];
+            }];
             
-        }];
-        
-        
-    });
-
+            
+        });
+    }else{
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [HttpHelper getCouponList:nil success:^(HttpModel *model){
+                NSLog(@"%@",model.message);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                        AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        myDelegate.model=model;
+                        dataArray=(NSArray *)model.result;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            
+                            [favourTableView reloadData];
+                            
+                        });
+                    }
+                    [ProgressHUD dismiss];
+                    
+                });
+            }failure:^(NSError *error){
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
+                    
+                }
+                [ProgressHUD dismiss];
+                
+            }];
+            
+            
+        });
+ 
+    }
+    
+}
+-(void)disMiss:(UITapGestureRecognizer *)recognizer{
+    // NSLog(@"点点点");
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 @end
 

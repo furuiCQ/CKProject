@@ -83,6 +83,7 @@
 @synthesize subAddTableView;
 @synthesize typeTableView;
 @synthesize endAddTableView;
+@synthesize searchs;
 static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -1496,8 +1497,43 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         
     }
     if (titleName) {
-        [searchLabel setText:[titleName stringByAppendingString:@"课程"]];
+        [searchLabel setText:[titleName stringByAppendingString:@"机构"]];
     }
+    if (searchs) {
+        [searchLabel setText:[NSString stringWithFormat:@"搜索%@结果",searchs]];
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [HttpHelper searchInst:searchs success:^(HttpModel *model){
+                NSLog(@"%@",model.message);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                        
+                        tableArray=(NSArray *)model.result;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            
+                            [projectTableView reloadData];
+                        });
+                        
+                        
+                    }else{
+                        
+                    }
+                    [ProgressHUD dismiss];
+                });
+            }failure:^(NSError *error){
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
+                }
+                [ProgressHUD dismiss];
+                
+            }];
+            
+            
+        });
+        
+    }
+
+    
 }
 -(void)searchInst{
     if (aid==nil && cid==nil) {

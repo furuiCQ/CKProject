@@ -10,6 +10,9 @@
 #import "HttpHelper.h"
 #import "FDCalendar.h"
 #import "AppDelegate.h"
+#import "ProjectListViewController.h"
+#import "FavourableViewController.h"
+#import "OrganismListViewController.h"
 @interface SearchViewController ()<UITextFieldDelegate>{
     NSArray *tableArray;
     UILabel *titleLabel;
@@ -223,7 +226,39 @@
 -(void)searchData{
     if(isSearch){
         NSString *str=searchField.text;
-        
+        switch ([searchType intValue]) {
+            case 1:
+            {
+                OrganismListViewController *registerViewController=[[OrganismListViewController alloc]init];
+                [registerViewController setSearchs:str];
+                [self presentViewController: registerViewController animated:YES completion:nil];
+
+            }
+                break;
+            case 2:
+            {
+                ProjectListViewController *registerViewController=[[ProjectListViewController alloc]init];
+                [registerViewController setSearchs:str];
+                [self presentViewController: registerViewController animated:YES completion:nil];
+                
+            }
+                break;
+            case 3:
+            {
+                FavourableViewController *registerViewController=[[FavourableViewController alloc]init];
+                [registerViewController setSearchs:str];
+                [self presentViewController: registerViewController animated:YES completion:nil];
+            }
+                break;
+            default:
+            {
+                OrganismListViewController *registerViewController=[[OrganismListViewController alloc]init];
+                [registerViewController setSearchs:str];
+                [self presentViewController: registerViewController animated:YES completion:nil];
+                
+            }
+                break;
+        }
         
     }else{
         [self dismissViewControllerAnimated:YES completion:nil];
