@@ -372,6 +372,7 @@ int secondsCountDown; //倒计时总时长
     switch (uiAlertView.tag) {
         case 1:
         {
+            [self releaseTImer];
             AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             myDelegate.isLogin=YES;
             [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
