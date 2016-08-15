@@ -188,8 +188,33 @@
         [cell.textLabel setTextColor:[UIColor blackColor]];
         cell.textLabel.font = [UIFont systemFontOfSize:18];
     }
-    cell.textLabel.text = [[_cities objectForKey:key] objectAtIndex:indexPath.row];
+    cell.textLabel.text = [[_cities objectForKey:key]  objectAtIndex:indexPath.row];
     return cell;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSString *key = [_keys objectAtIndex:indexPath.section];
+    NSString *cityString=[[_cities objectForKey:key]  objectAtIndex:indexPath.row];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"txt"];
+    NSError *error = [[NSError alloc]init];
+    NSString *_localData = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    NSRange rang  = [_localData rangeOfString:cityString];
+    NSLog(@"%@",NSStringFromRange(rang));
+    if(rang.location>_localData.length){
+        return;
+    }
+    NSString *str=[_localData substringWithRange:NSMakeRange(rang.location-10, rang.length+18)];
+    NSArray *cityArray=[str componentsSeparatedByString:NSLocalizedString(@",", nil)];
+    NSString *cityStr=[cityArray objectAtIndex:0];
+    cityStr=[cityStr substringWithRange:NSMakeRange(1, cityStr.length-2)];
+    NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
+    NSNumber *_selectCityId=[formater numberFromString:cityStr];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    myDelegate.localNumber=_selectCityId;
+    myDelegate.cityName=cityString;
+    NSNotification *notification =[NSNotification notificationWithName:@"changeCity" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 @end
 

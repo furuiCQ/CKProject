@@ -97,7 +97,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     sc=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [sc setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self.view addSubview:sc];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeCity) name:@"changeCity" object:nil];
+
     //    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     //    localLat=myDelegate.latitude;
     //    localLng=myDelegate.longitude;
@@ -129,7 +130,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self getNewHotLesson];
     
 }
-
+-(void)changeCity{
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [cityLabel setText:myDelegate.cityName];
+}
 //初始化顶部菜单栏
 -(void)initTitle{
     //设置顶部栏
@@ -1212,7 +1216,7 @@ static NSString *identy = @"OrderRecordCell";
             NSLog(@"当前城市:%@",cityString);
             if(cityString!=nil){
                 if([cityString length]>=2){
-                    [cityLabel setText:[cityString substringToIndex:3]];
+                    [cityLabel setText:[cityString substringToIndex:2]];
                 }else{
                     [cityLabel setText:cityString];
                 }
