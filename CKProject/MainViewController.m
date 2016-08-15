@@ -597,7 +597,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     mainTableView.rowHeight                         = self.view.bounds.size.height*7/12;
     mainTableView.separatorStyle=NO;
     
-    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, sc.frame.size.height+2, width, width/8.8)];
+    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, sc.frame.size.height+2, width, 36)];
     [headerView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [self initSwitchBtn:headerView];
     [sc addSubview:headerView];
@@ -1210,8 +1210,12 @@ static NSString *identy = @"OrderRecordCell";
         
         [[CCLocationManager shareLocation]getCity:^(NSString *cityString) {
             NSLog(@"当前城市:%@",cityString);
-            [cityLabel setText:cityString];
             if(cityString!=nil){
+                if([cityString length]>=2){
+                    [cityLabel setText:[cityString substringToIndex:3]];
+                }else{
+                    [cityLabel setText:cityString];
+                }
                 NSString *path = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"txt"];
                 NSError *error = [[NSError alloc]init];
                 NSString *_localData = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
@@ -1239,6 +1243,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
                 myDelegate.localNumber=[formater numberFromString:DEFAULT_LOCAL_AID];
                 [cityLabel setText:@"重庆"];
+                myDelegate.cityName=@"重庆市";
             }
             
         }];

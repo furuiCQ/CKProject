@@ -192,7 +192,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     int width=self.view.frame.size.width;
     int hegiht=self.view.frame.size.height;
     
-    scrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, titleHeight+0.5+20, width, hegiht-(titleHeight+0.5+20))];
+    scrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, titleHeight+20, width, hegiht-(titleHeight+20))];
     [scrollView setContentSize:CGSizeMake(width, hegiht)];
     [scrollView setBackgroundColor:[UIColor whiteColor]];
     
@@ -215,14 +215,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [instituteControl addSubview:instituteNameLabel];
     //18px
     UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_gray"]];
-    [localImageView setFrame:CGRectMake(instituteNameLabel.frame.origin.x, instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/35.6, width/35.6, width/23.7)];
+    [localImageView setFrame:CGRectMake(instituteNameLabel.frame.origin.x, instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/25, width/35.6, width/23.7)];
     UITapGestureRecognizer *addresGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openAddress)];
     [localImageView addGestureRecognizer:addresGesture];
     [localImageView setUserInteractionEnabled:YES];
     [instituteControl addSubview:localImageView];
     
     
-    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(localImageView.frame.size.width+localImageView.frame.origin.x+width/49,  instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/37.6, width-(localImageView.frame.size.width+localImageView.frame.origin.x+width/49)-width/40, width/22.8*2)];
+    projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(localImageView.frame.size.width+localImageView.frame.origin.x+width/49,  instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/55, width-(localImageView.frame.size.width+localImageView.frame.origin.x+width/49)-width/40, width/22.8*2)];
     [projectAddLabel setText:@"渝中区太平洋大厦3楼"];
     [projectAddLabel addGestureRecognizer:addresGesture];
     [projectAddLabel setUserInteractionEnabled:YES];
@@ -231,7 +231,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     projectAddLabel.numberOfLines=0;
     [instituteControl addSubview:projectAddLabel];
     
-    ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(instituteNameLabel.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/35.6, width/29*6, width/20)];
+    ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(instituteNameLabel.frame.origin.x, localImageView.frame.size.height+localImageView.frame.origin.y+width/25, width/29*6, width/20)];
     ratingBar.isIndicator=YES;
     [ratingBar setPadding:2];
     [ratingBar setImageDeselected:@"star_normal" halfSelected:nil fullSelected:@"star_light" andDelegate:nil];

@@ -313,7 +313,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     UIControl *siftCotrol=[[UIControl alloc]initWithFrame:CGRectMake(hotControl.frame.origin.x+hotControl.frame.size.width+0.2, 0, width-(hotLabel.frame.origin.x+hotLabel.frame.size.width+0.2), width/7)];
     [siftCotrol setTag:1];
     [siftCotrol setUserInteractionEnabled:YES];
-    [siftCotrol addTarget:self action:@selector(topOnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [siftCotrol addTarget:self action:@selector(openSildingMenu) forControlEvents:UIControlEventTouchUpInside];
     //筛选按钮
     UIImageView *siftImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, (width/7-width/17.8)/2, width/19.3, width/17.8)];
     [siftCotrol setBackgroundColor:[UIColor whiteColor]];
@@ -326,6 +326,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [siftCotrol addSubview:siftImageView];
     [marginview addSubview:siftCotrol];
 }
+
 -(void)sortData{
     if(isHot){
         isHot=NO;
@@ -613,7 +614,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [firstLayout closeDrawer];
     isSift=YES;
 }
-
+-(void)openSildingMenu{
+    [firstLayout openDrawer];
+}
 -(void)initTableView{
     
     bottomHeight=49;
