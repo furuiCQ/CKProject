@@ -452,6 +452,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     myDelegate.model=model;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         xws=(NSArray *)model.result;
+                        pag=[[UIPageControl alloc]init];
+                        pag.numberOfPages=xws.count;
+                        tok=xws.count;
                         for (int i=0; i<xws.count; i++) {
                             UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(0, i* (st.frame.size.height/2), st.frame.size.width, st.frame.size.height/2)];
                             NSDictionary *bt=[xws objectAtIndex:i];
@@ -496,19 +499,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [ma showBack];
 }
 
--(void)nextxinwen
-{
-    int page = (int)pag.currentPage;
-    //    NSLog(@"page----%i",page);
-    if (page == tok-1) {
-        page = 0;
-    }else
-    {
-        page++;
-    }
-    CGFloat x = page*st.frame.size.height;
-    st.contentOffset = CGPointMake(0, x);
-}
+
 -(void)getCharsection{
     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
     if (localNumber==nil) {
@@ -727,7 +718,20 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     });
     
 }
-
+//加载下条新闻
+-(void)nextxinwen
+{
+    int page = (int)pag.currentPage;
+    NSLog(@"nextxinwen page----%i",page);
+    if (page == tok-1) {
+        page = 0;
+    }else
+    {
+        page++;
+    }
+    CGFloat x = page*st.frame.size.height;
+    st.contentOffset = CGPointMake(0, x);
+}
 //加载下张图片
 - (void)nextImage
 {
@@ -738,7 +742,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     {
         page++;
     }
-    
     //  滚动scrollview
     CGFloat x = page * scrollview.frame.size.width;
     scrollview.contentOffset = CGPointMake(x, 0);

@@ -255,7 +255,28 @@
         return [orgDictionary count];
     }
 }
-
+#pragma mark - UIView animation
+//Spring Animation
+- (void)dismisAnimation{
+    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
+//                //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
+//                [UIView animateWithDuration:1.f delay:0.02*(btn.tag) usingSpringWithDamping:0.6f initialSpringVelocity:1.5f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//                    btn.frame = CGRectMake(btn.frame.origin.x, -300, btn.frame.size.width,btn.frame.size.height);
+//                } completion:^(BOOL finished) {
+//                }];
+//   });
+}
+-(void)showAnimation{
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
+//        //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
+//        [UIView animateWithDuration:1.f delay:(0.2-0.02*(btn.tag)) usingSpringWithDamping:1.0f initialSpringVelocity:15.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//            btn.frame = CGRectMake(btn.frame.origin.x, (y+paddingHeight+width/9.1)*(btn.tag), btn.frame.size.width,btn.frame.size.height);
+//        } completion:^(BOOL finished) {
+//        }];
+//    });
+//
+}
 #pragma mark返回每行的单元格
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSIndexPath是一个结构体，记录了组和行信息
@@ -337,9 +358,16 @@
             if(isSelected==true){
                 [control addSubview:itemLabel];
                 [dataCell addSubview:control];
-                CGRect frame=cell.frame;
-                frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
-                cell.frame=frame;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
+                    //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
+                    [UIView animateWithDuration:1.f delay:(0.2-0.02*(i)) usingSpringWithDamping:1.0f initialSpringVelocity:15.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                        CGRect frame=cell.frame;
+                        frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
+                        cell.frame=frame;
+                        } completion:^(BOOL finished) {
+                    }];
+                });
+                
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:255.f/255.f green:82.f/255.f blue:82.f/255.f alpha:1.0]];
                 [dataCell.moreLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
                 [cell setBackgroundColor:[UIColor colorWithRed:234.f/255.f green:235.f/255.f blue:235.f/255.f alpha:1.0]];
