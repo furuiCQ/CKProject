@@ -878,7 +878,7 @@ static NSString *identy = @"OrderRecordCell";
         if([selcedIdArray count]>0){
             for (int i=0; i<[selcedIdArray count]; i++) {
                 NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
-                if(selectId ==indexPath){
+                if([selectId row] ==[indexPath row]){
                     isSelected=true;
                 }
             }
@@ -984,7 +984,7 @@ static NSString *identy = @"OrderRecordCell";
         if([selcedIdArray count]>0){
             for (int i=0; i<[selcedIdArray count]; i++) {
                 NSIndexPath *selectId=(NSIndexPath *)[selcedIdArray objectAtIndex:i];
-                if(selectId ==indexPath){
+                if([selectId row]==[indexPath row]){
                     [selcedIdArray removeObjectAtIndex:i];
                     hasNumb=true;
                 }
