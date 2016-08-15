@@ -117,7 +117,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [leftImage setUserInteractionEnabled:YES];
     [leftImage setImage:[UIImage imageNamed:@"msg_logo"]];
    // [titleView addSubview:leftImage];
-    UIControl *leftControl=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/5.3, titleHeight)];
+    UIControl *leftControl=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/5, titleHeight)];
     [leftControl addTarget:self action:@selector(goMsgViewController) forControlEvents:UIControlEventTouchUpInside];
  //   [titleView addSubview:leftControl];
     
@@ -131,12 +131,8 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     //新建右上角的图形
     msgLabel=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/19-2, titleHeight/2-7,4, 15)];
     [msgLabel setUserInteractionEnabled:YES];
-    
-   // UITapGestureRecognizer *menuapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openRightMenu)];
-    //[msgLabel addGestureRecognizer:menuapGestureRecognizer];
-    
     [msgLabel setImage:[UIImage imageNamed:@"menu_logo"]];
-    UIControl *rightControl=[[UIControl alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/5.3, 0, self.view.frame.size.width/5.3, titleHeight)];
+    UIControl *rightControl=[[UIControl alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/5.3, 0, self.view.frame.size.width/5, titleHeight)];
     [rightControl addTarget:self action:@selector(openRightMenu) forControlEvents:UIControlEventTouchUpInside];
     [titleView addSubview:rightControl];
     
@@ -447,7 +443,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         if (myDelegate.model!=nil) {
             
             [HttpHelper getUserInfo:myDelegate.model success:^(HttpModel *model){
-                NSLog(@"2222222222222223___%@",model.result);
+               // NSLog(@"2222222222222223___%@",model.result);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -456,7 +452,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                         myDelegate.isLogin=YES;
                         [self setData:model.result];
                         [slideMenu setData:model.result];
-                        [slideMenu setScrollEnabled:YES];
+                    //    [slideMenu setScrollEnabled:YES];
                     }else{
                         
                     }

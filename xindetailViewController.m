@@ -435,11 +435,14 @@
     if ([tableArray count]>0) {
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
         if ([dic objectForKey:@"uimg"] && ![[dic objectForKey:@"uimg"] isEqual:[NSNull null]]) {
-            [cell.im.layer setCornerRadius:cell.im.frame.size.width/2];
             NSString *logo=[dic objectForKey:@"uimg"];
             if([logo length]>0){
                 [cell.im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
+               
             }
+            [cell.im.layer setCornerRadius:cell.im.frame.size.width/2];
+            [cell.im.layer setMasksToBounds:YES];
+            [cell.im setBackgroundColor:[UIColor clearColor]];
         }
         if ([dic objectForKey:@"username"] && ![[dic objectForKey:@"username"] isEqual:[NSNull null]] ) {
             [cell.writers  setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]]    ];

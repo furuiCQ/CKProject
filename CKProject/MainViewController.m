@@ -722,7 +722,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 -(void)nextxinwen
 {
     int page = (int)pag.currentPage;
-    NSLog(@"nextxinwen page----%i",page);
+   // NSLog(@"nextxinwen page----%i",page);
     if (page == tok-1) {
         page = 0;
     }else
@@ -777,7 +777,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         
         if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
             
-            NSLog(@"上拉加载");
+          //  NSLog(@"上拉加载");
             
         }
         
