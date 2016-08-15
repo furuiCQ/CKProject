@@ -54,6 +54,8 @@
     //share
     NSDictionary* popJson;
     UIView *allShowView;
+    BOOL isShow;
+
     
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
@@ -841,17 +843,54 @@
         [imageView addGestureRecognizer:gesture];
         [imageView setTag:i];
         [imageView setImage:[imageArray objectAtIndex:i]];
+        imageView.frame = CGRectMake(imageView.frame.origin.x, -300, imageView.frame.size.width,imageView.frame.size.height);
         [allShowView addSubview:imageView];
     }
-    [allShowView setHidden:YES];
     [self.view addSubview:allShowView];
 }
+#pragma mark - UIView animation
+//Spring Animation
+- (void)dismisAnimation{
+    for (UIView *view in allShowView.subviews) {
+        if ([view isKindOfClass:[UIImageView class]]) {
+            UIImageView *btn=(UIImageView *)view;
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
+                //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
+                [UIView animateWithDuration:1.f delay:0.02*(btn.tag) usingSpringWithDamping:0.6f initialSpringVelocity:1.5f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    btn.frame = CGRectMake(btn.frame.origin.x, -300, btn.frame.size.width,btn.frame.size.height);
+                } completion:^(BOOL finished) {
+                }];
+            });
+        }
+    }
+}
+-(void)showAnimation{
+    int width=self.view.frame.size.width;
+    int y=0;
+    int paddingHeight=width/35.6;
+    for (UIView *view in allShowView.subviews) {
+        if ([view isKindOfClass:[UIImageView class]]) {
+            UIImageView *btn=(UIImageView *)view;
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
+                //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
+                [UIView animateWithDuration:1.f delay:(0.2-0.02*(btn.tag)) usingSpringWithDamping:1.0f initialSpringVelocity:15.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    btn.frame = CGRectMake(btn.frame.origin.x, (y+paddingHeight+width/9.1)*(btn.tag), btn.frame.size.width,btn.frame.size.height);
+                } completion:^(BOOL finished) {
+                }];
+            });
+        }
+    }
+}
+
 -(void)share{
-    if(allShowView.hidden){
-        [allShowView setHidden:NO];
+    if(!isShow){
+        isShow=YES;
+        [self showAnimation];
     }else{
-        [allShowView setHidden:YES];
-        
+        [self dismisAnimation];
+        isShow=NO;
     }
     NSString *title=[@"这里有免费的"stringByAppendingString:searchLabel.text];
     NSString *txt;
