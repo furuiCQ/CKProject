@@ -91,9 +91,12 @@ static NSString *const API_TIMELIST=@"weeklist";
 static NSString *const API_NEWSCOMMENTS_ZAN=@"newscommentszan";
 static NSString *const API_NEWS_ZAN=@"newszan";
 static NSString *const API_COUPON=@"coupon";
+static NSString *const API_SHOW_COUPON=@"showcoupon";
+
 @interface HttpHelper : NSObject
 +(NSString *)getNowImageTime;
 //二期接口
++(void)showCoupon:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)searchData:(NSNumber *)aid  withCid:(NSNumber *)cid withPid:(NSNumber *)pid withGid:(NSNumber *)gid withPc:(NSNumber *)pc withPn:(NSNumber *)pn withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)searchCoupon:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)searchProject:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

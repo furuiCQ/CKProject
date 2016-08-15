@@ -313,7 +313,6 @@
     if(topBar.tag==0){
         [detailContentLabel setHidden:YES];
         [tableHeaderView setFrame:CGRectMake(0, 0, self.view.frame.size.width, headerView.frame.origin.y+headerView.frame.size.height)];
-       // projectTableView
 
     }else{
         [detailContentLabel setHidden:NO];

@@ -241,6 +241,15 @@
         failture(error);
     }];
 }
++(void)showCoupon:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SHOW_COUPON] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
+
 +(void)getCity:(NSNumber *)aid success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{@"name":@"id",@"value":aid}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_LOCAL_LIST] success:^(HttpModel *model){

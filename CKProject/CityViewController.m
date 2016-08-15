@@ -19,12 +19,13 @@
 @synthesize searchLabel;
 @synthesize cityLabel;
 @synthesize _tableView;
+@synthesize nowCity;
 - (id)init
 {
     self = [super init];
     if (self) {
         // Custom initialization
-        self.arrayHotCity = [NSMutableArray arrayWithObjects:@"北京",@"成都",@"杭州",@"南京",@"武汉",@"厦门", nil];
+        self.arrayHotCity = [NSMutableArray arrayWithObjects:@"北京",@"重庆",@"成都",@"杭州",@"南京",@"武汉",@"厦门", nil];
         self.keys = [NSMutableArray array];
         self.arrayCitys = [NSMutableArray array];
     }
@@ -54,6 +55,8 @@
 #pragma mark - 获取城市数据
 -(void)getCityData
 {
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
     NSString *path=[[NSBundle mainBundle] pathForResource:@"citydict"
                                                    ofType:@"plist"];
     self.cities = [NSMutableDictionary dictionaryWithContentsOfFile:path];
@@ -68,7 +71,17 @@
 
     strHot = @"当";
     [self.keys insertObject:strHot atIndex:0];
-    [self.cities setObject:[NSMutableArray arrayWithObjects:@"重庆", nil]forKey:strHot];
+    if(!myDelegate.cityName){
+        myDelegate.cityName=@"重庆";
+    }
+    [self.cities setObject:[NSMutableArray arrayWithObjects:myDelegate.cityName, nil]forKey:strHot];
+    for(NSString *str in self.arrayHotCity){
+        if([str isEqualToString:myDelegate.cityName])
+        {
+            [self.arrayHotCity removeObject:str];
+            break;
+        }
+    }
     
 }
 
@@ -191,6 +204,8 @@
     cell.textLabel.text = [[_cities objectForKey:key]  objectAtIndex:indexPath.row];
     return cell;
 }
+static NSString * const DEFAULT_LOCAL_AID = @"500100";
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSString *key = [_keys objectAtIndex:indexPath.section];
     NSString *cityString=[[_cities objectForKey:key]  objectAtIndex:indexPath.row];
@@ -209,6 +224,10 @@
     NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
     NSNumber *_selectCityId=[formater numberFromString:cityStr];
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSRange cqRange=[cityString rangeOfString:@"重庆"];
+    if(cqRange.length>0){
+        myDelegate.localNumber=[formater numberFromString:DEFAULT_LOCAL_AID];
+    }
     myDelegate.localNumber=_selectCityId;
     myDelegate.cityName=cityString;
     NSNotification *notification =[NSNotification notificationWithName:@"changeCity" object:nil];

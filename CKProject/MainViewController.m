@@ -132,6 +132,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 -(void)changeCity{
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if(![myDelegate.cityName isEqualToString:cityLabel.text]){
+        TopBar *bar=[[TopBar alloc]init];
+        [bar setTag:1];
+        [self topBarOnClick:bar];
+    }
     [cityLabel setText:myDelegate.cityName];
 }
 //初始化顶部菜单栏
