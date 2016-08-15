@@ -9,7 +9,8 @@
 #import "LoadingViewController.h"
 #import "MainViewController.h"
 #import "SortViewController.h"
-#import "CircleViewController.h"
+#import "ViewController.h"
+
 #import "MineViewController.h"
 
 @interface LoadingViewController (){
@@ -31,15 +32,17 @@
     timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(goMainViewController) userInfo:nil repeats:NO];
     
 }
+//[btnView setSelectColor:[UIColor colorWithRed:1 green:99.f/255.f blue:99.f/255.f alpha:1.0]];
+//[btnView setUnSelectColor:[UIColor blackColor]];
+
 -(void)goMainViewController{
         MainTabBarViewController *mtvc;
     
-        NSArray *selectArray =[NSArray arrayWithObjects:@"main_select",@"sort_select",@"circle_select",@"mine_select",nil];
-        NSArray *unselectArray =[NSArray arrayWithObjects:@"main_unselect",@"sort_unselect",@"circle_unselect",@"mine_unselect",nil];
-        NSArray *textArray =[NSArray arrayWithObjects:@"首页",@"分类",@"圈子",
-                             @"我",nil];
-        NSArray *viewControllerArray =[NSArray arrayWithObjects:[[MainViewController alloc]init],[[SortViewController alloc]init],[[CircleViewController alloc]init],
-                             [[MineViewController alloc]init],nil];
+        NSArray *selectArray =[NSArray arrayWithObjects:@"main_select",@"news",@"sort_select",@"mine_select",nil];
+        NSArray *unselectArray =[NSArray arrayWithObjects:@"main_unselect",@"news_normal",@"sort_unselect",@"mine_unselect",nil];
+        NSArray *textArray =[NSArray arrayWithObjects:@"首页",@"新闻",@"分类",
+                         @"我",nil];
+        NSArray *viewControllerArray =[NSArray arrayWithObjects:[[MainViewController alloc]init],[[ViewController alloc]init],[[SortViewController alloc]init],[[MineViewController alloc]init],nil];
     
         mtvc=[[MainTabBarViewController alloc]init];
         NSMutableArray *vcArray=[[NSMutableArray alloc]init];
