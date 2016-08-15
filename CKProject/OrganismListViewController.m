@@ -212,12 +212,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     DemotionControl *btn=(DemotionControl *)sender;
     
     switch (btn.tag) {
-//        case 0:
-//        {
-//            [self inPopView];
-//            
-//        }
-            break;
         case 0:
         {
             btn.userLogo.selected=!btn.userLogo.selected;//每次点击都改变按钮的状态
@@ -1002,87 +996,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         OrganTableCell *porjectCell=(OrganTableCell *)cell;
         
         NSDictionary *dic=[tableArray objectAtIndex:[indexPath row]];
-        if ([dic objectForKey:@"lng"] && ![[dic objectForKey:@"lng"] isEqual:[NSNull null]] &&
-            [dic objectForKey:@"lat"] && ![[dic objectForKey:@"lat"] isEqual:[NSNull null]]) {
-            NSNumber *lng=[dic objectForKey:@"lng"];
-            NSNumber *lat=[dic objectForKey:@"lat"];
-            
-            //得到当前坐标
-            
-            //转化为坐标
-           
-            CLLocationCoordinate2D coordinate;
-            coordinate.latitude=[lat floatValue];
-            
-            coordinate.longitude=[lng floatValue];
-            //1.获得输入的经纬度
-            lg=[NSString stringWithFormat:@"%f",neloct.coordinate.longitude] ;
-            lt=[NSString stringWithFormat:@"%f",neloct.coordinate.latitude] ;
-            NSString *longtitudeText=lg;
-            NSString *latitudeText=lt;;
-            
-            CLLocationDegrees latitude=[latitudeText doubleValue];
-            CLLocationDegrees longitude=[longtitudeText doubleValue];
-            
-            CLLocation *location=[[CLLocation alloc]initWithLatitude:latitude longitude:longitude];
-            //2.反地理编码
-            [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-                if (error||placemarks.count==0) {
-                    place1.text=@"你的地址没找到，可能在月球上";
-                }else//编码成功
-                {
-                    //显示最前面的地标信息
-                    NSLog(@"111111:%@",placemarks);
-                    CLPlacemark *firstPlacemark=[placemarks firstObject];
-                    
-                    NSLog(@"2222-%@",firstPlacemark.name);
-                    //经纬度
-                    for (CLPlacemark *place in placemarks) {
-                        NSDictionary *location =[place addressDictionary];
-                        NSLog(@"国家：%@",[location objectForKey:@"Country"]);
-                        NSLog(@"城市：%@",[location objectForKey:@"State"]);
-                        NSLog(@"区：%@",[location objectForKey:@"SubLocality"]);
-                        
-                        NSLog(@"位置：%@", place.name);
-                        NSLog(@"国家：%@", place.country);
-                        NSLog(@"城市：%@", place.locality);
-                        NSLog(@"区：%@", place.subLocality);
-                        place1.text=place.subLocality;
-                        NSLog(@"街道：%@", place.thoroughfare);
-                        NSLog(@"子街道：%@", place.subThoroughfare);
-                        
-                    }
-                    //------
-                    //                    CLLocationDegrees latitude=firstPlacemark.location.coordinate.latitude;
-                    //                    CLLocationDegrees longitude=firstPlacemark.location.coordinate.longitude;
-                    //                    lt=[NSString stringWithFormat:@"%.2f",latitude];
-                    //                    lg=[NSString stringWithFormat:@"%.2f",longitude];
-                }
-            }];
-            
-            
- 
-            
-            
-            //            //NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-            //            double distance=[RJUtil LantitudeLongitudeDist:[lng doubleValue] other_Lat:[lat doubleValue] self_Lon:localLng self_Lat:localLat];
-            //            NSLog(@"distance:%f",distance);
-            //            if(distance>0.0){
-            //                if (distance/1000>1) {
-            //                    [porjectCell.listItem.typelabel3 setText:[NSString stringWithFormat:@"约%dkm",(int)distance/1000]];
-            //
-            //                }else if (distance/1000<1 && distance/1000>0.5){
-            //                    [porjectCell.listItem.typelabel3 setText:@"<1000m"];
-            //                }else if (distance/1000<0.5){
-            //                    [porjectCell.listItem.typelabel3 setText:@"<500m"];
-            //                }
-            //            }
-            
-        }
-
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
             [porjectCell.listItem.orgName setText:[NSString stringWithFormat:@"%@",title]];
+            porjectCell.listItem.orgName.numberOfLines=0;
+            [porjectCell.listItem.orgName sizeToFit];
         }
         if ([dic objectForKey:@"stitle"] && ![[dic objectForKey:@"stitle"] isEqual:[NSNull null]]) {
             NSString *stitle=[dic objectForKey:@"stitle"];
@@ -1106,6 +1024,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
             NSString *addr=[dic objectForKey:@"addr"];
             [porjectCell.listItem.addLabel setText:[NSString stringWithFormat:@"%@",addr]];
+            porjectCell.listItem.addLabel.numberOfLines=0;
+            [porjectCell.listItem.addLabel sizeToFit];
+
         }
     }else if ([local1Array count]>0 && tableView.tag==1) {
         

@@ -1195,6 +1195,10 @@ static NSString *identy = @"OrderRecordCell";
             myDelegate.longitude=locationCorrrdinate.longitude;
             localLat= myDelegate.latitude;
             localLng=myDelegate.longitude;
+            NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+            [user setObject:[NSNumber numberWithDouble:localLat] forKey:@"lttt"];
+            [user setObject:[NSNumber numberWithDouble:localLng]  forKey:@"nggg"];
+
         }];
     }
     

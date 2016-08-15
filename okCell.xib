@@ -55,7 +55,7 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="Zag-hY-TRA" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.6" id="1QG-MW-a47"/>
+                    <constraint firstItem="Zag-hY-TRA" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.55" id="1QG-MW-a47"/>
                     <constraint firstItem="I1Z-xi-rNR" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="ZL5-In-bk7"/>
                     <constraint firstItem="I1Z-xi-rNR" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.4" id="dfk-09-MCp"/>
                     <constraint firstItem="Mpj-Ee-bfO" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" id="sGj-J9-NDy"/>

@@ -53,39 +53,38 @@
         
         [self addSubview:logoView];
 
-        orgName=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6
+        orgName=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/45.7
                                                                   , width/2, width/11)];
         [orgName setText:@"二胡十段兴趣班"];
         [orgName setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
         [orgName setFont:[UIFont systemFontOfSize:width/22]];
-        orgName.lineBreakMode = UILineBreakModeWordWrap;
         orgName.numberOfLines = 0;
         [self addSubview:orgName];
         
         
-        UILabel *orderLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6+width/22+width/35.6, width/32*2, width/32)];
+        UILabel *orderLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6+width/22+width/20, width/32*2, width/32)];
         [orderLabel setText:@"预约"];
         [orderLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
         [orderLabel setFont:[UIFont systemFontOfSize:width/32]];
         [self addSubview:orderLabel];
         
-        numberLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/32*2+width/45.7, width/24.6+width/22+width/35.6, width/32*4, width/32)];
+        numberLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/32*2+width/45.7, width/24.6+width/22+width/20, width/32*4, width/32)];
         [numberLabel setText:@"200"];
         [numberLabel setFont:[UIFont systemFontOfSize:width/32]];
         [numberLabel setTextColor:[UIColor colorWithRed:240.f/255.f green:0.f/255.f blue:0.f/255.f alpha:1.0]];
         [self addSubview:numberLabel];
         
-        ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/32*2+width/45.7+width/32*4+width/35.6, width/24.6+width/22+width/35.6, width/29*6, width/20)];
+        ratingBar=[[RatingBar alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/32*2+width/45.7+width/32*4+width/35.6, width/24.6+width/22+width/20, width/29*6, width/20)];
         ratingBar.isIndicator=YES;
         [ratingBar setImageDeselected:@"star_normal" halfSelected:nil fullSelected:@"star_light" andDelegate:nil];
         [ratingBar displayRating:4.0f];
         [self addSubview:ratingBar];
        
         UIImageView *localImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"location_gray"]];
-        [localImageView setFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6+width/22+width/35.6+width/32+width/11.4+width/160, width/35.5, width/29)];
+        [localImageView setFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6+width/22+width/35.6+width/11.4+width/160, width/35.6, width/23.7)];
         [self addSubview:localImageView];
         
-        addLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/35.5+width/45.7, width/24.6+width/22+width/35.6+width/32+width/11.4, width/29*18, width/13)];
+        addLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/35.5+width/45.7, width/24.6+width/22+width/35.6+width/11.4, width/29*18, width/13)];
         [addLabel setText:@"渝中区牛角沱太平洋广场3楼"];
         //自动折行设置
         addLabel.lineBreakMode = UILineBreakModeWordWrap;

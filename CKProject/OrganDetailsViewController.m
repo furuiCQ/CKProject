@@ -422,7 +422,6 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     //  NSLog(@"计算每组(组%i)行数",section);
     //  KCContactGroup *group1=_contacts[section];
-    NSLog(@"数组个数：%li",tableArray.count);
     return [tableArray count];
     
 }

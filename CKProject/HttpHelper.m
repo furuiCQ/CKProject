@@ -1336,6 +1336,7 @@
         }
         [body appendFormat:@"%@", param[@"value"]];
     }
+    NSLog(@"url===:%@",url);
     NSLog(@"body===:%@",body);
     
     //声明myRequestData，用来放入http body

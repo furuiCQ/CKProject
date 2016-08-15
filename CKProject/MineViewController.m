@@ -242,7 +242,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [regBtn setTextAlignment:NSTextAlignmentCenter];
     [unloginControl addSubview:regBtn];
     
-    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, whiteImageView.frame.origin.y+whiteImageView.frame.size.height, width, width/8.8)];
+    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, whiteImageView.frame.origin.y+whiteImageView.frame.size.height, width, 36)];
     [headerView setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     [tableHeaderView addSubview:headerView];
     [self initSwitchBtn:headerView];

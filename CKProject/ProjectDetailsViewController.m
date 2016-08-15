@@ -92,6 +92,7 @@
     NSString *lg;
     UINib *nib;
     UILabel *distanceLabel;
+    UILabel *collectNumLabel;
     UIView *allShowView;
     ProjectTimePicker *picker;
     NSDictionary *timeData;
@@ -310,7 +311,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     UIControl *collectControl=[[UIControl alloc]initWithFrame:CGRectMake(0,height-width/6.2, width/5.6, width/6.2)];
     [collectControl setBackgroundColor:[UIColor whiteColor]];
     
-    UILabel *collectNumLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, width/20, width/5.6, width/32)];
+    collectNumLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, width/20, width/5.6, width/32)];
     [collectNumLabel setText:@"288"];
     [collectNumLabel setFont:[UIFont systemFontOfSize:width/32]];
     [collectNumLabel setTextAlignment:NSTextAlignmentCenter];
@@ -733,6 +734,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"insttitle"]&& ![[dic objectForKey:@"insttitle"] isEqual:[NSNull null]]){
                                 [instituteNameLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"insttitle"]]];
                             }
+                            if([dic objectForKey:@"favorite"]&& ![[dic objectForKey:@"favorite"] isEqual:[NSNull null]]){
+                                NSNumber *number=[dic objectForKey:@"favorite"];
+                               [collectNumLabel setText:[NSString stringWithFormat:@"%@",number]];
+                            }
                             
                             if([dic objectForKey:@"people"]&& ![[dic objectForKey:@"people"] isEqual:[NSNull null]]){
                                 NSNumber *number=[dic objectForKey:@"people"];
@@ -938,7 +943,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             if([dic objectForKey:@"insttitle"]&& ![[dic objectForKey:@"insttitle"] isEqual:[NSNull null]]){
                                 [instituteNameLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"insttitle"]]];
                             }
-                            
+                            if([dic objectForKey:@"favorite"]&& ![[dic objectForKey:@"favorite"] isEqual:[NSNull null]]){
+                                NSNumber *number=[dic objectForKey:@"favorite"];
+                                [collectNumLabel setText:[NSString stringWithFormat:@"%@",number]];
+                            }
                             if([dic objectForKey:@"people"]&& ![[dic objectForKey:@"people"] isEqual:[NSNull null]]){
                                 NSNumber *number=[dic objectForKey:@"people"];
                                 [numbLabel setText:[NSString stringWithFormat:@"%@",number]];

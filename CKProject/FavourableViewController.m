@@ -113,7 +113,7 @@
     }
     if ([dic objectForKey:@"insttitle"] && ![[dic objectForKey:@"insttitle"] isEqual:[NSNull null]]) {
         NSString *title=[dic objectForKey:@"insttitle"];
-    //    [porjectCell.authorLabel setText:[NSString stringWithFormat:@"%@",title]];
+       [cell.orgName setText:[NSString stringWithFormat:@"%@",title]];
     }
     if ([dic objectForKey:@"biglogo"] && ![[dic objectForKey:@"biglogo"] isEqual:[NSNull null]]) {
         NSString *logo=[dic objectForKey:@"biglogo"];
@@ -140,12 +140,17 @@
     }
     if ([dic objectForKey:@"reduce"] && ![[dic objectForKey:@"reduce"] isEqual:[NSNull null]]) {
         NSNumber *grade=[dic objectForKey:@"reduce"];
-        [cell.nowPrice setText:[NSString stringWithFormat:@"%@",grade]];
+        [cell.nowPrice setText:[NSString stringWithFormat:@"￥%@",grade]];
     }
     if ([dic objectForKey:@"pay"] && ![[dic objectForKey:@"pay"] isEqual:[NSNull null]]) {
         NSNumber *grade=[dic objectForKey:@"pay"];
-        [cell.lastPrice setText:[NSString stringWithFormat:@"%@",grade]];
+        NSString *oldStr=[NSString stringWithFormat:@"￥%@",grade];
+        //中划线
+       NSDictionary *attribtDic = @{NSStrikethroughStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]};
+        NSMutableAttributedString *attribtStr = [[NSMutableAttributedString alloc]initWithString:oldStr attributes:attribtDic];
+        [cell.lastPrice setAttributedText:attribtStr];
     }
+
     if ([dic objectForKey:@"usenum"] && ![[dic objectForKey:@"usenum"] isEqual:[NSNull null]] &&
         [dic objectForKey:@"totalnum"] && ![[dic objectForKey:@"totalnum"] isEqual:[NSNull null]]) {
         NSNumber *usenum=[dic objectForKey:@"usenum"];

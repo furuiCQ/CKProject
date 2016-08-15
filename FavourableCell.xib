@@ -49,10 +49,6 @@
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="URJ-vN-Zni">
-                        <rect key="frame" x="253" y="54" width="35" height="1"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    </view>
                     <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" progress="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="wOo-Gd-EZV">
                         <rect key="frame" x="48" y="90" width="97" height="2.5"/>
                         <color key="backgroundColor" red="0.90980392156862744" green="0.9137254901960784" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
@@ -90,7 +86,6 @@
                     <constraint firstItem="NF9-SD-9ve" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.25" id="XVF-7z-YfH"/>
                     <constraint firstItem="rvH-Kp-EMu" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-3" id="Xl6-Yg-490"/>
                     <constraint firstItem="1vO-oq-xeE" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" id="fkk-8f-HyY"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="URJ-vN-Zni" secondAttribute="trailing" constant="24" id="mkv-a0-SsK"/>
                     <constraint firstAttribute="trailingMargin" secondItem="45L-Pa-hrG" secondAttribute="trailing" constant="-3" id="tOa-br-CeB"/>
                     <constraint firstItem="NF9-SD-9ve" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="tv9-1n-N7F"/>
                     <constraint firstItem="BQn-lS-gJH" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.4" id="wBC-j6-Ag9"/>
@@ -100,7 +95,6 @@
                 <outlet property="activityLabel" destination="0cL-W2-zwY" id="8e5-n1-YZ4"/>
                 <outlet property="bgView" destination="rvH-Kp-EMu" id="se5-0G-4y1"/>
                 <outlet property="lastPrice" destination="NF9-SD-9ve" id="DAo-Ad-TIE"/>
-                <outlet property="lineView" destination="URJ-vN-Zni" id="iYc-tI-GiR"/>
                 <outlet property="logoView" destination="yTA-Uq-y9z" id="BIt-tn-kkN"/>
                 <outlet property="nowPrice" destination="J3p-AG-J7c" id="mUu-Y9-jVF"/>
                 <outlet property="orgName" destination="BQn-lS-gJH" id="0fd-QB-y1m"/>

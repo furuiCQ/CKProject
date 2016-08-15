@@ -723,7 +723,7 @@ static NSString *identy = @"OrderRecordCell";
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSIndexPath是一个结构体，记录了组和行信息
     UITableViewCell *cell;
-    NSLog(@"tableView.tag %ld",(long)tableView.tag);
+    //NSLog(@"tableView.tag %ld",(long)tableView.tag);
     if ([tableArray count]>0 && tableView.tag==0) {
         static NSString *identy = @"CustomCell";
         cell = [tableView dequeueReusableCellWithIdentifier:identy];
@@ -1288,8 +1288,8 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getData{
+     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [ProgressHUD show:@"加载中..."];
-    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
     NSNumber *Aid= myDelegate.localNumber;
     if(Aid==NULL){
@@ -1298,9 +1298,10 @@ static NSString *identy = @"OrderRecordCell";
     NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
     NSNumber *ar=[stand objectForKey:@"lttt"];
     NSNumber *ngg=[stand objectForKey:@"nggg"];
+   
     if (ar==NULL&&ngg==NULL) {
-        ar=[NSNumber numberWithDouble:localLat];
-        ngg=[NSNumber numberWithDouble:localLng];
+        ar=[NSNumber numberWithDouble:myDelegate.latitude];
+        ngg=[NSNumber numberWithDouble:myDelegate.longitude];
     }
     if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
         ar=[NSNumber numberWithDouble:29.5];
@@ -1655,7 +1656,7 @@ static NSString *identy = @"OrderRecordCell";
 
 //返回每个item
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
+   // NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
     UICollectionViewCell * cell;
     NSDictionary *dic;
     if (collectionView.tag==0) {
@@ -1687,7 +1688,7 @@ static NSString *identy = @"OrderRecordCell";
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
+    //NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
     switch (collectionView.tag) {
         case 0:
         {
