@@ -9,6 +9,7 @@
 #import "YiRightView.h"
 #import "HttpHelper.h"
 #import "SettingCell.h"
+#import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 @interface YiRightView ()<UITableViewDelegate,UITableViewDataSource>{
@@ -37,6 +38,7 @@
     
     self = [super initWithFrame:frame];
     phone=@"";
+   
     dataArray=[[NSArray alloc]initWithObjects:@"我的优惠券",@"性别",@"修改密码",@"电话",@"地址",@"联系我们",@"设置",@"退出登录", nil];
     imageArray=[[NSArray alloc]initWithObjects:@"ticket-",@"gender",@"password",@"phone",@"Location",@"contact",@"Settings-",@"LogOut", nil];
     if (self) {
@@ -133,6 +135,10 @@
     [cell.titleLabel setText:[dataArray objectAtIndex:[indexPath row]]];
     [cell.logoImage setImage:[UIImage imageNamed:[imageArray objectAtIndex:[indexPath row]]]];
     [cell.rightView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if(!myDelegate.isHasCoupon && [indexPath row]==0){
+        [cell setHidden:YES];
+    }
     if([indexPath row]==1){
         UIButton *switchButton = [[UIButton alloc] initWithFrame:CGRectMake(cell.rightView.frame.size.width-10-38,  cell.rightView.frame.size.height/4, 38, 21)];
         [switchButton setUserInteractionEnabled:YES];

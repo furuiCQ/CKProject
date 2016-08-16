@@ -212,6 +212,7 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
     }
     return YES;
 }
+
 //授权后回调 WXApiDelegate
 -(void)onResp:(BaseReq *)resp
 {
@@ -225,11 +226,14 @@ static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
      lang    微信客户端当前语言
      country 微信用户当前国家信息
      */
-    SendAuthResp *aresp = (SendAuthResp *)resp;
-    if (aresp.errCode== 0) {
-        NSString *code = aresp.code;
-        [self getAccess_token:code];
+    if([resp isKindOfClass:[SendAuthResp class]]){
+        SendAuthResp *aresp = (SendAuthResp *)resp;
+        if (aresp.errCode== 0) {
+            NSString *code = aresp.code;
+            [self getAccess_token:code];
+        }
     }
+   
 }
 -(void)getAccess_token:(NSString *)code
 {

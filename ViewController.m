@@ -59,7 +59,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    _titleArray = [[NSMutableArray alloc] initWithArray:@[@"热门",@"早期教育",@"幼儿教育",@"小学教育",@"初高中教育",@"成人教育"]];
+    _titleArray = [[NSMutableArray alloc] initWithArray:@[@"热门",@"最新",@"幼儿教育",@"小学教育",@"初高中教育",@"成人教育"]];
     
     _topView = [[XMTopScrollView alloc] initWithFrame:CGRectMake(0, titleHeight+20, self.view.frame.size.width, titleHeight)];
     _topView.delegate = self;
@@ -94,6 +94,7 @@
     [refreshHeader header];
     refreshHeader.beginRefreshingBlock=^(){
         _isLoading=true;
+        pn=[NSNumber numberWithInt:1];
         [self getsj:0];
     };
     

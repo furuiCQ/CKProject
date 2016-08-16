@@ -819,7 +819,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     switch (uiAlertView.tag) {
         case 1:
         {
-            [self changeLogoutStauets];
+           // [self changeLogoutStauets];
         }
             break;
             
@@ -856,7 +856,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     myDelegate.model=model;
-                    //[control.userNameLabel setText:context];
                     
                 }else{
                     

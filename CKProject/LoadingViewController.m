@@ -61,9 +61,13 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSDictionary *result=model.result;
                 NSString *str=[NSString stringWithFormat:@"%@",result];
+                AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
                 if([str isEqualToString:@"0"]){
+                    [myDelegate setIsHasCoupon:NO];
                     [self goMainViewNormalController];
                 }else{
+                    [myDelegate setIsHasCoupon:YES];
                     [self goMainViewController];
                 }
 

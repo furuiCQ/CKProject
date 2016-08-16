@@ -31,7 +31,9 @@
 @property NSString *cityName;//省市名称
 @property NSString *areaName; //区县名
 @property BOOL isLogin;
-@property TencentOAuth *QQauth; 
+@property TencentOAuth *QQauth;
+@property BOOL isHasCoupon;
+
 
 
 @end

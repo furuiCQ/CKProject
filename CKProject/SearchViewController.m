@@ -81,6 +81,7 @@
     [searchField.layer setCornerRadius:2.0f];
     [searchField setFont:[UIFont systemFontOfSize:15]];
     [searchField setLeftView:cityLabel];
+    [searchField setPlaceholder:@"搜索你想要的课程/机构/优惠"];
     [searchField setLeftViewMode:UITextFieldViewModeAlways];
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/32-self.view.frame.size.width/11.8, (titleHeight-self.view.frame.size.width/11.8)/2, self.view.frame.size.width/11.8, self.view.frame.size.width/11.8)];
