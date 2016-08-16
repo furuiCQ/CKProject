@@ -83,14 +83,7 @@
         myDelegate.cityName=@"重庆";
     }
     [self.cities setObject:[NSMutableArray arrayWithObjects:myDelegate.cityName, nil]forKey:strHot];
-    for(NSString *str in self.arrayHotCity){
-        if([str isEqualToString:myDelegate.cityName])
-        {
-            [self.arrayHotCity removeObject:str];
-            break;
-        }
-    }
-    
+        
 }
 
 //初始化顶部菜单栏

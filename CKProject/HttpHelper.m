@@ -1125,7 +1125,6 @@
     //    [self uploadImage:parameters];
     UIImage *imageuplod=[UIImage imageWithContentsOfFile:[imageUrl stringByAppendingString:@".png"]];
     
-    
     NSDictionary *parameters=[NSDictionary  dictionaryWithObjectsAndKeys:model.tel,@"tel",
                               model.token,@"token",model.uid,@"uid",imageuplod,@"pic",nil];
     [self upload:[HTTPHEADER stringByAppendingString:API_UPLOAD] widthParams:parameters success:^(HttpModel *model){

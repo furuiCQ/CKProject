@@ -280,6 +280,10 @@
     [orderProject addGestureRecognizer:getsure];
     [orderProject setUserInteractionEnabled:YES];
     [nowWeekView addSubview:orderProject];
+    CGRect Tframe=self.frame;
+    Tframe.origin.y=Tframe.origin.y+self.frame.size.height-(nowWeekView.frame.size.height+nowWeekView.frame.origin.y);
+    Tframe.size.height=nowWeekView.frame.size.height+nowWeekView.frame.origin.y;
+     [self setFrame:Tframe];
 }
 -(void)initTimeView:(NSString *)time {
     CGRect rx = [ UIScreen mainScreen ].bounds;

@@ -77,11 +77,11 @@
     int hegiht=self.view.frame.size.height;
     UIScrollView *bgView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20+titleHeight+0.5, width, hegiht-(20+titleHeight+0.5))];
     [self.view addSubview:bgView];
-    keyTextField=[[UILabel alloc]initWithFrame:CGRectMake(width/11, width/16, width*5/6, width/10.7)];
+    keyTextField=[[UILabel alloc]initWithFrame:CGRectMake(width/11, width/16, width*5/6, width/22.8)];
     keyTextField.text=@"今日开设课程";
     [keyTextField setTextAlignment:NSTextAlignmentCenter];
     [keyTextField setTextColor:[UIColor colorWithRed:102.f/255.f green:102.f/255.f blue:102.f/255.f alpha:1.0]];
-    [keyTextField setFont:[UIFont systemFontOfSize:width/26.7]];
+    [keyTextField setFont:[UIFont systemFontOfSize:width/22.8]];
     [bgView addSubview:keyTextField];
     
     FDCalendar *calendar = [[FDCalendar alloc] initWithCurrentDate:[NSDate date]];
@@ -94,7 +94,7 @@
     [bgView addSubview:calendar];
     
     
-    sendAssessLabel=[[UILabel alloc]initWithFrame:CGRectMake((width-width/1.3)/2, calendar.frame.size.height+calendar.frame.origin.y+width/8.4, width/1.3, width/8)];
+    sendAssessLabel=[[UILabel alloc]initWithFrame:CGRectMake((width-width/1.3)/2, calendar.frame.size.height+calendar.frame.origin.y+width/10, width/1.3, width/8)];
     UITapGestureRecognizer *loginRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchProjectList)];
     sendAssessLabel.userInteractionEnabled=YES;
     [sendAssessLabel addGestureRecognizer:loginRecognizer];

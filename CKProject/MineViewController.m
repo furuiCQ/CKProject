@@ -252,7 +252,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     mainTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
                                                                0,
                                                                width,
-                                                               hegiht-(titleHeight))];
+                                                               hegiht-(titleHeight+20))];
     NSLog(@"%f",self.tabBarController.view.frame.size.height);
     mainTableView.dataSource                        = self;
     mainTableView.delegate                          = self;
@@ -994,7 +994,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         NSString *docPath = [paths lastObject];
         NSString *imageURl=[docPath stringByAppendingFormat:@"%@%@",@"/",timeDate];
         saveImageToCacheDir(docPath, image, timeDate, @"png");
-        [picker dismissViewControllerAnimated:YES completion:nil];
         [ProgressHUD show:@"上传图片中..."];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             // 耗时的操作
@@ -1009,8 +1008,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                 
                 
             }failure:^(NSError *error){
-                
-                
+                if (error.userInfo!=nil) {
+                    NSLog(@"%@",error.userInfo);
+                }
             }];
             
             
@@ -1020,7 +1020,8 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         
         
     }
-    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+
     
 }
 

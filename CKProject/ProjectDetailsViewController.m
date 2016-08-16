@@ -385,7 +385,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
 }
 -(void)openTimeSelectPicker{
-    [CustomPopView addViewAndShow:picker];
+    if(picker){
+        [CustomPopView addViewAndShow:picker]; 
+    }
 }
 -(void)closePopView:(UITapGestureRecognizer *)gesutre{
     [CustomPopView disMiss:gesutre.view.superview];
