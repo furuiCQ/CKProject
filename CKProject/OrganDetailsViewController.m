@@ -56,7 +56,9 @@
     NSDictionary* popJson;
     UIView *allShowView;
     BOOL isShow;
-
+    //
+    UIControl *instituteControl;
+    UIImageView *instiBg;
     
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
@@ -200,8 +202,8 @@
     [tableHeaderView setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     
     
-    UIControl *instituteControl=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, width, width/3)];
-    UIImageView *instiBg=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width, width/3)];
+    instituteControl=[[UIControl alloc]initWithFrame:CGRectMake(0, 0, width, width/3)];
+    instiBg=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width, width/3)];
     [instiBg setImage:[UIImage imageNamed:@"orgin_bg"]];
     [instituteControl addSubview:instiBg];
 
@@ -297,6 +299,7 @@
     }
 }
 -(void)topBarOnClick:(id)sender{
+    int width=self.view.frame.size.width;
     TopBar *topBar=(TopBar *)sender;
     for (NSObject *object in projectTableArray) {
         TopBar *b=(TopBar *)object;
@@ -314,7 +317,8 @@
     if(topBar.tag==0){
         [detailContentLabel setHidden:YES];
         tableArray=bktableArray;
-        [tableHeaderView setFrame:CGRectMake(0, 0, self.view.frame.size.width, headerView.frame.origin.y+headerView.frame.size.height)];
+        [headerView setFrame:CGRectMake(0, imageScrollview.frame.origin.y+imageScrollview.frame.size.height+2, width, width/8.8)];
+        [tableHeaderView setFrame:CGRectMake(0, 0, width, headerView.frame.origin.y+headerView.frame.size.height)];
 
     }else{
         [detailContentLabel setHidden:NO];
@@ -607,9 +611,7 @@
                             frame.size.height=size.height;
                             [detailContentLabel setFrame:frame];
                             detailContentLabel.scrollEnabled=NO;
-                            frame=headerView.frame;
-                            frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y;
-                            [headerView setFrame:frame];
+                            [headerView setFrame:CGRectMake(0, imageScrollview.frame.origin.y+imageScrollview.frame.size.height+2, width, width/8.8)];
                             [tableHeaderView setFrame:CGRectMake(0, 0, self.view.frame.size.width, headerView.frame.origin.y+headerView.frame.size.height)];
                         }
                         if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
@@ -635,8 +637,11 @@
                                 }
                             }
                             [distanceLabel setFrame:CGRectMake(width-width/4-width/32,  ratingBar.frame.origin.y, width/4, width/20)];
+                            CGRect frame=instituteControl.frame;
+                            frame.size.height=distanceLabel.frame.size.height+distanceLabel.frame.origin.y+width/15;
+                            [instiBg setFrame:frame];
+                            [instituteControl setFrame:frame];
 
-                            
                         }
                         tableArray=(NSArray *)[dic objectForKey:@"lesson"];
                         bktableArray=tableArray;

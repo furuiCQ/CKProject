@@ -273,6 +273,10 @@
             NSString *title=[dic objectForKey:@"title"];
             [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
         }
+        if ([dic objectForKey:@"instsort"] && ![[dic objectForKey:@"instsort"] isEqual:[NSNull null]]) {
+            NSString *title=[dic objectForKey:@"instsort"];
+            [porjectCell.authorLabel setText:[NSString stringWithFormat:@"%@",title]];
+        }
         if ([dic objectForKey:@"people"] && ![[dic objectForKey:@"people"] isEqual:[NSNull null]]) {
             NSString *people=[dic objectForKey:@"people"];
             NSString *str=[NSString stringWithFormat:@"已报%@人",people];
