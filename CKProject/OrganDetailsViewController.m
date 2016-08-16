@@ -26,7 +26,7 @@
 #import "TopBar.h"
 #import "RJUtil.h"
 #import "OrderRecordCell.h"
-
+#import "ScaleImgViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import <TencentOpenAPI/TencentOAuth.h>
 #import "TencentOpenAPI/QQApiInterface.h"
@@ -681,8 +681,8 @@
                                     
                                     [imageView setImage:[UIImage imageNamed:@"banner_default"]];
                                     [imageView setTag:i];
-                                    // UITapGestureRecognizer *openChorme=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageGesture:)];
-                                    //  [imageView addGestureRecognizer:openChorme];
+                                     UITapGestureRecognizer *openChorme=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageGesture:)];
+                                     [imageView addGestureRecognizer:openChorme];
                                     [imageView sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
                                     
                                     
@@ -1141,6 +1141,13 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
     if ([TencentOAuth iphoneQQInstalled]) {
         [self handleSendResult:sent];
     }
+}
+//点击进入大图片
+-(void)imageGesture:(UITapGestureRecognizer *)gesutre{
+    ScaleImgViewController *scaleImgViewController=[[ScaleImgViewController alloc]init];
+    [scaleImgViewController reloadImage:(int)gesutre.view.tag];
+    [self presentViewController:scaleImgViewController animated:YES completion:nil];
+    
 }
 -(void)shareToQQFriend{
     UIImage *image=[UIImage imageNamed:@"icon.png"];

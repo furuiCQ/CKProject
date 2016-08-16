@@ -157,12 +157,12 @@
                                             [selectArray addObjectsFromArray:data];
                                         }else{
                                             //初始化提示框；
-                                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"没有更多的数据了..." preferredStyle:  UIAlertControllerStyleAlert];
-                                            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                                //点击按钮的响应事件；
-                                            }]];
-                                            //弹出提示框；
-                                            [self presentViewController:alert animated:true completion:nil];
+//                                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"没有更多的数据了..." preferredStyle:  UIAlertControllerStyleAlert];
+//                                            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                                                //点击按钮的响应事件；
+//                                            }]];
+//                                            //弹出提示框；
+//                                            [self presentViewController:alert animated:true completion:nil];
                                         }
                                     }
                                    [vi reloadData];

@@ -12,6 +12,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UILabel+JJKAlertActionFont.h"
 #import "MainViewController.h"
+#import "UIImage+ImageCompress.h"
 
 @interface UserInfoViewController ()<UIAlertViewDelegate ,UIImagePickerControllerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate>
 
@@ -665,7 +666,8 @@
         NSString *imageURl=[docPath stringByAppendingFormat:@"%@%@",@"/",timeDate];
         saveImageToCacheDir(docPath, image, timeDate, @"png");
         [self creatDicatorView];
-        
+        [picker dismissViewControllerAnimated:YES completion:nil];
+
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             // 耗时的操作
             [HttpHelper upload:myDelegate.model withImageUrl:imageURl withImage:image success:^(HttpModel *model){
@@ -691,7 +693,6 @@
         
         
     }
-     [picker dismissViewControllerAnimated:YES completion:nil];
 //    MainViewController *main=[[MainViewController alloc]init];
 //    [self presentViewController:main animated:NO completion:nil]
       //返回上一次层
@@ -803,7 +804,13 @@ bool saveImageToCacheDir(NSString *directoryPath, UIImage *image, NSString *imag
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL existed = [fileManager fileExistsAtPath:directoryPath isDirectory:&isDir];
     bool isSaved = false;
-    image=[ImageCompress compressImage:image compressRatio:0.9f];
+    NSData *imageToCompressData = [[NSData alloc] initWithData:UIImageJPEGRepresentation(image, 1)];
+    NSLog([NSString stringWithFormat:@"Original size: %lu", (unsigned long)imageToCompressData.length]);
+    image= [UIImage compressImage:image
+                    compressRatio:0.9f];
+    imageToCompressData = [[NSData alloc] initWithData:UIImageJPEGRepresentation(image, 1)];
+    NSLog([NSString stringWithFormat:@"Original size: %lu", (unsigned long)imageToCompressData.length]);
+
     if ( isDir == YES && existed == YES )
     {
         if ([[imageType lowercaseString] isEqualToString:@"png"])

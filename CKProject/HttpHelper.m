@@ -1215,7 +1215,7 @@
     NSData* resultData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponese error:&error];
     NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] ==200&&[urlResponese statusCode]<300){
-    //    NSLog(@"返回结果=====%@",result);
+        NSLog(@"返回结果=====%@",result);
         NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:resultData options:kNilOptions error:&error];
         
         HttpModel *model=[[HttpModel alloc]init];
@@ -1226,7 +1226,7 @@
         [model setMessage:[resultJSON objectForKey:@"message"]];
         [model setResult:[resultJSON objectForKey:@"result"]];
         
-  //      NSLog(@"message====%@",[resultJSON objectForKey:@"message"]);
+        NSLog(@"message====%@",[resultJSON objectForKey:@"message"]);
         success(model);
     }else{
         NSLog(@"%ld",(long)[urlResponese statusCode]);

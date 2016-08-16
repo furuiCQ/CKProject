@@ -104,6 +104,8 @@
     //share
     NSDictionary* popJson;
     BOOL isShow;
+    //
+    UIAlertView *alertView;
 
 }
 @end
@@ -523,7 +525,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 -(void)deleteProject{
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -538,12 +544,15 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                               
                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                   
+                                                  [collectNorLabel setText:@"收藏课程"];
                                                   
                                               });
                                               
                                           }else{
                                               
                                           }
+                                          [alertView setMessage:model.message];
+                                          [alertView show];
                                           
                                       });
                                   }failure:^(NSError *error){
@@ -556,7 +565,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 -(void)collectionProject{
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -578,6 +590,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                      }else{
                                          
                                      }
+                                     [alertView setMessage:model.message];
+                                     [alertView show];
                                      
                                  });
                              }failure:^(NSError *error){

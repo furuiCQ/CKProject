@@ -198,6 +198,7 @@
     zanNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40, writer.frame.origin.y, swidth/26.7*4, swidth/26.7)];
     [zanNumberLabel setText:@"50"];
     [zanNumberLabel setFont:[UIFont systemFontOfSize:swidth/26.7]];
+    [zanNumberLabel setTextAlignment:NSTextAlignmentLeft];
     [zanNumberLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     [sb addSubview:zanNumberLabel];
     
@@ -532,7 +533,10 @@
     [self zanNews:iszan];
 }
 -(void)zanNews:(NSNumber *)zan {
-    
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -569,7 +573,10 @@
     
 }
 -(void)zanNewsComments:(NSNumber *)zan withCommentId:(NSNumber *)comId{
-    
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -801,7 +808,13 @@
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                                 [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
-                                [zanImageView setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6-swidth/53.3-swidth/16, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                                [zanImageView removeFromSuperview];
+                                zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                                [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
+                                [zanImageView setUserInteractionEnabled:YES];
+                                UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews:)];
+                                [zanImageView addGestureRecognizer:gesutre];
+                                [sb addSubview:zanImageView];
                             }
                             if([dic objectForKey:@"iszan"] && ![[dic objectForKey:@"iszan"] isEqual:[NSNull null]]){
                                 NSNumber *zanStaues=[dic objectForKey:@"iszan"];
@@ -918,7 +931,15 @@
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                                 [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
-                                [zanImageView setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6-swidth/53.3-swidth/16, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                               
+                                
+                                [zanImageView removeFromSuperview];
+                                zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                                [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
+                                [zanImageView setUserInteractionEnabled:YES];
+                                UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews:)];
+                                [zanImageView addGestureRecognizer:gesutre];
+                                [sb addSubview:zanImageView];
                             }
                             if([dic objectForKey:@"read"]){
                                 NSNumber *number=[dic objectForKey:@"read"];
@@ -1260,7 +1281,11 @@
     
 }
 
-
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (![editTextView isExclusiveTouch]) {
+        [editTextView resignFirstResponder];
+    }
+}
 //分享给好友
 -(void)shareToWxFriend
 {
