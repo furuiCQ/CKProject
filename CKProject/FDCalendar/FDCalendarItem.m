@@ -2,9 +2,7 @@
 //  FDCalendarItem.m
 //  FDCalendarDemo
 //
-//  Created by fergusding on 15/8/20.
-//  Copyright (c) 2015年 fergusding. All rights reserved.
-//
+
 
 #import "FDCalendarItem.h"
 

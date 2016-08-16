@@ -96,40 +96,20 @@
     
     NSUserDefaults *de=[NSUserDefaults standardUserDefaults];
     NSArray *bt=[de objectForKey:@"pictures"];
-    NSLog(@"88888888888888888---\n\n\n\n\n\n\n%@",bt);
+    //   NSLog(@"88888888888888888---\n\n\n\n\n\n\n%@",bt);
     
     UIScrollView *sc=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 84, self.view.frame.size.width, [UIScreen mainScreen].bounds.size.height-160)];
     sc.contentSize=CGSizeMake(bt.count * self.view.frame.size.width, [UIScreen mainScreen].bounds.size.height-160);
     sc.pagingEnabled=YES;
+    [sc setCanCancelContentTouches:YES];
     for (int i=0; i<bt.count; i++) {
         UIImageView *im=[[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width*i, 0, self.view.frame.size.width, [UIScreen mainScreen].bounds.size.height-160)];
-        //获取网路图片
-        
         im.contentMode=UIViewContentModeScaleAspectFit;
-     //   NSString *str=[NSString stringWithFormat:@"http://211.149.190.90%@",[bt objectAtIndex:i]];
-    //  im.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
-        
-        
-        
-       [im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[bt objectAtIndex:i]]]];
+        [im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[bt objectAtIndex:i]]]];
+        [im setUserInteractionEnabled:YES];
         [sc addSubview:im];
-     
     }
     [self.view addSubview:sc];
-//    imageView =[[UIImageView alloc]initWithImage:loadImage];
-//    //    [imageView setFrame:CGRectMake(self.view.frame.size.width/2-loadImage.size.width/2, self.view.frame.size.height/2-loadImage.size.height/2, loadImage.size.width, loadImage.size.height)];
-//    
-//    //    [imageView setFrame:CGRectMake(50, 100, 100, 100)];
-//    CGFloat margin=20;
-//    CGFloat NavH=20+44;
-//    CGFloat screenW=[UIScreen mainScreen].bounds.size.width;
-//    CGFloat screenH=[UIScreen mainScreen].bounds.size.height;
-//    CGFloat imgX=margin;
-//    CGFloat imgY=NavH+margin;
-//    CGFloat imgW=screenW-2*margin;
-//    CGFloat imgH=screenH-8*margin;
-//    [imageView setFrame:CGRectMake(imgX, imgY, imgW, imgH)];
-//    [self.view addSubview:imageView];
     imgStartWidth=imageView.frame.size.width;
     imgStartHeight=imageView.frame.size.height;
     //  滚动scrollview
@@ -153,7 +133,7 @@
     UIImageView *backImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];
     [backImageView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/35/2, titleHeight/2-self.view.frame.size.width/20/2, self.view.frame.size.width/35, self.view.frame.size.width/20)];
     [cityLabel addSubview:backImageView];
-
+    
     [cityLabel setTextAlignment:NSTextAlignmentCenter];
     cityLabel.userInteractionEnabled=YES;///
     UITapGestureRecognizer *gesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disMiss:)];

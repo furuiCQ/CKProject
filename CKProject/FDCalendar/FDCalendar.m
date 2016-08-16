@@ -2,9 +2,6 @@
 //  FDCalendar.m
 //  FDCalendarDemo
 //
-//  Created by fergusding on 15/8/20.
-//  Copyright (c) 2015年 fergusding. All rights reserved.
-//
 
 #import "FDCalendar.h"
 #import "FDCalendarItem.h"
@@ -208,11 +205,13 @@ static NSDateFormatter *dateFormattor;
 - (void)reloadCalendarItems {
     CGPoint offset = self.scrollView.contentOffset;
     
-    if (offset.x == self.scrollView.frame.size.width) { //防止滑动一点点并不切换scrollview的视图
+    if ((int)offset.x == (int)self.scrollView.frame.size.width) { //防止滑动一点点并不切换scrollview的视图
         return;
     }
-    
-    if (offset.x > self.scrollView.frame.size.width) {
+    NSLog(@"offset.x%f",offset.x);
+    NSLog(@"self.scrollView.frame.size.width%f",self.scrollView.frame.size.width);
+
+    if (offset.x >self.scrollView.frame.size.width) {
         [self setNextMonthDate];
     } else {
         [self setPreviousMonthDate];

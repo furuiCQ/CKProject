@@ -398,6 +398,18 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.isLogin=NO;
     appDelegate.model=nil;
+    dataArray=[[NSMutableArray alloc]init];
+    [mainTableView reloadData];
+    for (int i=0; i< [projectTableArray count];i++) {
+        TopBar *topBar=(TopBar *)[projectTableArray objectAtIndex:i];
+        if(i==0){
+            [topBar.textLabel setText:[NSString stringWithFormat:@"预约-"]];
+        }
+        if(i==1){
+            [topBar.textLabel setText:[NSString stringWithFormat:@"受理成功-"]];
+            
+        }
+    }
     [userImageView setImage:[UIImage imageNamed:@"logo"]];
 }
 -(void)autoLoginAccount:(NSNotification*)notification{
@@ -802,7 +814,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                             alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
                             alertView.delegate=self;
                         }
-                        [alertView setTag:1];
+                        [alertView setTag:5];
                         [alertView setMessage:model.message];
                         [alertView show];
                         [slideMenu setScrollEnabled:NO];
@@ -825,9 +837,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
 {
     NSLog(@"didDismissWithButtonIndex");
     switch (uiAlertView.tag) {
-        case 1:
+        case 5:
         {
-           // [self changeLogoutStauets];
+            [self changeLogoutStauets];
         }
             break;
             
@@ -1011,17 +1023,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     
     
 }
-//-(void)creatDicatorView{
-//    if (dicatorView==nil) {
-//        dicatorView=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-//        [dicatorView setFrame:CGRectMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-50, 100, 100)];
-//        [dicatorView setColor:[UIColor redColor]];
-//        [dicatorView startAnimating];
-//        [self.view addSubview:dicatorView];
-//    }
-//    [dicatorView startAnimating];
-//    
-//}
+
 #define kScreen_Height      ([UIScreen mainScreen].bounds.size.height)
 #define kScreen_Width       ([UIScreen mainScreen].bounds.size.width)
 #define kScreen_Frame       (CGRectMake(0, 0 ,kScreen_Width,kScreen_Height))

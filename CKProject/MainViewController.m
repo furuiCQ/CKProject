@@ -179,7 +179,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [searchField setBackgroundColor:[UIColor whiteColor]];
     [searchField.layer setCornerRadius:3.0f];
     [searchField setFont:[UIFont systemFontOfSize:15]];
-    [searchField setPlaceholder:@"搜索你想蹭的课程"];
+    [searchField setPlaceholder:@"搜索你想要的课程/机构/优惠"];
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 30,titleHeight*3/4)];
     UIImageView *searchImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"search_logo"]];
     [searchImageView setFrame:CGRectMake(10, searchField.frame.size.height/2-17/2, 17, 17)];

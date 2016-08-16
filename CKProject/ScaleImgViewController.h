@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseViewController.h"
-@interface ScaleImgViewController : BaseViewController {
+@interface ScaleImgViewController : BaseViewController{
     
     
     UIImageView * imageView;

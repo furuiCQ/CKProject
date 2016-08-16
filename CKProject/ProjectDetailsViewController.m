@@ -294,6 +294,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [contentLabel setTextAlignment:NSTextAlignmentLeft];
     [contentLabel setFont:[UIFont systemFontOfSize:width/24.6]];
     [contentControl addSubview:contentLabel];
+    
     detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(0, contentLabel.frame.size.height+contentLabel.frame.origin.y, width, 20)];
     [detailContentLabel setText:@"惺惺惜惺惺"];
     detailContentLabel.editable=NO;
@@ -384,7 +385,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
 }
 -(void)openTimeSelectPicker{
-    [self initTimePicker];
     [CustomPopView addViewAndShow:picker];
 }
 -(void)closePopView:(UITapGestureRecognizer *)gesutre{
@@ -968,14 +968,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 [projectAddLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]]];
                                 [projectAddLabel sizeToFit];
                             }
-                            //                            if([dic objectForKey:@"isfavorite"] && ![[dic objectForKey:@"isfavorite"] isEqual:[NSNull null]]){
-                            //                                NSNumber *zanStaues=[dic objectForKey:@"isfavorite"];
-                            //                                if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
-                            //                                   selected=false;
-                            //                                }else{
-                            //                                    collectLabel.selected=true;
-                            //                                }
-                            //                            }
+                            
                             if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
                                 phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
                                 [phoneLabel setText:[NSString stringWithFormat:@"联系电话:%@",phone]];
@@ -1014,9 +1007,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 //点击进入大图片
 -(void)imageGesture:(UITapGestureRecognizer *)gesutre{
-    //UIImageView *imageView=(UIImageView *)gesutre.view;
     ScaleImgViewController *scaleImgViewController=[[ScaleImgViewController alloc]init];
- //   [scaleImgViewController setLoadImage:imageView.image];
     [scaleImgViewController reloadImage:(int)gesutre.view.tag];
     [self presentViewController:scaleImgViewController animated:YES completion:nil];
     
@@ -1208,6 +1199,17 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
                         timeData=model.result;
+                        NSArray *week=[timeData objectForKey:@"now_week"];
+                        NSDictionary *dmm =[week objectAtIndex:0];
+                        NSNumber *teachetime=[dmm objectForKey:@"teachtime"];
+                        int width=self.view.frame.size.width;
+                        UILabel *timeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width*2/3-width/40, width/33.6+width/20.6+width/17.8, width/3, self.view.frame.size.width/24.6)];
+                        [timeLabel setText:[NSString stringWithFormat:@"课程时长:%@分钟",teachetime]];
+                        [timeLabel setTextAlignment:NSTextAlignmentRight];
+                        [timeLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/24.6]];
+                        [contentControl addSubview:timeLabel];
+                        [self initTimePicker];
+                        
                     });
                     
                 }else{
