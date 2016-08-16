@@ -658,6 +658,14 @@
         failture(error);
     }];
 }
++(void)openCity:(id )sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_OPEN_CITY] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
 +(void)deleteSysMsg:(NSNumber *)interId withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[ @{ @"name": @"tel", @"value": model.tel},
                              @{ @"name": @"token", @"value": model.token},

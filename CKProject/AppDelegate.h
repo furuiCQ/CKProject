@@ -33,7 +33,7 @@
 @property BOOL isLogin;
 @property TencentOAuth *QQauth;
 @property BOOL isHasCoupon;
-
+@property NSMutableArray *openCityArray;
 
 
 @end

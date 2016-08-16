@@ -128,6 +128,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self getLat];
     [self getCity];
     [self getNewHotLesson];
+    [self getOpenCity];
     
 }
 -(void)changeCity{
@@ -1656,6 +1657,29 @@ static NSString *identy = @"OrderRecordCell";
 -(void)goCityViewController{
     CityViewController *cityViewController=[[CityViewController alloc]init];
     [self presentViewController: cityViewController animated:YES completion:nil];
+}
+-(void)getOpenCity{
+    AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [HttpHelper openCity:self success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    myDelegate.openCityArray=model.result;
+                }
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                NSString *localizedDescription=[error.userInfo objectForKey:@"NSLocalizedDescription"];
+                if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
+                }
+                
+            }
+        }];
+    });
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

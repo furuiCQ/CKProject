@@ -24,8 +24,16 @@
 {
     self = [super init];
     if (self) {
-        // Custom initialization
         self.arrayHotCity = [NSMutableArray arrayWithObjects:@"北京",@"重庆",@"成都",@"杭州",@"南京",@"武汉",@"厦门", nil];
+        AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+        if(myDelegate.openCityArray){
+            [self.arrayHotCity removeAllObjects];
+            for(int i=0;i<[myDelegate.openCityArray count];i++){
+                NSDictionary *dic=[myDelegate.openCityArray objectAtIndex:i];
+                NSString *str=[dic objectForKey:@"cityname"];
+                [self.arrayHotCity addObject:str];
+            }
+        }
         self.keys = [NSMutableArray array];
         self.arrayCitys = [NSMutableArray array];
     }
