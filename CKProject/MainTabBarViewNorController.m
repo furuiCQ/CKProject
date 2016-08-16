@@ -75,10 +75,16 @@
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
+    
     //获得选中的item
     NSUInteger tabIndex = [tabBar.items indexOfObject:item];
+    if((int)tabIndex!=3){
+        NSNotification *notification =[NSNotification notificationWithName:@"closeSliding" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.selectIndex = tabIndex;
+    
     
 }
 

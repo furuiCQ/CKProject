@@ -95,7 +95,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
 }
 #define RightWidth ([[UIScreen mainScreen] bounds].size.width*6/7)
 -(void)closeSliding{
-    if(slideMenu.scrollEnabled && slideMenu.contentOffset.x>(self.view.frame.size.width+RightWidth)){
+    if(slideMenu.contentOffset.x>(self.view.frame.size.width+RightWidth)){
         [slideMenu navRightBtAction];
     }
 }
@@ -375,15 +375,22 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
 -(void)changeLoginStauets{
     [loginedControl setHidden:NO];
     [unloginControl setHidden:YES];
+    [self getUserInfo];
+    [self getData];
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     HttpModel *httpModel=appDelegate.model;
     if([httpModel.result count]>0){
-        [userNameLabel setText:[httpModel.result objectForKey:@"username"]];
+        if([httpModel.result isKindOfClass:[NSDictionary class]]){
+            NSLog(@"httpModel.result %@",httpModel.result);
+            if([[httpModel.result allKeys] containsObject:@"username"]){
+                [userNameLabel setText:[httpModel.result objectForKey:@"username"]];
+            }
+        }
+        
     }
-    [userTelLabel setText:[NSString stringWithFormat:@"%@", httpModel.tel]];
-    [slideMenu setUserPhone:[NSString stringWithFormat:@"%@", httpModel.tel]];
-    [self getUserInfo];
-    [self getData];
+    [userTelLabel setText:[NSString stringWithFormat:@"%@", appDelegate.model.tel]];
+    [slideMenu setUserPhone:[NSString stringWithFormat:@"%@", appDelegate.model.tel]];
+   
 }
 -(void)changeLogoutStauets{
     

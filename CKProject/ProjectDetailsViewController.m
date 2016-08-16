@@ -1272,7 +1272,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         }else{
             [orderViewController setContent:detailContentLabel.text];
         }
-        NSLog(@"----------\n\n\n%@,%@,%@,%@,%@",[data objectForKey:@"id"],weekId,weekNum,beginTime,advance_time);
+        NSLog(@"----orderViewController------\n\n\n%@,%@,%@,%@,%@",[data objectForKey:@"id"],weekId,weekNum,beginTime,advance_time);
         
         [self presentViewController:orderViewController animated:YES completion:^{
             NSNotification *notification =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];

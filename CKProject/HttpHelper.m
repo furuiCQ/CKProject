@@ -1352,8 +1352,8 @@
         }
         [body appendFormat:@"%@", param[@"value"]];
     }
-  //  NSLog(@"url===:%@",url);
-  //  NSLog(@"body===:%@",body);
+    NSLog(@"url===:%@",url);
+    NSLog(@"body===:%@",body);
     
     //声明myRequestData，用来放入http body
     NSMutableData *myRequestData=[NSMutableData data];
@@ -1383,7 +1383,7 @@
     
     NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] >=200&&[urlResponese statusCode]<300){
-       // NSLog(@"返回结果=====%@",result);
+        NSLog(@"返回结果=====%@",result);
         if (resultData!=nil) {
             NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:resultData options:kNilOptions error:&error];
             if (error) {

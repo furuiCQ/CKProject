@@ -454,8 +454,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         xws=(NSArray *)model.result;
                         pag=[[UIPageControl alloc]init];
@@ -518,8 +518,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             //            NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         chasetResult=(NSArray *)model.result;
                         for(UIView *view in [sc subviews]){
@@ -1282,8 +1282,8 @@ static NSString *identy = @"OrderRecordCell";
         [HttpHelper getHotLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     tableArray=(NSArray *)model.result;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1330,8 +1330,8 @@ static NSString *identy = @"OrderRecordCell";
         [HttpHelper getNewHotLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     tableArray=(NSArray *)model.result;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1379,8 +1379,8 @@ static NSString *identy = @"OrderRecordCell";
         [HttpHelper getNewLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     tableArray=(NSArray *)model.result;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1428,8 +1428,8 @@ static NSString *identy = @"OrderRecordCell";
         [HttpHelper getNearByLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     tableArray=(NSArray *)model.result;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1471,8 +1471,8 @@ static NSString *identy = @"OrderRecordCell";
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     tableArray=(NSArray *)model.result;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1528,8 +1528,8 @@ static NSString *identy = @"OrderRecordCell";
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    myDelegate.model=model;
+//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//                    myDelegate.model=model;
                     NSNumberFormatter *formater=[[NSNumberFormatter alloc]init];
                     customServiceNumber=[formater stringFromNumber: model.custom_tel ];
                     dispatch_async(dispatch_get_main_queue(), ^{
