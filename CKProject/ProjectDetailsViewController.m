@@ -1014,10 +1014,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 
 //点击进入大图片
 -(void)imageGesture:(UITapGestureRecognizer *)gesutre{
-    UIImageView *imageView=(UIImageView *)gesutre.view;
+    //UIImageView *imageView=(UIImageView *)gesutre.view;
     ScaleImgViewController *scaleImgViewController=[[ScaleImgViewController alloc]init];
-    [scaleImgViewController setLoadImage:imageView.image];
-    [scaleImgViewController reloadImage];
+ //   [scaleImgViewController setLoadImage:imageView.image];
+    [scaleImgViewController reloadImage:(int)gesutre.view.tag];
     [self presentViewController:scaleImgViewController animated:YES completion:nil];
     
 }

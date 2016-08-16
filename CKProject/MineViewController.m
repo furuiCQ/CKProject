@@ -675,6 +675,13 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"%ld",(long)indexPath.row);
+    ProjectDetailsViewController *projectDetailsViewController=[[ProjectDetailsViewController alloc]init];
+    NSDictionary *dic=[dataArray objectAtIndex:indexPath.row];
+    NSNumber *projectId=[dic objectForKey:@"lid"];
+    [projectDetailsViewController setProjectId:projectId];
+    [self presentViewController:projectDetailsViewController animated:YES completion:nil];
+    [projectDetailsViewController setSelect];
     
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -721,6 +728,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
             {
                 NSLog(@"地址");
                 [self showMyPicker];
+                return;
             }
                 break;
             case 5:
@@ -846,6 +854,11 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [self restSex:str];
 }
 -(void)restSex:(NSString *)context{
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
@@ -860,7 +873,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                 }else{
                     
                 }
-                
+                [alertView setMessage:model.message];
+                [alertView show];
+ 
             });
             
             
@@ -871,6 +886,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                 if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
                     
                 }
+                
             }
         }];
     });
@@ -1050,6 +1066,10 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [self hideMyPicker];
     if(selectCity==nil){
         selectCity=@"湖南省湘潭市雨湖区";
+    }
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
     }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{

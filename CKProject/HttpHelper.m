@@ -1074,7 +1074,7 @@
     NSArray *parameters = @[ @{ @"name": @"tel", @"value": phone},
                              @{ @"name": @"password", @"value": password}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_LOGIN] success:^(HttpModel *model){
-        NSLog(@"11111222222221");
+       // NSLog(@"11111222222221");
         success(model);
     }failure:^(NSError *error){
         failture(error);
@@ -1208,7 +1208,7 @@
     NSData* resultData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponese error:&error];
     NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] ==200&&[urlResponese statusCode]<300){
-        NSLog(@"返回结果=====%@",result);
+    //    NSLog(@"返回结果=====%@",result);
         NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:resultData options:kNilOptions error:&error];
         
         HttpModel *model=[[HttpModel alloc]init];
@@ -1219,7 +1219,7 @@
         [model setMessage:[resultJSON objectForKey:@"message"]];
         [model setResult:[resultJSON objectForKey:@"result"]];
         
-        NSLog(@"message====%@",[resultJSON objectForKey:@"message"]);
+  //      NSLog(@"message====%@",[resultJSON objectForKey:@"message"]);
         success(model);
     }else{
         NSLog(@"%ld",(long)[urlResponese statusCode]);
@@ -1291,15 +1291,15 @@
     
     NSHTTPURLResponse *urlResponese = nil;
     NSError *error = nil;
-    NSLog(@"=====%@",[request allHTTPHeaderFields]);
-    NSLog(@"======%@",body);
+  //  NSLog(@"=====%@",[request allHTTPHeaderFields]);
+  //  NSLog(@"======%@",body);
     //设置Content-Length
     
     NSData* resultData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponese error:&error];
     
     NSString* result= [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     if([urlResponese statusCode] ==200&&[urlResponese statusCode]<300){
-        NSLog(@"返回结果=====%@",result);
+    //    NSLog(@"返回结果=====%@",result);
         NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:resultData options:kNilOptions error:&error];
         if (error) {
             //failture(error);
@@ -1312,10 +1312,10 @@
         [model setMessage:[resultJSON objectForKey:@"message"]];
         [model setResult:[resultJSON objectForKey:@"result"]];
         
-        NSLog(@"message====%@",[resultJSON objectForKey:@"message"]);
+     //   NSLog(@"message====%@",[resultJSON objectForKey:@"message"]);
         // success(model);
     }else{
-        NSLog(@"%ld",(long)[urlResponese statusCode]);
+      //  NSLog(@"%ld",(long)[urlResponese statusCode]);
         //            if (error.user) {
         //                NSLog(
         //                      @"Error:%@",error);
@@ -1345,8 +1345,8 @@
         }
         [body appendFormat:@"%@", param[@"value"]];
     }
-    NSLog(@"url===:%@",url);
-    NSLog(@"body===:%@",body);
+  //  NSLog(@"url===:%@",url);
+  //  NSLog(@"body===:%@",body);
     
     //声明myRequestData，用来放入http body
     NSMutableData *myRequestData=[NSMutableData data];

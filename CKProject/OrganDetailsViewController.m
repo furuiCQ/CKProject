@@ -34,6 +34,7 @@
 #import "ShareTools.h"
 @interface OrganDetailsViewController ()<UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>{
     NSArray *tableArray;
+    NSArray *bktableArray;
     NSString *phone;
     NSDictionary *data1;
     UILabel *phoneLabel;
@@ -83,7 +84,7 @@
     [super viewDidLoad];
     data1=[[NSDictionary alloc]init];
     tableArray = [[NSArray alloc]init];
-    
+    bktableArray=[[NSArray alloc]init];
     [ProgressHUD show:@"加载中..."];
     
 //    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -214,7 +215,7 @@
     
     organNamelabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImage.frame.size.width+logoImage.frame.origin.x+width/27.8, logoImage.frame.origin.y, width-(logoImage.frame.size.width+logoImage.frame.origin.x+width/27.8), width/21.3)];
     [organNamelabel setText:@"新东方英语培训中心"];
-    [organNamelabel setFont:[UIFont systemFontOfSize:width/21.3]];
+    [organNamelabel setFont:[UIFont systemFontOfSize:width/20]];
     [organNamelabel setTextColor:[UIColor blackColor]];
     [instituteControl addSubview:organNamelabel];
     //18px
@@ -312,14 +313,17 @@
     }
     if(topBar.tag==0){
         [detailContentLabel setHidden:YES];
+        tableArray=bktableArray;
         [tableHeaderView setFrame:CGRectMake(0, 0, self.view.frame.size.width, headerView.frame.origin.y+headerView.frame.size.height)];
 
     }else{
         [detailContentLabel setHidden:NO];
+        tableArray=[[NSArray alloc]init];
         [tableHeaderView setFrame:CGRectMake(0, 0, self.view.frame.size.width, detailContentLabel.frame.origin.y+detailContentLabel.frame.size.height)];
         
     }
     projectTableView.tableHeaderView=tableHeaderView;
+    [projectTableView reloadData];
 
 }
 //轮播图片
@@ -453,6 +457,7 @@
                 
             }
         }
+        [cell.authorLabel setText:organNamelabel.text];
         [cell.distanceLabel setText:distanceLabel.text];
         if ([dic objectForKey:@"grade"] && ![[dic objectForKey:@"grade"] isEqual:[NSNull null]]) {
             NSString *grade=[dic objectForKey:@"grade"];
@@ -473,11 +478,9 @@
         }
         
         
-    }else{
-        cell.textLabel.textAlignment=NSTextAlignmentCenter;
-        cell.textLabel.text=@"数据加载中";
-        
     }
+    [ProgressHUD dismiss];
+
     return cell;
 }
 -(CLGeocoder *)geocoder
@@ -550,7 +553,8 @@
     NSNumber *projectId=[dic objectForKey:@"id"];
     [projectDetailsViewController setProjectId:projectId];
     [self presentViewController:projectDetailsViewController animated:YES completion:nil];
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
+
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -577,6 +581,7 @@
                         NSDictionary *dic=model.result;
                         data1=dic;
                         tableArray=(NSArray *)[dic objectForKey:@"lesson"];
+                        int width=self.view.frame.size.width;
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [projectTableView reloadData];
@@ -589,30 +594,58 @@
                         }
                         NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
                         
-                        if([dic objectForKey:@"lv"]&& ![[dic objectForKey:@"lv"] isEqual:[NSNull null]]){
-                            [ratingBar displayRating:[[dic objectForKey:@"lv"] floatValue]];
-                        }
+                        
                         if([dic objectForKey:@"people"]&& ![[dic objectForKey:@"people"] isEqual:[NSNull null]]){
                             NSNumber *number=[dic objectForKey:@"people"];
                             [numbLabel setText:[NSString stringWithFormat:@"%@",[formatter stringFromNumber:number]]];
                         }
                         if([dic objectForKey:@"content"]&& ![[dic objectForKey:@"content"] isEqual:[NSNull null]]){
                             [detailContentLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"content"]]];
-                            CGRect frame=detailContentLabel.frame;
-                            frame.size.height=detailContentLabel.contentSize.height;
+                            CGRect frame = detailContentLabel.frame;
+                            CGSize constraintSize = CGSizeMake(frame.size.width, MAXFLOAT);
+                            CGSize size = [detailContentLabel sizeThatFits:constraintSize];
+                            frame.size.height=size.height;
                             [detailContentLabel setFrame:frame];
                             detailContentLabel.scrollEnabled=NO;
+                            frame=headerView.frame;
+                            frame.size.height=detailContentLabel.frame.size.height+detailContentLabel.frame.origin.y;
+                            [headerView setFrame:frame];
                             [tableHeaderView setFrame:CGRectMake(0, 0, self.view.frame.size.width, headerView.frame.origin.y+headerView.frame.size.height)];
                         }
                         if([dic objectForKey:@"addr"]&& ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]){
                             [projectAddLabel setText:[NSString stringWithFormat:@"%@",[dic objectForKey:@"addr"]]];
+                            [projectAddLabel sizeToFit];
+                        }
+                        if([dic objectForKey:@"lv"]&& ![[dic objectForKey:@"lv"] isEqual:[NSNull null]]){
+                            [ratingBar displayRating:[[dic objectForKey:@"lv"] floatValue]];
+                            [ratingBar setFrame:CGRectMake(organNamelabel.frame.origin.x, projectAddLabel.frame.size.height+projectAddLabel.frame.origin.y, width/29*6, width/20)];
+
+                        }
+                        if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]] ) {
+                            NSNumber *range=[dic objectForKey:@"range"];
+                            double distance=[range doubleValue];
+                            if(distance>0.0){
+                                if (distance/1000>1) {
+                                    [distanceLabel setText:[NSString stringWithFormat:@"%.fkm",(float)distance/1000]];
+                                }else if (distance/1000<1 && distance/1000>0.5){
+                                    [distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
+                                    
+                                }else if (distance/1000<0.5){
+                                    [distanceLabel setText:@"<500m"];
+                                }
+                            }
+                            [distanceLabel setFrame:CGRectMake(width-width/4-width/32,  ratingBar.frame.origin.y, width/4, width/20)];
+
+                            
                         }
                         tableArray=(NSArray *)[dic objectForKey:@"lesson"];
+                        bktableArray=tableArray;
                         [projectTableView reloadData];
                         if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
                             phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
                             [phoneLabel setText:[NSString stringWithFormat:@"联系电话:%@",phone]];
                         }
+                        
                         if ([dic objectForKey:@"logo"]&& ![[dic objectForKey:@"logo"] isEqual:[NSNull null]]) {
                             NSString *images=[dic objectForKey:@"logo"];
                             NSArray *array = [images componentsSeparatedByString:@","];
@@ -677,21 +710,7 @@
                                 [tableHeaderView addSubview:pageControl];
                             }
                             
-                            if ([dic objectForKey:@"range"] && ![[dic objectForKey:@"range"] isEqual:[NSNull null]] ) {
-                                NSNumber *range=[dic objectForKey:@"range"];
-                                double distance=[range doubleValue];
-                                if(distance>0.0){
-                                    if (distance/1000>1) {
-                                        [distanceLabel setText:[NSString stringWithFormat:@"%.fkm",(float)distance/1000]];
-                                    }else if (distance/1000<1 && distance/1000>0.5){
-                                        [distanceLabel setText:[NSString stringWithFormat:@"%dm",(int)distance]];
-                                        
-                                    }else if (distance/1000<0.5){
-                                        [distanceLabel setText:@"<500m"];
-                                    }
-                                }
-                                
-                            }
+                            
                             
                         }
                         
@@ -699,11 +718,11 @@
                         
                         
                     });
-                    
+                    [ProgressHUD dismiss];
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+               // [ProgressHUD dismiss];
                 
                 
             });
@@ -711,7 +730,7 @@
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
+         //   [ProgressHUD dismiss];
             
         }];
         

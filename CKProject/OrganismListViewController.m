@@ -1024,8 +1024,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         if ([dic objectForKey:@"addr"] && ![[dic objectForKey:@"addr"] isEqual:[NSNull null]]) {
             NSString *addr=[dic objectForKey:@"addr"];
             [porjectCell.listItem.addLabel setText:[NSString stringWithFormat:@"%@",addr]];
-            porjectCell.listItem.addLabel.numberOfLines=0;
-            [porjectCell.listItem.addLabel sizeToFit];
+            //porjectCell.listItem.addLabel.numberOfLines=0;
+           // [porjectCell.listItem.addLabel sizeToFit];
 
         }
     }else if ([local1Array count]>0 && tableView.tag==1) {

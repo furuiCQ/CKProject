@@ -156,11 +156,19 @@
     int screenWidth=rx.size.width;
     nextWeekSelectView=[[UIView alloc]initWithFrame:CGRectMake(screenWidth/14.8, 4, screenWidth-screenWidth/14.8*2, screenWidth/8)];
     [nextWeekSelectView setBackgroundColor:[UIColor colorWithRed:133.f/255.f green:52.f/255.f blue:52.f/255.f alpha:1]];
-    [nextWeekSelectView.layer setCornerRadius:5];
+   // [nextWeekSelectView.layer setCornerRadius:10];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:nextWeekSelectView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = nextWeekSelectView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    nextWeekSelectView.layer.mask  = maskLayer;
     [self addSubview:nextWeekSelectView];
     //下周            大小：36px   37px
     nextTitleLabel=[[UILabel alloc]initWithFrame:CGRectMake(nextWeekSelectView.frame.size.width/2-screenWidth/17.8, screenWidth/22, screenWidth/17.8*2, screenWidth/17.8)];
     [nextTitleLabel setText:@"下周"];
+    UITapGestureRecognizer *nextGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setNextMonthDate)];
+    [nextTitleLabel setUserInteractionEnabled:YES];
+    [nextTitleLabel addGestureRecognizer:nextGesture];
     [nextTitleLabel setFont:[UIFont systemFontOfSize:screenWidth/20]];
     [nextTitleLabel setTextColor:[UIColor colorWithRed:133.f/255.f green:133.f/255.f blue:133.f/255.f alpha:1]];
     [nextTitleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -180,16 +188,24 @@
 
     //
     nowWeekView=[[UIView alloc]initWithFrame:CGRectMake(screenWidth/32, screenWidth/8, screenWidth-screenWidth/16, screenWidth/0.9)];
-    [nowWeekView setBackgroundColor:[UIColor whiteColor]];
+    [nowWeekView setBackgroundColor:[UIColor clearColor]];
     [self addSubview:nowWeekView];
     
     weekSelectView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, nowWeekView.frame.size.width, screenWidth/6.5)];
     [weekSelectView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
-    [weekSelectView.layer setCornerRadius:5];
+  //  [weekSelectView.layer setCornerRadius:10];
+    maskPath = [UIBezierPath bezierPathWithRoundedRect:weekSelectView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+    maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = weekSelectView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    weekSelectView.layer.mask  = maskLayer;
     [nowWeekView addSubview:weekSelectView];
     //本周            大小：36px   37px
     titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(weekSelectView.frame.size.width/2-screenWidth/17.8, screenWidth/17.8, screenWidth/17.8*2, screenWidth/17.8)];
     [titleLabel setText:@"本周"];
+    nextGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setNextMonthDate)];
+    [titleLabel setUserInteractionEnabled:YES];
+    [titleLabel addGestureRecognizer:nextGesture];
     [titleLabel setFont:[UIFont systemFontOfSize:screenWidth/17.8]];
     [titleLabel setTextColor:[UIColor whiteColor]];
     [titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -205,7 +221,11 @@
     [rightButton addTarget:self action:@selector(setNextMonthDate) forControlEvents:UIControlEventTouchUpInside];
     [weekSelectView addSubview:rightButton];
     
-    //
+    UIView *timeView=[[UIView alloc]initWithFrame:CGRectMake(0, weekSelectView.frame.size.height+weekSelectView.frame.origin.y, weekSelectView.frame.size.width, nowWeekView.frame.size.height-(weekSelectView.frame.size.height+weekSelectView.frame.origin.y))];
+    [timeView setBackgroundColor:[UIColor whiteColor]];
+  //  [timeView.layer setCornerRadius:10];
+    [nowWeekView addSubview:timeView];
+    //s t w s
     for(int i=0;i<[dataArray count];i++){
         NSString *str=[dataArray objectAtIndex:i];
         UILabel *topTitle=[[UILabel alloc]initWithFrame:CGRectMake(weekSelectView.frame.size.width/7*i, weekSelectView.frame.size.height+weekSelectView.frame.origin.y+screenWidth/13.3, weekSelectView.frame.size.width/7, screenWidth/20)];
@@ -298,7 +318,7 @@
             }
                 break;
         }
-        UILabel *timeLabel=[[UILabel alloc]initWithFrame:CGRectMake(x,y, screenWidth/9.5, screenWidth/33.6)];
+        UILabel *timeLabel=[[UILabel alloc]initWithFrame:CGRectMake(x,y, screenWidth/6, screenWidth/26.7)];
         [timeLabel setText:[dic objectForKey:@"begintime"]];
         [timeLabel setTextAlignment:NSTextAlignmentLeft];
         [timeLabel setTag:i];
@@ -373,10 +393,15 @@
     NSInteger *selectId=(NSInteger *)getsure.view.tag;
     for(UILabel *label in timeLabelArray){
         if(label.tag==selectId){
-            beginTime=label.text;
-            [label setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
+            if(label.textColor !=[UIColor grayColor]){
+                beginTime=label.text;
+                [label setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
+            }
         }else{
-            [label setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
+            
+            if(label.textColor !=[UIColor grayColor]){
+                [label setTextColor:[UIColor blackColor]];
+            }
         }
     }
     

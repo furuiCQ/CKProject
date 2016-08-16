@@ -43,13 +43,13 @@
         [logoView setImage:[UIImage imageNamed:@"instdetails_defalut"]];
         logoTitle=[[UILabel alloc]initWithFrame:CGRectMake(0, width/3.8-width/15, logoView.frame.size.width, width/15)];
         [logoTitle setBackgroundColor:[UIColor colorWithRed:0.f/255.f green:0.f/255.f blue:0.f/255.f alpha:0.5]];
-        [logoTitle setText:@"汉昌培训"];
+     //   [logoTitle setText:@"汉昌培训"];
         [logoTitle setTextAlignment:NSTextAlignmentCenter];
         //自动折行设置
        
         [logoTitle setFont:[UIFont systemFontOfSize:width/26.7]];
         [logoTitle setTextColor:[UIColor whiteColor]];
-        [logoView addSubview:logoTitle];
+     //   [logoView addSubview:logoTitle];
         
         [self addSubview:logoView];
 
@@ -84,11 +84,11 @@
         [localImageView setFrame:CGRectMake(width/45.7+width/2.7+width/17.8, width/24.6+width/22+width/35.6+width/11.4+width/160, width/35.6, width/23.7)];
         [self addSubview:localImageView];
         
-        addLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/35.5+width/45.7, width/24.6+width/22+width/35.6+width/11.4, width/29*18, width/13)];
+        addLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/45.7+width/2.7+width/17.8+width/35.5+width/45.7, width/24.6+width/22+width/35.6+width/11.4, width/29*15, width/13)];
         [addLabel setText:@"渝中区牛角沱太平洋广场3楼"];
         //自动折行设置
-        addLabel.lineBreakMode = UILineBreakModeWordWrap;
-        addLabel.numberOfLines = 0;
+      //  addLabel.lineBreakMode = UILineBreakModeWordWrap;
+     //   addLabel.numberOfLines = 1;
         [addLabel setTextColor:[UIColor colorWithRed:5.f/255.f green:27.f/255.f blue:40.f/255.f alpha:1.0]];
         [addLabel setFont:[UIFont systemFontOfSize:width/29]];
         [addLabel setTextAlignment:NSTextAlignmentLeft];

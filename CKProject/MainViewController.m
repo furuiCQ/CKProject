@@ -562,7 +562,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 NSLog(@"%@",error.userInfo);
                 
             }
-            [refreshHeader endRefreshing];
+          //  [refreshHeader endRefreshing];
             [ProgressHUD dismiss];
             
         }];
@@ -1293,7 +1293,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-                [refreshHeader endRefreshing];
+               // [refreshHeader endRefreshing];
                 [ProgressHUD dismiss];
             });
         }failure:^(NSError *error){
@@ -1301,7 +1301,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",error.userInfo);
                 
             }
-            [refreshHeader endRefreshing];
+            //[refreshHeader endRefreshing];
             [ProgressHUD dismiss];
             
         }];
@@ -1341,7 +1341,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-                [refreshHeader endRefreshing];
+                //[refreshHeader endRefreshing];
                 [ProgressHUD dismiss];
             });
         }failure:^(NSError *error){
@@ -1349,7 +1349,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",error.userInfo);
                 
             }
-            [refreshHeader endRefreshing];
+           // [refreshHeader endRefreshing];
             [ProgressHUD dismiss];
             
         }];
@@ -1390,7 +1390,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-                [refreshHeader endRefreshing];
+               // [refreshHeader endRefreshing];
                 [ProgressHUD dismiss];
             });
         }failure:^(NSError *error){
@@ -1398,7 +1398,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",error.userInfo);
                 
             }
-            [refreshHeader endRefreshing];
+           // [refreshHeader endRefreshing];
             [ProgressHUD dismiss];
             
         }];
@@ -1439,7 +1439,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-                [refreshHeader endRefreshing];
+               // [refreshHeader endRefreshing];
                 [ProgressHUD dismiss];
             });
         }failure:^(NSError *error){
@@ -1447,7 +1447,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",error.userInfo);
                 
             }
-            [refreshHeader endRefreshing];
+          //  [refreshHeader endRefreshing];
             [ProgressHUD dismiss];
             
         }];
@@ -1482,7 +1482,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-                [refreshHeader endRefreshing];
+              //  [refreshHeader endRefreshing];
                 [ProgressHUD dismiss];
                 
             });
@@ -1491,7 +1491,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",error.userInfo);
                 
             }
-            [refreshHeader endRefreshing];
+           // [refreshHeader endRefreshing];
             [ProgressHUD dismiss];
             
         }];

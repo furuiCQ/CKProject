@@ -975,7 +975,6 @@ static NSString *identy = @"OrderRecordCell";
         NSNumber *projectId=[dic objectForKey:@"id"];
         [projectDetailsViewController setProjectId:projectId];
         [self presentViewController:projectDetailsViewController animated:YES completion:nil];
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
         
     }else if(tableView.tag==4){
         pageNumb=1;
@@ -995,6 +994,8 @@ static NSString *identy = @"OrderRecordCell";
         }
         [dataTableView reloadData];
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
+
     
     
 }

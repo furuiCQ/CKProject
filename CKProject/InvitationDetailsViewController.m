@@ -833,7 +833,7 @@
     ScaleImgViewController *scaleImgViewController=[[ScaleImgViewController alloc]init];
     [scaleImgViewController setLoadImage:detialsImage];
     
-    [scaleImgViewController reloadImage];
+    [scaleImgViewController reloadImage:(int)gesutre.view.tag];
     [self presentViewController:scaleImgViewController animated:YES completion:nil];
     
 }

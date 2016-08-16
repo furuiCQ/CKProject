@@ -8,6 +8,7 @@
 
 #import "ScaleImgViewController.h"
 #import "HttpHelper.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 @implementation ScaleImgViewController
 
 @synthesize loadImage;
@@ -90,7 +91,7 @@
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     lastDistance=0;
 }
--(void)reloadImage{
+-(void)reloadImage:(int)numb{
     //创建滚动试图
     
     NSUserDefaults *de=[NSUserDefaults standardUserDefaults];
@@ -105,12 +106,12 @@
         //获取网路图片
         
         im.contentMode=UIViewContentModeScaleAspectFit;
-        NSString *str=[NSString stringWithFormat:@"http://211.149.190.90%@",[bt objectAtIndex:i]];
-      im.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
+     //   NSString *str=[NSString stringWithFormat:@"http://211.149.190.90%@",[bt objectAtIndex:i]];
+    //  im.image=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:str]]];
         
         
         
-//         [im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[bt objectAtIndex:i]]]];
+       [im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:[bt objectAtIndex:i]]]];
         [sc addSubview:im];
      
     }
@@ -131,6 +132,9 @@
 //    [self.view addSubview:imageView];
     imgStartWidth=imageView.frame.size.width;
     imgStartHeight=imageView.frame.size.height;
+    //  滚动scrollview
+    CGFloat x = numb * sc.frame.size.width;
+    sc.contentOffset = CGPointMake(x, 0);
 }
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
@@ -143,7 +147,7 @@
     //设置顶部栏
     titleHeight=44;
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, titleHeight)];
-    [titleView setBackgroundColor:[UIColor whiteColor]];
+    [titleView setBackgroundColor:[UIColor colorWithRed:255.f/255.f green:116.f/255.f blue:116.f/255.f alpha:1.0]];
     //新建左上角Label
     cityLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/6, titleHeight)];
     UIImageView *backImageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"back_logo"]];

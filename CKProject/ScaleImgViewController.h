@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface ScaleImgViewController : UIViewController {
+#import "BaseViewController.h"
+@interface ScaleImgViewController : BaseViewController {
     
     
     UIImageView * imageView;
@@ -27,6 +27,6 @@
 @property(strong,nonatomic)UILabel *msgLabel;
 @property int bottomHeight;
 
--(void)reloadImage;
+-(void)reloadImage:(int)numb;
 @end
 
