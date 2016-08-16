@@ -358,15 +358,15 @@
             if(isSelected==true){
                 [control addSubview:itemLabel];
                 [dataCell addSubview:control];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
-                    //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
-                    [UIView animateWithDuration:1.f delay:(0.2-0.02*(i)) usingSpringWithDamping:1.0f initialSpringVelocity:15.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                        CGRect frame=cell.frame;
-                        frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
-                        cell.frame=frame;
-                        } completion:^(BOOL finished) {
-                    }];
-                });
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
+//                    //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
+//                    [UIView animateWithDuration:1.f delay:(0.2-0.02*(i)) usingSpringWithDamping:1.0f initialSpringVelocity:15.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//                        CGRect frame=cell.frame;
+//                        frame.size.height=control.frame.origin.y+control.frame.size.height+width/26.7;
+//                        cell.frame=frame;
+//                    } completion:^(BOOL finished) {
+//                    }];
+//                });
                 
                 [dataCell.titleLabel setTextColor:[UIColor colorWithRed:255.f/255.f green:82.f/255.f blue:82.f/255.f alpha:1.0]];
                 [dataCell.moreLabel setTextColor:[UIColor colorWithRed:50.f/255.f green:60.f/255.f blue:63.f/255.f alpha:1.0]];
