@@ -108,17 +108,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     locationManager = [[CLLocationManager alloc] init];
     //    定位的数据
     locationManager.delegate = self;
-    
-    // 设置定位精度grayNearestTenMeters:精度10米
-    // kCLLocationAccuracyHundredMeters:精度100 米
-    // kCLLocationAccuracyKilometer:精度1000 米
-    // kCLLocationAccuracyThreeKilometers:精度3000米
-    // kCLLocationAccuracyBest:设备使用电池供电时候最高的精度
-    // kCLLocationAccuracyBestForNavigation:导航情况下最高精度，一般要有外接电源时才能使用
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
-    // distanceFilter是距离过滤器，为了减少对定位装置的轮询次数，位置的改变不会每次都去通知委托，而是在移动了足够的距离时才通知委托程序
-    // 它的单位是米，这里设置为至少移动1000再通知委托处理更新;
     locationManager.distanceFilter = 1000.0f; // 如果设为kCLDistanceFilterNone，则每秒更新一次;
     [locationManager startUpdatingLocation];
 

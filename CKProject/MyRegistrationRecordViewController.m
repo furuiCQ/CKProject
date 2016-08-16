@@ -458,7 +458,8 @@
     [projectDetailsViewController setProjectId:interId];
     [projectDetailsViewController setIsCancel:YES];
     [self presentViewController:projectDetailsViewController animated:YES completion:nil];
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
+
     
 }
 //跳转出错的bug

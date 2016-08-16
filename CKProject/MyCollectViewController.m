@@ -237,6 +237,8 @@
     [projectDetailsViewController setProjectId:projectId];
     [self presentViewController:projectDetailsViewController animated:YES completion:nil];
     [projectDetailsViewController setSelect];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
+
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
