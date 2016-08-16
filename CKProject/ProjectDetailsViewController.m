@@ -1116,7 +1116,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [imageView addGestureRecognizer:gesture];
         [imageView setTag:i]; 
         [imageView setImage:[imageArray objectAtIndex:i]];
-        imageView.frame = CGRectMake(imageView.frame.origin.x, -300, imageView.frame.size.width,imageView.frame.size.height);
+        [imageView setHidden:YES];
+        imageView.frame = CGRectMake(imageView.frame.origin.x, -titleHeight, imageView.frame.size.width,imageView.frame.size.height);
         [allShowView addSubview:imageView];
     }
     //[allShowView setHidden:YES];
@@ -1132,8 +1133,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
                 //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
                 [UIView animateWithDuration:1.f delay:0.02*(btn.tag) usingSpringWithDamping:0.6f initialSpringVelocity:1.5f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    btn.frame = CGRectMake(btn.frame.origin.x, -300, btn.frame.size.width,btn.frame.size.height);
+                    btn.frame = CGRectMake(btn.frame.origin.x, -titleHeight, btn.frame.size.width,btn.frame.size.height);
                 } completion:^(BOOL finished) {
+                    [btn setHidden:YES];
                 }];
             });
         }
@@ -1146,7 +1148,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     for (UIView *view in allShowView.subviews) {
         if ([view isKindOfClass:[UIImageView class]]) {
             UIImageView *btn=(UIImageView *)view;
-            
+            [btn setHidden:NO];
+
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05*NSEC_PER_SEC)),dispatch_get_main_queue(), ^{
                 //UIView animate动画:仿钉钉弹出添加按钮,从顶部弹到指定位置
                 [UIView animateWithDuration:1.f delay:(0.2-0.02*(btn.tag)) usingSpringWithDamping:1.0f initialSpringVelocity:15.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
