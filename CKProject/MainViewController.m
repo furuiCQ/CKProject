@@ -1296,7 +1296,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-               // [refreshHeader endRefreshing];
+                [refreshHeader endRefreshing];
                 [ProgressHUD dismiss];
             });
         }failure:^(NSError *error){
@@ -1605,6 +1605,7 @@ static NSString *identy = @"OrderRecordCell";
                 }else{
                     
                 }
+                [refreshHeader endRefreshing];
                 
             });
         }failure:^(NSError *error){
