@@ -15,6 +15,7 @@
 #import "MainViewController.h"
 #import "HttpHelper.h"
 #import "HttpModel.h"
+#import "xindetailViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "YiRefreshHeader.h"
 #import "YiRefreshFooter.h"
@@ -466,15 +467,19 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                             NSDictionary *bt=[xws objectAtIndex:i];
                             lab.backgroundColor=[UIColor whiteColor];
                             lab.text=[bt objectForKey:@"title"];
+                            lab.tag=[[bt objectForKey:@"id"]intValue];
                             lab.font=[UIFont systemFontOfSize:self.view.frame.size.width/23];
                             lab.textColor=[UIColor blackColor];
                             lab.numberOfLines=0;
+                            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tz:)];
+                            [lab addGestureRecognizer:tap];
+                            [lab setUserInteractionEnabled:YES];
                             [lab sizeToFit];
                             [st addSubview:lab];
                             
                         }
-                        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tz)];
-                        [st addGestureRecognizer:tap];
+                       // UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tz)];
+                       //[st addGestureRecognizer:tap];
                         st.delegate=self;
                         timer3= [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(nextxinwen) userInfo:nil repeats:YES];
                     });
@@ -500,11 +505,14 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     });
 }
 
--(void)tz{
+-(void)tz:(UITapGestureRecognizer *)getsure{
     
-    ViewController *ma=[[ViewController alloc]init];
-    [self presentViewController:ma animated:YES completion:nil];
-    [ma showBack];
+    xindetailViewController  *bt=[[xindetailViewController alloc]init];
+    NSNumber *aritcleId=[NSNumber numberWithInt:(int)getsure.view.tag];
+    [bt setAritcleId:aritcleId];
+    [self presentViewController:bt animated:YES completion:nil];
+
+    //[ma showBack];
 }
 
 

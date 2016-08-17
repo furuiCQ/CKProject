@@ -13,7 +13,7 @@
 
 @interface SendInvitationViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextViewDelegate>{
     NSArray *tableArray;
-    
+   
 }
 
 @end
@@ -331,14 +331,16 @@
 #define kViewHeight 56
 - (void)keyboardWillShow:(NSNotification *)aNotification
 {
+    
+  
+    
     //获取键盘高度
     NSValue *keyboardObject = [[aNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey];
+    
     
     CGRect keyboardRect;
     
     [keyboardObject getValue:&keyboardRect];
-    
-    //调整放置有textView的view的位置
     
     //设置动画
     [UIView beginAnimations:nil context:nil];
@@ -351,6 +353,7 @@
     
     [UIView commitAnimations];
 }
+
 -(void)keyboardHide:(UITapGestureRecognizer*)tap{
     [[self findFirstResponderBeneathView:self.view] resignFirstResponder];
 }

@@ -56,6 +56,10 @@
     UIView *allShowView;
     BOOL isShow;
     UITapGestureRecognizer *sendGesutre;
+    //key
+    
+    UIView *keyView;
+    UITapGestureRecognizer *keyTap;
 }
 
 @end
@@ -365,16 +369,16 @@
     editTextView.layer.masksToBounds=YES;
     [editTextView setBackgroundColor:[UIColor colorWithRed:248.f/255.f green:248.f/255.f blue:248.f/255.f alpha:1.0]];
     [editTextView.layer setCornerRadius:5.0f];
-  //  editTextView.delegate=self;
+    //  editTextView.delegate=self;
     [bottomView addSubview:editTextView];
     //100x60
-  
-
+    
+    
     UILabel *sendDisLabel=[[UILabel alloc]initWithFrame:CGRectMake(editTextView.frame.size.width+editTextView.frame.origin.x+swidth/64, (bottomView.frame.size.height-width/10)/2, width/6.4, width/10)];
     [sendDisLabel setBackgroundColor:[UIColor colorWithRed:30.f/255.f green:169.f/255.f blue:240.f/255.f alpha:1.0]];
-        sendGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sendeCommects)];
-     [sendDisLabel addGestureRecognizer:sendGesutre];
-     [sendDisLabel setUserInteractionEnabled:YES];
+    sendGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sendeCommects)];
+    [sendDisLabel addGestureRecognizer:sendGesutre];
+    [sendDisLabel setUserInteractionEnabled:YES];
     [sendDisLabel setText:@"发送"];
     [sendDisLabel setFont:[UIFont systemFontOfSize:width/24.6]];
     [sendDisLabel setTextColor:[UIColor whiteColor]];
@@ -444,7 +448,7 @@
             NSString *logo=[dic objectForKey:@"uimg"];
             if([logo length]>0){
                 [cell.im sd_setImageWithURL:[NSURL URLWithString:[HTTPHOST stringByAppendingString:logo]]];
-               
+                
             }
             [cell.im.layer setCornerRadius:cell.im.frame.size.width/2];
             [cell.im.layer setMasksToBounds:YES];
@@ -758,7 +762,7 @@
                         dispatch_async(dispatch_get_main_queue(), ^{
                             NSDictionary *dic=model.result;
                             data=dic;
-                           
+                            
                             if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
                                 [lab setText:[dic objectForKey:@"title"]];
                                 [lab sizeToFit];
@@ -885,9 +889,9 @@
                             if ([dic objectForKey:@"title"]&& ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
                                 [lab setText:[dic objectForKey:@"title"]];
                                 [lab sizeToFit];
-
+                                
                             }
-                           
+                            
                             if ([dic objectForKey:@"created"]&& ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
                                 NSNumber *number=[dic objectForKey:@"created"];
                                 NSInteger myInteger = [number integerValue];
@@ -912,7 +916,7 @@
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                                 [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
-                               
+                                
                                 
                                 [zanImageView removeFromSuperview];
                                 zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
@@ -930,7 +934,7 @@
                                 [self loadImages:dic];
                                 [lt setFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y+swidth/40, swidth, 0)];
                                 [imageScrollview setFrame:CGRectMake(0, lt.frame.size.height+lt.frame.origin.y+4, swidth, swidth/1.3)];
-
+                                
                             }
                             if([dic objectForKey:@"content"]){
                                 //[tv setText:[dic objectForKey:@"content"]];
@@ -965,7 +969,7 @@
                                 [sb setFrame:rect7];
                                 tab.tableHeaderView=sb;
                             }
-                           
+                            
                             
                         });
                         
@@ -1065,8 +1069,11 @@
     
     //定义动画时间
     [UIView setAnimationDuration:kAnimationDuration];
-    
-    //设置view的frame，往上平移
+    keyView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-curkeyBoardHeight-(self.view.frame.size.width/6.5-0.5))];
+    [keyView setBackgroundColor:[UIColor clearColor]];
+    keyTap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hidKeyBord)];
+    [self.view addSubview:keyView];
+   //设置view的frame，往上平移
     [(UIView *)[self.view viewWithTag:1000] setFrame:CGRectMake(0, self.view.frame.size.height-curkeyBoardHeight-(self.view.frame.size.width/6.5-0.5), self.view.frame.size.width, self.view.frame.size.width/6.5-0.5)];
     [UIView commitAnimations];
     [sendControl removeFromSuperview];
@@ -1075,7 +1082,12 @@
     [sendControl addGestureRecognizer:sendGesutre];
     [sendControl setUserInteractionEnabled:YES];
     [self.view addSubview:sendControl];
-   
+    
+}
+-(void)hidKeyBord{
+    [keyView removeGestureRecognizer:keyTap];
+    [keyView removeFromSuperview];
+    [editTextView resignFirstResponder];
 }
 - (void)keyboardWillHide:(NSNotification *)aNotification
 {
@@ -1091,7 +1103,7 @@
     [sendControl addGestureRecognizer:sendGesutre];
     [sendControl setUserInteractionEnabled:YES];
     [self.view addSubview:sendControl];
-
+    
 }
 -(void)initShareView{
     int width=self.view.frame.size.width;
