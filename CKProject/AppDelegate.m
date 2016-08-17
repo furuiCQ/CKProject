@@ -38,7 +38,7 @@
 static NSString * const WeiboKey=@"2850266283";
 static NSString * const QQKey=@"1105170232";
 static NSString * const WXKey=@"wxd1cc67205c307199";
-static NSString * const WXSECRET=@"990d34906f1041777cc6867dbf2fdddb";
+static NSString * const WXSECRET=@"ed8a20ce12cf1d6a46a6626ce072f94b";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.

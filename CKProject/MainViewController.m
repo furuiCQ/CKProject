@@ -1147,7 +1147,7 @@ static NSString *identy = @"OrderRecordCell";
         [searchViewController setAid:localNumber];
         
     }else{
-        [searchViewController setAid:[NSNumber numberWithInt:500000]];
+        [searchViewController setAid:[NSNumber numberWithInt:500100]];
     }
     [self presentViewController: searchViewController animated:YES completion:nil];
 
@@ -1516,7 +1516,7 @@ static NSString *identy = @"OrderRecordCell";
         [searchViewController setAid:localNumber];
         
     }else{
-        [searchViewController setAid:[NSNumber numberWithInt:500000]];
+        [searchViewController setAid:[NSNumber numberWithInt:500100]];
         
     }
     [self presentViewController: searchViewController animated:YES completion:nil];

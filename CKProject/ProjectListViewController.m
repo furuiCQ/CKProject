@@ -131,7 +131,7 @@
 @synthesize gradeTableView;
 @synthesize counts;
 @synthesize searchs;
-static NSString * const DEFAULT_LOCAL_AID = @"500000";
+static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -213,7 +213,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     NSUserDefaults *src=[NSUserDefaults standardUserDefaults];
     NSString *bt1=[src objectForKey:@"kp"];
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?date=%@&lng=%f&lat=%f&status=2&pn=%d&pc=10",bt1,myDelegate.longitude,myDelegate.latitude,pageNumb];
+    
+    
+    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?date=%@&lng=%f&lat=%f&status=2&pn=%d&pc=20",bt1,myDelegate.longitude,myDelegate.latitude,pageNumb];
     NSURL *url=[NSURL URLWithString:str];
     NSURLRequest *request=[NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
@@ -222,11 +224,20 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         
         NSDictionary *db=[obj objectForKey:@"result"];
         NSArray *dataArray=[db objectForKey:@"lesson"];
-        [tableArray addObjectsFromArray:dataArray];
-        
-        NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",tableArray);
+        if([dataArray count]>0){
+            [tableArray addObjectsFromArray:dataArray];
+        }else{
+            if (alertView==nil) {
+                alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                alertView.delegate=self;
+            }
+            [alertView setMessage:@"没有更多的课程了"];
+            [alertView show];
+        }
         [projectTableView reloadData];
         [refreshFooter endRefreshing];
+        [refreshHeader endRefreshing];
+
         _isLoading=NO;
         [ProgressHUD dismiss];
         
@@ -284,6 +295,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
         [localLabel setText:myDelegate.areaName];
     }else if(myDelegate.cityName){
         [localLabel setText:myDelegate.cityName];
+    }else{
+        [localLabel setText:@"重庆"];
     }
     [localLabel setBackgroundColor:[UIColor whiteColor]];
     [localLabel setFont:[UIFont systemFontOfSize:width/24.6]];
@@ -610,6 +623,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     selectAid=NULL;
 }
 -(void)confirmDrawLayout{
+    pageNumb=1;
     [self getLessonSift];
     [firstLayout closeDrawer];
     isSift=YES;
@@ -642,10 +656,45 @@ static NSString * const DEFAULT_LOCAL_AID = @"500000";
     [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
     [projectTableView addSubview:_refreshControl];
     
+    refreshHeader=[[YiRefreshHeader alloc] init];
+    refreshHeader.scrollView=projectTableView;
+    [refreshHeader header];
+    refreshHeader.beginRefreshingBlock=^(){
+        _isLoading=true;
+        pageNumb=1;
+        if(std==2){
+            if(isSift)
+            {
+                [self getLessonSift];
+            }else{
+                
+                [self searchData];
+            }
+        }else{
+            [self getData];
+        }
+
+    };
+    
+    
     refreshFooter=[[YiRefreshFooter alloc] init];
     refreshFooter.scrollView=projectTableView;
     [refreshFooter footer];
     refreshFooter.beginRefreshingBlock=^(){
+        NSLog(@"上拉加载");
+        pageNumb++;
+        _isLoading=true;
+        if(std==2){
+            if(isSift)
+            {
+                [self getLessonSift];
+            }else{
+                
+                [self searchData];
+            }
+        }else{
+                [self getData];
+        }
     };
 }
 
@@ -1314,14 +1363,23 @@ static NSString *identy = @"OrderRecordCell";
     if (projectID!=0 && projectID!=nil) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            [HttpHelper getLessonList:projectID withPid:projectSubID withAID:Aid withlng:ngg withlat:ar withnums:[NSNumber numberWithInt:2]  success:^(HttpModel *model){
+            [HttpHelper getLessonList:projectID withPid:projectSubID withAID:Aid withlng:ngg withlat:ar withnums:[NSNumber numberWithInt:2] withPn:[NSNumber numberWithInt:pageNumb] withPageLine:[NSNumber numberWithInt:20]  success:^(HttpModel *model){
                 NSLog(@"%@",model.message);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                         NSDictionary *result=model.result;
                         
-                        tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
-                        
+                        NSArray *dataArray=[result objectForKey:@"lesson"];
+                        if([dataArray count]>0){
+                            [tableArray addObjectsFromArray:dataArray];
+                        }else{
+                            if (alertView==nil) {
+                                alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                                alertView.delegate=self;
+                            }
+                            [alertView setMessage:@"没有更多的课程了"];
+                            [alertView show];
+                        }
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [projectTableView reloadData];
                         });
@@ -1330,8 +1388,11 @@ static NSString *identy = @"OrderRecordCell";
                     }else{
                         
                     }
+                   
+                    [refreshFooter endRefreshing];
+                    [refreshHeader endRefreshing];
+                    _isLoading=NO;
                     [ProgressHUD dismiss];
-                    
                     
                 });
             }failure:^(NSError *error){
@@ -1456,7 +1517,7 @@ static NSString *identy = @"OrderRecordCell";
         cid=[formatter numberFromString:@"0"];
         
     }
-    NSNumber *pc=[NSNumber numberWithInt:10];
+    NSNumber *pc=[NSNumber numberWithInt:20];
     NSNumber *pn=[NSNumber numberWithInt:1];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
@@ -1495,7 +1556,7 @@ static NSString *identy = @"OrderRecordCell";
 }
 -(void)searchData:(NSString *)data withTime:(NSString *)date withAid:(NSNumber *)Aid{
     
-    NSNumber *pc=[NSNumber numberWithInt:10];
+    NSNumber *pc=[NSNumber numberWithInt:20];
     NSNumber *pn=[NSNumber numberWithInt:1];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -1587,35 +1648,59 @@ static NSString *identy = @"OrderRecordCell";
         alertView.delegate=self;
     }
     
-    if(selectCid==NULL || selectPid==NULL){
-        [alertView setMessage:@"请选择课程种类!"];
+//    if((selectCid==NULL || selectPid==NULL)){
+//        [alertView setMessage:@"请选择课程种类!"];
+//        [alertView show];
+//        return;
+//    }
+//    if(selectGid==NULL){
+//        [alertView setMessage:@"请选择年龄段!"];
+//        [alertView show];
+//        return;
+//
+//    }
+//    if(selectAid==NULL){
+//        [alertView setMessage:@"请选择地区!"];
+//        [alertView show];
+//        return;
+//    }
+    if((selectCid==NULL || selectPid==NULL) && selectGid==NULL && selectAid==NULL){
+        [alertView setMessage:@"请选择至少选择一个筛选条件!"];
         [alertView show];
         return;
     }
-    if(selectGid==NULL){
-        [alertView setMessage:@"请选择年龄段!"];
-        [alertView show];
-        
-        return;
-
+    NSMutableArray *dataArray=[[NSMutableArray alloc]init];
+    if((selectCid!=NULL  && selectPid!=NULL)){
+        [dataArray addObject:@{ @"name": @"cid", @"value": selectCid}];
+        [dataArray addObject:@{ @"name": @"pid", @"value": selectPid}];
     }
-    if(selectAid==NULL){
-        [alertView setMessage:@"请选择地区!"];
-        [alertView show];
-        return;
+    if(selectGid!=NULL){
+        [dataArray addObject:@{ @"name": @"gid", @"value": selectGid}];
     }
-
-    
+    if(selectAid!=NULL){
+        [dataArray addObject:@{ @"name": @"aid", @"value": selectAid}];
+    }
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        [HttpHelper searchData:selectAid withCid:selectCid withPid:selectPid withGid:selectGid withPc:[NSNumber numberWithInt:10] withPn:[NSNumber numberWithInt:pageNumb] withlgn:lat withlat:lng withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+
+        [HttpHelper searchData:dataArray withPc:[NSNumber numberWithInt:20] withPn:[NSNumber numberWithInt:pageNumb] withlgn:lat withlat:lng withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     NSDictionary *result=model.result;
                     
-                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
+                    NSArray *dataArray=[result objectForKey:@"lesson"];
+                    if([dataArray count]>0){
+                        [tableArray addObjectsFromArray:dataArray];
+                    }else{
+                        if (alertView==nil) {
+                            alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                            alertView.delegate=self;
+                        }
+                        [alertView setMessage:@"没有更多的课程了"];
+                        [alertView show];
+                    }
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1628,7 +1713,9 @@ static NSString *identy = @"OrderRecordCell";
                 }
                 
                 [ProgressHUD dismiss];
-                
+                [refreshFooter endRefreshing];
+                [refreshHeader endRefreshing];
+                _isLoading=NO;
                 
             });
         }failure:^(NSError *error){
@@ -1751,27 +1838,14 @@ static NSString *identy = @"OrderRecordCell";
     if (!_isLoading && uiScrollView.tag==0) { // 判断是否处于刷新状态，刷新中就不执行
         float height = uiScrollView.contentSize.height > projectTableView.frame.size.height?projectTableView.frame.size.height : uiScrollView.contentSize.height;
         if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
-            
-            // 调用上拉刷新方法
-            [refreshFooter beginRefreshing];
-            NSLog(@"上拉加载");
-            pageNumb++;
-            _isLoading=true;
-            if(std==2){
-                if(isSift)
-                {
-                    [self getLessonSift];
-                }else{
-                    [self searchData];
-                }
-            }
+         
             
         }
         if (- uiScrollView.contentOffset.y / projectTableView.frame.size.height > 0.2) {
             
             // 调用下拉刷新方法
             NSLog(@"刷新");
-            [refreshHeader beginRefreshing];
+          //  [refreshHeader beginRefreshing];
             _isLoading=true;
         }
         

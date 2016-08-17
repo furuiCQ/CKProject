@@ -392,33 +392,14 @@
 }
 
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
-    // NSLog(@"点点点");
-    [self dismissViewControllerAnimated:YES completion:^{
-        //通过委托协议传值
-        //   [[NSNotificationCenter defaultCenter] postNotificationName:@"do" object:self];
-    }];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"test" object:nil];
+    [editTextView resignFirstResponder];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-//-(void)textViewDidBeginEditing:(UITextView *)textView
-//{
-//    CGRect rect8=bottomView.frame;
-//    rect8.origin.y=sheight-300;
-//    [bottomView setFrame:rect8];
-//    editTextView.text=nil;
-//    NSLog(@"textViewDidBeginEditing");
-//}
-//-(void)textViewDidEndEditing:(UITextView *)textView
-//{
-//    [editTextView resignFirstResponder];
-//    CGRect rect8=bottomView.frame;
-//    rect8.origin.y=self.view.frame.size.height-swidth/6.5;
-//    [bottomView setFrame:rect8];
-//}
+
 #pragma mark - 数据源方法
 #pragma mark 返回分组数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -661,7 +642,7 @@
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             
-            [HttpHelper getArticleCommectsList:aritcleId withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
+            [HttpHelper getArticleCommectsList:aritcleId withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5]  success:^(HttpModel *model){
                 
                 NSLog(@"%@",model.message);
                 

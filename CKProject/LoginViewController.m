@@ -445,10 +445,21 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
     //do nothing
 }
 - (void)getWXUserInfo:(NSNotification*)notification{
+    [ProgressHUD show:@"登陆中..."];
     NSDictionary *dic=(NSDictionary  *)notification.object;
-    NSString *access_token = [dic objectForKey:@"access_token"];
-    NSString *openid = [dic objectForKey:@"openid"];
-    [self getWXUserInfo:access_token withOpenId:openid];
+    if([dic objectForKey:@"access_token"] &&[dic objectForKey:@"openid"] ){
+        NSString *access_token = [dic objectForKey:@"access_token"];
+        NSString *openid = [dic objectForKey:@"openid"];
+        [self getWXUserInfo:access_token withOpenId:openid];
+    }else{
+        if (alertView==nil) {
+            alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            alertView.delegate=self;
+        }
+        [alertView setMessage:[NSString stringWithFormat:@"%@",dic]];
+        [alertView show];
+    }
+
 }
 
 - (void)getWBUserInfo:(NSNotification*)notification{
@@ -546,9 +557,17 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
         dispatch_async(dispatch_get_main_queue(), ^{
             if (data) {
                 NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-                NSString *type=@"wx";
-                [self accessLogin:openid withUserName:[dic objectForKey:@"nickname"] withToken:access_token withType:type];
-                
+                if([dic objectForKey:@"nickname"]){
+                    NSString *type=@"wx";
+                    [self accessLogin:openid withUserName:[dic objectForKey:@"nickname"] withToken:access_token withType:type];
+                }else{
+                    if (alertView==nil) {
+                        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                        alertView.delegate=self;
+                    }
+                    [alertView setMessage:[NSString stringWithFormat:@"%@",dic]];
+                    [alertView show];
+                }
             }
         });
         

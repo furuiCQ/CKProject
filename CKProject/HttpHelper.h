@@ -97,6 +97,8 @@ static NSString *const API_OPEN_CITY=@"openingcity";
 @interface HttpHelper : NSObject
 +(NSString *)getNowImageTime;
 //二期接口
++(void)getLessonList:(NSNumber *)cid withPid:(NSNumber *)pid withAID:(NSNumber *)aid withlng:(NSNumber *)lg withlat:(NSNumber *)lat withnums:(NSNumber *)nums withPn:(NSNumber *)pn withPageLine:(NSNumber *)pc success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)searchData:(NSMutableArray *)parameter withPc:(NSNumber *)pc withPn:(NSNumber *)pn withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)openCity:(id )sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)showCoupon:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)searchData:(NSNumber *)aid  withCid:(NSNumber *)cid withPid:(NSNumber *)pid withGid:(NSNumber *)gid withPc:(NSNumber *)pc withPn:(NSNumber *)pn withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

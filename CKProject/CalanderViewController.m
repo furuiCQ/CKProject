@@ -110,6 +110,8 @@
     selectDate=date;
     [self tzshuj:date];
 }
+static NSString * const DEFAULT_LOCAL_AID = @"500100";
+
 //值发生改变时
 -(void)tzshuj:(NSDate *)selected1
 {
@@ -147,12 +149,17 @@
         
         
         NSLog(@"选择的时间：%@",date1);
-        
+        AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+        NSNumber *Aid= myDelegate.localNumber;
+        if(Aid==NULL){
+            Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+        }
         
         
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            [HttpHelper getLessonCount:[NSNumber numberWithInt:500000] andstrd:date1 success:^(HttpModel *model){
+            [HttpHelper getLessonCount:Aid andstrd:date1 success:^(HttpModel *model){
                 NSLog(@"%@",model.message);
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -221,9 +228,15 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     NSDate *selected = [NSDate date];
     NSString *date1=[dateFormatter stringFromDate:selected];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        [HttpHelper getLessonCount:[NSNumber numberWithInt:500000] andstrd:date1 success:^(HttpModel *model){
+        [HttpHelper getLessonCount:Aid andstrd:date1 success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             
             dispatch_async(dispatch_get_main_queue(), ^{

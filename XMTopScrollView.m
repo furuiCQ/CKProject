@@ -93,9 +93,9 @@
             break;
         case XMTopItemShowTypeCenter:
         {
-            if (_cellCount%2 == 0) {
-                return;
-            }
+//            if (_cellCount%2 == 0) {
+//                return;
+//            }
             
             if (index >= _cellCount/2 && _list.count > _cellCount/2+1) {
                 if (index < _list.count-_cellCount/2) {

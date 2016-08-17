@@ -415,6 +415,7 @@
     }];
     
 }
+
 +(void)getArticleCommectsList:(NSNumber *)articleId withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{ @"name": @"tel", @"value": model.tel},
                             @{ @"name": @"token", @"value": model.token},
@@ -895,6 +896,22 @@
     }];
     
 }
++(void)getLessonList:(NSNumber *)cid withPid:(NSNumber *)pid withAID:(NSNumber *)aid withlng:(NSNumber *)lg withlat:(NSNumber *)lat withnums:(NSNumber *)nums withPn:(NSNumber *)pn withPageLine:(NSNumber *)pc success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{ @"name": @"aid", @"value": aid},
+                            @{ @"name": @"cid", @"value": cid},
+                            @{ @"name": @"pid", @"value": pid},
+                            @{ @"name": @"lng", @"value": lg},
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": nums},
+                            @{@"name":@"pn",@"value":pn},
+                            @{@"name":@"pc",@"value":pc}];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_LESSON_LIST] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+    
+}
 
 
 
@@ -903,6 +920,21 @@
     NSArray *parameters = @[@{ @"name": @"aid", @"value": aid},
                             @{ @"name": @"sqlstring", @"value": sqlstring},
                             ];
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){
+        success(model);
+    }failure:^(NSError *error){
+        failture(error);
+    }];
+}
++(void)searchData:(NSMutableArray *)parameter withPc:(NSNumber *)pc withPn:(NSNumber *)pn withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSMutableArray *array=[parameter mutableCopy];
+    NSArray *parameters = @[@{ @"name": @"pn", @"value": pn},
+                            @{ @"name": @"pc", @"value": pc},
+                            @{ @"name": @"lng", @"value": lng},
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": status},];
+    [array addObjectsFromArray:parameters];
+    parameters =[array copy];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
