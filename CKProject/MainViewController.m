@@ -462,19 +462,21 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                         pag.numberOfPages=xws.count;
                         tok=xws.count;
                         for (int i=0; i<xws.count; i++) {
-                            UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(0, i* (st.frame.size.height/2), st.frame.size.width, st.frame.size.height/2)];
+                            UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(10, 5+i* (st.frame.size.height), st.frame.size.width-10, st.frame.size.height-5)];
                             NSDictionary *bt=[xws objectAtIndex:i];
                             lab.backgroundColor=[UIColor whiteColor];
                             lab.text=[bt objectForKey:@"title"];
                             lab.font=[UIFont systemFontOfSize:self.view.frame.size.width/23];
                             lab.textColor=[UIColor blackColor];
+                            lab.numberOfLines=0;
+                            [lab sizeToFit];
                             [st addSubview:lab];
                             
                         }
                         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tz)];
                         [st addGestureRecognizer:tap];
                         st.delegate=self;
-                        timer3= [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(nextxinwen) userInfo:nil repeats:YES];
+                        timer3= [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(nextxinwen) userInfo:nil repeats:YES];
                     });
                 }else{
                     
