@@ -87,32 +87,9 @@
     data1=[[NSDictionary alloc]init];
     tableArray = [[NSArray alloc]init];
     bktableArray=[[NSArray alloc]init];
-    [ProgressHUD show:@"加载中..."];
-    
-//    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    localLat=myDelegate.latitude;
-//    localLng=myDelegate.longitude;
-    
-    
-    locationManager = [[CLLocationManager alloc] init];
-    //    定位的数据
-    locationManager.delegate = self;
-    
-    // 设置定位精度grayNearestTenMeters:精度10米
-    // kCLLocationAccuracyHundredMeters:精度100 米
-    // kCLLocationAccuracyKilometer:精度1000 米
-    // kCLLocationAccuracyThreeKilometers:精度3000米
-    // kCLLocationAccuracyBest:设备使用电池供电时候最高的精度
-    // kCLLocationAccuracyBestForNavigation:导航情况下最高精度，一般要有外接电源时才能使用
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
-    // distanceFilter是距离过滤器，为了减少对定位装置的轮询次数，位置的改变不会每次都去通知委托，而是在移动了足够的距离时才通知委托程序
-    // 它的单位是米，这里设置为至少移动1000再通知委托处理更新;
-    locationManager.distanceFilter = 1000.0f; // 如果设为kCLDistanceFilterNone，则每秒更新一次;
-    [locationManager startUpdatingLocation];
-    
-    
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    [ProgressHUD showSuccess:@"加载中..."];
+
     [self getsavetab];
     [self initTitle];
     [self initContent];
@@ -568,11 +545,23 @@
 }
 //tabarray的值
 -(void)getOrgInfo{
-    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+    NSNumber *ar=[stand objectForKey:@"lttt"];
+    NSNumber *ngg=[stand objectForKey:@"nggg"];
+    if (ar==NULL&&ngg==NULL) {
+        ar=[NSNumber numberWithDouble:myDelegate.latitude];
+        ngg=[NSNumber numberWithDouble:myDelegate.longitude];
+    }
+    if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        ar=[NSNumber numberWithDouble:29.5];
+        ngg=[NSNumber numberWithDouble:106.5];
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
-        [HttpHelper getInsetInfo:aritcleId success:^(HttpModel *model){
+        [HttpHelper getInsetInfo:aritcleId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2]
+                         success:^(HttpModel *model){
             NSLog(@"aritcled:--------%@",aritcleId);
             NSLog(@"%@",model.message);
             
@@ -723,11 +712,10 @@
                         
                         
                     });
-                    [ProgressHUD dismiss];
                 }else{
                     
                 }
-               // [ProgressHUD dismiss];
+                [ProgressHUD dismiss];
                 
                 
             });

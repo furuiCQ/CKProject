@@ -1102,7 +1102,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         NSNumber *aritcleId=[dic objectForKey:@"id"];
         [projectDetailsViewController setAritcleId:aritcleId];
         [self presentViewController:projectDetailsViewController animated:YES completion:nil];
-        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
+
     }else if(tableView.tag==1){
         NSDictionary *dic=[local1Array objectAtIndex:[indexPath row]];
         select1Id=(int)[indexPath row];

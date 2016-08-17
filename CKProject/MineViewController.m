@@ -758,7 +758,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                 break;
             case 5:
             {
-                NSLog(@"联系我们");
+                UIWebView * callWebview = [[UIWebView alloc] init];
+                [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"tel://4000020368"]]];
+                [self.view addSubview:callWebview];
             }
                 break;
             case 6:

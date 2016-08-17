@@ -31,7 +31,7 @@
 }
 //nearby
 +(void)getNearByLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
-    NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
+    NSArray *parameters = @[@{ @"name": @"aid", @"value": userId},
                             @{ @"name": @"lng", @"value": lng},
                             @{ @"name": @"lat", @"value": lat},
                             @{ @"name": @"status", @"value": status}
@@ -44,7 +44,7 @@
 }
 //首页最新课程获取
 +(void)getNewLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
-    NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
+    NSArray *parameters = @[@{ @"name": @"aid", @"value": userId},
                             @{ @"name": @"lng", @"value": lng},
                             @{ @"name": @"lat", @"value": lat},
                             @{ @"name": @"status", @"value": status}
@@ -57,8 +57,8 @@
 }
 
 //首页热门课程获取
-+(void)getNewHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
-    NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
++(void)getNewHotLesson:(NSNumber *) aid withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
+    NSArray *parameters = @[@{ @"name": @"aid", @"value": aid},
                             @{ @"name": @"lng", @"value": lng},
                             @{ @"name": @"lat", @"value": lat},
                             @{ @"name": @"status", @"value": status}
@@ -71,7 +71,7 @@
 }
 //首页推荐课程获取
 +(void)getHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture{
-    NSArray *parameters = @[@{ @"name": @"uid", @"value": userId},
+    NSArray *parameters = @[@{ @"name": @"aid", @"value": userId},
                             @{ @"name": @"lng", @"value": lng},
                             @{ @"name": @"lat", @"value": lat},
                             @{ @"name": @"status", @"value": status}
@@ -437,7 +437,7 @@
                             @{@"name":@"pc",@"value":pc}
                             
                             ];
-    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_CIRCLE_AIRTICLE_COMMENTS_LIST] success:^(HttpModel *model){
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_XINWENCIRCLE_AIRTICLE_INFO] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
         failture(error);
@@ -568,8 +568,11 @@
         failture(error);
     }];
 }
-+(void)getInsetInfo:(NSNumber *)orgId success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
-    NSArray *parameters = @[@{@"name":@"id",@"value":orgId}];
++(void)getInsetInfo:(NSNumber *)orgId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{@"name":@"id",@"value":orgId},
+                            @{ @"name": @"lng", @"value": lng},
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": status}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_INSET_INFO] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){

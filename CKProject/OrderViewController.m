@@ -18,7 +18,6 @@
 #import "ShareTools.h"
 #import "RJShareView.h"
 @interface OrderViewController (){
-    NSArray *tableArray;
     
 }
 
@@ -38,29 +37,12 @@
 @synthesize beginTime;
 - (void)viewDidLoad {
     [super viewDidLoad];
-    tableArray = [NSArray arrayWithObjects:@"1",@"2",@"3", nil];
     [ProgressHUD show:@"加载中..."];
 
-    
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initTitle];
     [self initContentView];
-    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame=CGRectMake(self.view.frame.size.width/2.8, self.view.frame.size.height/1.8, self.view.frame.size.width/4, self.view.frame.size.height/20);
-    [btn setTitle:@"返回" forState:UIControlStateNormal];
-    
-    btn.backgroundColor=[UIColor orangeColor];
-    btn.layer.cornerRadius=10.0f;
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(adismiss) forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:btn];
-
     [self orderPoject];
-    
-    
-//    NSString *bt=[NSString stringWithFormat:@"%@",advancetime];
-//    UIAlertView *al=[[UIAlertView alloc]initWithTitle:@"九阴" message:bt delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"1", nil];
-//    [al show];
-    // Do any additional setup after loading the view, typically from a nib.
 }
 -(void)adismiss
 {
@@ -89,64 +71,63 @@
     searchLabel=[[UILabel alloc]initWithFrame:(CGRectMake(self.view.frame.size.width/4, titleHeight/8, self.view.frame.size.width/2, titleHeight*3/4))];
     //[searchLabel setBackgroundColor:[UIColor whiteColor]];
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
-    [searchLabel setTextColor:[UIColor colorWithRed:41.f/255.f green:41.f/255.f blue:41.f/255.f alpha:1.0]];
+    [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
     [searchLabel setText:@"预约中"];
     
-    //新建右上角的图形
-    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
-    msgLabel.userInteractionEnabled=YES;///
-    UITapGestureRecognizer *shareGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share)];
-    [msgLabel addGestureRecognizer:shareGesutre];
-    UIImageView *shareView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_logo"]];
-    [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/12.3/2, titleHeight/2-self.view.frame.size.width/12.3/2, self.view.frame.size.width/12.3, self.view.frame.size.width/12.3)];
-    [msgLabel addSubview:shareView];
-    [msgLabel setTextAlignment:NSTextAlignmentCenter];
+//    //新建右上角的图形
+//    msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
+//    msgLabel.userInteractionEnabled=YES;///
+//    UITapGestureRecognizer *shareGesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share)];
+//    [msgLabel addGestureRecognizer:shareGesutre];
+//    UIImageView *shareView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_logo"]];
+//    [shareView setFrame:CGRectMake(self.view.frame.size.width/12-self.view.frame.size.width/12.3/2, titleHeight/2-self.view.frame.size.width/12.3/2, self.view.frame.size.width/12.3, self.view.frame.size.width/12.3)];
+//    [msgLabel addSubview:shareView];
+//    [msgLabel setTextAlignment:NSTextAlignmentCenter];
     
     [titleView addSubview:cityLabel];
     [titleView addSubview:searchLabel];
     [self.view addSubview:titleView];
     
 }
--(void)share{
-    //[ShareTools shareToQQ];
-    NSString *title=[[@"我蹭到免费的“"stringByAppendingString:searchLabel.text]stringByAppendingString:@"”课程了"];
-    NSString *description=content;
-    NSString *imageurl=[[NSString alloc]init];
-    NSString *url=@"http://211.149.190.90/m/20160126/index.html";
-    
-    
-    NSDictionary *jsonData=[NSDictionary  dictionaryWithObjectsAndKeys:title,@"title",
-                            description,@"description",imageurl,@"imageurl",url,@"url",nil];
-    [RJShareView showGridMenuWithTitle:@"分享到..."
-                            itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
-                                images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone"]]
-                             shareJson:jsonData
-                        selectedHandle:^(NSInteger index){
-                            switch (index) {
-                                case 1:
-                                case 2:
-                                    if (![WXApi isWXAppInstalled]) {
-                                        [ProgressHUD showError:@"未安装微信！"];
-                                    }
-                                    break;
-                                    
-                                case 3:
-                                    if (![WeiboSDK isWeiboAppInstalled]) {
-                                        [ProgressHUD showError:@"未安装微博！"];
-                                    }
-                                    break;
-                                    
-                                case 4:
-                                case 5:
-                                    if (![TencentOAuth iphoneQQInstalled]) {
-                                        [ProgressHUD showError:@"未安装QQ！"];
-                                    }
-                                    break;
-                                    
-                            }
-                        }];
-}
+//-(void)share{
+//    NSString *title=[[@"我蹭到免费的“"stringByAppendingString:searchLabel.text]stringByAppendingString:@"”课程了"];
+//    NSString *description=content;
+//    NSString *imageurl=[[NSString alloc]init];
+//    NSString *url=@"http://211.149.190.90/m/20160126/index.html";
+//    
+//    
+//    NSDictionary *jsonData=[NSDictionary  dictionaryWithObjectsAndKeys:title,@"title",
+//                            description,@"description",imageurl,@"imageurl",url,@"url",nil];
+//    [RJShareView showGridMenuWithTitle:@"分享到..."
+//                            itemTitles:@[@"微信好友",@"朋友圈",@"微博",@"QQ好友",@"QQ空间"]
+//                                images:@[[UIImage imageNamed:@"weixin"],[UIImage imageNamed:@"wx_circle"],[UIImage imageNamed:@"weibo"],[UIImage imageNamed:@"qq"],[UIImage imageNamed:@"qzone"]]
+//                             shareJson:jsonData
+//                        selectedHandle:^(NSInteger index){
+//                            switch (index) {
+//                                case 1:
+//                                case 2:
+//                                    if (![WXApi isWXAppInstalled]) {
+//                                        [ProgressHUD showError:@"未安装微信！"];
+//                                    }
+//                                    break;
+//                                    
+//                                case 3:
+//                                    if (![WeiboSDK isWeiboAppInstalled]) {
+//                                        [ProgressHUD showError:@"未安装微博！"];
+//                                    }
+//                                    break;
+//                                    
+//                                case 4:
+//                                case 5:
+//                                    if (![TencentOAuth iphoneQQInstalled]) {
+//                                        [ProgressHUD showError:@"未安装QQ！"];
+//                                    }
+//                                    break;
+//                                    
+//                            }
+//                        }];
+//}
 -(void)initContentView{
     int width=self.view.frame.size.width;
     UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake((width-width/2.7)/2, titleHeight+20+width/5, width/2.7, width/2.7)];

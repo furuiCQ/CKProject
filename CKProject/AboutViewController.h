@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "TopBar.h"
 #import "MsgTableCell.h"
+#import "BaseViewController.h"
 
-@interface AboutViewController : UIViewController
+@interface AboutViewController : BaseViewController
 @property int titleHeight;
 @property(strong,nonatomic)UILabel *cityLabel;
 @property(strong,nonatomic)UILabel *searchLabel;

@@ -81,11 +81,12 @@
     [searchField.layer setCornerRadius:2.0f];
     [searchField setFont:[UIFont systemFontOfSize:15]];
     [searchField setLeftView:cityLabel];
+    [searchField setReturnKeyType:UIReturnKeySearch];
     [searchField setPlaceholder:@"搜索你想要的课程/机构/优惠"];
     [searchField setLeftViewMode:UITextFieldViewModeAlways];
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/32-self.view.frame.size.width/11.8, (titleHeight-self.view.frame.size.width/11.8)/2, self.view.frame.size.width/11.8, self.view.frame.size.width/11.8)];
-    UITapGestureRecognizer *uITapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchData)];
+    UITapGestureRecognizer *uITapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismis)];
     [msgLabel addGestureRecognizer:uITapGestureRecognizer];
     [msgLabel setUserInteractionEnabled:YES];
     [msgLabel setText:@"取消"];
@@ -110,6 +111,12 @@
                                                object:searchField];
 
 }
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    //主要是[receiver resignFirstResponder]在哪调用就能把receiver对应的键盘往下收
+    [self searchData];
+    return YES;
+}
 -(void)showView{
     if(isShow){
         [self hideView];
@@ -128,8 +135,12 @@
     bgView=[[UIView alloc]initWithFrame:CGRectMake(width/80, view.frame.size.height+view.frame.origin.y, width/2.1, width/2.1)];
     
     UIImageView *imageBgView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width/2.1, width/2.1)];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if(!myDelegate.isHasCoupon){
+        [imageBgView setFrame:CGRectMake(0, 0, width/2.1,  width/6.7*2+width/32)];
+    }
     [imageBgView setImage:[UIImage imageNamed:@"-drop-down_bg"]];
-    [imageBgView setContentMode:UIViewContentModeScaleAspectFit];
+    [imageBgView setContentMode:UIViewContentModeScaleToFill];
     [imageBgView setUserInteractionEnabled:YES];
     [bgView addSubview:imageBgView];
     
@@ -177,27 +188,29 @@
     [imageBgView addSubview:projectControl];
     
     
-    UIView *line2View=[[UIView alloc]initWithFrame:CGRectMake(3, projectControl.frame.size.height+projectControl.frame.origin.y  , imageBgView.frame.size.width-6, 1)];
-    [line2View setBackgroundColor:[UIColor grayColor]];
-    [imageBgView addSubview:line2View];
+    
     //14.5  //6.7
-    UIControl *rebateControl=[[UIControl alloc]initWithFrame:CGRectMake(0, line2View.frame.size.height+line2View.frame.origin.y, imageBgView.frame.size.width, width/6.7)];
-    [rebateControl setBackgroundColor:[UIColor clearColor]];
-    [rebateControl setTag:3];
-    [rebateControl setUserInteractionEnabled:YES];
-    [rebateControl addTarget:self action:@selector(controlOnclick:) forControlEvents:UIControlEventTouchUpInside];
-
-    UIImageView *rebateImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, width/29, width/13.9, width/13.9)];
-    [rebateImageView setImage:[UIImage imageNamed:@"privilege_icon"]];
-    [rebateImageView setContentMode:UIViewContentModeScaleAspectFit];
-    [rebateControl addSubview:rebateImageView];
-    UILabel *rebateLabel=[[UILabel alloc]initWithFrame:CGRectMake(rebateImageView.frame.size.width+rebateImageView.frame.origin.x+width/13.3, width/19.4, rebateControl.frame.size.width/2, width/22.8)];
-    [rebateLabel setText:@"优惠"];
-    [rebateLabel setTextColor:[UIColor whiteColor]];
-    [rebateLabel setTextAlignment:NSTextAlignmentLeft];
-    [rebateLabel setFont:[UIFont systemFontOfSize:width/22.8]];
-    [rebateControl addSubview:rebateLabel];
-    [imageBgView addSubview:rebateControl];
+    if(myDelegate.isHasCoupon){
+        UIView *line2View=[[UIView alloc]initWithFrame:CGRectMake(3, projectControl.frame.size.height+projectControl.frame.origin.y  , imageBgView.frame.size.width-6, 1)];
+        [line2View setBackgroundColor:[UIColor grayColor]];
+        [imageBgView addSubview:line2View];
+        UIControl *rebateControl=[[UIControl alloc]initWithFrame:CGRectMake(0, line2View.frame.size.height+line2View.frame.origin.y, imageBgView.frame.size.width, width/6.7)];
+        [rebateControl setBackgroundColor:[UIColor clearColor]];
+        [rebateControl setTag:3];
+        [rebateControl setUserInteractionEnabled:YES];
+        [rebateControl addTarget:self action:@selector(controlOnclick:) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *rebateImageView=[[UIImageView alloc]initWithFrame:CGRectMake(width/13.3, width/29, width/13.9, width/13.9)];
+        [rebateImageView setImage:[UIImage imageNamed:@"privilege_icon"]];
+        [rebateImageView setContentMode:UIViewContentModeScaleAspectFit];
+        [rebateControl addSubview:rebateImageView];
+        UILabel *rebateLabel=[[UILabel alloc]initWithFrame:CGRectMake(rebateImageView.frame.size.width+rebateImageView.frame.origin.x+width/13.3, width/19.4, rebateControl.frame.size.width/2, width/22.8)];
+        [rebateLabel setText:@"优惠"];
+        [rebateLabel setTextColor:[UIColor whiteColor]];
+        [rebateLabel setTextAlignment:NSTextAlignmentLeft];
+        [rebateLabel setFont:[UIFont systemFontOfSize:width/22.8]];
+        [rebateControl addSubview:rebateLabel];
+        [imageBgView addSubview:rebateControl];
+    }
 }
 -(void)controlOnclick:(id)sender{
     UIControl *control=(UIControl *)sender;
@@ -216,10 +229,8 @@
 {
     UITextField *textField = (UITextField *)[notification object];
     if([textField.text length]>0){
-        [msgLabel setText:@"确定"];
         isSearch=YES;
     }else{
-        [msgLabel setText:@"取消"];
         isSearch=NO;
         
     }
@@ -261,11 +272,12 @@
                 break;
         }
         
-    }else{
-        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
+-(void)dismis{
+    [self dismissViewControllerAnimated:YES completion:nil];
 
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

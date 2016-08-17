@@ -8,7 +8,9 @@
 
 #import "SettingViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-@interface SettingViewController ()
+@interface SettingViewController (){
+    UILabel *sizeLabel;
+}
 
 @end
 
@@ -78,7 +80,7 @@
     [aboutlabel setText:@"关于我们"];
     [aboutlabel setFont:[UIFont systemFontOfSize:width/23.7]];
     [aboutView addSubview:aboutlabel];
-    UIImageView *aboutRight=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/45.7-width/26, (width/6.5-width/17.8)/2, width/26, width/17.8)];
+    UIImageView *aboutRight=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/45.7-width/26, (titleHeight-width/17.8)/2, width/26, width/17.8)];
     [aboutRight setImage:[UIImage imageNamed:@"right_logo"]];
     [aboutView addSubview:aboutRight];
     [self.view addSubview:aboutView];
@@ -97,41 +99,41 @@
     [clearlabel setFont:[UIFont systemFontOfSize:width/23.7]];
     [clearView addSubview:clearlabel];
     
-    UIImageView *clearRight=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/45.7-width/26, (width/6.5-width/17.8)/2, width/26, width/17.8)];
-    [clearRight setImage:[UIImage imageNamed:@"right_logo"]];
+  //  UIImageView *clearRight=[[UIImageView alloc]initWithFrame:CGRectMake(width-width/45.7-width/26, (width/6.5-width/17.8)/2, width/26, width/17.8)];
+  //  [clearRight setImage:[UIImage imageNamed:@"right_logo"]];
     
-    [clearView addSubview:clearRight];
+    //[clearView addSubview:clearRight];
+    
+    sizeLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/21-width/4, (titleHeight-width/29)/2, width/4, width/29)];
+    
+    NSUInteger datasize=[[SDImageCache sharedImageCache] getSize];
+    NSString *data=[NSString stringWithFormat:@"%luMB",(unsigned long)datasize/1024/1024];
+    [sizeLabel setText:data];
+    [sizeLabel setTextAlignment:NSTextAlignmentRight];
+    [sizeLabel setTextColor:[UIColor colorWithRed:146.f/255.f green:146.f/255.f blue:146.f/255.f alpha:1.0]];
+    [sizeLabel setFont:[UIFont systemFontOfSize:width/29]];
     UITapGestureRecognizer *gestureRecognizer1=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(getjuste)];
     [clearView addGestureRecognizer:gestureRecognizer1];
     [clearView setUserInteractionEnabled:YES];
-    // [clearView addSubview:sizeLabel];
-    
-    
+    [clearView addSubview:sizeLabel];
     [self.view addSubview:clearView];
     
-    
-    //    UILabel *logoutLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/20, titleHeight+20+titleHeight/8+titleHeight+0.5+titleHeight+titleHeight, width*9/10, width/8.7)];
-    //    UITapGestureRecognizer *gestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(logout)];
-    //    [logoutLabel addGestureRecognizer:gestureRecognizer];
-    //    [logoutLabel setUserInteractionEnabled:YES];
-    //    [logoutLabel setText:@"退出账号"];
-    //    [logoutLabel setFont:[UIFont systemFontOfSize:width/24.6]];
-    //    [logoutLabel setTextAlignment:NSTextAlignmentCenter];
-    //    [logoutLabel setTextColor:[UIColor orangeColor]];
-    //    logoutLabel.layer.borderColor=[UIColor orangeColor].CGColor;
-    //    logoutLabel.layer.cornerRadius=15.0;
-    //    logoutLabel.layer.borderWidth = 1; //要设置的描边宽
-    //    logoutLabel.layer.masksToBounds=YES;
-    //    [self.view addSubview:logoutLabel];
+   
 }
 //－－－－－－－－－－－－－－－－－－－－－－
 -(void)getjuste
 {
-    
     [[SDImageCache sharedImageCache] clearDisk];
-    
     [[SDImageCache sharedImageCache] clearMemory];
-    
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+    [alertView setMessage:@"缓存清理成功"];
+    [alertView show];
+    NSUInteger datasize=[[SDImageCache sharedImageCache] getSize];
+    NSString *data=[NSString stringWithFormat:@"%luMB",(unsigned long)datasize/1024/1024];
+    [sizeLabel setText:data];
 }
 //－－－－－－－－－－－－－－－－－－－－－－－－
 -(void)logout{

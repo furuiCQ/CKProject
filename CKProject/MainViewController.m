@@ -1275,7 +1275,11 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getHotLesson{
-    NSNumber *userId=[NSNumber numberWithInt:0];
+    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+    if (localNumber==nil) {
+        localNumber=[formatter numberFromString:DEFAULT_LOCAL_AID];
+        
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
@@ -1289,7 +1293,7 @@ static NSString *identy = @"OrderRecordCell";
             ar=[NSNumber numberWithDouble:29.5];
             ngg=[NSNumber numberWithDouble:106.5];
         }
-        [HttpHelper getHotLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+        [HttpHelper getHotLesson:localNumber withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
 //                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1304,7 +1308,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-                [refreshHeader endRefreshing];
+              //  [refreshHeader endRefreshing];
                 [ProgressHUD dismiss];
             });
         }failure:^(NSError *error){
@@ -1323,7 +1327,11 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getNewHotLesson{
-    NSNumber *userId=[NSNumber numberWithInt:0];
+    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+    if (localNumber==nil) {
+        localNumber=[formatter numberFromString:DEFAULT_LOCAL_AID];
+        
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
@@ -1337,7 +1345,7 @@ static NSString *identy = @"OrderRecordCell";
             ar=[NSNumber numberWithDouble:29.5];
             ngg=[NSNumber numberWithDouble:106.5];
         }
-        [HttpHelper getNewHotLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+        [HttpHelper getNewHotLesson:localNumber withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
 //                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1371,7 +1379,11 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getNewLesson{
-    NSNumber *userId=[NSNumber numberWithInt:0];
+    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+    if (localNumber==nil) {
+        localNumber=[formatter numberFromString:DEFAULT_LOCAL_AID];
+        
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
@@ -1386,7 +1398,7 @@ static NSString *identy = @"OrderRecordCell";
             ar=[NSNumber numberWithDouble:29.5];
             ngg=[NSNumber numberWithDouble:106.5];
         }
-        [HttpHelper getNewLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+        [HttpHelper getNewLesson:localNumber withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
 //                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1420,7 +1432,11 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getNearByLesson{
-    NSNumber *userId=[NSNumber numberWithInt:0];
+    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+    if (localNumber==nil) {
+        localNumber=[formatter numberFromString:DEFAULT_LOCAL_AID];
+        
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
@@ -1435,7 +1451,7 @@ static NSString *identy = @"OrderRecordCell";
             ar=[NSNumber numberWithDouble:29.5];
             ngg=[NSNumber numberWithDouble:106.5];
         }
-        [HttpHelper getNearByLesson:userId withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+        [HttpHelper getNearByLesson:localNumber withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
 //                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];

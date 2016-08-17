@@ -152,7 +152,7 @@ static NSString *const API_OPEN_CITY=@"openingcity";
 +(void)getArticleInfo:(NSNumber *)articleId withModel:(HttpModel *)model success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)getArticleList:(NSNumber *)aid withCircleId:(NSNumber *)circleId withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getTopArticle:(NSNumber *)aid withCircleId:(NSNumber *)circleId success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
-+(void)getInsetInfo:(NSNumber *)orgId success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)getInsetInfo:(NSNumber *)orgId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)collectionLesson:(NSNumber *)projectId withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)orderLesson:(NSNumber *)projectId withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getLessonInfo:(NSNumber *)projectId success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

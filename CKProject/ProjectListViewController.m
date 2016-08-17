@@ -80,6 +80,10 @@
     
     int pageNumb;
     BOOL _isLoading;
+    BOOL _isHeader;
+    BOOL _isFooter;
+    BOOL _isNoData;
+
     YiRefreshHeader *refreshHeader;
     YiRefreshFooter *refreshFooter;
     
@@ -134,7 +138,7 @@
 static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [ProgressHUD show:@"加载中..."];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     if (tableArray==nil) {
         tableArray = [[NSMutableArray alloc]init];
@@ -170,8 +174,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     [self initTitle];
     [self initSelectView];
-    //shuju，
     [self initTableView];
+   
     if (std==1) {
         [self tit];
     }
@@ -225,15 +229,24 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         NSDictionary *db=[obj objectForKey:@"result"];
         NSArray *dataArray=[db objectForKey:@"lesson"];
         if([dataArray count]>0){
-            [tableArray addObjectsFromArray:dataArray];
-        }else{
-            if (alertView==nil) {
-                alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-                alertView.delegate=self;
+            _isNoData=NO;
+            if(_isHeader){
+                tableArray =[dataArray mutableCopy];
+            }else{
+                [tableArray addObjectsFromArray:dataArray];
             }
-            [alertView setMessage:@"没有更多的课程了"];
-            [alertView show];
+        }else{
+            if(!_isNoData){
+                if (alertView==nil) {
+                    alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                    alertView.delegate=self;
+                }
+                [alertView setMessage:@"没有更多的课程了"];
+                [alertView show];
+                _isNoData=YES;
+            }
         }
+
         [projectTableView reloadData];
         [refreshFooter endRefreshing];
         [refreshHeader endRefreshing];
@@ -291,9 +304,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     localLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, width/3, width/7)];
     [localLabel setText:@"正在定位.."];
-    if(myDelegate.areaName){
-        [localLabel setText:myDelegate.areaName];
-    }else if(myDelegate.cityName){
+    if(myDelegate.cityName){
         [localLabel setText:myDelegate.cityName];
     }else{
         [localLabel setText:@"重庆"];
@@ -623,7 +634,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     selectAid=NULL;
 }
 -(void)confirmDrawLayout{
+    
     pageNumb=1;
+    _isNoData=NO;
+    [ProgressHUD show:@"加载中..."];
     [self getLessonSift];
     [firstLayout closeDrawer];
     isSift=YES;
@@ -638,64 +652,27 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                                                   titleHeight+20+0.5+self.view.frame.size.width/7,
                                                                   self.view.frame.size.width,
                                                                   self.view.frame.size.height-titleHeight-20-0.5-titleHeight)];
-    NSLog(@"%f",self.tabBarController.view.frame.size.height);
-    [projectTableView setBackgroundColor:[UIColor whiteColor]];
+        [projectTableView setBackgroundColor:[UIColor whiteColor]];
     projectTableView.dataSource                        = self;
     projectTableView.delegate                          = self;
     projectTableView.rowHeight                         = self.view.bounds.size.height/7;
     [projectTableView setTag:0];
     projectTableView.separatorStyle=NO;
     [self.view addSubview:projectTableView];
-    //添加刷新
-    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
-    [_refreshControl setTintColor:[UIColor grayColor]];
-    
-    [_refreshControl addTarget:self
-                        action:@selector(refreshView:)
-              forControlEvents:UIControlEventValueChanged];
-    [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
-    [projectTableView addSubview:_refreshControl];
     
     refreshHeader=[[YiRefreshHeader alloc] init];
     refreshHeader.scrollView=projectTableView;
     [refreshHeader header];
     refreshHeader.beginRefreshingBlock=^(){
-        _isLoading=true;
-        pageNumb=1;
-        if(std==2){
-            if(isSift)
-            {
-                [self getLessonSift];
-            }else{
-                
-                [self searchData];
-            }
-        }else{
-            [self getData];
-        }
-
+        
     };
     
     
-    refreshFooter=[[YiRefreshFooter alloc] init];
-    refreshFooter.scrollView=projectTableView;
-    [refreshFooter footer];
-    refreshFooter.beginRefreshingBlock=^(){
-        NSLog(@"上拉加载");
-        pageNumb++;
-        _isLoading=true;
-        if(std==2){
-            if(isSift)
-            {
-                [self getLessonSift];
-            }else{
-                
-                [self searchData];
-            }
-        }else{
-                [self getData];
-        }
-    };
+//    refreshFooter=[[YiRefreshFooter alloc] init];
+//    refreshFooter.scrollView=projectTableView;
+//    [refreshFooter footer];
+//    refreshFooter.beginRefreshingBlock=^(){
+//            };
 }
 
 -(void) refreshView:(UIRefreshControl *)refresh
@@ -1342,7 +1319,6 @@ static NSString *identy = @"OrderRecordCell";
 }
 -(void)getData{
      AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [ProgressHUD show:@"加载中..."];
     NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
     NSNumber *Aid= myDelegate.localNumber;
     if(Aid==NULL){
@@ -1371,19 +1347,25 @@ static NSString *identy = @"OrderRecordCell";
                         
                         NSArray *dataArray=[result objectForKey:@"lesson"];
                         if([dataArray count]>0){
-                            [tableArray addObjectsFromArray:dataArray];
-                        }else{
-                            if (alertView==nil) {
-                                alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-                                alertView.delegate=self;
+                            _isNoData=NO;
+                            if(_isHeader){
+                                tableArray =[dataArray mutableCopy];
+                            }else{
+                                [tableArray addObjectsFromArray:dataArray];
                             }
-                            [alertView setMessage:@"没有更多的课程了"];
-                            [alertView show];
-                        }
-                        dispatch_async(dispatch_get_main_queue(), ^{
                             [projectTableView reloadData];
-                        });
-                        
+                        }else{
+                            if(!_isNoData){
+                                if (alertView==nil) {
+                                    alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                                    alertView.delegate=self;
+                                }
+                                [alertView setMessage:@"没有更多的课程了"];
+                                [alertView show];
+                                _isNoData=YES;
+                            }
+                        }
+
                         
                     }else{
                         
@@ -1647,23 +1629,7 @@ static NSString *identy = @"OrderRecordCell";
         alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         alertView.delegate=self;
     }
-    
-//    if((selectCid==NULL || selectPid==NULL)){
-//        [alertView setMessage:@"请选择课程种类!"];
-//        [alertView show];
-//        return;
-//    }
-//    if(selectGid==NULL){
-//        [alertView setMessage:@"请选择年龄段!"];
-//        [alertView show];
-//        return;
-//
-//    }
-//    if(selectAid==NULL){
-//        [alertView setMessage:@"请选择地区!"];
-//        [alertView show];
-//        return;
-//    }
+
     if((selectCid==NULL || selectPid==NULL) && selectGid==NULL && selectAid==NULL){
         [alertView setMessage:@"请选择至少选择一个筛选条件!"];
         [alertView show];
@@ -1692,14 +1658,29 @@ static NSString *identy = @"OrderRecordCell";
                     
                     NSArray *dataArray=[result objectForKey:@"lesson"];
                     if([dataArray count]>0){
-                        [tableArray addObjectsFromArray:dataArray];
-                    }else{
-                        if (alertView==nil) {
-                            alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-                            alertView.delegate=self;
+                        _isNoData=NO;
+                        if(_isHeader){
+                            tableArray =[dataArray mutableCopy];
+                        }else{
+                            [tableArray addObjectsFromArray:dataArray];
                         }
-                        [alertView setMessage:@"没有更多的课程了"];
-                        [alertView show];
+                    }else{
+                        if(!_isFooter){
+                            tableArray =[dataArray mutableCopy];
+                        }else{
+                            [tableArray addObjectsFromArray:dataArray];
+                        }
+                        
+                        if(!_isNoData){
+                            
+                            if (alertView==nil) {
+                                alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                                alertView.delegate=self;
+                            }
+                            [alertView setMessage:@"没有更多的课程了"];
+                            [alertView show];
+                            _isNoData=YES;
+                        }
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1838,15 +1819,41 @@ static NSString *identy = @"OrderRecordCell";
     if (!_isLoading && uiScrollView.tag==0) { // 判断是否处于刷新状态，刷新中就不执行
         float height = uiScrollView.contentSize.height > projectTableView.frame.size.height?projectTableView.frame.size.height : uiScrollView.contentSize.height;
         if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
-         
             
+            NSLog(@"上拉加载");
+            _isFooter=true;
+            _isHeader=false;
+            pageNumb++;
+            _isLoading=true;
+            if(std==2){
+                if(isSift)
+                {
+                    [self getLessonSift];
+                }else{
+                    
+                    [self searchData];
+                }
+            }else{
+                [self getData];
+            }
+
         }
         if (- uiScrollView.contentOffset.y / projectTableView.frame.size.height > 0.2) {
-            
-            // 调用下拉刷新方法
-            NSLog(@"刷新");
-          //  [refreshHeader beginRefreshing];
+            _isHeader=true;
+            _isFooter=false;
             _isLoading=true;
+            pageNumb=1;
+            if(std==2){
+                if(isSift)
+                {
+                    [self getLessonSift];
+                }else{
+                    
+                    [self searchData];
+                }
+            }else{
+                [self getData];
+            }
         }
         
     }
