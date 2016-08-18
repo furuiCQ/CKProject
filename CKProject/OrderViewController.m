@@ -37,7 +37,6 @@
 @synthesize beginTime;
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initTitle];
     [self initContentView];

@@ -342,7 +342,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [girlView setBackgroundColor:[UIColor whiteColor]];
     UITextField *girltitleTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
                                                                                 width/35.5, width/2.5-width/32, width/21.3)];
-    [girltitleTextView setText:@"女生专区"];
+    [girltitleTextView setText:@"免费学车"];
     [girltitleTextView setTag:107];
     [girltitleTextView setEnabled:false];
     [girltitleTextView setTextAlignment:NSTextAlignmentLeft];
@@ -350,8 +350,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [girlView addSubview:girltitleTextView];
     
     
-    UIImageView *girlimageview=[[UIImageView alloc]initWithFrame:CGRectMake(girlView.frame.size.width-width/6.9,girlView
-                                                                            .frame.size.height-width/4.8, width/6.9, width/4.8)];
+    UIImageView *girlimageview=[[UIImageView alloc]initWithFrame:CGRectMake(width/45.7,girlView
+                                                                            .frame.size.height-width/6.2, width/4.5, width/6.2)];
     [girlimageview setImage:[UIImage imageNamed:@"girl_image"]];
     [girlimageview setTag:204];
     [girlView addSubview:girlimageview];
@@ -359,7 +359,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     UITextField *girlcontentTextView=[[UITextField alloc]initWithFrame:CGRectMake(width/32,
                                                                                   girltitleTextView.frame.size.height+girltitleTextView.frame.origin.y+
                                                                                   width/53, width/2.5-width/32, width/27)];
-    [girlcontentTextView setText:@"点我变女神"];
+    [girlcontentTextView setText:@"老司机带你飞"];
     [girlcontentTextView setTag:108];
     [girlcontentTextView setEnabled:false];
     [girlcontentTextView setTextColor:[UIColor grayColor]];

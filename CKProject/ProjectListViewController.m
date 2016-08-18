@@ -1337,6 +1337,48 @@ static NSString *identy = @"OrderRecordCell";
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+-(void)setHotModel:(NSString *)sqlString{
+    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
+    if(aid==nil){
+        aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
+    }
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [HttpHelper searchData:aid withData:sqlString success:^(HttpModel *model){
+            NSLog(@"%@",model.message);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                    NSDictionary *result=model.result;
+                    
+                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [projectTableView reloadData];
+                    });
+                    
+                    
+                }else{
+                    
+                }
+                
+                [HUD dismiss];
+                
+            });
+        }failure:^(NSError *error){
+            if (error.userInfo!=nil) {
+                NSLog(@"%@",error.userInfo);
+                
+            }
+            [HUD dismiss];
+
+            
+        }];
+        
+        
+    });
+    
+}
 -(void)getLessonSift{
     
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
