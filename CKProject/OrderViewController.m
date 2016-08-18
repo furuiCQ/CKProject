@@ -130,7 +130,7 @@
 -(void)initContentView{
     int width=self.view.frame.size.width;
     UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake((width-width/2.7)/2, titleHeight+20+width/5, width/2.7, width/2.7)];
-    [imageView setImage:[UIImage imageNamed:@"order_ok_logo"]];
+    [imageView setImage:[UIImage imageNamed:@"order_ok_logo.jpg"]];
     [self.view addSubview:imageView];
     
     UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, titleHeight+20+width/2.7+width/5+width/12, width, width/26.7)];
