@@ -32,6 +32,8 @@
 #import "TencentOpenAPI/QQApiInterface.h"
 #import "WeiboSDK.h"
 #import "ShareTools.h"
+#import <JGProgressHUD/JGProgressHUD.h>
+
 @interface OrganDetailsViewController ()<UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>{
     NSArray *tableArray;
     NSArray *bktableArray;
@@ -59,6 +61,9 @@
     //
     UIControl *instituteControl;
     UIImageView *instiBg;
+    //progress
+    JGProgressHUD *HUD;
+    
     
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
@@ -88,45 +93,14 @@
     tableArray = [[NSArray alloc]init];
     bktableArray=[[NSArray alloc]init];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    [ProgressHUD showSuccess:@"加载中..."];
-
-    [self getsavetab];
     [self initTitle];
     [self initContent];
     [self initShareView];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self getOrgInfo];
-    
-    
-    
     // Do any additional setup after loading the view, typically from a nib.
-}
-
-
-
-
--(void)getsavetab
-{
-    
-    //   http://211.149.190.90/api/instinfo?id=6
-    //    NSString *sp=[NSString stringWithFormat:@"%@",num];
-    //    UIAlertView *vi=[[UIAlertView alloc]initWithTitle:@"提示" message:sp delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"123", nil];
-    //    [vi show ];
-    
-    //    NSString *str=[NSString stringWithFormat:@"http://211.149.190.90/api/searchs?instid=%@",aritcleId];
-    //    NSURL *url=[NSURL URLWithString:str];
-    //    NSURLRequest *request=[NSURLRequest requestWithURL:url];
-    //    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-    //
-    //        id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-    //
-    //        NSDictionary *db=[obj objectForKey:@"result"];
-    //        aiy=[db objectForKey:@"lesson"];
-    //        NSUserDefaults *defa=[NSUserDefaults standardUserDefaults];
-    //        [defa setObject:aiy forKey:@"kay"];
-    //        NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",aiy);
-    //
-    //    }];
-    
 }
 
 
@@ -193,7 +167,7 @@
     [instituteControl addSubview:logoImage];
     
     organNamelabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImage.frame.size.width+logoImage.frame.origin.x+width/27.8, logoImage.frame.origin.y, width-(logoImage.frame.size.width+logoImage.frame.origin.x+width/27.8), width/21.3)];
-    [organNamelabel setText:@"新东方英语培训中心"];
+    [organNamelabel setText:@""];
     [organNamelabel setFont:[UIFont systemFontOfSize:width/20]];
     [organNamelabel setTextColor:[UIColor blackColor]];
     [instituteControl addSubview:organNamelabel];
@@ -207,7 +181,7 @@
     
     
     projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(localImageView.frame.size.width+localImageView.frame.origin.x+width/49,  organNamelabel.frame.size.height+organNamelabel.frame.origin.y+width/37.6, width-(localImageView.frame.size.width+localImageView.frame.origin.x+width/49)-width/40, width/22.8)];
-    [projectAddLabel setText:@"渝中区太平洋大厦3楼"];
+    [projectAddLabel setText:@""];
     [projectAddLabel addGestureRecognizer:addresGesture];
     [projectAddLabel setUserInteractionEnabled:YES];
     [projectAddLabel setNumberOfLines:0];
@@ -223,7 +197,7 @@
     [instituteControl addSubview:ratingBar];
     
     distanceLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-width/32,  ratingBar.frame.origin.y, width/4, width/20)];
-    [distanceLabel setText:@"500 米"];
+    [distanceLabel setText:@""];
     [distanceLabel setFont:[UIFont systemFontOfSize:width/32]];
     [distanceLabel setTextAlignment:NSTextAlignmentRight];
     [distanceLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
@@ -520,8 +494,6 @@
         result=confromTimespStr;
         
     }
-    
-    
     return  result;
 }
 
@@ -715,7 +687,7 @@
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
                 
             });
@@ -723,7 +695,7 @@
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-         //   [ProgressHUD dismiss];
+            [HUD dismiss];
             
         }];
         

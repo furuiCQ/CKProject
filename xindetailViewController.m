@@ -9,11 +9,11 @@
 #import "xindetailViewController.h"
 #import "InvitaitionTabelCell.h"
 #import "AppDelegate.h"
+#import <JGProgressHUD/JGProgressHUD.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "LoginViewController.h"
 #import "RJShareView.h"
 #import "ScaleImgViewController.h"
-#import "ProgressHUD.h"
 #import "NewsCommentCell.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -60,6 +60,9 @@
     
     UIView *keyView;
     UITapGestureRecognizer *keyTap;
+    
+    //progress
+    JGProgressHUD *HUD;
 }
 
 @end
@@ -75,7 +78,6 @@
 @synthesize totalCount;
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ProgressHUD show:@"加载中"];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     tableArray=[[NSArray alloc]init];
@@ -85,7 +87,9 @@
     [self getCommectsList];
     [self getArticleInfo];
     [self initShareView];
-    
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     
     // Do any additional setup after loading the view.
 }
@@ -107,7 +111,8 @@
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
     }
-    [ProgressHUD show:@"评论提交中..."];
+    HUD.textLabel.text = @"提交评论中...";
+    [HUD showInView:self.view];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -128,15 +133,16 @@
                                            
                                        }
                                        [[self findFirstResponderBeneathView:self.view] resignFirstResponder];
-                                       [ProgressHUD dismiss];
                                        [alertView setMessage:model.message];
                                        [alertView show];
-                                       
+                                       [HUD dismiss];
                                    });
                                }failure:^(NSError *error){
                                    if (error.userInfo!=nil) {
                                        NSLog(@"%@",error.userInfo);
                                    }
+                                   [HUD dismiss];
+
                                }];
         
         
@@ -210,7 +216,7 @@
     zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
     [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
     [zanImageView setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews:)];
+    UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews)];
     [zanImageView addGestureRecognizer:gesutre];
     [sb addSubview:zanImageView];
     
@@ -277,15 +283,15 @@
     tab.rowHeight= self.view.bounds.size.height/5;
     tab.separatorStyle = NO;
     
-    //下拉刷新
-    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
-    [_refreshControl setTintColor:[UIColor grayColor]];
-    
-    [_refreshControl addTarget:self
-                        action:@selector(refreshView:)
-              forControlEvents:UIControlEventValueChanged];
-    [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
-    [tab addSubview:_refreshControl];
+//    //下拉刷新
+//    UIRefreshControl *_refreshControl = [[UIRefreshControl alloc] init];
+//    [_refreshControl setTintColor:[UIColor grayColor]];
+//    
+//    [_refreshControl addTarget:self
+//                        action:@selector(refreshView:)
+//              forControlEvents:UIControlEventValueChanged];
+//    [_refreshControl setAttributedTitle:[[NSAttributedString alloc] initWithString:@"松手更新数据"]];
+//    [tab addSubview:_refreshControl];
     
     [self.view addSubview:tab];
     
@@ -860,14 +866,14 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                     
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             
@@ -893,7 +899,6 @@
                                 [lab sizeToFit];
                                 
                             }
-                            
                             if ([dic objectForKey:@"created"]&& ![[dic objectForKey:@"created"] isEqual:[NSNull null]]) {
                                 NSNumber *number=[dic objectForKey:@"created"];
                                 NSInteger myInteger = [number integerValue];
@@ -983,14 +988,14 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                     
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             

@@ -20,6 +20,8 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "DemotionControl.h"
 #import "JZLocationConverter.h"
+#import <JGProgressHUD/JGProgressHUD.h>
+
 @interface OrganismListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,RatingBarDelegate,CLLocationManagerDelegate>{
     NSArray *tableArray;
     NSArray *local1Array;
@@ -59,6 +61,8 @@
     int select2Id;
     int select3Id;
     UILabel *place1;
+    //progress
+    JGProgressHUD *HUD;
 
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
@@ -113,8 +117,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [locationManager startUpdatingLocation];
 
     [self initTitle];
-  //  [self initSelectView];
     [self initTableView];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self getData];
     
     // Do any additional setup after loading the view, typically from a nib.
@@ -1352,13 +1358,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
 
             }];
             
@@ -1388,13 +1394,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             

@@ -11,6 +11,7 @@
 #import "MsgViewController.h"
 #import "msViewController.h"
 #import "OrderRecordCell.h"
+#import <JGProgressHUD/JGProgressHUD.h>
 #import "YiSlideMenu.h"
 #import "ChangePhoneViewController.h"
 #import "ChangeNickNameViewController.h"
@@ -48,6 +49,8 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     UIView *bgView;
     UIView *pickerTopView;
     NSString *selectCity;
+    //progress
+    JGProgressHUD *HUD;
 }
 
 @end
@@ -88,7 +91,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(myDelegate.isLogin){
-        [ProgressHUD show:@"加载中..."];
         [self changeLoginStauets];
     }
     // Do any additional setup after loading the view, typically from a nib.
@@ -373,6 +375,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [slideMenu navRightBtAction];
 }
 -(void)changeLoginStauets{
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [loginedControl setHidden:NO];
     [unloginControl setHidden:YES];
     [self getUserInfo];
@@ -475,14 +480,14 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                 });
                 
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             
@@ -490,44 +495,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     });
     
 }
-/*
- 
- -(void)controlClick:(UIControl *)control{
- AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
- if (!myDelegate.isLogin) {
- LoginViewController *loginViewController=[[LoginViewController alloc]init];
- [self presentViewController:loginViewController animated:YES completion:nil];
- return;
- }
- long tag=(long)control.tag;
- switch (tag) {
- case 0://预约
- {
- MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
- [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
- [myRegistrationRecordViewController clickNumber:1];
- 
- }
- break;
- case 1://受理成功
- {
- MyRegistrationRecordViewController *myRegistrationRecordViewController=[[MyRegistrationRecordViewController alloc]init];
- [self presentViewController: myRegistrationRecordViewController animated:YES completion:nil];
- [myRegistrationRecordViewController clickNumber:2];
- }
- break;
- case 2://发帖
- {
- 
- MyCollectViewController *myCollectViewController=[[MyCollectViewController alloc]init];
- [self presentViewController: myCollectViewController animated:YES completion:nil];
- }
- break;
- 
- default:
- break;
- }
- }*/
+
 -(void)goMyRegViewController{
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
@@ -549,10 +517,6 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     [self presentViewController: myCollectViewController animated:YES completion:nil];
 }
 -(void)setData:(NSDictionary *)dic{
-    
-    
-    
-    // NSNumber *userId=[dic objectForKey:@"id"];
     NSString *username=[dic objectForKey:@"username"];
     NSNumber *tel=[dic objectForKey:@"tel"];
     NSString *logo=[dic objectForKey:@"logo"];
@@ -1009,31 +973,31 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         NSString *docPath = [paths lastObject];
         NSString *imageURl=[docPath stringByAppendingFormat:@"%@%@",@"/",timeDate];
         saveImageToCacheDir(docPath, image, timeDate, @"png");
-        [ProgressHUD show:@"上传图片中..."];
+        HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+        HUD.textLabel.text = @"图片上传中...";
+        [HUD showInView:self.view];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             // 耗时的操作
             [HttpHelper upload:myDelegate.model withImageUrl:imageURl withImage:image success:^(HttpModel *model){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    [ProgressHUD dismiss];
                     [slideMenu setImage:nil withImage:image];
                     [userImageView setImage:image];
-                    //[dicatorView stopAnimating];
+                    [HUD dismiss];
                 });
                 
                 
             }failure:^(NSError *error){
+                if(error.code==500){
+                    HUD.textLabel.text = @"网络异常！";
+                    [HUD dismissAfterDelay:5];
+                }
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
             }];
             
-            
-            
-            
         });
-        
-        
     }
     [picker dismissViewControllerAnimated:YES completion:nil];
 
@@ -1100,6 +1064,8 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     [alertView setMessage:@"地址修改成功"];
                     [alertView show];
+                    [slideMenu setUserAddress:selectCity];
+
                 }else{
                     [alertView setMessage:model.message];
                     [alertView show];

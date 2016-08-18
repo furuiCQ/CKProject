@@ -12,7 +12,7 @@
 #import "OrganismListViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "CustomLabel.h"
-#import "ProgressHUD/ProgressHUD.h"
+#import <JGProgressHUD/JGProgressHUD.h>
 @interface SortViewController
 ()<UITableViewDataSource,UITableViewDelegate>{
     NSArray *tableArray;
@@ -24,6 +24,8 @@
     NSIndexPath *selectIndex;
     NSArray *normalImageArray;
     
+    //progress
+    JGProgressHUD *HUD;
 }
 
 @end
@@ -44,7 +46,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    [ProgressHUD show:@"加载中"];
     [self initTitle];
     [self initSwitchBtn];
     tableArray = [NSArray arrayWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",nil];
@@ -55,6 +56,9 @@
     [self initOrgTableView];
     [projectTableView setHidden:NO];
     [orgTableView setHidden:YES];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self getLessonGroup];
     [self getInstList];
     // Do any additional setup after loading the view, typically from a nib.
@@ -587,13 +591,13 @@
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }
         }];
@@ -603,11 +607,15 @@
 }
 -(void)getInstList{
     static NSString * const DEFAULT_LOCAL_AID = @"500100";
-    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-    NSNumber *aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        [HttpHelper getInsetList:aid success:^(HttpModel *model){
+        [HttpHelper getInsetList:Aid success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {

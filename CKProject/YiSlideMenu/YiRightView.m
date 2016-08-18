@@ -103,6 +103,10 @@
     phone=_phone;
     [_tableView reloadData];
 }
+-(void)setUserAddress:(NSString *)_address{
+    address=_address;
+    [_tableView reloadData];
+}
 -(void)setData:(NSDictionary *)dic{
     phone=[NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
     username=[NSString stringWithFormat:@"%@",[dic objectForKey:@"username"]];
@@ -174,6 +178,14 @@
         [label setTextAlignment:NSTextAlignmentRight];
         [cell.rightView addSubview:label];
         
+        
+    }else if([indexPath row]==4){
+        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, cell.rightView.frame.size.width-10, cell.rightView.frame.size.height)];
+        [label setText:address];
+        [label setFont:[UIFont systemFontOfSize:11]];
+        [label setTextColor:[UIColor whiteColor]];
+        [label setTextAlignment:NSTextAlignmentRight];
+        [cell.rightView addSubview:label];
         
     }else{//Chevron_ic-2
         UIImageView *image=[[UIImageView alloc]initWithFrame:CGRectMake(cell.rightView.frame.size.width-9-10, cell.rightView.frame.size.height/2-17/2, 9, 17)];

@@ -17,7 +17,7 @@
 -(void)setData:(NSDictionary *)dic;
 -(void)setImage:(UIImage *)imageUrl;
 -(void)setUserName:(NSString *)name;
-
+-(void)setUserAddress:(NSString *)_address;
 @end
 @protocol YiRightViewDelegate<NSObject>
 - (void)rightDidSelectRowAtIndexPath:(NSIndexPath *)indexPath;

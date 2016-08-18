@@ -31,7 +31,7 @@
 #import "DayModel.h"
 #import "JZLocationConverter.h"
 #import "RJUtil.h"
-
+#import <JGProgressHUD/JGProgressHUD.h>
 #import <QuartzCore/QuartzCore.h>
 #import <TencentOpenAPI/TencentOAuth.h>
 #import "TencentOpenAPI/QQApiInterface.h"
@@ -106,7 +106,8 @@
     BOOL isShow;
     //
     UIAlertView *alertView;
-
+//Progress
+    JGProgressHUD *HUD;
 }
 @end
 
@@ -142,7 +143,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    [ProgressHUD show:@"加载中..."];
+   // [ProgressHUD show:@"加载中..."];
     selectWeekArry=[[NSMutableArray alloc]init];
     timeData=[[NSDictionary alloc]init];
     isShow=NO;
@@ -150,6 +151,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self initContent];
     [self initBootomView];
     [self initShareView];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
+    
     [self getProjectInfo];
 }
 //初始化顶部菜单栏
@@ -174,7 +179,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
     [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
-    [searchLabel setText:@"课程详情"];
+    [searchLabel setText:@""];
     
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
@@ -212,7 +217,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [instituteControl addSubview:logoImageView];
     
     instituteNameLabel=[[UILabel alloc]initWithFrame:CGRectMake(logoImageView.frame.size.width+logoImageView.frame.origin.x+width/27.8, logoImageView.frame.origin.y, width-(logoImageView.frame.size.width+logoImageView.frame.origin.x+width/27.8), width/21.3)];
-    [instituteNameLabel setText:@"新东方英语培训中心"];
+    [instituteNameLabel setText:@""];
     [instituteNameLabel setFont:[UIFont systemFontOfSize:width/21.3]];
     [instituteNameLabel setTextColor:[UIColor blackColor]];
     [instituteControl addSubview:instituteNameLabel];
@@ -226,7 +231,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     
     projectAddLabel=[[UILabel alloc]initWithFrame:CGRectMake(localImageView.frame.size.width+localImageView.frame.origin.x+width/49,  instituteNameLabel.frame.size.height+instituteNameLabel.frame.origin.y+width/55, width-(localImageView.frame.size.width+localImageView.frame.origin.x+width/49)-width/40, width/22.8*2)];
-    [projectAddLabel setText:@"渝中区太平洋大厦3楼"];
+    [projectAddLabel setText:@""];
     [projectAddLabel addGestureRecognizer:addresGesture];
     [projectAddLabel setUserInteractionEnabled:YES];
     [projectAddLabel setTextColor:[UIColor colorWithRed:85.f/255.f green:85.f/255.f blue:85.f/255.f alpha:1.0]];
@@ -250,19 +255,19 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [scrollView addSubview:projectControl];
     
     projectNameLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/29,  width/25.6, width*2/3, width/22.8)];
-    [projectNameLabel setText:@"暑假英语酷学计划"];
+    [projectNameLabel setText:@""];
     [projectNameLabel setFont:[UIFont systemFontOfSize:width/22.8]];
     [projectNameLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
     [projectControl addSubview:projectNameLabel];
     
     UILabel *ageLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/29,  projectNameLabel.frame.size.height+projectNameLabel.frame.origin.y+width/58, width*2/3, width/29)];
-    [ageLabel setText:@"适合年龄段：3-16岁"];
+    [ageLabel setText:@""];
     [ageLabel setFont:[UIFont systemFontOfSize:width/29]];
     [ageLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
     [projectControl addSubview:ageLabel];
     
     distanceLabel=[[UILabel alloc]initWithFrame:CGRectMake(width-width/4-width/16.8,  width/16.8, width/4, width/32)];
-    [distanceLabel setText:@"500 米"];
+    [distanceLabel setText:@""];
     [distanceLabel setFont:[UIFont systemFontOfSize:width/32]];
     [distanceLabel setTextAlignment:NSTextAlignmentRight];
     [distanceLabel setTextColor:[UIColor colorWithRed:51.f/255.f green:51.f/255.f blue:51.f/255.f alpha:1.0]];
@@ -298,7 +303,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [contentControl addSubview:contentLabel];
     
     detailContentLabel=[[UITextView alloc]initWithFrame:CGRectMake(0, contentLabel.frame.size.height+contentLabel.frame.origin.y, width, 20)];
-    [detailContentLabel setText:@"惺惺惜惺惺"];
+    [detailContentLabel setText:@""];
     detailContentLabel.editable=NO;
     [detailContentLabel setTextAlignment:NSTextAlignmentLeft];
     [detailContentLabel setTextColor:[UIColor colorWithRed:104.f/255.f green:104.f/255.f blue:104.f/255.f alpha:1.0]];
@@ -316,7 +321,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [collectControl setBackgroundColor:[UIColor whiteColor]];
     
     collectNumLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, width/20, width/5.6, width/32)];
-    [collectNumLabel setText:@"288"];
+    [collectNumLabel setText:@""];
     [collectNumLabel setFont:[UIFont systemFontOfSize:width/32]];
     [collectNumLabel setTextAlignment:NSTextAlignmentCenter];
     [collectControl addSubview:collectNumLabel];
@@ -333,7 +338,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [orderControl setBackgroundColor:[UIColor whiteColor]];
     
     numbLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, width/20, width/5.6, width/32)];
-    [numbLabel setText:@"234"];
+    [numbLabel setText:@""];
     [numbLabel setFont:[UIFont systemFontOfSize:width/32]];
     [numbLabel setTextAlignment:NSTextAlignmentCenter];
     [orderControl addSubview:numbLabel];
@@ -812,13 +817,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
                 
             }];
             
@@ -1002,7 +1005,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                     
                     
                 });
@@ -1010,7 +1013,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             
@@ -1234,12 +1237,16 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }else{
                     
                 }
+                [HUD dismiss];
+
                 
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
+            [HUD dismiss];
+
         }];
         
         

@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, YiSlideDirection) {
 -(void)setData:(NSDictionary *)dic;
 -(void)setImage:(NSString *)imageUrl withImage:(UIImage *)image;
 -(void)setUserName:(NSString *)name;
+-(void)setUserAddress:(NSString *)_address;
 @end
 
 

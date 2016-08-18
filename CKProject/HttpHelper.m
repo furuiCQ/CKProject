@@ -181,8 +181,14 @@
     
     
 }
-+(void)searchProject:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
-    NSArray *parameters = @[ @{@"name":@"searchs",@"value":searchs}];
++(void)searchProject:(NSString *)searchs withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc  withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[ @{@"name":@"searchs",@"value":searchs},
+                             @{ @"name": @"lng", @"value": lng},
+                             @{ @"name": @"lat", @"value": lat},
+                             @{ @"name": @"status", @"value": status},
+                             @{@"name":@"pn",@"value":pn},
+                             @{@"name":@"pc",@"value":pc}
+                             ];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
@@ -1153,11 +1159,6 @@
     }];
 }
 +(void)upload:(HttpModel *)model withImageUrl:(NSString *)imageUrl withImage:(UIImage *)image success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
-    //    NSArray *parameters = @[ @{ @"name": @"tel", @"value": model.tel},
-    //                             @{ @"name": @"time_stamp", @"value": model.time_stamp},
-    //                             @{ @"name": @"token", @"value": model.token},
-    //                             @{ @"name": @"uid", @"value": model.uid}];
-    //    [self uploadImage:parameters];
     UIImage *imageuplod=[UIImage imageWithContentsOfFile:[imageUrl stringByAppendingString:@".png"]];
     
     NSDictionary *parameters=[NSDictionary  dictionaryWithObjectsAndKeys:model.tel,@"tel",
@@ -1243,8 +1244,6 @@
     [request setHTTPBody:myRequestData];
     //http method
     [request setHTTPMethod:@"POST"];
-    
-    
     NSHTTPURLResponse *urlResponese = nil;
     NSError *error = nil;
     NSData* resultData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponese error:&error];
@@ -1264,7 +1263,11 @@
         NSLog(@"message====%@",[resultJSON objectForKey:@"message"]);
         success(model);
     }else{
-        NSLog(@"%ld",(long)[urlResponese statusCode]);
+        NSLog(@"urlResponese statusCode %ld",(long)[urlResponese statusCode]);
+        if([urlResponese statusCode]==500){
+            error=[[NSError alloc]initWithDomain:@"网络连接异常" code:500 userInfo:nil];
+            failture(error);
+        }
         if (error.userInfo) {
             NSLog(
                   @"Error:%@",error.userInfo);

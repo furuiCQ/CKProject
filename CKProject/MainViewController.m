@@ -22,7 +22,8 @@
 #import "AppDelegate.h"
 #import "RJUtil.h"
 #import "LoginRegViewController.h"
-#import "ProgressHUD/ProgressHUD.h"
+//#import "ProgressHUD/ProgressHUD.h"
+#import <JGProgressHUD/JGProgressHUD.h>
 #import "CharesectionView.h"
 #import "DayModel.h"
 #import "JZLocationConverter.h"
@@ -69,7 +70,8 @@
     //
     NSMutableArray *projectTableArray;
     NSArray *chasetResult;
-    
+        //progress
+    JGProgressHUD *HUD;
 }
 
 @end
@@ -100,10 +102,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self.view addSubview:sc];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeCity) name:@"changeCity" object:nil];
 
-    //    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //    localLat=myDelegate.latitude;
-    //    localLng=myDelegate.longitude;
-    
+   
     [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     
     if (IS_IOS8) {
@@ -120,12 +119,15 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     localArray=[[NSArray alloc]init];
     localNumber=[[NSNumber alloc]init];
-    [ProgressHUD show:@"加载中..."];
+  
+   // [ProgressHUD show:@"加载中..."];
     
     [self getMainSlider];
     [self initImageScrollView];
     [self initMainView];
-    
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self getLat];
     [self getCity];
     [self getNewHotLesson];
@@ -461,7 +463,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                         xws=(NSArray *)model.result;
                         pag=[[UIPageControl alloc]init];
                         pag.numberOfPages=xws.count;
-                        tok=xws.count;
+                        tok=(int)xws.count;
                         for (int i=0; i<xws.count; i++) {
                             UILabel *lab=[[UILabel alloc]initWithFrame:CGRectMake(10, 5+i* (st.frame.size.height), st.frame.size.width-10, st.frame.size.height-5)];
                             NSDictionary *bt=[xws objectAtIndex:i];
@@ -574,7 +576,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 
             }
           //  [refreshHeader endRefreshing];
-            [ProgressHUD dismiss];
+          //  [ProgressHUD dismiss];
             
         }];
         
@@ -655,6 +657,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
 }
 -(void)topBarOnClick:(id)sender{
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     TopBar *topBar=(TopBar *)sender;
     for (NSObject *object in projectTableArray) {
         TopBar *b=(TopBar *)object;
@@ -1309,7 +1314,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                 }
               //  [refreshHeader endRefreshing];
-                [ProgressHUD dismiss];
+                [HUD dismiss];
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
@@ -1317,7 +1322,7 @@ static NSString *identy = @"OrderRecordCell";
                 
             }
             //[refreshHeader endRefreshing];
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             
         }];
         
@@ -1361,7 +1366,8 @@ static NSString *identy = @"OrderRecordCell";
                     
                 }
                 //[refreshHeader endRefreshing];
-                [ProgressHUD dismiss];
+              //  [ProgressHUD dismiss];
+                [HUD dismiss];
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
@@ -1369,7 +1375,9 @@ static NSString *identy = @"OrderRecordCell";
                 
             }
            // [refreshHeader endRefreshing];
-            [ProgressHUD dismiss];
+          // [ProgressHUD dismiss];
+            [HUD dismiss];
+
             
         }];
         
@@ -1414,7 +1422,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                 }
                // [refreshHeader endRefreshing];
-                [ProgressHUD dismiss];
+                [HUD dismiss];
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
@@ -1422,7 +1430,7 @@ static NSString *identy = @"OrderRecordCell";
                 
             }
            // [refreshHeader endRefreshing];
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             
         }];
         
@@ -1467,7 +1475,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                 }
                // [refreshHeader endRefreshing];
-                [ProgressHUD dismiss];
+                [HUD dismiss];
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
@@ -1475,7 +1483,7 @@ static NSString *identy = @"OrderRecordCell";
                 
             }
           //  [refreshHeader endRefreshing];
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             
         }];
         
@@ -1694,7 +1702,7 @@ static NSString *identy = @"OrderRecordCell";
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    myDelegate.openCityArray=model.result;
+                    myDelegate.openCityArray=(NSMutableArray *)model.result;
                 }
             });
         }failure:^(NSError *error){

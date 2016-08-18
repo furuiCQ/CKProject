@@ -9,12 +9,16 @@
 #import "LoginViewController.h"
 #import "WeiboSDK.h"
 #import "ShareTools.h"
+#import <JGProgressHUD/JGProgressHUD.h>
+
 
 @interface LoginViewController ()<UIAlertViewDelegate,WBHttpRequestDelegate,WXApiDelegate>{
     NSString *Otheruid;
     NSString *Othernickname;
     NSString *Othertoken;
     NSString *Othertype;
+    //progress
+    JGProgressHUD *HUD;
 }
 
 @end
@@ -318,7 +322,9 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
 }
 -(void)goLoginViewController{
     NSLog(@"gologin");
-    [ProgressHUD show:@"登陆中..."];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"登陆中...";
+    [HUD showInView:self.view];
     
     if (alertView==nil) {
         alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
@@ -330,12 +336,14 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
     if(phone==nil || [phone isEqualToString:@""]){
         [alertView setMessage:@"手机号为空!"];
         [alertView show];
+        [HUD dismiss];
         return;
     }
     
     if(password==nil || [password isEqualToString:@""]){
         [alertView setMessage:@"密码为空!"];
         [alertView show];
+        [HUD dismiss];
         return;
     }
     [alertView setTag:0];
@@ -358,7 +366,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 [alertView setMessage:model.message];
                 [alertView show];
             });
@@ -372,7 +380,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
                     [alertView setMessage:localizedDescription];
                     [alertView show];
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }
         }];
@@ -445,7 +453,9 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
     //do nothing
 }
 - (void)getWXUserInfo:(NSNotification*)notification{
-    [ProgressHUD show:@"登陆中..."];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"登陆中...";
+    [HUD showInView:self.view];
     NSDictionary *dic=(NSDictionary  *)notification.object;
     if([dic objectForKey:@"access_token"] &&[dic objectForKey:@"openid"] ){
         NSString *access_token = [dic objectForKey:@"access_token"];
@@ -457,6 +467,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
             alertView.delegate=self;
         }
         [alertView setMessage:[NSString stringWithFormat:@"%@",dic]];
+        [HUD dismiss];
         [alertView show];
     }
 
@@ -487,7 +498,6 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
     
 }
 -(void)accessLogin:(NSString *)uid withUserName:(NSString *)nickname withToken:(NSString *)token withType:(NSString *)type{
-    [ProgressHUD show:@"登陆中..."];
     
     if (alertView==nil) {
         alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
@@ -513,7 +523,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
                     
                 }
             }
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             [alertView setMessage:model.message];
             [alertView show];
         });
@@ -527,7 +537,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
                 [alertView setMessage:localizedDescription];
                 [alertView show];
             }
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             
         }
     }];
@@ -566,6 +576,7 @@ static NSString * const WeiboRedirectURI =@"http://www.sina.com";
                         alertView.delegate=self;
                     }
                     [alertView setMessage:[NSString stringWithFormat:@"%@",dic]];
+                    [HUD dismiss];
                     [alertView show];
                 }
             }

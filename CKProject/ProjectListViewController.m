@@ -26,6 +26,7 @@
 #import "CustomLabel.h"
 #import "YiRefreshHeader.h"
 #import "YiRefreshFooter.h"
+#import <JGProgressHUD/JGProgressHUD.h>
 
 @interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,CLLocationManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
     NSArray *local1Array;
@@ -83,7 +84,7 @@
     BOOL _isHeader;
     BOOL _isFooter;
     BOOL _isNoData;
-
+    
     YiRefreshHeader *refreshHeader;
     YiRefreshFooter *refreshFooter;
     
@@ -107,6 +108,9 @@
     
     BOOL isSift;
     BOOL isHot;
+    //progress
+    JGProgressHUD *HUD;
+    
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
 @end
@@ -126,10 +130,7 @@
 @synthesize projectID;
 @synthesize projectSubID;
 @synthesize titleName;
-@synthesize addTableView;
-@synthesize subAddTableView;
 @synthesize typeTableView;
-@synthesize endAddTableView;
 @synthesize gradeLayout;
 @synthesize tableArray;
 @synthesize gradeTableView;
@@ -138,7 +139,7 @@
 static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ProgressHUD show:@"加载中..."];
+    //  [ProgressHUD show:@"加载中..."];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     if (tableArray==nil) {
         tableArray = [[NSMutableArray alloc]init];
@@ -175,22 +176,26 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [self initTitle];
     [self initSelectView];
     [self initTableView];
-   
+    [self inPopView];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
+    
     if (std==1) {
         [self tit];
     }
     if (std==2) {
         [self searchData];
     }else{
+        _isHeader=YES;
         [self getData];
     }
-    [self inPopView];
     
 }
 
 -(void)tit
 {
-    [ProgressHUD show:@"加载中..."];
+    //  [ProgressHUD show:@"加载中..."];
     
     NSUserDefaults *sd=[NSUserDefaults standardUserDefaults];
     NSNumber *artid=[sd objectForKey:@"nid"];
@@ -207,12 +212,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         
         NSLog(@"----------------\n\n\n\n\n\n\n\\n\n\n\n%@",tableArray);
         [projectTableView reloadData];
-        [ProgressHUD dismiss];
+        [HUD dismiss];
     }];
 }
 -(void)searchData
 {
-    [ProgressHUD show:@"加载中..."];
+    //  [ProgressHUD show:@"加载中..."];
     
     NSUserDefaults *src=[NSUserDefaults standardUserDefaults];
     NSString *bt1=[src objectForKey:@"kp"];
@@ -246,13 +251,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 _isNoData=YES;
             }
         }
-
+        
         [projectTableView reloadData];
         [refreshFooter endRefreshing];
         [refreshHeader endRefreshing];
-
+        
         _isLoading=NO;
-        [ProgressHUD dismiss];
+        [HUD dismiss];
         
     }];
 }
@@ -362,9 +367,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         NSArray *sortArray=[timeSortArray sortedArrayUsingDescriptors:sortDescriptors];
         tableArray=[sortArray copy];
         [projectTableView reloadData];
-
         
-
+        
+        
     }else{
         isHot=YES;
         [hotImageView setImage:[self image:[UIImage imageNamed:@"red_down"]rotation:UIImageOrientationDown]];
@@ -376,7 +381,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         tableArray=[sortArray copy];
         [projectTableView reloadData];
     }
-  
+    
 }
 - (UIImage *)image:(UIImage *)image rotation:(UIImageOrientation)orientation
 {
@@ -634,10 +639,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     selectAid=NULL;
 }
 -(void)confirmDrawLayout{
-    
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     pageNumb=1;
     _isNoData=NO;
-    [ProgressHUD show:@"加载中..."];
     [self getLessonSift];
     [firstLayout closeDrawer];
     isSift=YES;
@@ -652,7 +658,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                                                   titleHeight+20+0.5+self.view.frame.size.width/7,
                                                                   self.view.frame.size.width,
                                                                   self.view.frame.size.height-titleHeight-20-0.5-titleHeight)];
-        [projectTableView setBackgroundColor:[UIColor whiteColor]];
+    [projectTableView setBackgroundColor:[UIColor whiteColor]];
     projectTableView.dataSource                        = self;
     projectTableView.delegate                          = self;
     projectTableView.rowHeight                         = self.view.bounds.size.height/7;
@@ -660,19 +666,19 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     projectTableView.separatorStyle=NO;
     [self.view addSubview:projectTableView];
     
-    refreshHeader=[[YiRefreshHeader alloc] init];
-    refreshHeader.scrollView=projectTableView;
-    [refreshHeader header];
-    refreshHeader.beginRefreshingBlock=^(){
-        
-    };
+    //    refreshHeader=[[YiRefreshHeader alloc] init];
+    //    refreshHeader.scrollView=projectTableView;
+    //    [refreshHeader header];
+    //    refreshHeader.beginRefreshingBlock=^(){
+    //
+    //    };
+    //
     
-    
-//    refreshFooter=[[YiRefreshFooter alloc] init];
-//    refreshFooter.scrollView=projectTableView;
-//    [refreshFooter footer];
-//    refreshFooter.beginRefreshingBlock=^(){
-//            };
+    //    refreshFooter=[[YiRefreshFooter alloc] init];
+    //    refreshFooter.scrollView=projectTableView;
+    //    [refreshFooter footer];
+    //    refreshFooter.beginRefreshingBlock=^(){
+    //            };
 }
 
 -(void) refreshView:(UIRefreshControl *)refresh
@@ -1021,7 +1027,7 @@ static NSString *identy = @"OrderRecordCell";
         [dataTableView reloadData];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];// 取消选中
-
+    
     
     
 }
@@ -1031,14 +1037,6 @@ static NSString *identy = @"OrderRecordCell";
     if (tableView.tag==0) {
         cell = [self tableView:projectTableView cellForRowAtIndexPath:indexPath];
         
-    }else if(tableView.tag==1){
-        cell = [self tableView:addTableView cellForRowAtIndexPath:indexPath];
-    }
-    else if(tableView.tag==2){
-        cell = [self tableView:subAddTableView cellForRowAtIndexPath:indexPath];
-        
-    }else if(tableView.tag==3){
-        cell = [self tableView:endAddTableView cellForRowAtIndexPath:indexPath];
     }else if(tableView.tag==4){
         cell = [self tableView:dataTableView cellForRowAtIndexPath:indexPath];
     }else if(tableView.tag==5){
@@ -1047,7 +1045,6 @@ static NSString *identy = @"OrderRecordCell";
     return cell.frame.size.height;
 }
 -(NSString *) compareCurrentTime:(NSString*) compareString
-//
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
@@ -1090,8 +1087,6 @@ static NSString *identy = @"OrderRecordCell";
         result=confromTimespStr;
         
     }
-    
-    
     return  result;
 }
 -(void)getAllGrade{
@@ -1106,7 +1101,6 @@ static NSString *identy = @"OrderRecordCell";
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                        // [gradeTableView reloadData];
                         [gradCollectView reloadData];
                     });
                     
@@ -1114,111 +1108,14 @@ static NSString *identy = @"OrderRecordCell";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
-                
-                
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
-            
         }];
-        
-        
     });
     
-}
--(void)getEndCity:(NSNumber *)Aid{
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper getCity:Aid success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    NSDictionary *result=model.result;
-                    
-                    local3Array=(NSArray *)[result objectForKey:@"content"];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        [endAddTableView reloadData];
-                        
-                        if ([local3Array count]>0) {
-                            [endAddTableView reloadData];
-                            NSIndexPath *idxPath = [NSIndexPath indexPathForRow:select3Id inSection:0];//定位到第8行
-                            [endAddTableView scrollToRowAtIndexPath:idxPath
-                                                   atScrollPosition:UITableViewScrollPositionTop
-                                                           animated:NO];
-                            
-                        }
-                        
-                    });
-                    
-                    
-                }else{
-                    
-                }
-                [ProgressHUD dismiss];
-                
-                
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-            }
-            [ProgressHUD dismiss];
-            
-        }];
-        
-        
-    });
-}
--(void)getSubCity:(NSNumber *)Aid{
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper getCity:Aid success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    NSDictionary *result=model.result;
-                    
-                    local2Array=(NSArray *)[result objectForKey:@"content"];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        [subAddTableView reloadData];
-                        
-                        if ([local2Array count]>0) {
-                            [subAddTableView reloadData];
-                            NSIndexPath *idxPath = [NSIndexPath indexPathForRow:select2Id inSection:0];//定位到第8行
-                            [subAddTableView scrollToRowAtIndexPath:idxPath
-                                                   atScrollPosition:UITableViewScrollPositionTop
-                                                           animated:NO];
-                            
-                        }
-                        
-                    });
-                    
-                    
-                }else{
-                    
-                }
-                [ProgressHUD dismiss];
-                
-                
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-            }
-            [ProgressHUD dismiss];
-            
-        }];
-        
-        
-    });
 }
 -(void)getAllType{
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -1238,15 +1135,11 @@ static NSString *identy = @"OrderRecordCell";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
-                
-                
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
             
         }];
         
@@ -1273,7 +1166,6 @@ static NSString *identy = @"OrderRecordCell";
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                        // [addTableView reloadData];
                         [cityCollectView reloadData];
                     });
                     
@@ -1281,19 +1173,12 @@ static NSString *identy = @"OrderRecordCell";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
-                
-                
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
-            
         }];
-        
-        
     });
     
 }
@@ -1318,7 +1203,9 @@ static NSString *identy = @"OrderRecordCell";
     
 }
 -(void)getData{
-     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //   [ProgressHUD show:@"加载中..."];
+    
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
     NSNumber *Aid= myDelegate.localNumber;
     if(Aid==NULL){
@@ -1327,7 +1214,7 @@ static NSString *identy = @"OrderRecordCell";
     NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
     NSNumber *ar=[stand objectForKey:@"lttt"];
     NSNumber *ngg=[stand objectForKey:@"nggg"];
-   
+    
     if (ar==NULL&&ngg==NULL) {
         ar=[NSNumber numberWithDouble:myDelegate.latitude];
         ngg=[NSNumber numberWithDouble:myDelegate.longitude];
@@ -1365,23 +1252,21 @@ static NSString *identy = @"OrderRecordCell";
                                 _isNoData=YES;
                             }
                         }
-
+                        
                         
                     }else{
                         
                     }
-                   
-                    [refreshFooter endRefreshing];
-                    [refreshHeader endRefreshing];
+                    
                     _isLoading=NO;
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                     
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             
@@ -1399,44 +1284,52 @@ static NSString *identy = @"OrderRecordCell";
         [searchLabel setText:[NSString stringWithFormat:@"搜索%@结果",searchs]];
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            [HttpHelper searchProject:searchs success:^(HttpModel *model){
+            [HttpHelper searchProject:searchs withPageNumber:[NSNumber numberWithInt:pageNumb] withPageLine:[NSNumber numberWithInt:20]  withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2]  success:^(HttpModel *model){
                 NSLog(@"%@",model.message);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                         NSDictionary *result=model.result;
-                        tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            
+                        
+                        NSArray *dataArray=[result objectForKey:@"lesson"];
+                        if([dataArray count]>0){
+                            _isNoData=NO;
+                            if(_isHeader){
+                                tableArray =[dataArray mutableCopy];
+                            }else{
+                                [tableArray addObjectsFromArray:dataArray];
+                            }
                             [projectTableView reloadData];
-                        });
+                        }else{
+                            if(!_isNoData){
+                                if (alertView==nil) {
+                                    alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                                    alertView.delegate=self;
+                                }
+                                [alertView setMessage:@"没有更多的课程了"];
+                                [alertView show];
+                                _isNoData=YES;
+                            }
+                        }
                         
                         
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    _isLoading=NO;
+                    [HUD dismiss];
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
-            
-            
         });
-        
-        
-        
-        
-        
-        
         
     }
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
-    [ProgressHUD dismiss];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -1444,180 +1337,8 @@ static NSString *identy = @"OrderRecordCell";
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
--(void)setHotModel:(NSString *)sqlString{
-    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-    if(aid==nil){
-        aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
-    }
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper searchData:aid withData:sqlString success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    NSDictionary *result=model.result;
-                    
-                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        [projectTableView reloadData];
-                    });
-                    
-                    
-                }else{
-                    
-                }
-                [ProgressHUD dismiss];
-                
-                
-                
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-                
-            }
-            [ProgressHUD dismiss];
-            
-        }];
-        
-        
-    });
-    
-}
--(void)setData{
-    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-    NSDate *  senddate=[NSDate date];
-    NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
-    [dateformatter setDateFormat:@"YYYY-MM-dd"];
-    NSString *date=[dateformatter stringFromDate:senddate];
-    if(aid==nil){
-        aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
-    }
-    if(cid==nil){
-        cid=[formatter numberFromString:@"0"];
-        
-    }
-    NSNumber *pc=[NSNumber numberWithInt:20];
-    NSNumber *pn=[NSNumber numberWithInt:1];
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper searchData:aid withData:@"" withDate:date withCid:cid withPid:pid withGid:gid withPc:pc withPn:pn success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    NSDictionary *result=model.result;
-                    
-                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [projectTableView reloadData];
-                    });
-                    
-                    
-                }else{
-                    
-                }
-                [ProgressHUD dismiss];
-                
-                
-                
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-                
-            }
-            [ProgressHUD dismiss];
-            
-        }];
-        
-        
-    });
-}
--(void)searchData:(NSString *)data withTime:(NSString *)date withAid:(NSNumber *)Aid{
-    
-    NSNumber *pc=[NSNumber numberWithInt:20];
-    NSNumber *pn=[NSNumber numberWithInt:1];
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper searchData: Aid withData:data withDate:date withCid:cid withPid:pid withGid:gid withPc:pc withPn:pn success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    NSDictionary *result=model.result;
-                    
-                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        [projectTableView reloadData];
-                    });
-                    
-                    
-                }else{
-                    
-                }
-                [ProgressHUD dismiss];
-                
-                
-                
-                
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-                
-            }
-            [ProgressHUD dismiss];
-            
-        }];
-        
-        
-    });
-    
-}
--(void)getLessonSubClasses:(NSNumber *)classesId{
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [HttpHelper getLessonSubClasses:classesId success:^(HttpModel *model){
-            NSLog(@"%@",model.message);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    NSDictionary *result=model.result;
-                    
-                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        [projectTableView reloadData];
-                    });
-                    
-                    
-                }else{
-                    
-                }
-                
-                [ProgressHUD dismiss];
-                
-                
-            });
-        }failure:^(NSError *error){
-            if (error.userInfo!=nil) {
-                NSLog(@"%@",error.userInfo);
-                
-            }
-            [ProgressHUD dismiss];
-            
-        }];
-        
-        
-    });
-    
-}
 -(void)getLessonSift{
+    
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSNumber *lat=[NSNumber numberWithDouble:myDelegate.latitude];
     NSNumber *lng=[NSNumber numberWithDouble:myDelegate.longitude];
@@ -1629,10 +1350,11 @@ static NSString *identy = @"OrderRecordCell";
         alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         alertView.delegate=self;
     }
-
+    
     if((selectCid==NULL || selectPid==NULL) && selectGid==NULL && selectAid==NULL){
         [alertView setMessage:@"请选择至少选择一个筛选条件!"];
         [alertView show];
+        [HUD dismiss];
         return;
     }
     NSMutableArray *dataArray=[[NSMutableArray alloc]init];
@@ -1649,7 +1371,7 @@ static NSString *identy = @"OrderRecordCell";
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-
+        
         [HttpHelper searchData:dataArray withPc:[NSNumber numberWithInt:20] withPn:[NSNumber numberWithInt:pageNumb] withlgn:lat withlat:lng withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1693,7 +1415,7 @@ static NSString *identy = @"OrderRecordCell";
                     
                 }
                 
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 [refreshFooter endRefreshing];
                 [refreshHeader endRefreshing];
                 _isLoading=NO;
@@ -1704,7 +1426,7 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",error.userInfo);
                 
             }
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             
         }];
         
@@ -1728,7 +1450,7 @@ static NSString *identy = @"OrderRecordCell";
 
 //返回每个item
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-   // NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
+    // NSLog(@"collectionView.tag%ld",(long)collectionView.tag);
     UICollectionViewCell * cell;
     NSDictionary *dic;
     if (collectionView.tag==0) {
@@ -1818,8 +1540,10 @@ static NSString *identy = @"OrderRecordCell";
 {
     if (!_isLoading && uiScrollView.tag==0) { // 判断是否处于刷新状态，刷新中就不执行
         float height = uiScrollView.contentSize.height > projectTableView.frame.size.height?projectTableView.frame.size.height : uiScrollView.contentSize.height;
-        if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
-            
+        if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.18) {
+            HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+            HUD.textLabel.text = @"加载中...";
+            [HUD showInView:self.view];
             NSLog(@"上拉加载");
             _isFooter=true;
             _isHeader=false;
@@ -1836,24 +1560,27 @@ static NSString *identy = @"OrderRecordCell";
             }else{
                 [self getData];
             }
-
+            
         }
         if (- uiScrollView.contentOffset.y / projectTableView.frame.size.height > 0.2) {
-            _isHeader=true;
-            _isFooter=false;
-            _isLoading=true;
-            pageNumb=1;
-            if(std==2){
-                if(isSift)
-                {
-                    [self getLessonSift];
-                }else{
-                    
-                    [self searchData];
-                }
-            }else{
-                [self getData];
-            }
+            //            HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+            //            HUD.textLabel.text = @"加载中...";
+            //            [HUD showInView:self.view];
+            //            _isHeader=true;
+            //            _isFooter=false;
+            //            _isLoading=true;
+            //            pageNumb=1;
+            //            if(std==2){
+            //                if(isSift)
+            //                {
+            //                    [self getLessonSift];
+            //                }else{
+            //                    
+            //                    [self searchData];
+            //                }
+            //            }else{
+            //                [self getData];
+            //            }
         }
         
     }

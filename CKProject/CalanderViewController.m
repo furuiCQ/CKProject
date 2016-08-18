@@ -224,6 +224,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 
 -(void)getLessonCount{
+    [ProgressHUD show:@"加载中..."];
+
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];//设置输出的格式
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     NSDate *selected = [NSDate date];

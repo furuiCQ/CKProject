@@ -159,7 +159,7 @@
         [cell.progressView  setProgress:[usenum doubleValue]/[totalnum doubleValue]];
     }
     if ([dic objectForKey:@"url"] && ![[dic objectForKey:@"url"] isEqual:[NSNull null]]) {
-        NSString *url=[dic objectForKey:@"url"];
+          NSString *url=[dic objectForKey:@"url"];
       //  [cell.progressLabel setText:[NSString stringWithFormat:@"%@/%@",usenum,totalnum]];
     }
     NSNumber *pid=[dic objectForKey:@"pid"];

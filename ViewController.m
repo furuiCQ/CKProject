@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "okCell.h"
-#import "ProgressHUD.h"
+#import <JGProgressHUD/JGProgressHUD.h>
 #import "modetailViewController.h"
 #import "xindetailViewController.h"
 #import "HttpHelper.h"
@@ -42,6 +42,8 @@
     YiRefreshFooter *refreshFooter;
     YiRefreshHeader *refreshHeader;
     BOOL _isLoading;
+    //progress
+    JGProgressHUD *HUD;
 }
 @end
 
@@ -81,24 +83,15 @@
     refreshFooter.scrollView=vi;
     [refreshFooter footer];
     refreshFooter.beginRefreshingBlock=^(){
-        NSLog(@"上拉加载");
-        _isLoading=true;
-        int numb=[pn intValue];
-        numb++;
-        pn=[NSNumber numberWithInt:numb];
-        [self getsj:1];
+       
     };
     
     refreshHeader=[[YiRefreshHeader alloc] init];
     refreshHeader.scrollView=vi;
     [refreshHeader header];
     refreshHeader.beginRefreshingBlock=^(){
-        _isLoading=true;
-        pn=[NSNumber numberWithInt:1];
-        [self getsj:0];
+       
     };
-    
-    
     UIImageView *goTopView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-swidth/8.5-swidth/40, sheight*3/4, swidth/8.5, swidth/8.5)];
     [goTopView setImage:[UIImage imageNamed:@"totop_image"]];
     UITapGestureRecognizer *goTopGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goTop)];
@@ -106,11 +99,17 @@
     [goTopView addGestureRecognizer:goTopGestureRecognizer];
     [self.view addSubview:goTopView];
     [self hidBack];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
 }
 -(void)goTop{
     [vi setContentOffset:CGPointMake(0,0) animated:YES];
 }
 - (void)selectClickAction:(NSInteger)index {
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     switch (index) {
         case 0:
             newsType=[NSNumber numberWithInt:2];
@@ -135,7 +134,7 @@
     [self getsj:0];
 }
 -(void)getsj:(int)add{
-    [ProgressHUD show:@"加载中..."];
+    //[ProgressHUD show:@"加载中..."];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -170,12 +169,13 @@
                                }else{
                                    
                                }
-                               
+                               [HUD dismiss];
                            });
                        }failure:^(NSError *error){
                            if (error.userInfo!=nil) {
                                NSLog(@"%@",error.userInfo);
                            }
+                           [HUD dismiss];
                        }];
         
         
@@ -264,7 +264,7 @@
     cell.times.text=sdt;
     
     // Configure the cell...
-    [ProgressHUD dismiss];
+   // [ProgressHUD dismiss];
     return cell;
     
 }
@@ -275,11 +275,20 @@
         float height = uiScrollView.contentSize.height > vi.frame.size.height ? vi.frame.size.height : uiScrollView.contentSize.height;
         if ((height - uiScrollView.contentSize.height + uiScrollView.contentOffset.y) / height > 0.2) {
             // 调用上拉刷新方法
+            NSLog(@"上拉加载");
+            _isLoading=true;
+            int numb=[pn intValue];
+            numb++;
+            pn=[NSNumber numberWithInt:numb];
+            [self getsj:1];
             [refreshFooter beginRefreshing];
         }
         if (- uiScrollView.contentOffset.y / vi.frame.size.height > 0.2) {
             // 调用下拉刷新方法
             NSLog(@"刷新");
+            _isLoading=true;
+            pn=[NSNumber numberWithInt:1];
+            [self getsj:0];
             [refreshHeader beginRefreshing];
         }
         

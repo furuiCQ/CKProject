@@ -204,6 +204,14 @@
         }
     }
 }
+-(void)setUserAddress:(NSString *)_address{
+    for(UIView *view in [rightBgView subviews]){
+        if([view isKindOfClass:[YiRightView class]]){
+            YiRightView *rightView=(YiRightView *)view;
+            [rightView setUserAddress:_address];
+        }
+    }
+}
 -(void)selectUserName{
     [slideMenuDelegate selectUserName];
 }

@@ -103,7 +103,7 @@ static NSString *const API_OPEN_CITY=@"openingcity";
 +(void)showCoupon:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)searchData:(NSNumber *)aid  withCid:(NSNumber *)cid withPid:(NSNumber *)pid withGid:(NSNumber *)gid withPc:(NSNumber *)pc withPn:(NSNumber *)pn withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)searchCoupon:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
-+(void)searchProject:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)searchProject:(NSString *)searchs withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc  withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)searchInst:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)verifyTel:(NSString *)tel withCode:(NSString *)code  success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)getCouponList:(NSString *)searchs  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
@@ -200,6 +200,5 @@ static NSString *const API_OPEN_CITY=@"openingcity";
 //
 +(void)getLessonList:(NSNumber *)cid withPid:(NSNumber *)pid withAID:(NSNumber *)aid withlng:(NSNumber *)lg withlat:(NSNumber *)lat withnums:(NSNumber *)nums  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 //获取新闻列表
-+(void)getliebiao:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 
 @end

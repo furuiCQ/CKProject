@@ -43,6 +43,5 @@
 @property NSString *searchs;
 
 -(void)setHotModel:(NSString *)sqlString;
--(void)searchData:(NSString *)data withTime:(NSString *)date withAid:(NSNumber *)aid;
 -(void)setstd:(int)num;
 @end
