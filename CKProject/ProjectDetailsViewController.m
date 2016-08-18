@@ -589,7 +589,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                          dispatch_async(dispatch_get_main_queue(), ^{
                                              
                                              [collectNorLabel setText:@"已收藏"];
-                                             
+                                             [collectImageView setImage:[UIImage imageNamed:@"collected"]];
                                          });
                                          
                                      }else{
@@ -783,9 +783,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                                 if ([zanStaues isEqualToNumber:[NSNumber numberWithInt:0]]) {
                                     selected=false;
                                     [collectNorLabel setText:@"收藏课程"];
+                                    [collectImageView setImage:[UIImage imageNamed:@"start_white"]];
                                 }else{
                                     selected=true;
                                     [collectNorLabel setText:@"已收藏"];
+                                    [collectImageView setImage:[UIImage imageNamed:@"collected"]];
+
                                 }
                             }
                             if([dic objectForKey:@"tel"]&& ![[dic objectForKey:@"tel"] isEqual:[NSNull null]]){
