@@ -25,8 +25,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     UITableView *mainTableView;
     UINib *nib;
     
-    
-    NSMutableArray *dataArray;
+    NSMutableArray *orderArray;//已受理
+    NSMutableArray *allDataArray;
+    NSMutableArray *dataArray;//全部
     YiSlideMenu *slideMenu;
     UIAlertView *alertView;
     UIImageView *nodataImageView;
@@ -77,6 +78,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
 - (void)viewDidLoad {
     [super viewDidLoad];
     dataArray=[[NSMutableArray alloc]init];
+    allDataArray=[[NSMutableArray alloc]init];
+    orderArray=[[NSMutableArray alloc]init];
+
     [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLoginStauets) name:@"refresh_userInfo" object:nil];
@@ -310,6 +314,23 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
             
         }
     }
+    switch (topBar.tag) {
+        case 0:
+        {
+            dataArray=allDataArray;
+        }
+            break;
+        case 1:
+        {
+            dataArray=orderArray;
+        }
+            break;
+            
+        default:
+            break;
+    }
+    [mainTableView reloadData];
+    
 }
 //  颜色转换为背景图片
 - (UIImage *)imageWithColor:(UIColor *)color {
@@ -579,16 +600,16 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         [userInfoArray addObject:@"女"];
     }
     
-    for (int i=0; i< [projectTableArray count];i++) {
-        TopBar *topBar=(TopBar *)[projectTableArray objectAtIndex:i];
-        if(i==0){
-            [topBar.textLabel setText:[NSString stringWithFormat:@"预约%@",bk]];
-        }
-        if(i==1){
-            [topBar.textLabel setText:[NSString stringWithFormat:@"受理成功%@",acce]];
-            
-        }
-    }
+//    for (int i=0; i< [projectTableArray count];i++) {
+//        TopBar *topBar=(TopBar *)[projectTableArray objectAtIndex:i];
+//        if(i==0){
+//            [topBar.textLabel setText:[NSString stringWithFormat:@"预约%@",bk]];
+//        }
+//        if(i==1){
+//            [topBar.textLabel setText:[NSString stringWithFormat:@"受理成功%@",acce]];
+//            
+//        }
+//    }
     [userInfoArray addObject:@""];
     [userInfoArray addObject:tel];
     [userInfoArray addObject:addr];
@@ -795,6 +816,27 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     dataArray=[(NSMutableArray *)model.result mutableCopy];
+                    allDataArray=[dataArray mutableCopy];
+                    for(NSDictionary *dic in dataArray){
+                        if ([dic objectForKey:@"status"] && ![[dic objectForKey:@"status"] isEqual:[NSNull null]]) {
+                            NSNumber *status=[dic objectForKey:@"status"];
+                            if([status intValue]==1){
+                                //受理成功但未评价
+                                [orderArray addObject:dic];
+                            }
+                        }
+                    }
+                    
+                    for (int i=0; i< [projectTableArray count];i++) {
+                        TopBar *topBar=(TopBar *)[projectTableArray objectAtIndex:i];
+                        if(i==0){
+                            [topBar.textLabel setText:[NSString stringWithFormat:@"预约%lu",(unsigned long)[dataArray count]]];
+                        }
+                        if(i==1){
+                            [topBar.textLabel setText:[NSString stringWithFormat:@"受理成功%lu",(unsigned long)[orderArray count]]];
+                            
+                        }
+                    }
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [nodataImageView setHidden:YES];
                         [mainTableView reloadData];

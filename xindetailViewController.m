@@ -43,7 +43,7 @@
     UILabel *writer;
     UILabel *timers;
     UIImageView *mg;
-    UIButton *zanImageView;
+    UIImageView *zanImageView;
     UILabel *lb;
     UIView *bottomView;
     UILabel *lp;
@@ -217,11 +217,11 @@
     [zanNumberLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
     [sb addSubview:zanNumberLabel];
     
-    zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
-    [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
-    [zanImageView setUserInteractionEnabled:YES];
-    UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews)];
-    [zanImageView addGestureRecognizer:gesutre];
+    zanImageView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
+    [zanImageView setImage:[UIImage imageNamed:@"zan_logo"]];
+    //[zanImageView setUserInteractionEnabled:YES];
+   // UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews)];
+   // [zanImageView addGestureRecognizer:gesutre];
     [sb addSubview:zanImageView];
     
     lt=[[UILabel alloc]initWithFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y+swidth/40, swidth, 0)];
@@ -800,9 +800,8 @@
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                                 [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
                                 [zanImageView removeFromSuperview];
-                                zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
-                                [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
-                                [zanImageView setUserInteractionEnabled:YES];
+                                zanImageView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                                [zanImageView setImage:[UIImage imageNamed:@"zan_logo"]];
                                 UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, lab.frame.size.height, swidth/3, swidth/6.5)];
                                 
                                 [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
@@ -812,10 +811,10 @@
                             if([dic objectForKey:@"iszan"] && ![[dic objectForKey:@"iszan"] isEqual:[NSNull null]]){
                                 NSNumber *zanStaues=[dic objectForKey:@"iszan"];
                                 if ([zanStaues intValue]==0) {
-                                    [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
+                                    [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] ];
                                     
                                 }else{
-                                    [zanImageView setImage:[UIImage imageNamed:@"dianzan_logo"] forState:UIControlStateNormal];
+                                    [zanImageView setImage:[UIImage imageNamed:@"dianzan_logo"]];
                                 }
                             }
                             if([dic objectForKey:@"read"]){
@@ -925,12 +924,9 @@
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
                                 [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
-                                
-                                
                                 [zanImageView removeFromSuperview];
-                                zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
-                                [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
-                                [zanImageView setUserInteractionEnabled:YES];
+                                zanImageView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                                [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] ];
                                 UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, lab.frame.size.height, swidth/3, swidth/6.5)];
                                 [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
                             
@@ -1086,7 +1082,6 @@
             keyView=nil;
         }
         keyView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20, self.view.frame.size.width, self.view.frame.size.height-curkeyBoardHeight-(self.view.frame.size.width/6.5-0.5)-(titleHeight+20))];
-        [keyView setBackgroundColor:[UIColor redColor]];
         keyTap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hidKeyBord)];
         [keyView setUserInteractionEnabled:YES];
         [keyView addGestureRecognizer:keyTap];

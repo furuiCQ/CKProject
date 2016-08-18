@@ -492,7 +492,7 @@
                                 //受理失败
                                 [kispray addObject:dic];
                             }
-                            if([status intValue]==1){
+                            if([status intValue]>=1){
                                 //受理成功但未评价
                                 [orderArray addObject:dic];
                             }
