@@ -806,6 +806,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             
             // 调用下拉刷新方法
             NSLog(@"刷新");
+            HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+            HUD.textLabel.text = @"加载中...";
+            [HUD showInView:self.view];
             [refreshHeader beginRefreshing];
             
             [self getHotLesson];
@@ -1301,8 +1304,6 @@ static NSString *identy = @"OrderRecordCell";
         [HttpHelper getHotLesson:localNumber withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-//                    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//                    myDelegate.model=model;
                     tableArray=(NSArray *)model.result;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1313,7 +1314,6 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-              //  [refreshHeader endRefreshing];
                 [HUD dismiss];
             });
         }failure:^(NSError *error){
