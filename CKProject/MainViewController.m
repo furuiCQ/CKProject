@@ -751,7 +751,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         page++;
     }
     CGFloat x = page*st.frame.size.height;
-    st.contentOffset = CGPointMake(0, x);
+  //  st.contentOffset = CGPointMake(0, x);
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [st setContentOffset:CGPointMake(0, x) animated:YES];
+    [UIView commitAnimations];
 }
 //加载下张图片
 - (void)nextImage
@@ -765,7 +770,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     }
     //  滚动scrollview
     CGFloat x = page * scrollview.frame.size.width;
-    scrollview.contentOffset = CGPointMake(x, 0);
+    //scrollview.contentOffset = CGPointMake(x, 0);
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [scrollview setContentOffset:CGPointMake(x, 0) animated:YES];
+    [UIView commitAnimations];
+
 }
 
 // scrollview滚动的时候调用
