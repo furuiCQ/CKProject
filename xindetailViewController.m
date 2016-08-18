@@ -78,6 +78,7 @@
 @synthesize totalCount;
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     tableArray=[[NSArray alloc]init];
@@ -792,7 +793,7 @@
                             if([dic objectForKey:@"zan"]){
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
-                                [zanNumberLabel setBackgroundColor:[UIColor redColor]];
+                                //[zanNumberLabel setBackgroundColor:[UIColor redColor]];
                                 [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
                                 [zanImageView removeFromSuperview];
                                 zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
@@ -863,14 +864,16 @@
                         
                     }
                     [HUD dismiss];
-                    
+                    [self.view setHidden:NO];
+
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
                 [HUD dismiss];
-                
+                [self.view setHidden:NO];
+
             }];
             
             
