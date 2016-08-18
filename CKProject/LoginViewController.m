@@ -46,7 +46,7 @@ TencentOAuth *tencentOAuth;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getWXUserInfo:) name:@"getWXUserInfo" object:nil];
     
     
-    //[self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [imageView setImage:[UIImage imageNamed:@"login_bg"]];
     [self.view addSubview:imageView];

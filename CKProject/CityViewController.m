@@ -41,6 +41,8 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+
     [self initCustomNavItem];
     [self getCityData];
     [self initTitle];
