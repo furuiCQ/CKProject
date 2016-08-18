@@ -1517,8 +1517,6 @@ static NSString *identy = @"OrderRecordCell";
                     
                     
                 }
-              //  [refreshHeader endRefreshing];
-                [ProgressHUD dismiss];
                 
             });
         }failure:^(NSError *error){
@@ -1526,8 +1524,6 @@ static NSString *identy = @"OrderRecordCell";
                 NSLog(@"%@",error.userInfo);
                 
             }
-           // [refreshHeader endRefreshing];
-            [ProgressHUD dismiss];
             
         }];
         

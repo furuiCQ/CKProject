@@ -92,7 +92,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    [ProgressHUD show:@"加载中"];
     tableArray = [[NSArray alloc]init];
     local1Array = [[NSArray alloc]init];
     local2Array = [[NSArray alloc]init];
@@ -555,7 +554,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
     typeLayout.openFromRight = YES;
     [typeLayout openDrawer];
-    [ProgressHUD show:@"加载中"];
 
     [self getAllType];
     
@@ -610,7 +608,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     twoLayout.openFromRight = YES;
     [twoLayout openDrawer];
     if ([local1Array count]<=0) {
-        [ProgressHUD show:@"加载中..."];
         [self getAllCity];
     }else{
         [addTableView reloadData];
@@ -1206,7 +1203,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
 
                 
             });
@@ -1214,7 +1210,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
 
         }];
         
@@ -1252,7 +1247,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
 
                 
             });
@@ -1260,7 +1254,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
 
         }];
         
@@ -1284,14 +1277,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
                 
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
 
         }];
         
@@ -1321,7 +1312,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
 
                 
             });
@@ -1329,7 +1319,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
 
         }];
         
@@ -1439,7 +1428,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
 
                 
             });
@@ -1447,14 +1435,12 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
 
         }];
 
     });
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
-    // NSLog(@"点点点");
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)didReceiveMemoryWarning {

@@ -8,11 +8,13 @@
 #import "OrderRecordCell.h"
 #import "MyCollectViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <JGProgressHUD/JGProgressHUD.h>
 
 @interface MyCollectViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray *dataArray;
-    
+    //Progress
+    JGProgressHUD *HUD;
 }
 @end
 
@@ -27,14 +29,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    [ProgressHUD show:@"加载中..."];
 
     [self initTitle];
     [self visibleTabBar];
     
     dataArray = [[NSMutableArray alloc]init];
     [self initTableView];
-    
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
+
     if([dataArray count]>0){
         
         
@@ -323,7 +327,7 @@
         ngg=[NSNumber numberWithDouble:106.5];
     }
     dispatch_async(queue, ^{
-    [HttpHelper getFavoriteProjectList:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:10]withLng:ngg withLat:ar  withModel:myDelegate.model success:^(HttpModel *model){
+    [HttpHelper getFavoriteProjectList:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:20]withLng:ngg withLat:ar  withModel:myDelegate.model success:^(HttpModel *model){
         NSLog(@"%@",model.message);
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -341,13 +345,13 @@
             }else{
                 
             }
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             
         });
     }failure:^(NSError *error){
         if (error.userInfo!=nil) {
             NSLog(@"%@",error.userInfo);
-            [ProgressHUD dismiss];
+            [HUD dismiss];
 
         }
     }];

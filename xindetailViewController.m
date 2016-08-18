@@ -632,7 +632,6 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
                     
                     
                 });
@@ -640,7 +639,6 @@
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
                 
             }];
             
@@ -665,7 +663,6 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
                     
                     
                 });
@@ -673,7 +670,6 @@
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
                 
             }];
             

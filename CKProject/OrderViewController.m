@@ -37,11 +37,11 @@
 @synthesize beginTime;
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ProgressHUD show:@"加载中..."];
 
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initTitle];
     [self initContentView];
+    
     [self orderPoject];
 }
 -(void)adismiss
@@ -167,13 +167,11 @@
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
         }];
         
         

@@ -52,7 +52,6 @@
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    [ProgressHUD show:@"加载中..."];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
     tableArray = [[NSArray alloc]init];
     if (alertView==nil) {
@@ -145,13 +144,13 @@
                                 case 1:
                                 case 2:
                                     if (![WXApi isWXAppInstalled]) {
-                                        [ProgressHUD showError:@"未安装微信！"];
+                                    //    [ProgressHUD showError:@"未安装微信！"];
                                     }
                                     break;
                                     
                                 case 3:
                                     if (![WeiboSDK isWeiboAppInstalled]) {
-                                        [ProgressHUD showError:@"未安装微博！"];
+                                     //   [ProgressHUD showError:@"未安装微博！"];
                                     }
                                     break;
                                     
@@ -159,7 +158,7 @@
                                 case 4:
                                 case 5:
                                     if (![TencentOAuth iphoneQQInstalled]) {
-                                        [ProgressHUD showError:@"未安装QQ！"];
+                                      //  [ProgressHUD showError:@"未安装QQ！"];
                                     }
                                     break;
                                     
@@ -504,7 +503,7 @@
     
 }
 -(void)sendeCommects{
-    [ProgressHUD show:@"评论提交中..."];
+   // [ProgressHUD show:@"评论提交中..."];
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
         LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
@@ -531,7 +530,7 @@
                                      
                                  }
                                  [[self findFirstResponderBeneathView:self.view] resignFirstResponder];
-                                 [ProgressHUD dismiss];
+                                 //[ProgressHUD dismiss];
                                  [alertView setMessage:model.message];
                                  [alertView show];
                                  
@@ -689,14 +688,14 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                  //  [ProgressHUD dismiss];
                     
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+            //    [ProgressHUD dismiss];
                 
             }];
             
@@ -812,14 +811,14 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                //    [ProgressHUD dismiss];
                     
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+             //   [ProgressHUD dismiss];
                 
             }];
             
@@ -865,7 +864,7 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                //    [ProgressHUD dismiss];
                     
                     
                 });
@@ -873,7 +872,7 @@
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+               // [ProgressHUD dismiss];
                 
             }];
             
@@ -899,7 +898,7 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                 //   [ProgressHUD dismiss];
                     
                     
                 });
@@ -907,7 +906,7 @@
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+               // [ProgressHUD dismiss];
                 
             }];
             

@@ -119,7 +119,6 @@
     }
     else
     {
-    [ProgressHUD show:@"正在发帖..."];
     static NSString * const DEFAULT_LOCAL_AID = @"500000";
     //[self creatDicatorView];
     if (alertView==nil) {
@@ -168,7 +167,6 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
                     [alertView setMessage:model.message];
                     [alertView show];
                     
@@ -177,7 +175,6 @@
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
-                    [ProgressHUD dismiss];
 
                 }
                 

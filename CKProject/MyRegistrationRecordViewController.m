@@ -10,6 +10,8 @@
 #import "HttpHelper.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "OrderRecordCell.h"
+#import <JGProgressHUD/JGProgressHUD.h>
+
 @interface MyRegistrationRecordViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray *dataArray;
@@ -21,6 +23,8 @@
     int flag;
     int select_number;
     UIImageView *nodataImageView;
+    //Progress
+    JGProgressHUD *HUD;
 }
 @end
 
@@ -38,7 +42,6 @@
     [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:244.f/255.f blue:247.f/255.f alpha:1.0]];
     select_number=-1;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getData) name:@"refresh" object:nil];
-    [ProgressHUD show:@"加载中..."];
     [self initTitle];
     [self visibleTabBar];
     [self initTopBar];
@@ -49,7 +52,9 @@
     unOrderArray=[[NSMutableArray alloc]init];
     orderArray=[[NSMutableArray alloc]init];
     kispray=[[NSMutableArray alloc]init];
-    
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self getData];
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -547,7 +552,7 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         AppDelegate *myDelegate=( AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
+        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:10] withModel:myDelegate.model success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -577,13 +582,13 @@
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }
         }];

@@ -96,7 +96,7 @@ static NSString * const WXSECRET=@"ed8a20ce12cf1d6a46a6626ce072f94b";
                      }else{
                          
                      }
-                     [ProgressHUD dismiss];
+                  //   [ProgressHUD dismiss];
                      
                  });
                  
@@ -106,7 +106,7 @@ static NSString * const WXSECRET=@"ed8a20ce12cf1d6a46a6626ce072f94b";
                      NSString *localizedDescription=[error.userInfo objectForKey:@"NSLocalizedDescription"];
                      if (localizedDescription!=nil && ![localizedDescription isEqualToString:@""]) {
                      }
-                     [ProgressHUD dismiss];
+                     //  [ProgressHUD dismiss];
                      
                  }
              }];

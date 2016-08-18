@@ -11,7 +11,6 @@
 #import "WXApi.h"
 #import <UIKit/UIKit.h>
 #import <TencentOpenAPI/TencentOAuth.h>
-#import "ProgressHUD/ProgressHUD.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate,WeiboSDKDelegate,TencentSessionDelegate,WXApiDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

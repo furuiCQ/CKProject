@@ -10,10 +10,13 @@
 #import "SearchViewController.h"
 #import "FavourableViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <JGProgressHUD/JGProgressHUD.h>
 
 @interface FavourableViewController()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     NSArray *dataArray;
     CustomTextField *searchField;
+    JGProgressHUD *HUD;
+    
 }
 @end
 @implementation FavourableViewController
@@ -25,10 +28,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ProgressHUD show:@"数据加载中..."];
-
     [self initTitle];
     [self initContentView];
+    
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self getData];
 }
 //初始化顶部菜单栏
@@ -223,13 +228,13 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             
@@ -251,7 +256,7 @@
                             
                         });
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                     
                 });
             }failure:^(NSError *error){
@@ -259,7 +264,7 @@
                     NSLog(@"%@",error.userInfo);
                     
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             

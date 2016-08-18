@@ -16,6 +16,7 @@
 #import "MainTabBarViewNorController.h"
 @interface LoadingViewController ()<UIAlertViewDelegate,YBMonitorNetWorkStateDelegate>{
     NSTimer *timer;
+    int count;
 }
 
 @end
@@ -46,7 +47,10 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"网络连接异常" message:@"暂无法访问蹭课信息，请检查网络是否正常连接" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
     }else{
-        [self showFav];
+        if(count==0){
+            [self showFav];
+ 
+        }
     }
 }
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
@@ -70,6 +74,7 @@
                     [myDelegate setIsHasCoupon:YES];
                     [self goMainViewController];
                 }
+                count++;
 
             });
         }failure:^(NSError *error){

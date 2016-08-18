@@ -283,6 +283,7 @@ static NSString * const DXPlaceholderColorKey = @"placeholderLabel.textColor";
 }
 
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
+    [self releaseTImer];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)hidPas{

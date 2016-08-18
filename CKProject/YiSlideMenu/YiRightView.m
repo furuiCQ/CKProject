@@ -40,7 +40,7 @@
     phone=@"";
    
     dataArray=[[NSArray alloc]initWithObjects:@"我的优惠券",@"性别",@"修改密码",@"电话",@"地址",@"联系我们",@"设置",@"退出登录", nil];
-    imageArray=[[NSArray alloc]initWithObjects:@"ticket-",@"gender",@"password",@"phone",@"Location",@"contact",@"Settings-",@"LogOut", nil];
+    imageArray=[[NSArray alloc]initWithObjects:@"ticket-",@"gender",@"password",@"phone",@"location",@"contact",@"Settings-",@"LogOut", nil];
     if (self) {
         float viewWidth=frame.size.width;
         float viewHeight=frame.size.height;

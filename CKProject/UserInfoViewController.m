@@ -105,14 +105,12 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
                 });
                 
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
                 
             }];
             
@@ -391,7 +389,7 @@
     }
     customAlertView.delegate=self;
     [customAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    NSLog(@"contol.tag----%li",control.tag);
+ //   NSLog(@"contol.tag----%li",control.tag);
     [customAlertView setTag:control.tag];
     UITextField *nameField = [customAlertView textFieldAtIndex:0];
     nameField.placeholder = placeholder;

@@ -23,7 +23,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
-    [ProgressHUD show:@"加载中..."];
     [self initTitle];
     [self visibleTabBar];
     [self initTableView];
@@ -284,14 +283,12 @@
                                            }else{
                                                
                                            }
-                                           [ProgressHUD dismiss];
 
                                        });
                                    }failure:^(NSError *error){
                                        if (error.userInfo!=nil) {
                                            NSLog(@"%@",error.userInfo);
                                        }
-                                       [ProgressHUD dismiss];
 
                                    }];
     });

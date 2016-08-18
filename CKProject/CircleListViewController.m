@@ -43,7 +43,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [ProgressHUD show:@"加载中..."];
+   // [ProgressHUD show:@"加载中..."];
    vi=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,44+self.view.frame.size.width/3.5+self.view.frame.size.width/7.6*2-40)];
 //    vi.backgroundColor=[UIColor greenColor];
     [self.view addSubview:vi];
@@ -395,14 +395,14 @@
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+              //  [ProgressHUD dismiss];
                 
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
+           // [ProgressHUD dismiss];
 
         }];
         
@@ -443,7 +443,7 @@
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+             //   [ProgressHUD dismiss];
 
                 
             });
@@ -451,7 +451,7 @@
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
+        //    [ProgressHUD dismiss];
 
         }];
         

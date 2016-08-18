@@ -434,7 +434,6 @@
         
         
     }
-    [ProgressHUD dismiss];
 
     return cell;
 }

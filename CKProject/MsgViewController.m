@@ -30,7 +30,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"view Did Load");
-    [ProgressHUD show:@"加载中..."];
     page=[NSNumber numberWithInt:1];
     line=[NSNumber numberWithInt:5];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
@@ -479,13 +478,11 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
 
             }];
             });
@@ -511,7 +508,6 @@
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
 
                     
                 });
@@ -519,7 +515,6 @@
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
 
             }];
             
@@ -545,7 +540,6 @@
                                                   }else{
                                                       
                                                   }
-                                                  [ProgressHUD dismiss];
 
                                                   
                                               });
@@ -553,7 +547,6 @@
                                               if (error.userInfo!=nil) {
                                                   NSLog(@"%@",error.userInfo);
                                               }
-                                              [ProgressHUD dismiss];
 
                                           }];
             });

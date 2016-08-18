@@ -780,6 +780,9 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
 
 //－－－－－－－－－－－－－－－－－－－－－－－－
 -(void)logout{
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"退出登陆中...";
+    [HUD showInView:self.view];
     AppDelegate *myDelegate = ( AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (myDelegate.model!=nil) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -787,25 +790,28 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
             [HttpHelper logoutAcount:myDelegate.model success:^(HttpModel *model){
                 NSLog(@"%@",model.message);
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
+                    if (alertView==nil) {
+                        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                        alertView.delegate=self;
+                    }
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                        if (alertView==nil) {
-                            alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-                            alertView.delegate=self;
-                        }
+                       
                         [alertView setTag:5];
-                        [alertView setMessage:model.message];
-                        [alertView show];
                         [slideMenu setScrollEnabled:NO];
                     }else{
                         
                     }
+                    [alertView setMessage:model.message];
+                    [alertView show];
+                    [HUD dismiss];
                 });
                 
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
+                [HUD dismiss];
+
             }];
         });
         
@@ -980,9 +986,21 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
             // 耗时的操作
             [HttpHelper upload:myDelegate.model withImageUrl:imageURl withImage:image success:^(HttpModel *model){
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    if (alertView==nil) {
+                        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                        alertView.delegate=self;
+                    }
+                    if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
+                        [slideMenu setImage:nil withImage:image];
+                        [userImageView setImage:image];
+                        
+                    }else{
+                        
+                        
+                    }
+                    [alertView setMessage:model.message];
+                    [alertView show];
                     
-                    [slideMenu setImage:nil withImage:image];
-                    [userImageView setImage:image];
                     [HUD dismiss];
                 });
                 

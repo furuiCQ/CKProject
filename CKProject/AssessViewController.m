@@ -116,7 +116,7 @@
     lvNumber=[NSNumber numberWithFloat:newRating];
 }
 -(void)sendAssess{
-    [ProgressHUD show:@"正在提交评价..."];
+   // [ProgressHUD show:@"正在提交评价..."];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
 
@@ -138,12 +138,11 @@
                                                }];
                                                
                                            }
-                    //爱你是这一辈子最正确的决定
                                            
                                            else{
                                                
                                            }
-                                           [ProgressHUD dismiss];
+                                        //   [ProgressHUD dismiss];
                                            
                                            
                                        });
@@ -151,7 +150,7 @@
                                        if (error.userInfo!=nil) {
                                            NSLog(@"%@",error.userInfo);
                                        }
-                                       [ProgressHUD dismiss];
+                                      // [ProgressHUD dismiss];
 
                                    }];
     });

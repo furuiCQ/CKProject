@@ -10,6 +10,8 @@
 #import "HttpHelper.h"
 #import "FDCalendar.h"
 #import "AppDelegate.h"
+#import <JGProgressHUD/JGProgressHUD.h>
+
 @interface CalanderViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,EveryFrameDelegate>{
     NSArray *tableArray;
     UILabel *titleLabel;
@@ -20,6 +22,8 @@
     //
     NSArray *ary;
     NSDate *selectDate;
+    //Progress
+    JGProgressHUD *HUD;
 }
 
 @end
@@ -41,9 +45,11 @@
     [imageView setImage:[UIImage imageNamed:@"login_bg"]];
     [self.view addSubview:imageView];
     selectDate=[NSDate date];
-    [ProgressHUD show:@"加载中..."];
     [self initTitle];
     [self initContentView];
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self getLessonCount];
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -108,6 +114,9 @@
 }
 - (void)getSelectData:(NSDate *)date{
     selectDate=date;
+    HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
+    HUD.textLabel.text = @"加载中...";
+    [HUD showInView:self.view];
     [self tzshuj:date];
 }
 static NSString * const DEFAULT_LOCAL_AID = @"500100";
@@ -187,13 +196,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                     }else{
                         
                     }
-                    [ProgressHUD dismiss];
+                    [HUD dismiss];
                 });
             }failure:^(NSError *error){
                 if (error.userInfo!=nil) {
                     NSLog(@"%@",error.userInfo);
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
                 
             }];
             
@@ -224,8 +233,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 
 -(void)getLessonCount{
-    [ProgressHUD show:@"加载中..."];
-
+   
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];//设置输出的格式
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     NSDate *selected = [NSDate date];
@@ -266,13 +275,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
                 }else{
                     
                 }
-                [ProgressHUD dismiss];
+                [HUD dismiss];
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
                 NSLog(@"%@",error.userInfo);
             }
-            [ProgressHUD dismiss];
+            [HUD dismiss];
             
         }];
         
