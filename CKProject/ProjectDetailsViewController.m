@@ -179,7 +179,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [searchLabel setTextAlignment:NSTextAlignmentCenter];
     [searchLabel setTextColor:[UIColor whiteColor]];
     [searchLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/20]];
-    [searchLabel setText:@""];
+    [searchLabel setText:@"课程详情"];
     
     //新建右上角的图形
     msgLabel=[[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-self.view.frame.size.width/6, 0, self.view.frame.size.width/6, titleHeight)];
