@@ -234,6 +234,7 @@
     recordTableView.dataSource                        = self;
     recordTableView.delegate                          = self;
     recordTableView.rowHeight                         = self.view.bounds.size.height/7;
+    recordTableView.separatorStyle=NO;
     [self.view addSubview:recordTableView];
     
 }
