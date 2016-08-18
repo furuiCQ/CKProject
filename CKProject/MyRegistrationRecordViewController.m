@@ -15,9 +15,9 @@
 @interface MyRegistrationRecordViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray *dataArray;
-    NSMutableArray *allArray;
-    NSMutableArray *unOrderArray;
-    NSMutableArray *orderArray;
+    NSMutableArray *allArray;//全部
+    NSMutableArray *unOrderArray;//预约
+    NSMutableArray *orderArray;//已受理
     NSMutableArray *kispray;//受理失败
     
     int flag;
@@ -182,7 +182,7 @@
             
         }
     }
-    flag=(int)topBar.tag;
+   // flag=(int)topBar.tag;
     switch (topBar.tag) {
             
         case 0:
@@ -265,16 +265,7 @@
 
     
     if ([dataArray count]>0) {
-        NSDictionary *dic;
-        switch (flag) {
-            case 0:
-                dic=[dataArray objectAtIndex:[indexPath row]];
-                break;
-            default:
-                dic=[[dataArray objectAtIndex:[indexPath row]] objectAtIndex:0];
-                break;
-        }
-        
+        NSDictionary *dic=[dataArray objectAtIndex:[indexPath row]];
         if ([dic objectForKey:@"title"] && ![[dic objectForKey:@"title"] isEqual:[NSNull null]]) {
             NSString *title=[dic objectForKey:@"title"];
             [porjectCell.titleLabel setText:[NSString stringWithFormat:@"%@",title]];
@@ -329,112 +320,30 @@
             NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
             [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
         }
-
         if ([dic objectForKey:@"status"] && ![[dic objectForKey:@"status"] isEqual:[NSNull null]]) {
             NSNumber *status=[dic objectForKey:@"status"];
-           NSNumber *atime=[dic objectForKey:@"atime"];
-           int at=[atime intValue];
-           if ([status isEqualToNumber:[NSNumber numberWithInt:0]]&&at>0) {
-//               [cell.statueLabel setText:@"受理失败"];
-//               [cell.statueLabel setTextColor:[UIColor colorWithRed:245.f/255.f green:7.f/255.f blue:35.f/255.f alpha:1.0]];
-//               cell.statueLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
-               [cell.accpet_image setHidden:NO];
-               [cell.accpet_image setImage:[UIImage imageNamed:@"accepte_warn"]];
-               if (flag==0) {
-                   NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
-                   BOOL toAdd=true;
-                   if ([kispray count]>0) {
-                       for (NSArray *item in kispray) {
-                           NSNumber *itemId=[[item objectAtIndex:0] objectForKey:@"lid"];
-                           NSNumber *dicId=[dic objectForKey:@"lid"];
-                           if ([itemId isEqualToNumber:dicId]) {
-                               toAdd=false;
-                           }
-                       }
-                   }else{
-                       toAdd=true;
-                   }
-                   if (toAdd) {
-                       [kispray addObject:[arry mutableCopy]];
-                   }
-               }
-               
-           }
-            if ([status isEqualToNumber:[NSNumber numberWithInt:0]]&&at==0) {
-//                [cell.statueLabel setText:@"未受理"];
-//                [cell.statueLabel setTextColor:[UIColor colorWithRed:245.f/255.f green:7.f/255.f blue:35.f/255.f alpha:1.0]];
-//                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:237.f/255.f green:237.f/255.f blue:237.f/255.f alpha:1.0].CGColor;
+            NSNumber *atime=[dic objectForKey:@"atime"];
+            int at=[atime intValue];
+            if(at==0 && [status intValue]==0){
+                //未受理
                 [cell.accpet_image setHidden:NO];
                 [cell.accpet_image setImage:[UIImage imageNamed:@"accepting"]];
-                if (flag==0) {
-                    NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
-                    BOOL toAdd=true;
-                    if ([unOrderArray count]>0) {
-                        for (NSArray *item in unOrderArray) {
-                            NSNumber *itemId=[[item objectAtIndex:0] objectForKey:@"lid"];
-                            NSNumber *dicId=[dic objectForKey:@"lid"];
-                            if ([itemId isEqualToNumber:dicId]) {
-                                toAdd=false;
-                            }
-                        }
-                    }else{
-                        toAdd=true;
-                    }
-                    if (toAdd) {
-                        [unOrderArray addObject:[arry mutableCopy]];
-                    }
-                }
+            }
+            if(at!=0 && [status intValue]==0){
+                //受理失败
+                [cell.accpet_image setHidden:NO];
+                [cell.accpet_image setImage:[UIImage imageNamed:@"accepte_warn"]];
+            }
+            if([status intValue]==1){
+                //受理成功但未评价
+                [cell.accpet_image setHidden:NO];
+                [cell.accpet_image setImage:[UIImage imageNamed:@"accept_sucess"]];
                 
             }
-           else  if ([status isEqualToNumber:[NSNumber numberWithInt:1]]) {
-//                [cell.statueLabel setText:@"评价"];
-//                [cell.statueLabel setTag:[indexPath row]];
-//                UITapGestureRecognizer *tapGestureRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goAssessViewController:)];
-//                [cell.statueLabel setUserInteractionEnabled:YES];
-//                [cell.statueLabel addGestureRecognizer:tapGestureRecognizer];
-//                [cell.statueLabel setTextColor:[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0]];
-//                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:75.f/255.f green:206.f/255.f blue:109.f/255.f alpha:1.0].CGColor;
-                if (flag==0) {
-                    NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
-                    BOOL toAdd=true;
-                    if ([orderArray count]>0) {
-                        for (NSArray *item in orderArray) {
-                            NSNumber *itemId=[[item objectAtIndex:0] objectForKey:@"lid"];
-                            NSNumber *dicId=[dic objectForKey:@"lid"];
-                            if ([itemId isEqualToNumber:dicId]) {
-                                toAdd=false;
-                            }
-                        }
-                    }else{
-                        toAdd=true;
-                    }
-                    if (toAdd) {
-                        [orderArray addObject:[arry mutableCopy]];
-                    }
-                }
-                
-            }else  if ([status isEqualToNumber:[NSNumber numberWithInt:2]]) {
-//                [cell.statueLabel setText:@"已评价"];
-//                [cell.statueLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-//                cell.statueLabel.layer.borderColor=[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0].CGColor;
-                if (flag==0) {
-                    NSArray *arry=[[NSArray alloc]initWithObjects:dic, nil];
-                    BOOL toAdd=true;
-                    if ([orderArray count]>0) {
-                        for (NSArray *item in orderArray) {
-                            NSNumber *itemId=[[item objectAtIndex:0] objectForKey:@"lid"];
-                            NSNumber *dicId=[dic objectForKey:@"lid"];
-                            if ([itemId isEqualToNumber:dicId]) {
-                                toAdd=false;
-                            }
-                        }
-                    }else{
-                        toAdd=true;
-                    }
-                    if (toAdd) {
-                        [orderArray addObject:[arry mutableCopy]];
-                    }
-                }
+            if([status intValue]==2){
+                //已评价
+                [cell.accpet_image setHidden:NO];
+                [cell.accpet_image setImage:[UIImage imageNamed:@"accepted"]];
             }
             
         }
@@ -526,7 +435,6 @@
                         
                         [dataArray removeObjectAtIndex:[index row]];//删除数据
                         
-                        // Delete the row from the data source.
                         [recordTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationFade];
                         
                         NSNotification *notification =[NSNotification notificationWithName:@"refresh_userInfo" object:nil];
@@ -552,13 +460,47 @@
 -(void)getData{
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        AppDelegate *myDelegate=( AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:10] withModel:myDelegate.model success:^(HttpModel *model){
+        AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+        NSNumber *ar=[stand objectForKey:@"lttt"];
+        NSNumber *ngg=[stand objectForKey:@"nggg"];
+        
+        if (ar==NULL&&ngg==NULL) {
+            ar=[NSNumber numberWithDouble:myDelegate.latitude];
+            ngg=[NSNumber numberWithDouble:myDelegate.longitude];
+        }
+        if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+            ar=[NSNumber numberWithDouble:29.5];
+            ngg=[NSNumber numberWithDouble:106.5];
+        }
+        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withLng: ngg withLat:ar  withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     dataArray=[(NSMutableArray *)model.result mutableCopy];
-                    allArray=dataArray;
+                    allArray=[dataArray mutableCopy];
+                    for(NSDictionary *dic in allArray){
+                        if ([dic objectForKey:@"status"] && ![[dic objectForKey:@"status"] isEqual:[NSNull null]]) {
+                            NSNumber *status=[dic objectForKey:@"status"];
+                            NSNumber *atime=[dic objectForKey:@"atime"];
+                            int at=[atime intValue];
+                            if(at==0 && [status intValue]==0){
+                                //未受理
+                                [unOrderArray addObject:dic];
+                            }
+                            if(at!=0 && [status intValue]==0){
+                                //受理失败
+                                [kispray addObject:dic];
+                            }
+                            if([status intValue]==1){
+                                //受理成功但未评价
+                                [orderArray addObject:dic];
+                            }
+                            
+                        }
+
+                    }
+                    
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
                         [recordTableView reloadData];

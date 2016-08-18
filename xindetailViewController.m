@@ -63,6 +63,8 @@
     
     //progress
     JGProgressHUD *HUD;
+    //
+    BOOL inThisPage;
 }
 
 @end
@@ -88,6 +90,7 @@
     [self getCommectsList];
     [self getArticleInfo];
     [self initShareView];
+    inThisPage=YES;
     HUD = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
     HUD.textLabel.text = @"加载中...";
     [HUD showInView:self.view];
@@ -496,6 +499,8 @@
     NSLog(@"dianZan%d",tag);
     AppDelegate *myDelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     if (!myDelegate.isLogin) {
+        inThisPage=NO;
+        [self hidKeyBord];
         LoginViewController *loginRegViewController=[[LoginViewController alloc]init];
         [self presentViewController:loginRegViewController animated:YES completion:nil];
         return;
@@ -793,16 +798,14 @@
                             if([dic objectForKey:@"zan"]){
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
-                                //[zanNumberLabel setBackgroundColor:[UIColor redColor]];
                                 [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
                                 [zanImageView removeFromSuperview];
-                                zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                                zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
                                 [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
-                                UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, writer.frame.origin.y-5, swidth/3, swidth/10)];
-                                [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
-                                //  UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews:)];
-                                // [zanImageView addGestureRecognizer:gesutre];
+                                [zanImageView setUserInteractionEnabled:YES];
+                                UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, lab.frame.size.height, swidth/3, swidth/6.5)];
                                 
+                                [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
                                 [sb addSubview:zanImageView];
                                 [sb addSubview:zanControl];
                             }
@@ -928,11 +931,9 @@
                                 zanImageView=[[UIButton alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
                                 [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] forState:UIControlStateNormal];
                                 [zanImageView setUserInteractionEnabled:YES];
-                                UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, writer.frame.origin.y-5, swidth/3, swidth/10)];
+                                UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, lab.frame.size.height, swidth/3, swidth/6.5)];
                                 [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
-                              //  UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews:)];
-                               // [zanImageView addGestureRecognizer:gesutre];
-
+                            
                                 [sb addSubview:zanImageView];
                                 [sb addSubview:zanControl];
 
@@ -1077,16 +1078,21 @@
     //调整放置有textView的view的位置
     //设置动画
     [UIView beginAnimations:nil context:nil];
-    
     //定义动画时间
     [UIView setAnimationDuration:kAnimationDuration];
-    keyView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-curkeyBoardHeight-(self.view.frame.size.width/6.5-0.5))];
-    [keyView setBackgroundColor:[UIColor clearColor]];
-    keyTap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hidKeyBord)];
-    [keyView setUserInteractionEnabled:YES];
-    [keyView addGestureRecognizer:keyTap];
-    [self.view addSubview:keyView];
-   //设置view的frame，往上平移
+    if(inThisPage){
+        if(keyView!=nil){
+            [keyView removeFromSuperview];
+            keyView=nil;
+        }
+        keyView=[[UIView alloc]initWithFrame:CGRectMake(0, titleHeight+20, self.view.frame.size.width, self.view.frame.size.height-curkeyBoardHeight-(self.view.frame.size.width/6.5-0.5)-(titleHeight+20))];
+        [keyView setBackgroundColor:[UIColor redColor]];
+        keyTap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hidKeyBord)];
+        [keyView setUserInteractionEnabled:YES];
+        [keyView addGestureRecognizer:keyTap];
+        [self.view addSubview:keyView];
+    }
+    //设置view的frame，往上平移
     [(UIView *)[self.view viewWithTag:1000] setFrame:CGRectMake(0, self.view.frame.size.height-curkeyBoardHeight-(self.view.frame.size.width/6.5-0.5), self.view.frame.size.width, self.view.frame.size.width/6.5-0.5)];
     [UIView commitAnimations];
     [sendControl removeFromSuperview];
@@ -1098,12 +1104,17 @@
     
 }
 -(void)hidKeyBord{
-    [keyView removeGestureRecognizer:keyTap];
-    [keyView removeFromSuperview];
-    [editTextView resignFirstResponder];
+    if(keyView!=nil){
+        [keyView removeGestureRecognizer:keyTap];
+        [keyView removeFromSuperview];
+        [editTextView resignFirstResponder];
+        keyView=nil;
+    }
+ 
 }
 - (void)keyboardWillHide:(NSNotification *)aNotification
 {
+    [self hidKeyBord];
     //定义动画
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:kAnimationDuration];

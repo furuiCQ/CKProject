@@ -166,7 +166,7 @@ static NSString *const API_OPEN_CITY=@"openingcity";
 +(void)deleteMyInter:(NSNumber *)interId  withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getMyInterListwithPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)deleteMyLesson:(NSNumber *)projectId withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
-+(void)getMyLessonList:(NSNumber *)statues withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)getMyLessonList:(NSNumber *)statues withLng:(NSNumber *)lng withLat:(NSNumber *)lat  withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)deleteFavoriteProject:(NSNumber *)projectId withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getInterGroup:(NSNumber *)aid success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getInsetList:(NSNumber *)aid success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

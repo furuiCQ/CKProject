@@ -29,7 +29,7 @@
 #import <JGProgressHUD/JGProgressHUD.h>
 
 @interface ProjectListViewController ()<UITableViewDataSource,UITableViewDelegate,ECDrawerLayoutDelegate,CLLocationManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
-    NSArray *local1Array;
+    NSMutableArray *local1Array;
     NSArray *local2Array;
     NSArray *local3Array;
     
@@ -40,7 +40,7 @@
     UILabel *gradeNowLabel;
     CLLocationManager *locationManager;
     NSMutableArray *typeArray;
-    NSArray *gradeArray;
+    NSMutableArray *gradeArray;
     
     UILabel *allSortLabel;
     UILabel *allGradeLabel;
@@ -110,6 +110,8 @@
     BOOL isHot;
     //progress
     JGProgressHUD *HUD;
+    //
+    NSMutableArray *moreBtnArray;
     
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
@@ -144,11 +146,11 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     if (tableArray==nil) {
         tableArray = [[NSMutableArray alloc]init];
     }
-    local1Array = [[NSArray alloc]init];
+    local1Array = [[NSMutableArray alloc]init];
     local2Array = [[NSArray alloc]init];
     local3Array = [[NSArray alloc]init];
     
-    gradeArray=[[NSArray alloc]init];
+    gradeArray=[[NSMutableArray alloc]init];
     typeArray = [[NSMutableArray alloc]init];
     imageViewArray=[[NSMutableArray alloc]init];
     timeSortArray=[[NSMutableArray alloc]init];
@@ -156,6 +158,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     typeAllArray=[[NSMutableArray alloc]init];
     cityAllArray=[[NSMutableArray alloc]init];
     gradeAllArray=[[NSMutableArray alloc]init];
+    moreBtnArray=[[NSMutableArray alloc]init];
     
     aid=[[NSNumber alloc]init];
     cid=[NSNumber numberWithInt:0];
@@ -633,6 +636,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     for (UILabel *label in cityAllArray) {
         [label setTextColor:[UIColor blackColor]];
     }
+    for(UILabel *label in moreBtnArray){
+        [label setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+    }
+
     selectCid=NULL;
     selectPid=NULL;
     selectGid=NULL;
@@ -897,8 +904,10 @@ static NSString *identy = @"OrderRecordCell";
         //19px
         [dataCell.titleLabel setFont:[UIFont systemFontOfSize:self.view.frame.size.width/33.6]];
         [dataCell.titleLabel setText:[NSString stringWithFormat:@"%@",[[typeArray objectAtIndex:[indexPath row]]objectForKey:@"title"]]];
-        
-        
+        UITapGestureRecognizer *allGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(goAllPorjectListViewController:)];
+        [dataCell.moreLabel addGestureRecognizer:allGesture];
+        [dataCell.moreLabel setTag:[indexPath row]];
+        [moreBtnArray addObject:dataCell.moreLabel];
         NSInteger number=0;
         if ([typeArray count]>0 && typeArray!=nil) {
             NSArray *lesson=[[typeArray objectAtIndex:[indexPath row]]objectForKey:@"lesson_group"];
@@ -1044,6 +1053,7 @@ static NSString *identy = @"OrderRecordCell";
     }
     return cell.frame.size.height;
 }
+
 -(NSString *) compareCurrentTime:(NSString*) compareString
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -1097,7 +1107,12 @@ static NSString *identy = @"OrderRecordCell";
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
-                    gradeArray=(NSMutableArray *)model.result;
+                    NSArray *array=(NSArray *)model.result;
+                    gradeArray=[array mutableCopy];
+                    NSMutableDictionary * mutableDictionary = [[NSMutableDictionary alloc]init];
+                    [mutableDictionary setObject:[NSNumber numberWithInt:0] forKey:@"id"];
+                    [mutableDictionary setObject:@"全部" forKey:@"title"];
+                    [gradeArray addObject:mutableDictionary];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -1161,9 +1176,14 @@ static NSString *identy = @"OrderRecordCell";
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     NSDictionary *result=model.result;
-                    
-                    local1Array=(NSArray *)[result objectForKey:@"content"];
-                    
+                    NSArray *array=[result objectForKey:@"content"];
+                    local1Array=[array mutableCopy];
+                    NSMutableDictionary * mutableDictionary = [[NSMutableDictionary alloc]init];
+                    [mutableDictionary setObject:myDelegate.localNumber forKey:@"id"];
+                    [mutableDictionary setObject:myDelegate.cityName forKey:@"title"];
+                    [mutableDictionary setObject:myDelegate.localNumber forKey:@"pid"];
+
+                    [local1Array addObject:mutableDictionary];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
                         [cityCollectView reloadData];
@@ -1198,6 +1218,9 @@ static NSString *identy = @"OrderRecordCell";
         }else{
             [label setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
         }
+    }
+    for(UILabel *lb in moreBtnArray){
+        [lb setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
     }
     
     
@@ -1371,7 +1394,7 @@ static NSString *identy = @"OrderRecordCell";
                 
             }
             [HUD dismiss];
-
+            
             
         }];
         
@@ -1393,7 +1416,7 @@ static NSString *identy = @"OrderRecordCell";
         alertView.delegate=self;
     }
     
-    if((selectCid==NULL || selectPid==NULL) && selectGid==NULL && selectAid==NULL){
+    if((selectCid==NULL && selectPid==NULL) && selectGid==NULL && selectAid==NULL){
         [alertView setMessage:@"请选择至少选择一个筛选条件!"];
         [alertView show];
         [HUD dismiss];
@@ -1414,7 +1437,7 @@ static NSString *identy = @"OrderRecordCell";
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
-        [HttpHelper searchData:dataArray withPc:[NSNumber numberWithInt:20] withPn:[NSNumber numberWithInt:pageNumb] withlgn:lat withlat:lng withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
+        [HttpHelper searchData:dataArray withPc:[NSNumber numberWithInt:20] withPn:[NSNumber numberWithInt:pageNumb] withlgn:lng withlat:lat withstatus:[NSNumber numberWithInt:2] success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -1570,7 +1593,24 @@ static NSString *identy = @"OrderRecordCell";
 {
     return 10;
 }
-
+-(void)goAllPorjectListViewController:(UITapGestureRecognizer *)gestrue{
+    NSLog(@"goAllPorjectListViewController");
+    UILabel *selectlabel=(UILabel *)gestrue.view;
+    int tag=(int)selectlabel.tag;
+    NSDictionary *dic=[typeArray objectAtIndex:tag] ;
+    selectCid=[dic objectForKey:@"id"];
+    selectPid=NULL;
+    [selectlabel setTextColor:[UIColor redColor]];
+    for(UILabel *lb in moreBtnArray){
+        int ta=(int)lb.tag;
+        if(ta!=tag){
+            [lb setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+        }
+    }
+    for (UILabel *label in typeAllArray) {
+        [label setTextColor:[UIColor colorWithRed:61.f/255.f green:66.f/255.f blue:69.f/255.f alpha:1.0]];
+    }
+}
 
 //两个cell之间的间距（同一行的cell的间距）
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
@@ -1617,7 +1657,7 @@ static NSString *identy = @"OrderRecordCell";
             //                {
             //                    [self getLessonSift];
             //                }else{
-            //                    
+            //
             //                    [self searchData];
             //                }
             //            }else{

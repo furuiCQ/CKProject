@@ -803,14 +803,16 @@
         failture(error);
     }];
 }
-+(void)getMyLessonList:(NSNumber *)statues withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
++(void)getMyLessonList:(NSNumber *)statues withLng:(NSNumber *)lng withLat:(NSNumber *)lat  withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     
     NSArray *parameters = @[ @{ @"name": @"tel", @"value": model.tel},
                              @{ @"name": @"token", @"value": model.token},
                              @{ @"name": @"uid", @"value": model.uid},
                              @{@"name":@"status",@"value":statues},
                              @{@"name":@"pn",@"value":pn},
-                             @{@"name":@"pc",@"value":pc}];
+                             @{@"name":@"pc",@"value":pc},
+                             @{@"name":@"lng",@"value":lng},
+                             @{@"name":@"lat",@"value":lat}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_MYLESSON_LIST] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){

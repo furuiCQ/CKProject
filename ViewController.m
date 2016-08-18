@@ -51,7 +51,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    newsType=[NSNumber numberWithInt:2];
+    newsType=[NSNumber numberWithInt:1];
     pn=[NSNumber numberWithInt:1];
     pc=[NSNumber numberWithInt:10];
     _isLoading=NO;
@@ -112,22 +112,22 @@
     [HUD showInView:self.view];
     switch (index) {
         case 0:
-            newsType=[NSNumber numberWithInt:2];
+            newsType=[NSNumber numberWithInt:1];
             break;
         case 1:
-            newsType=[NSNumber numberWithInt:3];
+            newsType=[NSNumber numberWithInt:2];
             break;
         case 2:
-            newsType=[NSNumber numberWithInt:4];
+            newsType=[NSNumber numberWithInt:3];
             break;
         case 3:
-            newsType=[NSNumber numberWithInt:5];
+            newsType=[NSNumber numberWithInt:4];
             break;
         case 4:
-            newsType=[NSNumber numberWithInt:6];
+            newsType=[NSNumber numberWithInt:5];
             break;
         case 5:
-            newsType=[NSNumber numberWithInt:7];
+            newsType=[NSNumber numberWithInt:6];
             break;
     }
     pn=[NSNumber numberWithInt:1];

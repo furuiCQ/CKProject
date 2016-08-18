@@ -657,7 +657,33 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
         NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
         [porjectCell.timeLabel setText:[NSString stringWithFormat:@"%@",confromTimespStr]];
     }
-    
+    if ([dic objectForKey:@"status"] && ![[dic objectForKey:@"status"] isEqual:[NSNull null]]) {
+        NSNumber *status=[dic objectForKey:@"status"];
+        NSNumber *atime=[dic objectForKey:@"atime"];
+        int at=[atime intValue];
+        if(at==0 && [status intValue]==0){
+            //未受理
+            [cell.accpet_image setHidden:NO];
+            [cell.accpet_image setImage:[UIImage imageNamed:@"accepting"]];
+        }
+        if(at!=0 && [status intValue]==0){
+            //受理失败
+            [cell.accpet_image setHidden:NO];
+            [cell.accpet_image setImage:[UIImage imageNamed:@"accepte_warn"]];
+        }
+        if([status intValue]==1){
+         //受理成功但未评价
+            [cell.accpet_image setHidden:NO];
+            [cell.accpet_image setImage:[UIImage imageNamed:@"accept_sucess"]];
+            
+        }
+        if([status intValue]==2){
+            //已评价
+            [cell.accpet_image setHidden:NO];
+            [cell.accpet_image setImage:[UIImage imageNamed:@"accepted"]];
+        }
+
+    }
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -747,10 +773,24 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
 }
 //预约列表
 -(void)getData{
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+    NSNumber *ar=[stand objectForKey:@"lttt"];
+    NSNumber *ngg=[stand objectForKey:@"nggg"];
+    
+    if (ar==NULL&&ngg==NULL) {
+        ar=[NSNumber numberWithDouble:myDelegate.latitude];
+        ngg=[NSNumber numberWithDouble:myDelegate.longitude];
+    }
+    if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        ar=[NSNumber numberWithDouble:29.5];
+        ngg=[NSNumber numberWithDouble:106.5];
+    }
+    
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         AppDelegate *myDelegate=( AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
+        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withLng: ngg withLat:ar  withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
