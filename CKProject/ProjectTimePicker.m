@@ -150,6 +150,24 @@
     [self changeDataRes:@"now_week"];
     
 }
+-(void)setWeekDayStatues:(NSString *)str{
+    NSDictionary *dic=[nowdata objectForKey:@"list"];
+    NSDictionary *weekData=[dic objectForKey:str];
+    for(UILabel *label in weekDayBtnArray){
+        NSDictionary *item=[weekData objectForKey:[NSString stringWithFormat:@"%d",(int)label.tag]];
+        NSNumber *statues=[item objectForKey:@"status"];
+        switch ([statues intValue]) {
+            case 1:
+                [label setTextColor:[UIColor blackColor]];
+                break;
+            case 2:
+                [label setTextColor:[UIColor grayColor]];
+                break;
+            default:
+                break;
+        }
+    }
+}
 -(void)initView:(CGRect *)frame
 {
     CGRect rx = [ UIScreen mainScreen ].bounds;
@@ -251,7 +269,7 @@
             [topTitle.layer setBorderWidth:2];
         }else{
             [topTitle.layer setMasksToBounds:NO];
-            [topTitle setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
+            [topTitle setTextColor:[UIColor blackColor]];
             [topTitle.layer setBorderWidth:0];
         }
         [topTitle setTag:i];
@@ -356,17 +374,17 @@
     if(isNowWeek){
         isNowWeek=NO;
         [self changeDataRes:@"next_week"];
+        [self setWeekDayStatues:@"next_week"];
         [nextTitleLabel setText:@"本周"];
         [titleLabel setText:@"下周"];
-        
         [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
         
     }else{
         isNowWeek=YES;
         [nextTitleLabel setText:@"下周"];
         [titleLabel setText:@"本周"];
-        
         [self changeDataRes:@"now_week"];
+        [self setWeekDayStatues:@"now_week"];
         [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
     }
 }
@@ -378,16 +396,16 @@
     if(isNowWeek){
         isNowWeek=NO;
         [self changeDataRes:@"next_week"];
+        [self setWeekDayStatues:@"next_week"];
         [nextTitleLabel setText:@"本周"];
         [titleLabel setText:@"下周"];
-
         [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
 
     }else{
         isNowWeek=YES;
         [nextTitleLabel setText:@"下周"];
         [titleLabel setText:@"本周"];
-
+        [self setWeekDayStatues:@"now_week"];
         [self changeDataRes:@"now_week"];
         [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
     }
@@ -414,21 +432,25 @@
     NSInteger *selectId=(NSInteger *)getsure.view.tag;
     for(UILabel *label in weekDayBtnArray){
         if(label.tag==selectId){
-            [label.layer setMasksToBounds:YES];
-            [label setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
-            [label.layer setBorderColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0].CGColor];
-            [label.layer setBorderWidth:2];
-            for(UILabel *label in timeLabelArray){
-                [label removeFromSuperview];
+            if(label.textColor !=[UIColor grayColor]){
+                [label.layer setMasksToBounds:YES];
+                [label setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
+                [label.layer setBorderColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0].CGColor];
+                [label.layer setBorderWidth:2];
+                for(UILabel *label in timeLabelArray){
+                    [label removeFromSuperview];
+                }
+                int num=(int)getsure.view.tag;
+                weekNum=[NSNumber numberWithInt:num];
+                [self initTimeView:[NSString stringWithFormat:@"%d",num ]];
+
             }
-            int num=(int)getsure.view.tag;
-            weekNum=[NSNumber numberWithInt:num];
-            [self initTimeView:[NSString stringWithFormat:@"%d",num ]];
-            
         }else{
+            if(label.textColor !=[UIColor grayColor]){
             [label.layer setMasksToBounds:NO];
-            [label setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
+            [label setTextColor:[UIColor blackColor]];
             [label.layer setBorderWidth:0];
+            }
         }
     }
     

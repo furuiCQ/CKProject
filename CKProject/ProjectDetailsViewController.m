@@ -389,6 +389,8 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     picker.pickerDelegate=self;
     [picker setData:timeData];
     [picker initView:nil];
+    [picker setWeekDayStatues:@"now_week"];
+
     
 }
 -(void)openTimeSelectPicker{

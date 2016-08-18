@@ -18,4 +18,5 @@
 -(void)setData:(NSDictionary *)data;
 -(void)dismiss;
 -(void)show;
+-(void)setWeekDayStatues:(NSString *)str;
 @end
