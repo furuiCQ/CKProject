@@ -154,8 +154,17 @@
     NSDictionary *dic=[nowdata objectForKey:@"list"];
     NSDictionary *weekData=[dic objectForKey:str];
     for(UILabel *label in weekDayBtnArray){
-        NSDictionary *item=[weekData objectForKey:[NSString stringWithFormat:@"%d",(int)label.tag]];
+        NSLog(@"%ld",(long)label.tag);
+        int tag=(int)label.tag;
+        if(tag==0){
+            tag=7;
+        }
+        NSString *str=[NSString stringWithFormat:@"%d",tag];
+        NSDictionary *item=[weekData objectForKey:str];
         NSNumber *statues=[item objectForKey:@"status"];
+        [label.layer setMasksToBounds:NO];
+        [label.layer setBorderColor:[UIColor clearColor].CGColor];
+
         switch ([statues intValue]) {
             case 1:
                 [label setTextColor:[UIColor blackColor]];
@@ -167,6 +176,8 @@
                 break;
         }
     }
+    
+    
 }
 -(void)initView:(CGRect *)frame
 {
@@ -267,16 +278,9 @@
         [topTitle setTextAlignment:NSTextAlignmentCenter];
         [topTitle setTextColor:[UIColor colorWithRed:123.f/255.f green:131.f/255.f blue:146.f/255.f alpha:1.0]];
         [topTitle.layer setCornerRadius:screenWidth/20];
-        if(i==0){
-            [topTitle.layer setMasksToBounds:YES];
-            [topTitle setTextColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0]];
-            [topTitle.layer setBorderColor:[UIColor colorWithRed:1 green:75.f/255.f blue:75.f/255.f alpha:1.0].CGColor];
-            [topTitle.layer setBorderWidth:2];
-        }else{
-            [topTitle.layer setMasksToBounds:NO];
-            [topTitle setTextColor:[UIColor blackColor]];
-            [topTitle.layer setBorderWidth:0];
-        }
+        [topTitle.layer setMasksToBounds:NO];
+        [topTitle setTextColor:[UIColor blackColor]];
+        [topTitle.layer setBorderWidth:0];
         [topTitle setTag:i];
         UITapGestureRecognizer *getsure=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(weekGesture:)];
         [topTitle addGestureRecognizer:getsure];
@@ -309,10 +313,18 @@
      [self setFrame:Tframe];
 }
 -(void)initTimeView:(NSString *)time {
+    if([timeLabelArray count]>0){
+        for(UIView *view in timeLabelArray){
+            [view removeFromSuperview];
+        }
+    }
     CGRect rx = [ UIScreen mainScreen ].bounds;
     int screenWidth=rx.size.width;
     //236   宽度：67px高度：19px  50
-    int tag=0;
+    int tagA=-1;
+    int tagB=-1;
+    int tagC=-1;
+
     NSMutableArray *array=[timeDictionary objectForKey:time];
     for(int i=0;i<[array count];i++){
         NSDictionary *dic=[array objectAtIndex:i];
@@ -325,23 +337,31 @@
         int y=screenWidth/2.7+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
         switch (man) {
             case 1:{
+                tagA=i;
                 y=screenWidth/2.7+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
             }
                 break;
             case 2:{
-                if(tag==0){
-                    tag=i;
+                if(tagB==-1 && tagA>-1){
+                    tagB=i;
+                }
+                if(tagB==-1 && i==0){//当上午没课时
+                    tagB=i;
                 }
                 y=screenWidth/1.9+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
-                x=offset+(screenWidth/9.5+paddingwidth)*(i-tag);
+                x=offset+(screenWidth/9.5+paddingwidth)*(i-tagB);
             }
                 break;
             case 3:{
-                if(i-tag>=1){
-                    tag=i;
+//                if(i-tagC>=1){
+//                    tagC=i;
+//                }
+                if(tagC==-1){
+                    tagC=i;
                 }
+                
                 y=screenWidth/1.4+weekSelectView.frame.size.height+weekSelectView.frame.origin.y;
-                x=offset+(screenWidth/9.5+paddingwidth)*(i-tag);
+                x=offset+(screenWidth/9.5+paddingwidth)*(i-tagC);
             }
                 break;
         }
@@ -378,6 +398,7 @@
     }
     if(isNowWeek){
         isNowWeek=NO;
+        weekId=[NSNumber numberWithInt:1];
         [self changeDataRes:@"next_week"];
         [self setWeekDayStatues:@"next_week"];
         [nextTitleLabel setText:@"本周"];
@@ -386,6 +407,7 @@
         
     }else{
         isNowWeek=YES;
+        weekId=[NSNumber numberWithInt:0];
         [nextTitleLabel setText:@"下周"];
         [titleLabel setText:@"本周"];
         [self changeDataRes:@"now_week"];
