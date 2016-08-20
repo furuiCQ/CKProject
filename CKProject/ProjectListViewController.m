@@ -445,7 +445,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 -(void)inPopView{
     int width=self.view.frame.size.width;
     int hegiht=self.view.frame.size.height;
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width/1.3, hegiht-titleHeight-15)];
+    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width/1.3, hegiht-20)];
     [view setBackgroundColor:[UIColor whiteColor]];
     //RGB(56,71,79)
     UIView *topView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, width/1.3, width/4)];
@@ -510,7 +510,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     dataTableView=[[UITableView alloc]initWithFrame:CGRectMake(0,
                                                                topView.frame.size.height+topView.frame.origin.y,
                                                                width/1.3,
-                                                               view.frame.size.height-(topView.frame.size.height+topView.frame.origin.y))];
+                                                               view.frame.size.height-(width/8+topView.frame.size.height+topView.frame.origin.y))];
     [dataTableView setBackgroundColor:[UIColor whiteColor]];
     dataTableView.dataSource                        = self;
     dataTableView.delegate                          = self;
@@ -529,7 +529,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     cityCollectView = [[UICollectionView alloc]initWithFrame:CGRectMake(width/16,
                                                                         topView.frame.size.height+topView.frame.origin.y+width/40,
                                                                         width/1.3-width/8,
-                                                                        view.frame.size.height-(topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout];
+                                                                        view.frame.size.height-(width/8+topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout];
     //代理设置
     cityCollectView.delegate=self;
     cityCollectView.dataSource=self;
@@ -549,7 +549,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     gradCollectView = [[UICollectionView alloc]initWithFrame:CGRectMake(width/16,
                                                                         topView.frame.size.height+topView.frame.origin.y+width/40,
                                                                         width/1.3-width/8,
-                                                                        view.frame.size.height-(topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout2];
+                                                                        view.frame.size.height-(width/8+topView.frame.size.height+topView.frame.origin.y)) collectionViewLayout:layout2];
     //代理设置
     gradCollectView.delegate=self;
     gradCollectView.dataSource=self;
@@ -561,7 +561,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [view addSubview:gradCollectView];
     
     
-    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, view.frame.size.height, width/1.3/2, width/8)];
+    UILabel *cancelLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, view.frame.size.height-width/8, width/1.3/2, width/8)];
     [cancelLabel setText:@"重置"];
     [cancelLabel setTextAlignment:NSTextAlignmentCenter];
     [cancelLabel setTextColor:[UIColor whiteColor]];
@@ -573,7 +573,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [view addSubview:cancelLabel];
     
     
-    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/1.3/2, view.frame.size.height, width/1.3/2, width/8)];
+    UILabel *confirmLabel=[[UILabel alloc]initWithFrame:CGRectMake(view.frame.size.width-width/1.3/2, view.frame.size.height-width/8, width/1.3/2, width/8)];
     [confirmLabel setText:@"完成"];
     [confirmLabel setTextAlignment:NSTextAlignmentCenter];
     [confirmLabel setTextColor:[UIColor whiteColor]];
@@ -593,6 +593,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     firstLayout.contentView=view;
     firstLayout.delegate=self;
     [firstLayout setTag:0];
+
     [self.view addSubview:firstLayout];
     
     firstLayout.openFromRight = YES;
