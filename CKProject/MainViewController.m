@@ -95,6 +95,7 @@
 static NSString * const DEFAULT_LOCAL_AID = @"500100";
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     db=[[NSMutableArray alloc]init];
     [self getnews];
     sc=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -103,7 +104,6 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeCity) name:@"changeCity" object:nil];
 
    
-    [self.view setBackgroundColor:[UIColor colorWithRed:241.f/255.f green:243.f/255.f blue:247.f/255.f alpha:1.0]];
     
     if (IS_IOS8) {
         [UIApplication sharedApplication].idleTimerDisabled = TRUE;

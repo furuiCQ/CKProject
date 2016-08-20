@@ -228,10 +228,10 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     NSNumber *_selectCityId=[formater numberFromString:cityStr];
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSRange cqRange=[cityString rangeOfString:@"重庆"];
+    myDelegate.localNumber=_selectCityId;
     if(cqRange.length>0){
         myDelegate.localNumber=[formater numberFromString:DEFAULT_LOCAL_AID];
     }
-    myDelegate.localNumber=_selectCityId;
     myDelegate.cityName=cityString;
     NSNotification *notification =[NSNotification notificationWithName:@"changeCity" object:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];

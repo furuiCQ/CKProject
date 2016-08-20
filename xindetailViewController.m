@@ -65,6 +65,8 @@
     JGProgressHUD *HUD;
     //
     BOOL inThisPage;
+    //
+    UIControl *zanControl;
 }
 
 @end
@@ -209,20 +211,21 @@
     timers.font=[UIFont systemFontOfSize:swidth/24.6];
     timers.text=@"07-22";
     timers.textColor=[UIColor grayColor];
+
+    zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3,lab.frame.size.height+lab.frame.origin.y, swidth/3, swidth/6.5)];
     
-    zanNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40, writer.frame.origin.y, swidth/26.7*4, swidth/26.7)];
+    [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
+    [sb addSubview:zanControl];
+    zanNumberLabel=[[UILabel alloc]initWithFrame:CGRectMake(swidth/3-swidth/26.7*3, swidth/26.7, swidth/26.7*3, swidth/26.7)];
     [zanNumberLabel setText:@"50"];
     [zanNumberLabel setFont:[UIFont systemFontOfSize:swidth/26.7]];
     [zanNumberLabel setTextAlignment:NSTextAlignmentLeft];
     [zanNumberLabel setTextColor:[UIColor colorWithRed:155.f/255.f green:155.f/255.f blue:155.f/255.f alpha:1.0]];
-    [sb addSubview:zanNumberLabel];
+    [zanControl addSubview:zanNumberLabel];
     
-    zanImageView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-swidth/26.7*4-swidth/40-zanNumberLabel.frame.size.width, writer.frame.origin.y-5, swidth/16, swidth/16)];
+    zanImageView=[[UIImageView alloc]initWithFrame:CGRectMake(zanNumberLabel.frame.origin.x-swidth/40-swidth/16, swidth/26.7-5, swidth/16, swidth/16)];
     [zanImageView setImage:[UIImage imageNamed:@"zan_logo"]];
-    //[zanImageView setUserInteractionEnabled:YES];
-   // UITapGestureRecognizer *gesutre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dianZanNews)];
-   // [zanImageView addGestureRecognizer:gesutre];
-    [sb addSubview:zanImageView];
+    [zanControl addSubview:zanImageView];
     
     lt=[[UILabel alloc]initWithFrame:CGRectMake(0, writer.frame.size.height+writer.frame.origin.y+swidth/40, swidth, 0)];
     lt.backgroundColor=[UIColor grayColor];
@@ -793,20 +796,15 @@
                                 writer.text=[dic objectForKey:@"author"];
                                 [writer setFrame:CGRectMake(swidth/32, lab.frame.size.height+lab.frame.origin.y+swidth/26.7, swidth/24.6*(int)[writer.text length], swidth/24.6)];
                                 [timers setFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/20,writer.frame.origin.y, swidth/4, swidth/24.6)];
+                                [zanControl setFrame:CGRectMake(swidth*2/3, lab.frame.size.height+lab.frame.origin.y, swidth/3, swidth/6.5)];
                             }
                             
                             if([dic objectForKey:@"zan"]){
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
-                                [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
-                                [zanImageView removeFromSuperview];
-                                zanImageView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
+                                [zanNumberLabel sizeToFit];
                                 [zanImageView setImage:[UIImage imageNamed:@"zan_logo"]];
-                                UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, lab.frame.size.height, swidth/3, swidth/6.5)];
-                                
-                                [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
-                                [sb addSubview:zanImageView];
-                                [sb addSubview:zanControl];
+
                             }
                             if([dic objectForKey:@"iszan"] && ![[dic objectForKey:@"iszan"] isEqual:[NSNull null]]){
                                 NSNumber *zanStaues=[dic objectForKey:@"iszan"];
@@ -918,20 +916,14 @@
                                 writer.text=[dic objectForKey:@"author"];
                                 [writer setFrame:CGRectMake(swidth/32, lab.frame.size.height+lab.frame.origin.y+swidth/26.7, swidth/24.6*(int)[writer.text length], swidth/24.6)];
                                 [timers setFrame:CGRectMake(writer.frame.origin.x+writer.frame.size.width+swidth/20,writer.frame.origin.y, swidth/4, swidth/24.6)];
+                                [zanControl setFrame:CGRectMake(swidth*2/3, lab.frame.size.height+lab.frame.origin.y, swidth/3, swidth/6.5)];
+
                             }
                             
                             if([dic objectForKey:@"zan"]){
                                 NSString *number=[dic objectForKey:@"zan"];
                                 [zanNumberLabel setText:[NSString stringWithFormat:@"%@",number]];
-                                [zanNumberLabel setFrame:CGRectMake(swidth-(swidth/32*(int)[zanNumberLabel.text length])-swidth/42.6,lab.frame.size.height+lab.frame.origin.y+swidth/23, swidth/32*(int)[zanNumberLabel.text length], swidth/32)];
-                                [zanImageView removeFromSuperview];
-                                zanImageView=[[UIImageView alloc]initWithFrame:CGRectMake(swidth-zanNumberLabel.frame.size.width-swidth/16-swidth/20, writer.frame.origin.y-5, swidth/16, swidth/16)];
-                                [zanImageView setImage:[UIImage imageNamed:@"zan_logo"] ];
-                                UIControl *zanControl=[[UIControl alloc]initWithFrame:CGRectMake(swidth*2/3, lab.frame.size.height, swidth/3, swidth/6.5)];
-                                [zanControl addTarget:self action:@selector(dianZanNews) forControlEvents:UIControlEventTouchUpInside];
-                            
-                                [sb addSubview:zanImageView];
-                                [sb addSubview:zanControl];
+                                [zanNumberLabel sizeToFit];
 
                             }
                             if([dic objectForKey:@"read"]){
