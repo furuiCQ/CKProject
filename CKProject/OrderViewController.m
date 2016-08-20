@@ -18,7 +18,8 @@
 #import "ShareTools.h"
 #import "RJShareView.h"
 @interface OrderViewController (){
-    
+    UIAlertView *alertView;
+    UILabel *toastLabel;
 }
 
 @end
@@ -133,12 +134,12 @@
     [imageView setImage:[UIImage imageNamed:@"order_ok_logo.jpg"]];
     [self.view addSubview:imageView];
     
-    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, titleHeight+20+width/2.7+width/5+width/12, width, width/26.7)];
-    [label setText:@"您的课程已预定，客服正在飞速受理中..."];
-    [label setFont:[UIFont systemFontOfSize:width/26.7]];
-    [label setTextAlignment:NSTextAlignmentCenter];
-    [label setTextColor:[UIColor colorWithRed:146.f/255.f green:146.f/255.f blue:146.f/255.f alpha:1.0]];
-    [self.view addSubview:label];
+    toastLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, titleHeight+20+width/2.7+width/5+width/12, width, width/26.7)];
+    [toastLabel setText:@"您的课程已预定，客服正在飞速受理中..."];
+    [toastLabel setFont:[UIFont systemFontOfSize:width/26.7]];
+    [toastLabel setTextAlignment:NSTextAlignmentCenter];
+    [toastLabel setTextColor:[UIColor colorWithRed:146.f/255.f green:146.f/255.f blue:146.f/255.f alpha:1.0]];
+    [self.view addSubview:toastLabel];
 
 }
 -(void)disMiss:(UITapGestureRecognizer *)recognizer{
@@ -146,6 +147,11 @@
 }
 -(void)orderPoject{
     AppDelegate *mydelegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (alertView==nil) {
+        alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.delegate=self;
+    }
+
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -158,14 +164,15 @@
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
-                      //  NSDictionary *dic=model.result;
                    
                         
                     });
                     
                 }else{
-                    
+                    [toastLabel setText:@"请选择重新选择时间段预约课程!"];
                 }
+                [alertView setMessage:model.message];
+                [alertView show];
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {

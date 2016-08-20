@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIButton+EnlargeEdge.h"
+
 @protocol PickerDelegate <NSObject>
 
 -(void)orderClick:(NSNumber *)weekId withWeekNum:(NSNumber *)weeknum withBegintime:(NSString *)beginTime;

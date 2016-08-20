@@ -34,12 +34,57 @@
     self.delegate=self;
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (appDelegate.selectIndex!=5) {
-        self.selectedIndex=appDelegate.selectIndex;
+        [self setSelectedIndex:appDelegate.selectIndex];
     }else{
         self.selectedIndex=0;
 
     }
+    UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tappedRightButton:)];
+    
+    [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+    [self.view addGestureRecognizer:swipeLeft];
+    
+    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tappedLeftButton:)];
+    
+    [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
+    [self.view addGestureRecognizer:swipeRight];
 
+}
+- (IBAction) tappedRightButton:(id)sender
+{
+    NSUInteger selectedIndex = [self selectedIndex];
+    
+    NSArray *aryViewController = self.viewControllers;
+    
+    if (selectedIndex < aryViewController.count - 1) {
+        
+        UIView *fromView = [self.selectedViewController view];
+        UIView *toView = [[self.viewControllers objectAtIndex:selectedIndex + 1] view];
+        
+        [UIView transitionFromView:fromView toView:toView duration:0.5f options:UIViewAnimationOptionTransitionFlipFromRight completion:^(BOOL finished) {
+            if (finished) {
+                [self setSelectedIndex:selectedIndex + 1];
+            }
+        }];
+    }
+}
+
+- (IBAction) tappedLeftButton:(id)sender
+{
+    
+    NSUInteger selectedIndex = [self selectedIndex];
+    
+    if (selectedIndex > 0) {
+        UIView *fromView = [self.selectedViewController view];
+        
+        UIView *toView = [[self.viewControllers objectAtIndex:selectedIndex - 1] view];
+        
+        [UIView transitionFromView:fromView toView:toView duration:0.5f options:UIViewAnimationOptionTransitionFlipFromLeft completion:^(BOOL finished) {
+            if (finished) {
+                [self setSelectedIndex:selectedIndex - 1];
+            }
+        }];
+    }
 }
 
 /**
@@ -47,6 +92,7 @@
  */
 -(void)visibleTabBar
 {
+    
     for (UIView *view  in self.view.subviews) {
         if([view isKindOfClass:[UITabBar class]]){
             [view setHidden:YES];
@@ -66,13 +112,6 @@
     [self.view addSubview:topView];
     
 }
--(void)setSelectedIndex:(NSUInteger)selectedIndex
-{
-    AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDelegate.selectIndex = selectedIndex;
-   
-}
-
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
     
@@ -84,8 +123,6 @@
     }
     AppDelegate* appDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.selectIndex = tabIndex;
-    
-    
 }
 
 //-(void)onClick:(id)sender

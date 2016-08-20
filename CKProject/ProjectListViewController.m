@@ -1179,6 +1179,12 @@ static NSString *identy = @"OrderRecordCell";
                     NSArray *array=[result objectForKey:@"content"];
                     local1Array=[array mutableCopy];
                     NSMutableDictionary * mutableDictionary = [[NSMutableDictionary alloc]init];
+                    if(myDelegate.localNumber==NULL){
+                        myDelegate.localNumber=Aid;
+                    }
+                    if(myDelegate.cityName==NULL){
+                        myDelegate.cityName=@"重庆";
+                    }
                     [mutableDictionary setObject:myDelegate.localNumber forKey:@"id"];
                     [mutableDictionary setObject:myDelegate.cityName forKey:@"title"];
                     [mutableDictionary setObject:myDelegate.localNumber forKey:@"pid"];
@@ -1362,12 +1368,27 @@ static NSString *identy = @"OrderRecordCell";
 }
 -(void)setHotModel:(NSString *)sqlString{
     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-    if(aid==nil){
-        aid=[formatter numberFromString:DEFAULT_LOCAL_AID];
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+    }
+    NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+    NSNumber *ar=[stand objectForKey:@"lttt"];
+    NSNumber *ngg=[stand objectForKey:@"nggg"];
+    
+    if (ar==NULL&&ngg==NULL) {
+        ar=[NSNumber numberWithDouble:myDelegate.latitude];
+        ngg=[NSNumber numberWithDouble:myDelegate.longitude];
+    }
+    if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        ar=[NSNumber numberWithDouble:29.5];
+        ngg=[NSNumber numberWithDouble:106.5];
     }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        [HttpHelper searchData:aid withData:sqlString success:^(HttpModel *model){
+        [HttpHelper searchData:Aid withData:sqlString withlgn:ngg withlat:ar success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -1423,8 +1444,10 @@ static NSString *identy = @"OrderRecordCell";
         return;
     }
     NSMutableArray *dataArray=[[NSMutableArray alloc]init];
-    if((selectCid!=NULL  && selectPid!=NULL)){
+    if((selectCid!=NULL)){
         [dataArray addObject:@{ @"name": @"cid", @"value": selectCid}];
+    }
+    if(selectPid!=NULL){
         [dataArray addObject:@{ @"name": @"pid", @"value": selectPid}];
     }
     if(selectGid!=NULL){

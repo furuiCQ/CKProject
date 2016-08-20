@@ -136,6 +136,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
 }
 -(void)changeCity{
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    localNumber=myDelegate.localNumber;
     if(![myDelegate.cityName isEqualToString:cityLabel.text]){
         TopBar *bar=[[TopBar alloc]init];
         [bar setTag:1];

@@ -927,9 +927,11 @@
 
 
 //热门模块的搜索结果
-+(void)searchData:(NSNumber *)aid withData:(NSString *)sqlstring success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
++(void)searchData:(NSNumber *)aid withData:(NSString *)sqlstring withlgn:(NSNumber *)lng withlat:(NSNumber *)lat success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{ @"name": @"aid", @"value": aid},
                             @{ @"name": @"sqlstring", @"value": sqlstring},
+                            @{ @"name": @"lng", @"value": lng},
+                            @{ @"name": @"lat", @"value": lat}
                             ];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){
         success(model);
@@ -943,7 +945,7 @@
                             @{ @"name": @"pc", @"value": pc},
                             @{ @"name": @"lng", @"value": lng},
                             @{ @"name": @"lat", @"value": lat},
-                            @{ @"name": @"status", @"value": status},];
+                            @{ @"name": @"status", @"value": status}];
     [array addObjectsFromArray:parameters];
     parameters =[array copy];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){

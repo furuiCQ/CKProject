@@ -502,6 +502,7 @@
 		49EE21151C13DB3800055CF9 /* ProjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49EE21141C13DB3800055CF9 /* ProjectDetailsViewController.m */; };
 		49EE21181C13DB5400055CF9 /* ProjectListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49EE21171C13DB5400055CF9 /* ProjectListViewController.m */; };
 		49EF3AFE1D658CD100149E3F /* order_ok_logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49EF3AFD1D658CD100149E3F /* order_ok_logo.jpg */; };
+		49F1E2051D67D01B006FFDDC /* UIButton+EnlargeEdge.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F1E2041D67D01B006FFDDC /* UIButton+EnlargeEdge.m */; };
 		49F8DD5F1C377716000E5A17 /* CustomControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F8DD5E1C377716000E5A17 /* CustomControl.m */; };
 		49F8DD621C38B71E000E5A17 /* ShareTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F8DD611C38B71E000E5A17 /* ShareTools.m */; };
 		49F8DD751C38DC41000E5A17 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49F8DD741C38DC41000E5A17 /* CoreTelephony.framework */; };
@@ -1172,6 +1173,8 @@
 		49EE21161C13DB4C00055CF9 /* ProjectListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProjectListViewController.h; sourceTree = "<group>"; };
 		49EE21171C13DB5400055CF9 /* ProjectListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectListViewController.m; sourceTree = "<group>"; };
 		49EF3AFD1D658CD100149E3F /* order_ok_logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = order_ok_logo.jpg; sourceTree = "<group>"; };
+		49F1E2031D67D010006FFDDC /* UIButton+EnlargeEdge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+EnlargeEdge.h"; sourceTree = "<group>"; };
+		49F1E2041D67D01B006FFDDC /* UIButton+EnlargeEdge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+EnlargeEdge.m"; sourceTree = "<group>"; };
 		49F8DD5D1C37770E000E5A17 /* CustomControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomControl.h; sourceTree = "<group>"; };
 		49F8DD5E1C377716000E5A17 /* CustomControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomControl.m; sourceTree = "<group>"; };
 		49F8DD601C38B713000E5A17 /* ShareTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareTools.h; sourceTree = "<group>"; };
@@ -1888,6 +1891,8 @@
 				4977AF411C117FD7001F0D55 /* ProjectListItem.m */,
 				496453AF1C21538E00EA5F67 /* CustomTextField.h */,
 				496453B01C21539700EA5F67 /* CustomTextField.m */,
+				49F1E2031D67D010006FFDDC /* UIButton+EnlargeEdge.h */,
+				49F1E2041D67D01B006FFDDC /* UIButton+EnlargeEdge.m */,
 				496454361C22EE8800EA5F67 /* RatingBar.h */,
 				496454371C22EE9400EA5F67 /* RatingBar.m */,
 				4946218E1C26DB8200E372ED /* FVCustomAlertView.h */,
@@ -2803,6 +2808,7 @@
 				497FB52C1C3BDD8A0078E055 /* OrganismListViewController.m in Sources */,
 				493305901C193933005B9EDC /* InvitationTableCell.m in Sources */,
 				49DB846F1C29845C00C344B1 /* OrderViewController.m in Sources */,
+				49F1E2051D67D01B006FFDDC /* UIButton+EnlargeEdge.m in Sources */,
 				496453461C204F3500EA5F67 /* SortProjectListTableCell.m in Sources */,
 				10322D031C0EBBC000945A89 /* CCLocationManager.m in Sources */,
 				CED6033E1D2390A4005C3CE7 /* modetailViewController.m in Sources */,

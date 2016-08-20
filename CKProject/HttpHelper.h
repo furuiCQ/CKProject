@@ -113,7 +113,7 @@ static NSString *const API_OPEN_CITY=@"openingcity";
 +(void)deleteMyLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBeginTime:(NSString *) begintime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)orderLesson:(NSNumber *)projectId withWeekId:(NSNumber *)weekid withWeekNum:(NSNumber *)weeknum withBtime:(NSString *)begintime withadvancetime:(NSNumber *) advancetime withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getTimeList:(NSNumber *)lid withBeginTime:(NSNumber *)btime withAid:(NSNumber *)aid success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
-+(void)searchData:(NSNumber *)aid withData:(NSString *)sqlstring success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)searchData:(NSNumber *)aid withData:(NSString *)sqlstring withlgn:(NSNumber *)lng withlat:(NSNumber *)lat success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getCharsection:(NSNumber *)userId success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)getHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;
 +(void)getNewHotLesson:(NSNumber *) userId withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *))success failure:(void (^)(NSError *))failture;

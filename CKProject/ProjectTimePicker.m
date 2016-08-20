@@ -196,11 +196,14 @@
     [nextLeftButton setImage:[UIImage imageNamed:@"icon_previous"] forState:UIControlStateNormal];
     [nextLeftButton setAlpha:0.7];
     [nextLeftButton addTarget:self action:@selector(setPreviousMonthDate) forControlEvents:UIControlEventTouchUpInside];
+    [nextLeftButton setEnlargeEdge:20];
     [nextWeekSelectView addSubview:nextLeftButton];
     
     UIButton *nextRightButton = [[UIButton alloc] initWithFrame:CGRectMake(nextWeekSelectView.frame.size.width - screenWidth/7.2-10, nextWeekSelectView.frame.size.height/2-4, 5, 8)];
     [nextRightButton setImage:[UIImage imageNamed:@"icon_next"] forState:UIControlStateNormal];
     [nextRightButton setAlpha:0.7];
+    [nextRightButton setEnlargeEdge:20];
+
     [nextRightButton addTarget:self action:@selector(setNextMonthDate) forControlEvents:UIControlEventTouchUpInside];
     [nextWeekSelectView addSubview:nextRightButton];
 
@@ -231,11 +234,13 @@
     
     UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(screenWidth/7.2, weekSelectView.frame.size.height/2-4, 5, 8)];
     [leftButton setImage:[UIImage imageNamed:@"icon_previous"] forState:UIControlStateNormal];
+    [leftButton setEnlargeEdge:20];
     [leftButton addTarget:self action:@selector(setPreviousMonthDate) forControlEvents:UIControlEventTouchUpInside];
     [weekSelectView addSubview:leftButton];
     
     UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(weekSelectView.frame.size.width - screenWidth/7.2-10, weekSelectView.frame.size.height/2-4, 5, 8)];
     [rightButton setImage:[UIImage imageNamed:@"icon_next"] forState:UIControlStateNormal];
+    [rightButton setEnlargeEdge:20];
     [rightButton addTarget:self action:@selector(setNextMonthDate) forControlEvents:UIControlEventTouchUpInside];
     [weekSelectView addSubview:rightButton];
     

@@ -388,6 +388,8 @@
         //}
     }else if(tableView.tag==1 ){
         cell  = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
         NSString *str;
         int width=self.view.frame.size.width;
         titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(width/35.6, width/21, width, width/26.7)];
@@ -559,7 +561,6 @@
         });
     }
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-
     
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

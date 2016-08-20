@@ -82,6 +82,15 @@
         //        隐藏指示条
         imageScrollview.showsHorizontalScrollIndicator = NO;
         if(i==2){
+            UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(imageW/2-imageW/2.6/2, imageH-imageW/9.1-imageW/7.2, imageW/2.6, imageW/9.1)];
+            [label setText:@"进入首页"];
+            label.layer.masksToBounds=YES;
+            [label.layer setCornerRadius:5];
+            [label setBackgroundColor:[UIColor whiteColor]];
+            [label setTextAlignment:NSTextAlignmentCenter];
+            [label setFont:[UIFont systemFontOfSize:imageW/21.3]];
+            [label setTextColor:[UIColor colorWithRed:252.f/255.f green:88.f/255.f blue:90.f/255.f alpha:1.0]];
+            [imageView addSubview:label];
             UITapGestureRecognizer *gesre=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showFav)];
             [imageView setUserInteractionEnabled:YES];
             [imageView addGestureRecognizer:gesre];
@@ -101,7 +110,7 @@
     imageScrollview.delegate = self;
     CGRect bounds = imageScrollview.frame;  //获取界面区域
 
-    pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-width/3.5, bounds.size.width, 30)];
+    pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, imageScrollview.frame.size.height+imageScrollview.frame.origin.y-imageW/9.1-imageW/7.2-imageW/32-30, bounds.size.width, 30)];
     pageControl.numberOfPages=totalCount;
 
     [self.view addSubview:imageScrollview];
@@ -116,34 +125,34 @@
         CGFloat x = uiScrollView.contentOffset.x;
         int page = (x + scrollviewW / 2) /  scrollviewW;
         pageControl.currentPage = page;
-        if(pageControl.currentPage==2){
-            count++;
-            if(count==1){
-                [self addTimer];
-            }
-            
-        }
+//        if(pageControl.currentPage==2){
+//            count++;
+//            if(count==1){
+//                [self addTimer];
+//            }
+//            
+//        }
     }
 }
-/**
- *  开启定时器
- */
-- (void)addTimer{
-    
-    timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(nextImage) userInfo:nil repeats:YES];
-}
-/**
- *  关闭定时器
- */
-- (void)removeTimer
-{
-    [timer invalidate];
-}
-//加载下张图片
-- (void)nextImage
-{
-    [self showFav];
-}
+///**
+// *  开启定时器
+// */
+//- (void)addTimer{
+//    
+//    timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(nextImage) userInfo:nil repeats:YES];
+//}
+///**
+// *  关闭定时器
+// */
+//- (void)removeTimer
+//{
+//    [timer invalidate];
+//}
+////加载下张图片
+//- (void)nextImage
+//{
+//    [self showFav];
+//}
 
 #pragma mark 网络监听的代理方法，当网络状态发生改变的时候触发
 - (void)netWorkStateChanged{
@@ -169,7 +178,7 @@
                 NSDictionary *result=model.result;
                 NSString *str=[NSString stringWithFormat:@"%@",result];
                 AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                [self removeTimer];
+                //[self removeTimer];
                 if([str isEqualToString:@"0"]){
                     [myDelegate setIsHasCoupon:NO];
                     [self goMainViewNormalController];
