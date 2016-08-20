@@ -176,7 +176,11 @@
                 break;
         }
     }
-    
+    if([timeLabelArray count]>0){
+        for(UIView *view in timeLabelArray){
+            [view removeFromSuperview];
+        }
+    }
     
 }
 -(void)initView:(CGRect *)frame
@@ -296,7 +300,7 @@
         [morningLabel setFont:[UIFont systemFontOfSize:screenWidth/23.7]];
         [nowWeekView addSubview:morningLabel];
     }
-    [self initTimeView:@"0"];
+    //[self initTimeView:@"0"];
     //34px  54px    宽度：492px高度：80px
     UILabel *orderProject=[[UILabel alloc]initWithFrame:CGRectMake(screenWidth/11.8, nowWeekView.frame.size.height-screenWidth/18.8-screenWidth/8, screenWidth/1.3, screenWidth/8)];
     [orderProject setText:@"预约课程"];//大小：32px
@@ -403,7 +407,7 @@
         [self setWeekDayStatues:@"next_week"];
         [nextTitleLabel setText:@"本周"];
         [titleLabel setText:@"下周"];
-        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
+       // [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
         
     }else{
         isNowWeek=YES;
@@ -412,7 +416,7 @@
         [titleLabel setText:@"本周"];
         [self changeDataRes:@"now_week"];
         [self setWeekDayStatues:@"now_week"];
-        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
+      //  [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
     }
 }
 -(void)setNextMonthDate{
@@ -426,7 +430,7 @@
         [self setWeekDayStatues:@"next_week"];
         [nextTitleLabel setText:@"本周"];
         [titleLabel setText:@"下周"];
-        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
+     //   [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue] ]];
 
     }else{
         isNowWeek=YES;
@@ -434,7 +438,7 @@
         [titleLabel setText:@"本周"];
         [self setWeekDayStatues:@"now_week"];
         [self changeDataRes:@"now_week"];
-        [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
+      //  [self initTimeView:[NSString stringWithFormat:@"%d",[weekNum intValue]  ]];
     }
 
 }
