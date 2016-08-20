@@ -473,7 +473,7 @@
             ar=[NSNumber numberWithDouble:29.5];
             ngg=[NSNumber numberWithDouble:106.5];
         }
-        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withLng: ngg withLat:ar  withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
+        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withLng: ngg withLat:ar  withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:100] withModel:myDelegate.model success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {

@@ -811,7 +811,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         AppDelegate *myDelegate=( AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withLng: ngg withLat:ar  withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:5] withModel:myDelegate.model success:^(HttpModel *model){
+        [HttpHelper getMyLessonList:[NSNumber numberWithInt:0] withLng: ngg withLat:ar  withPageNumber:[NSNumber numberWithInt:1] withPageLine:[NSNumber numberWithInt:100] withModel:myDelegate.model success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -820,7 +820,7 @@ UINavigationControllerDelegate,YiSlideMenuDelegate,UIPickerViewDelegate>{
                     for(NSDictionary *dic in dataArray){
                         if ([dic objectForKey:@"status"] && ![[dic objectForKey:@"status"] isEqual:[NSNull null]]) {
                             NSNumber *status=[dic objectForKey:@"status"];
-                            if([status intValue]==1){
+                            if([status intValue]>=1){
                                 //受理成功但未评价
                                 [orderArray addObject:dic];
                             }
