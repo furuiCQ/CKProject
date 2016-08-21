@@ -112,6 +112,8 @@
     JGProgressHUD *HUD;
     //
     NSMutableArray *moreBtnArray;
+    //
+    NSString *localSqlString;
     
 }
 @property (nonatomic,strong)CLGeocoder *geocoder;
@@ -1368,6 +1370,7 @@ static NSString *identy = @"OrderRecordCell";
     // Dispose of any resources that can be recreated.
 }
 -(void)setHotModel:(NSString *)sqlString{
+    localSqlString=sqlString;
     NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
@@ -1389,26 +1392,51 @@ static NSString *identy = @"OrderRecordCell";
     }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        [HttpHelper searchData:Aid withData:sqlString withlgn:ngg withlat:ar success:^(HttpModel *model){
+        [HttpHelper searchData:Aid withData:sqlString withlgn:ngg withlat:ar withnums:[NSNumber numberWithInt:2] withPn:[NSNumber numberWithInt:pageNumb] withPageLine:[NSNumber numberWithInt:20] success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
                     NSDictionary *result=model.result;
                     
-                    tableArray=(NSMutableArray *)[result objectForKey:@"lesson"];
+                    NSArray *dataArray=[result objectForKey:@"lesson"];
+                    if([dataArray count]>0){
+                        _isNoData=NO;
+                        if(_isHeader){
+                            tableArray =[dataArray mutableCopy];
+                        }else{
+                            [tableArray addObjectsFromArray:dataArray];
+                        }
+                    }else{
+                        if(!_isFooter){
+                            tableArray =[dataArray mutableCopy];
+                        }else{
+                            [tableArray addObjectsFromArray:dataArray];
+                        }
+                        
+                        if(!_isNoData){
+                            
+                            if (alertView==nil) {
+                                alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:@"" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                                alertView.delegate=self;
+                            }
+                            [alertView setMessage:@"没有更多的课程了"];
+                            [alertView show];
+                            _isNoData=YES;
+                        }
+                    }
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
                         [projectTableView reloadData];
                     });
                     
-                    
                 }else{
                     
                 }
                 
                 [HUD dismiss];
-                
+                _isLoading=NO;
+
             });
         }failure:^(NSError *error){
             if (error.userInfo!=nil) {
@@ -1416,7 +1444,8 @@ static NSString *identy = @"OrderRecordCell";
                 
             }
             [HUD dismiss];
-            
+            _isLoading=NO;
+
             
         }];
         
@@ -1665,6 +1694,9 @@ static NSString *identy = @"OrderRecordCell";
                 }
             }else{
                 [self getData];
+            }
+            if(localSqlString!=nil){
+                [self setHotModel:localSqlString];
             }
             
         }

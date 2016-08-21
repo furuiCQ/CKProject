@@ -927,12 +927,14 @@
 
 
 //热门模块的搜索结果
-+(void)searchData:(NSNumber *)aid withData:(NSString *)sqlstring withlgn:(NSNumber *)lng withlat:(NSNumber *)lat success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
++(void)searchData:(NSNumber *)aid withData:(NSString *)sqlstring withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withnums:(NSNumber *)nums withPn:(NSNumber *)pn withPageLine:(NSNumber *)pc  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[@{ @"name": @"aid", @"value": aid},
                             @{ @"name": @"sqlstring", @"value": sqlstring},
                             @{ @"name": @"lng", @"value": lng},
-                            @{ @"name": @"lat", @"value": lat}
-                            ];
+                            @{ @"name": @"lat", @"value": lat},
+                            @{ @"name": @"status", @"value": nums},
+                            @{@"name":@"pn",@"value":pn},
+                            @{@"name":@"pc",@"value":pc}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
