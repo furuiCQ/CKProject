@@ -138,7 +138,7 @@ static NSString *const API_OPEN_CITY=@"openingcity";
 +(void)completeUserInfo:(NSString *)username withUserSex:(NSNumber *)sexNumber withAddr:(NSString *)addres withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)setStar:(NSNumber *)lid withLv:(NSNumber *)lv withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getCity:(NSNumber *)aid success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
-+(void)getSlider:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
++(void)getSlider:(NSNumber *)aid success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)getFavoriteProjectList:(NSNumber *)pn withPageLine:(NSNumber *)pc withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)siftOrgList:(NSNumber *)aid withTypeId:(NSNumber *)cid withCornerId:(NSNumber *)tid withLv:(NSNumber *)lvId success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;
 +(void)zanComments:(NSNumber*)commentsId withZan:(NSNumber *)zan withModel:(HttpModel *)model success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture;

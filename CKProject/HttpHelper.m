@@ -271,8 +271,10 @@
     }];
 }
 
-+(void)getSlider:(id)sender success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
-    [self postParems:nil withUrl:[HTTPHEADER stringByAppendingString:API_GET_SLIDER] success:^(HttpModel *model){
++(void)getSlider:(NSNumber *)aid success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[@{@"name":@"aid",@"value":aid}];
+
+    [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_GET_SLIDER] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
         failture(error);

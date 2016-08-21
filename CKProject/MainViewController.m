@@ -143,6 +143,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [self topBarOnClick:bar];
     }
     [cityLabel setText:myDelegate.cityName];
+    [self getMainSlider];
     NSNotification *notification =[NSNotification notificationWithName:@"changeCityInst" object:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     
@@ -1509,14 +1510,15 @@ static NSString *identy = @"OrderRecordCell";
 }
 -(void)getMainData{
     mainConnectCount--;
-    NSNumberFormatter *formatter=[[NSNumberFormatter alloc]init];
-    if (localNumber==nil) {
-        localNumber=[formatter numberFromString:DEFAULT_LOCAL_AID];
-        
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
     }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        [HttpHelper getMainData:localNumber success:^(HttpModel *model){
+        [HttpHelper getMainData:Aid success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -1567,9 +1569,15 @@ static NSString *identy = @"OrderRecordCell";
     [self presentViewController: searchViewController animated:YES completion:nil];
 }
 -(void)getMainSlider{
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+    }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        [HttpHelper getSlider:self success:^(HttpModel *model){
+        [HttpHelper getSlider:Aid success:^(HttpModel *model){
             NSLog(@"%@",model.message);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([model.status isEqual:[NSNumber numberWithInt:1]]) {
@@ -1580,14 +1588,16 @@ static NSString *identy = @"OrderRecordCell";
                     dispatch_async(dispatch_get_main_queue(), ^{
                         connectCount=3;
                         list=(NSArray *)model.result;
+                        NSArray *views = [scrollview subviews];
+                        for(UIView *view in views)
+                        {
+                            [view removeFromSuperview];
+                        }
+                        [pageControl removeFromSuperview];
                         if ([list count]>0) {
                             totalCount=[list count];
                             pageControl.numberOfPages=totalCount;
-                            NSArray *views = [scrollview subviews];
-                            for(UIView *view in views)
-                            {
-                                [view removeFromSuperview];
-                            }
+                            
                             //    图片的宽
                             CGFloat imageW = scrollview.frame.size.width;
                             //    CGFloat imageW = 300;
