@@ -1327,9 +1327,13 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     
 }
 -(void)getData{
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
+    NSNumber *Aid= myDelegate.localNumber;
+    if(Aid==NULL){
+        Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
+    }
     if (projectID!=0) {
-        NSNumberFormatter *fomaterr=[[NSNumberFormatter alloc]init];
-        NSNumber *Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             [HttpHelper siftOrgList:Aid withTypeId:projectID withCornerId:nil withLv:nil  success:^(HttpModel *model){

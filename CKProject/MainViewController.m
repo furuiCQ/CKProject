@@ -143,6 +143,9 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [self topBarOnClick:bar];
     }
     [cityLabel setText:myDelegate.cityName];
+    NSNotification *notification =[NSNotification notificationWithName:@"changeCityInst" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
 }
 //初始化顶部菜单栏
 -(void)initTitle{

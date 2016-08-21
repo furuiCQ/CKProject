@@ -46,6 +46,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithRed:237.f/255.f green:238.f/255.f blue:239.f/255.f alpha:1.0]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeCity) name:@"changeCityInst" object:nil];
+
     [self initTitle];
     [self initSwitchBtn];
     tableArray = [NSArray arrayWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",nil];
@@ -62,6 +64,9 @@
     [self getLessonGroup];
     [self getInstList];
     // Do any additional setup after loading the view, typically from a nib.
+}
+-(void)changeCity{
+    [self getInstList];
 }
 -(void)getData
 {
