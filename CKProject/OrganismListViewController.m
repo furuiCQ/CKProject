@@ -1333,6 +1333,18 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
     if(Aid==NULL){
         Aid=[fomaterr numberFromString:DEFAULT_LOCAL_AID];
     }
+    NSUserDefaults *stand=[NSUserDefaults standardUserDefaults];
+    NSNumber *ar=[stand objectForKey:@"lttt"];
+    NSNumber *ngg=[stand objectForKey:@"nggg"];
+    
+    if (ar==NULL&&ngg==NULL) {
+        ar=[NSNumber numberWithDouble:myDelegate.latitude];
+        ngg=[NSNumber numberWithDouble:myDelegate.longitude];
+    }
+    if ([ar isEqualToNumber:[NSNumber numberWithDouble:0]]) {
+        ar=[NSNumber numberWithDouble:29.5];
+        ngg=[NSNumber numberWithDouble:106.5];
+    }
     if (projectID!=0) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
@@ -1372,7 +1384,7 @@ static NSString * const DEFAULT_LOCAL_AID = @"500100";
         [searchLabel setText:[NSString stringWithFormat:@"搜索%@结果",searchs]];
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            [HttpHelper searchInst:searchs success:^(HttpModel *model){
+            [HttpHelper searchInst:searchs withAid:Aid withlgn:ngg withlat:ar withstatus:[NSNumber numberWithInt:2]  success:^(HttpModel *model){
                 NSLog(@"%@",model.message);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([model.status isEqual:[NSNumber numberWithInt:1]]) {

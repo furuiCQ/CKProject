@@ -181,13 +181,14 @@
     
     
 }
-+(void)searchProject:(NSString *)searchs withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc  withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
++(void)searchProject:(NSString *)searchs withAid:(NSNumber *)aid withPageNumber:(NSNumber *)pn withPageLine:(NSNumber *)pc  withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
     NSArray *parameters = @[ @{@"name":@"searchs",@"value":searchs},
                              @{ @"name": @"lng", @"value": lng},
                              @{ @"name": @"lat", @"value": lat},
                              @{ @"name": @"status", @"value": status},
                              @{@"name":@"pn",@"value":pn},
-                             @{@"name":@"pc",@"value":pc}
+                             @{@"name":@"pc",@"value":pc},
+                              @{@"name":@"aid",@"value":aid}
                              ];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH] success:^(HttpModel *model){
         success(model);
@@ -198,7 +199,8 @@
     
 }
 +(void)searchCoupon:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
-    NSArray *parameters = @[ @{@"name":@"searchs",@"value":searchs}];
+    NSArray *parameters = @[ @{@"name":@"searchs",@"value":searchs}
+                             ];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_COUPON] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){
@@ -208,8 +210,12 @@
     
 }
 
-+(void)searchInst:(NSString *)searchs success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
-    NSArray *parameters = @[ @{@"name":@"searchs",@"value":searchs}];
++(void)searchInst:(NSString *)searchs withAid:(NSNumber *)aid withlgn:(NSNumber *)lng withlat:(NSNumber *)lat withstatus:(NSNumber *)status  success:(void (^)(HttpModel *model)) success failure:(void (^)(NSError *error)) failture{
+    NSArray *parameters = @[ @{@"name":@"searchs",@"value":searchs},
+                             @{ @"name": @"lng", @"value": lng},
+                             @{ @"name": @"lat", @"value": lat},
+                             @{ @"name": @"status", @"value": status},
+                             @{@"name":@"aid",@"value":aid}];
     [self postParems:parameters withUrl:[HTTPHEADER stringByAppendingString:API_SEARCH_INST] success:^(HttpModel *model){
         success(model);
     }failure:^(NSError *error){

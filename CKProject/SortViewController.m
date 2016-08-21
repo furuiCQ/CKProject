@@ -236,7 +236,7 @@
     orgTableView.delegate                          = self;
     orgTableView.rowHeight                         = self.view.bounds.size.height/7;
     orgTableView.tag=1;
-    
+    orgTableView.separatorStyle=NO;
     [self.view addSubview:orgTableView];
 }
 
